@@ -4,6 +4,8 @@ var io = require('socket.io').listen(app);
 io.set('log level', 1);
 
 app.listen(8080);
+app.set ('views', __dirname + '/views');
+app.set ('view engine', 'jade');
 
 app.configure(function(){
   app.use(express.methodOverride());
@@ -17,6 +19,9 @@ app.configure(function(){
 
 });
 
+app.get('/', function(req, res){
+  res.render("index.jade", {layout:'layout', 'title' : 'Karma Racer'});
+});
 
 app.dynamicHelpers({
   'session' : function(req, res) {
