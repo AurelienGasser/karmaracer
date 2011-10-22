@@ -1,0 +1,11 @@
+!!! 5
+html
+  head
+    link(rel='stylesheet', href='/media/css/main.css')
+    title= title
+  body
+    #main
+      #header
+        - if (flash.warn)
+          p#warn= flash.warn
+      #container!= body
