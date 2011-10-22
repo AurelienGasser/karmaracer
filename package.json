@@ -1,0 +1,10 @@
+{
+	"name" : "karmaracer",
+	"version" : "0.0.1",
+	"dependencies" : {
+		"express" : ">=2.4.6",
+		"jade" : ">= 0.16.2",
+		"socket.io" : ">= 0.8.5"
+	},
+	"private" : true
+}
