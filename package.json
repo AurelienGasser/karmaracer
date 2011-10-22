@@ -4,7 +4,8 @@
 	"dependencies" : {
 		"express" : ">=2.4.6",
 		"jade" : ">= 0.16.2",
-		"socket.io" : ">= 0.8.5"
+		"socket.io" : ">= 0.8.5",
+		"backbone" : ">= 0.5.3"
 	},
 	"private" : true
 }

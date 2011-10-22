@@ -5,7 +5,6 @@ io.set('log level', 1);
 
 app.listen(8080);
 
-
 app.configure(function(){
     app.use(express.methodOverride());
     app.use(express.bodyParser());
@@ -23,6 +22,5 @@ app.dynamicHelpers({
 	'flash' : function(req, res) {
 		return req.flash();
 	}
-
 });
 
