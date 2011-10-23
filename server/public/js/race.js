@@ -39,11 +39,26 @@ var currentlyPressedKeys = {};
 var carPosY = 9.9;
 var cameraHeight = 10;
 
+
+// $(function(){
+//   $("window").resize(function(){
+//     alert('resize');
+//     gl = canvas.getContext("experimental-webgl");
+//     canvas.width = $('#game-canvas').width();
+//     canvas.height = $('#game-canvas').height();
+//     gl.viewportWidth = canvas.width;
+//     gl.viewportHeight = canvas.height;    
+
+//   });
+// });
+
 function initGL(canvas) {
   try {
     gl = canvas.getContext("experimental-webgl");
-    gl.viewportWidth = $('#game-canvas').width();
-    gl.viewportHeight = $('#game-canvas').height();
+    canvas.width = $('#game-canvas').width();
+    canvas.height = $('#game-canvas').height();
+    gl.viewportWidth = canvas.width;
+    gl.viewportHeight = canvas.height;
   } catch (e) {
     alert('Unable to init WebGL Canvas');
   }
