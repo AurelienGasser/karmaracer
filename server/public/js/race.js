@@ -25,7 +25,6 @@ var tabItems = ['road', 'grass', 'car'];
 var pitch = -90;
 var pitchRate = 0;
 var yaw = 0;
-var yawCar = 0;
 var yawRate = 0;
 var xPos = 0;
 var yPos = 10;
@@ -37,10 +36,8 @@ var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
-var carPosX = 0;
 var carPosY = 9.9;
-var carPosZ = 0;
-
+var cameraHeight = 10;
 
 function initGL(canvas) {
   try {
@@ -187,16 +184,22 @@ function handleKeys() {
     zPos += 0.1;
   } else if (currentlyPressedKeys[65]) {
     // Q
-    yawCar += 1;
+    nodeserver.emit('turnCar', -0.2);
   } else if (currentlyPressedKeys[68]) {
     // D
-    yawCar -= 1;
+    nodeserver.emit('turnCar', 0.2);
   } else if (currentlyPressedKeys[87]) {
     // W
-    carPosZ += 0.1;
+    nodeserver.emit('accelerate', 0.1);
   } else if (currentlyPressedKeys[83]) {
+   // S
+  nodeserver.emit('accelerate', -0.1);
+  }   else if (currentlyPressedKeys[76]) {
+  // S
+    cameraHeight += 0.1;
+  }   else if (currentlyPressedKeys[80]) {
     // S
-    carPosZ -= 0.1;
+    cameraHeight -= 0.1;
   }
 }
 
@@ -289,19 +292,37 @@ function drawScene() {
   }
   mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
   mat4.identity(mvMatrix);
-
+  _.each(cars, function(car) {
+    var item = 'car';
+    mvPushMatrix();    
+    mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
+    mat4.translate(mvMatrix, [-car.x - xPos, -carPosY, car.y- zPos]);      
+    mat4.rotate(mvMatrix, -car.r, [0, 1, 0]);
+    gl.activeTexture(gl.TEXTURE0);
+    gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
+    gl.uniform1i(shaderProgram.samplerUniform, 0);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.enable(gl.BLEND);
+    gl.disable(gl.DEPTH_TEST);
+    gl.uniform1f(shaderProgram.alphaUniform, 0);      
+    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer[item]);
+    gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
+    gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer[item]);
+    gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
+    setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, worldVertexPositionBuffer[item].numItems);
+    mvPopMatrix();    
+  });
+  
   for (var i in tabItems) {
     var item = tabItems[i];
-    mvPushMatrix();
     if (item == 'car') {
-      mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
-      mat4.translate(mvMatrix, [-carPosX - xPos, -carPosY, -carPosZ- zPos]);      
-      mat4.rotate(mvMatrix, degToRad(-yawCar), [0, 1, 0]);
-    } else {
-      mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
-      mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
-      mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);      
+      continue;
     }
+    mvPushMatrix();
+    mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
+    mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
+    mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);      
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
