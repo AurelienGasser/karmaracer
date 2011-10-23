@@ -1,4 +1,4 @@
-var karmaracer_server = "http://192.168.1.105:8090/";
+var karmaracer_server = "http://happyfunkyfoundation.com:8090/";
 
 var cars = null;
 
