@@ -9,6 +9,7 @@
   <script type="text/javascript" src="/js/libs/underscore.js"></script>
   <script type="text/javascript" src="/js/connection.js"></script>
   <script type="text/javascript" src="/js/race.js"></script>
+  <script type="text/javascript" src="/js/chat.js"></script>  
   <script id="shader-fs" type="x-shader/x-fragment">
     #ifdef GL_ES
     precision highp float;
@@ -31,10 +32,18 @@
     }
   </script>
   <link rel="stylesheet" href="/css/race.css"/>
+  <link rel="stylesheet" href="/css/chat.css"/>
 </head>
 <body onload="webGLStart();">
   <canvas id="game-canvas" style="border: none;" width="500" height="500"></canvas>
   <div id="loadingtext">Loading world...</div>
   <div>Press L or P to zoom</div>
+
+  <div id="chatzone">
+    <input id="playerName" type='text' placeholder='your name'/>
+    <input id="message" type='text' placeholder='write your message'/>
+    <input id="sendMessage" type='button' value="send message"/>
+    <div id="chatbox">&nbsp;</div>
+  </div>
 </body>
 </html>

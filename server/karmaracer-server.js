@@ -27,8 +27,6 @@ app.get('/', function(req, res){
 });
 
 
-
-
 app.dynamicHelpers({
   'session' : function(req, res) {
     return req.session;
@@ -118,12 +116,11 @@ var CarsCollection = backbone.Collection.extend({
 });
 var cars = new CarsCollection;
 
-//cars.add(new Car({}));
-
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
-  
+
+
   var carID = cars.length + 1;
   client.car = new Car({
     r : 0,
