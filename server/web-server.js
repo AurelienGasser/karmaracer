@@ -152,7 +152,7 @@ io.sockets.on('connection', function (client) {
     var allCars = cars.getShared();
     client.emit('objects', {myCar: client.car.getShared(), cars: allCars});
     client.car.updatePos();
-  }, 50);
+  }, 100);
 
   client.on('disconnect', function (socket) {
     cars.remove(client.car);
