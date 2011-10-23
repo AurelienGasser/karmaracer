@@ -13,6 +13,10 @@ function intiSockets(){
   nodeserver.on('message', function (message) {
   });
 
+  nodeserver.on('chat_msg', function (msg) {
+    $('#chat_msgs').append('<li>' + msg + '</li>');
+  });
+
   nodeserver.on('objects', function (objects) {
       cars = objects.cars;
 //    _.each(objects.cars, function(c) {

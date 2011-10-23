@@ -120,10 +120,11 @@ var cars = new CarsCollection;
 
 //cars.add(new Car({}));
 
+var clients = [];
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
-  
+  clients.push(client);
   var carID = cars.length + 1;
   client.car = new Car({
     r : 0,
@@ -165,6 +166,12 @@ io.sockets.on('connection', function (client) {
 
   client.on('accelerate', function (ac) {
     client.car.accelerate(ac);
+  });
+
+  client.on('chat_msg', function (msg) {
+    for (var i in clients) {
+      clients[i].emit('chat_msg', msg);
+    }
   });
 
   

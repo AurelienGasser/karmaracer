@@ -40,18 +40,6 @@ var carPosY = 9.9;
 var cameraHeight = 10;
 
 
-// $(function(){
-//   $("window").resize(function(){
-//     alert('resize');
-//     gl = canvas.getContext("experimental-webgl");
-//     canvas.width = $('#game-canvas').width();
-//     canvas.height = $('#game-canvas').height();
-//     gl.viewportWidth = canvas.width;
-//     gl.viewportHeight = canvas.height;    
-
-//   });
-// });
-
 function initGL(canvas) {
   try {
     gl = canvas.getContext("experimental-webgl");
@@ -184,40 +172,55 @@ function handleKeyUp(event) {
 
 
 function handleKeys() {
-  if (currentlyPressedKeys[37]) {
-    // Left cursor key or A
-    xPos -= 0.1;
-  } else if (currentlyPressedKeys[39]) {
-    // Right cursor key or D
-    xPos += 0.1;
-  } 
-  if (currentlyPressedKeys[38]) {
-    // Up cursor key or W
-    zPos -= 0.1;
-  } else if (currentlyPressedKeys[40]) {
-    // Down cursor key
-    zPos += 0.1;
-  } else if (currentlyPressedKeys[65]) {
-    // Q
-    nodeserver.emit('turnCar', -0.2);
-  } else if (currentlyPressedKeys[68]) {
-    // D
-    nodeserver.emit('turnCar', 0.2);
-  } else if (currentlyPressedKeys[87]) {
-    // W
-    nodeserver.emit('accelerate', 0.1);
-  } else if (currentlyPressedKeys[83]) {
-   // S
-  nodeserver.emit('accelerate', -0.1);
-  }   else if (currentlyPressedKeys[76]) {
-  // S
-    cameraHeight += 0.1;
-  }   else if (currentlyPressedKeys[80]) {
+  if (!($('#chat_input').is(':focus')))
+  {
+    if (currentlyPressedKeys[37]) {
+      // Left cursor key or A
+      xPos -= 0.1;
+    } else if (currentlyPressedKeys[39]) {
+      // Right cursor key or D
+      xPos += 0.1;
+    } 
+    if (currentlyPressedKeys[38]) {
+      // Up cursor key or W
+      zPos -= 0.1;
+    } else if (currentlyPressedKeys[40]) {
+      // Down cursor key
+      zPos += 0.1;
+    } else if (currentlyPressedKeys[65]) {
+      // Q
+      nodeserver.emit('turnCar', -0.2);
+    } else if (currentlyPressedKeys[68]) {
+      // D
+      nodeserver.emit('turnCar', 0.2);
+    } else if (currentlyPressedKeys[87]) {
+      // W
+      nodeserver.emit('accelerate', 0.1);
+    } else if (currentlyPressedKeys[83]) {
+     // S
+    nodeserver.emit('accelerate', -0.1);
+    }   else if (currentlyPressedKeys[76]) {
     // S
-    cameraHeight -= 0.1;
+      cameraHeight += 0.1;
+    }   else if (currentlyPressedKeys[80]) {
+      // S
+      cameraHeight -= 0.1;
+    }
+  } else {
+    if (currentlyPressedKeys[13]) {
+      sendMsg();
+    }
   }
 }
 
+function sendMsg()
+{
+  if ($('#chat_input').val().trim() != '') {
+    var msg = $('#player_name').val() + ': ' + $('#chat_input').val();
+    nodeserver.emit('chat_msg', msg);  
+  }
+  $('#chat_input').val('');    
+}
 
 function handleLoadedWorld(data) {
   var vertexCount = {
