@@ -1,3 +1,4 @@
 karmaracer.sublime-project
 node_modules
 .monitor
+.DS_Store
