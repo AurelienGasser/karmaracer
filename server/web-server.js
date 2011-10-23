@@ -6,7 +6,7 @@ var app = express.createServer();
 var io = require('socket.io').listen(app);
 io.set('log level', 1);
 
-app.listen(8080);
+app.listen(8090);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
 
@@ -37,23 +37,47 @@ app.dynamicHelpers({
   }
 });
 
-
-
+var Car = backbone.Model.extend({
+  turn : function (side) {
+    r += side;
+  }
+});
 
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
   
   var carID = cars.length + 1;
-  var c = {'id' : carID}
+  var c = new Car({
+    id : carID,
+    x : 0,
+    y : 0,
+    velocity : {
+      x : 0,
+      y : 0
+    },
+    acceleration : {
+      x : 0,
+      y : 0
+    },
+    r : 0
+  });
   cars.add(c);
 
   client.car = c;
-  client.emit('message', "Hi !! your car ID is : " + carID);
+  // client.emit('message', "Hi !! your car ID is : " + carID);
+  // 
+  client.interval = setInterval(function () {
+    client.emit('objects', {myCar: client.car, cars: cars});
+    console.log('send objects');
+  }, 500);
 
   client.on('disconnect', function (socket) {
     console.log('client left, car ID is ', client.car.id);
     cars.remove(client.car);
-  });  
-
+    clearInterval(client.interval);
+  });
+  client.on('turnCar', function (side) {
+    client.car.turn(side);
+  });
 });
