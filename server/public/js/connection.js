@@ -1,4 +1,4 @@
-var karmaracer_server = "http://192.168.1.101:8080/";
+var karmaracer_server = "http://localhost:8090/";
 
 var nodeserver = null;
 function intiSockets(){
@@ -12,6 +12,9 @@ function intiSockets(){
     console.log(message);  
   });
 
+  nodeserver.on('car', function (car) {
+    console.log(car);
+  })
 }
 
 intiSockets();

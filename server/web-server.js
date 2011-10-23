@@ -6,7 +6,7 @@ var app = express.createServer();
 var io = require('socket.io').listen(app);
 io.set('log level', 1);
 
-app.listen(8080);
+app.listen(8090);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
 
@@ -38,9 +38,6 @@ app.dynamicHelpers({
 });
 
 
-
-
-
 io.sockets.on('connection', function (client) {
   console.log('client connected');
   
@@ -51,6 +48,7 @@ io.sockets.on('connection', function (client) {
   client.car = c;
   client.emit('message', "Hi !! your car ID is : " + carID);
 
+  client.emit('car', client.car);
   client.on('disconnect', function (socket) {
     console.log('client left, car ID is ', client.car.id);
     cars.remove(client.car);
