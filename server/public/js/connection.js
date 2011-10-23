@@ -7,7 +7,7 @@ function intiSockets(){
   nodeserver = io.connect(karmaracer_server);
 
   nodeserver.on('connect', function (data) {
-    console.log("connected");
+    //console.log("connected");
   });
 
   nodeserver.on('message', function (message) {
