@@ -26,6 +26,7 @@ app.get('/', function(req, res){
   res.render("index.jade", {layout:false, 'title' : 'Karma Racer'});
 });
 
+
 var cars = new backbone.Collection;
 
 app.dynamicHelpers({
