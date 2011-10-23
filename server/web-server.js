@@ -1,4 +1,7 @@
 var express = require ('express');
+var backbone = require('backbone');
+var _ = require('underscore');
+
 var app = express.createServer();
 var io = require('socket.io').listen(app);
 io.set('log level', 1);
@@ -23,6 +26,8 @@ app.get('/', function(req, res){
   res.render("index.jade", {layout:'layout', 'title' : 'Karma Racer'});
 });
 
+var cars = new backbone.Collection;
+
 app.dynamicHelpers({
   'session' : function(req, res) {
     return req.session;
@@ -34,3 +39,21 @@ app.dynamicHelpers({
 
 
 
+
+
+io.sockets.on('connection', function (client) {
+  console.log('client connected');
+  
+  var carID = cars.length + 1;
+  var c = {'id' : carID}
+  cars.add(c);
+
+  client.car = c;
+  client.emit('message', "Hi !! your car ID is : " + carID);
+
+  client.on('disconnect', function (socket) {
+    console.log('client left, car ID is ', client.car.id);
+    cars.remove(client.car);
+  });  
+
+});
