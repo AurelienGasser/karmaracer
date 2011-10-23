@@ -25,6 +25,7 @@ var tabItems = ['road', 'grass', 'car'];
 var pitch = -90;
 var pitchRate = 0;
 var yaw = 0;
+var yawCar = 0;
 var yawRate = 0;
 var xPos = 0;
 var yPos = 10;
@@ -36,6 +37,9 @@ var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
+var carPosX = 0;
+var carPosY = 9.9;
+var carPosZ = 0;
 
 
 function initGL(canvas) {
@@ -168,32 +172,31 @@ function handleKeyUp(event) {
 
 
 function handleKeys() {
-  if (currentlyPressedKeys[33]) {
-    // Page Up
-    pitchRate = 0.1;
-  } else if (currentlyPressedKeys[34]) {
-    // Page Down
-    pitchRate = -0.1;
-  } else {
-    pitchRate = 0;
-  }
-  if (currentlyPressedKeys[37] || currentlyPressedKeys[65]) {
+  if (currentlyPressedKeys[37]) {
     // Left cursor key or A
     xPos -= 0.1;
-  } else if (currentlyPressedKeys[39] || currentlyPressedKeys[68]) {
+  } else if (currentlyPressedKeys[39]) {
     // Right cursor key or D
     xPos += 0.1;
-  } else {
-    //yawRate = 0;
-  }
-  if (currentlyPressedKeys[38] || currentlyPressedKeys[87]) {
+  } 
+  if (currentlyPressedKeys[38]) {
     // Up cursor key or W
     zPos -= 0.1;
-  } else if (currentlyPressedKeys[40] || currentlyPressedKeys[83]) {
+  } else if (currentlyPressedKeys[40]) {
     // Down cursor key
     zPos += 0.1;
-  } else {
-    //speed = 0;
+  } else if (currentlyPressedKeys[65]) {
+    // Q
+    yawCar += 1;
+  } else if (currentlyPressedKeys[68]) {
+    // D
+    yawCar -= 1;
+  } else if (currentlyPressedKeys[87]) {
+    // W
+    carPosZ += 0.1;
+  } else if (currentlyPressedKeys[83]) {
+    // S
+    carPosZ -= 0.1;
   }
 }
 
@@ -267,12 +270,12 @@ function loadWorld() {
     ],
 
     car: [
-    [-2.0,  0.0, -1.0,  0.0, 1.0],
-    [-2.0,  0.0,  0.0,  0.0, 0.0],
-    [-1.0,  0.0,  0.0, 1.0, 0.0],
-    [-2.0,  0.0, -1.0,  0.0, 1.0],
-    [-1.0,  0.0, -1.0, 1.0, 1.0],
-    [-1.0,  0.0,  0.0, 1.0, 0.0]
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [-0.5,  0.0,  0.5,  0.0, 0.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0],
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [0.5,  0.0, -0.5, 1.0, 1.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0]
     ]
   });
 }
@@ -290,16 +293,22 @@ function drawScene() {
   for (var i in tabItems) {
     var item = tabItems[i];
     mvPushMatrix();
-    mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
-    mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
-    mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);
+    if (item == 'car') {
+      mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
+      mat4.translate(mvMatrix, [-carPosX - xPos, -carPosY, -carPosZ- zPos]);      
+      mat4.rotate(mvMatrix, degToRad(-yawCar), [0, 1, 0]);
+    } else {
+      mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
+      mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
+      mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);      
+    }
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     gl.enable(gl.BLEND);
     gl.disable(gl.DEPTH_TEST);
-    gl.uniform1f(shaderProgram.alphaUniform, 1.0);      
+    gl.uniform1f(shaderProgram.alphaUniform, 0);      
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer[item]);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer[item]);
@@ -347,3 +356,4 @@ function webGLStart() {
   document.onkeyup = handleKeyUp;
   tick();
 }
+
