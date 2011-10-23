@@ -20,7 +20,7 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-  res.render("index.jade", {layout:'layout', 'title' : 'Karma Racer'});
+  res.render("index.jade", {layout:false, 'title' : 'Karma Racer'});
 });
 
 app.dynamicHelpers({
