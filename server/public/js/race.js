@@ -42,8 +42,8 @@ var cameraHeight = 10;
 function initGL(canvas) {
   try {
     gl = canvas.getContext("experimental-webgl");
-    gl.viewportWidth = canvas.width;
-    gl.viewportHeight = canvas.height;
+    gl.viewportWidth = $('#game-canvas').width();
+    gl.viewportHeight = $('#game-canvas').height();
   } catch (e) {
     alert('Unable to init WebGL Canvas');
   }
