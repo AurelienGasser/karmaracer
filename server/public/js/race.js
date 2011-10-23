@@ -296,6 +296,7 @@ function drawScene() {
     var item = 'car';
     mvPushMatrix();    
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
+    mat4.translate(mvMatrix, [0, -cameraHeight, 0]);      
     mat4.translate(mvMatrix, [-car.x - xPos, -carPosY, car.y- zPos]);      
     mat4.rotate(mvMatrix, -car.r, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
@@ -321,6 +322,7 @@ function drawScene() {
     }
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
+    mat4.translate(mvMatrix, [0, -cameraHeight, 0]);          
     mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
     mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);      
     gl.activeTexture(gl.TEXTURE0);
