@@ -27,7 +27,7 @@ app.get('/', function(req, res){
 });
 
 
-var cars = new backbone.Collection;
+
 
 app.dynamicHelpers({
   'session' : function(req, res) {
@@ -39,18 +39,95 @@ app.dynamicHelpers({
 });
 
 var Car = backbone.Model.extend({
+  urlRoot : '/cars',
+  carID : 0,
+  r : 0,
+  id : 0,
+  x : 0,
+  y : 0,
+  velocity : {
+    x : 0,
+    y : 0
+  },
+  acceleration : {
+    x : 0,
+    y : 0
+  },  
+  accelerationMax : 50,
+  accelerate : function (ac){
+    this.acceleration.x += ac * Math.sin(this.r);
+    this.acceleration.y += ac * Math.cos(this.r);
+
+    for (var i in this.acceleration){
+      if (this.acceleration[i] > this.accelerationMax) {
+        this.acceleration[i] = this.accelerationMax;
+      }      
+    }
+  },
+  reduceVelocity : function(){
+    var SLOWER = 0.125;
+    for (var i in this.velocity){
+      if (this.velocity[i] > 0){
+        this.velocity[i] /= 3;
+        if (this.velocity[i] < SLOWER){ 
+          this.velocity[i] = 0;
+        }
+      }else{
+        this.velocity[i] /= 3;
+        if (this.velocity[i] > SLOWER){ 
+          this.velocity[i] = 0;
+        }
+      }
+      
+    }
+  },
   turn : function (side) {
-    r += side;
+    //console.log('turning car before : ' + this.r);
+    this.r += side * Math.PI / 8;
+    //console.log('turning car : ' + this.r);
+  },
+  getShared : function(){
+    return {x : this.x, y : this.y, r : this.r};
+  },
+  updateVelocity : function(){
+    this.velocity.x += this.acceleration.x;
+    this.velocity.y += this.acceleration.y;
+    this.acceleration = {x : 0, y : 0};
+
+  },
+  updatePos : function(){
+    this.updateVelocity();    
+    this.x += this.velocity.x;
+    this.y += this.velocity.y;
+    this.reduceVelocity();
+    //console.log(this.acceleration);
   }
 });
+
+var CarsCollection = backbone.Collection.extend({
+  model : Car,
+  getShared : function(){
+    var myCars = Array();
+    //console.log("get shared list", this);
+    _.each(this.models, function(c){
+      //console.log(c);
+      myCars.push(c.getShared());
+    });
+    return myCars;
+  }
+});
+var cars = new CarsCollection;
+
+//cars.add(new Car({}));
 
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
   
   var carID = cars.length + 1;
-  var c = new Car({
-    id : carID,
+  client.car = new Car({
+    r : 0,
+    id : 0,
     x : 0,
     y : 0,
     velocity : {
@@ -60,25 +137,35 @@ io.sockets.on('connection', function (client) {
     acceleration : {
       x : 0,
       y : 0
-    },
-    r : 0
-  });
-  cars.add(c);
+    }    
+  });  
+  client.car.carID = carID;
+  cars.add(client.car);
+//  console.log(client.car.acceleration);
+//  console.log(client.car.velocity );
+  client.car.velocity = {x : 0, y : 0};
 
-  client.car = c;
-  // client.emit('message', "Hi !! your car ID is : " + carID);
-  // 
+  //console.log('message', "Hi !! your car ID is : " + carID);
+  //
+   
   client.interval = setInterval(function () {
-    client.emit('objects', {myCar: client.car, cars: cars});
-    console.log('send objects');
-  }, 500);
+    var allCars = cars.getShared();
+    client.emit('objects', {myCar: client.car.getShared(), cars: allCars});
+    client.car.updatePos();
+  }, 50);
 
   client.on('disconnect', function (socket) {
-    console.log('client left, car ID is ', client.car.id);
     cars.remove(client.car);
     clearInterval(client.interval);
   });
+
   client.on('turnCar', function (side) {
     client.car.turn(side);
   });
+
+  client.on('accelerate', function (ac) {
+    client.car.accelerate(ac);
+  });
+
+  
 });

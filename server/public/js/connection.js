@@ -1,4 +1,4 @@
-var karmaracer_server = "http://localhost:8090/";
+var karmaracer_server = "http://192.168.1.101:8090/";
 
 var nodeserver = null;
 function intiSockets(){
@@ -12,11 +12,17 @@ function intiSockets(){
   });
 
   nodeserver.on('objects', function (objects) {
+  
+    //console.log(objects);
+    //console.log(objects.cars);
+    //var car = objects.myCar;
     $('body').html('');
-    var a = [1, 2];
+    // var a = [1, 2];
     $('body').html(_.map(objects.cars, function (car){
-      return "<div class='car' style='top:" + car.x + ";left:" + car.y + ";-webkit-transform: rotate('" + car.r + "'); '></div>";
+      //console.log(car);
+      return "<div class='car' style=\"top:" + car.x + ";left:" + car.y + ";-webkit-transform: rotate(" + car.r + "rad);-moz-transform: rotate(" + car.r + "rad); \">" + car.r+ "</div>";
     }).join(""));
+
   });
 }
 
@@ -24,12 +30,20 @@ intiSockets();
 
 $(function () {
   $("html").keypress(function (ev) {
-    if (ev.keycode == 111) {
-      nodeserver.emit('turnCar', 1);
-    }
-    if (ev.keycode == 101) {
+    ///console.log(ev);
+    if (ev.keyCode == 37) {
       nodeserver.emit('turnCar', -1);
+      console.log("go right");
     }
-    console.log(ev);
+    if (ev.keyCode == 39) {
+      nodeserver.emit('turnCar', 1);
+      console.log("go left");
+    }
+    if (ev.keyCode == 38) {
+      nodeserver.emit('accelerate', 5);
+      //return 0;
+      console.log("accelerate");
+    }    
+    //console.log(ev);
   })
 });
