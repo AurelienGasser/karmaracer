@@ -1,0 +1,46 @@
+html
+  head
+    title Karma Racer, baby!
+    meta(http-equiv='content-type', content='text/html; charset=utf-8')
+    script(type='text/javascript', src='/js/libs/jquery-1.6.4.min.js')
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type='text/javascript', src='/js/libs/glMatrix-0.9.5.min.js')
+    script(type='text/javascript', src='/js/libs/webgl-utils.js')
+    script(type='text/javascript', src='/js/libs/underscore.js')
+    script(type='text/javascript', src='/js/connection.js')
+    script(type='text/javascript', src='/js/race.js')
+    script#shader-fs(type='x-shader/x-fragment').
+          #ifdef GL_ES
+          precision highp float;
+          #endif
+          varying vec2 vTextureCoord;
+          uniform sampler2D uSampler;
+          void main(void) {
+            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+          }
+        
+    script#shader-vs(type='x-shader/x-vertex').
+          attribute vec3 aVertexPosition;
+          attribute vec2 aTextureCoord;
+          uniform mat4 uMVMatrix;
+          uniform mat4 uPMatrix;
+          varying vec2 vTextureCoord;
+          void main(void) {
+            gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+            vTextureCoord = aTextureCoord;
+          }
+        
+    link(rel='stylesheet', href='/css/race.css')
+  body(onload='webGLStart();')
+    canvas#game-canvas(width='500', height='500')
+    #right_panel
+      #info
+        | Tip: Press L or P to zoom
+      #player_name_div
+        | Player name:
+        input#player_name(style='', placeholder='write your name')
+      #chat_msgs
+        div Welcome to the chat!
+        ul
+      textarea#chat_input(placeholder='set your message and press enter to send')
+    #loadingtext Loading world...

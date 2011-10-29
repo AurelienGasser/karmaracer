@@ -1,4 +1,3 @@
-//var karmaracer_server = "http://happyfunkyfoundation.com:8090/";
 var karmaracer_server = "http://happyfunkyfoundation.com:8090/";
 
 var cars = null;
