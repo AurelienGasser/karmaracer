@@ -3,7 +3,7 @@
 $(function(){
 
 	webGLStart();
-	intiSockets();	
+	initSockets();	
 
 	$(window).resize(function(){
 	  var canvas = document.getElementById("game-canvas");
