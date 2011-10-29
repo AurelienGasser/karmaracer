@@ -6,7 +6,8 @@ var app = express.createServer();
 var io = require('socket.io').listen(app);
 io.set('log level', 1);
 
-app.listen(8090);
+var port = 8090;
+app.listen(port);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
 
@@ -23,7 +24,11 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-  res.render("index.jade", {layout:false, 'title' : 'Karma Racer'});
+  res.render("index.jade", {
+    layout:false, 
+    'title' : 'Karma Racer', 
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? 'localhost' : 'happyfunkyfoundation.com') + ':' + port + '/'
+  });
 });
 
 
