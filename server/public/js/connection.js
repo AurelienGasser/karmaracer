@@ -1,7 +1,7 @@
-var cars = null;
+var cars = [];
 
 var nodeserver = null;
-function intiSockets(){
+function initSockets(){
   nodeserver = io.connect(karmaracer_server);
 
   nodeserver.on('connect', function (data) {
