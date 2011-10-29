@@ -39,6 +39,9 @@ var currentlyPressedKeys = {};
 var carPosY = 9.9;
 var cameraHeight = 10;
 
+$(function() {
+  webGLStart();  
+})
 
 function initGL(canvas) {
   try {
