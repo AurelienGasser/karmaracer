@@ -16,13 +16,8 @@ function intiSockets(){
     $('#chat_msgs').append('<li>' + msg + '</li>');
   });
 
-  nodeserver.on('chat_msg', function (msg) {
-    $('#chat_msgs').append('<li>' + msg + '</li>');
-  });
-
   nodeserver.on('objects', function (objects) {
       cars = objects.cars;
   });
 }
 
-intiSockets();

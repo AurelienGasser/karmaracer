@@ -43,7 +43,7 @@ var cameraHeight = 10;
 function initGL(canvas) {
   try {
     gl = canvas.getContext("experimental-webgl");
-    canvas.width = $('#game-canvas').width();
+    canvas.width = $('#game-canvas').width() - 10;
     canvas.height = $('#game-canvas').height();
     gl.viewportWidth = canvas.width;
     gl.viewportHeight = canvas.height;
@@ -213,14 +213,6 @@ function handleKeys() {
   }
 }
 
-function sendMsg()
-{
-  if ($('#chat_input').val().trim() != '') {
-    var msg = $('#player_name').val() + ': ' + $('#chat_input').val();
-    nodeserver.emit('chat_msg', msg);  
-  }
-  $('#chat_input').val('');    
-}
 
 function handleLoadedWorld(data) {
   var vertexCount = {

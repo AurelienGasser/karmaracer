@@ -4,6 +4,8 @@ var _ = require('underscore');
 
 var app = express.createServer();
 var io = require('socket.io').listen(app);
+
+
 io.set('log level', 1);
 
 var port = 8090;
@@ -27,7 +29,7 @@ app.get('/', function(req, res){
   res.render("index.jade", {
     layout:false, 
     'title' : 'Karma Racer', 
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? 'localhost' : 'happyfunkyfoundation.com') + ':' + port + '/'
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.105' : 'happyfunkyfoundation.com') + ':' + port + '/'
   });
 });
 
@@ -41,88 +43,28 @@ app.dynamicHelpers({
   }
 });
 
-var Car = backbone.Model.extend({
-  urlRoot : '/cars',
-  carID : 0,
-  r : 0,
-  id : 0,
-  x : 0,
-  y : 0,
-  velocity : {
-    x : 0,
-    y : 0
-  },
-  acceleration : {
-    x : 0,
-    y : 0
-  },  
-  accelerationMax : 50,
-  accelerate : function (ac){
-    this.acceleration.x += ac * Math.sin(this.r);
-    this.acceleration.y += ac * Math.cos(this.r);
 
-    for (var i in this.acceleration){
-      if (this.acceleration[i] > this.accelerationMax) {
-        this.acceleration[i] = this.accelerationMax;
-      }      
-    }
-  },
-  reduceVelocity : function(){
-    var SLOWER = 0.125;
-    for (var i in this.velocity){
-      if (this.velocity[i] > 0){
-        this.velocity[i] /= 3;
-        if (this.velocity[i] < SLOWER){ 
-          this.velocity[i] = 0;
-        }
-      }else{
-        this.velocity[i] /= 3;
-        if (this.velocity[i] > SLOWER){ 
-          this.velocity[i] = 0;
-        }
-      }
-      
-    }
-  },
-  turn : function (side) {
-    //console.log('turning car before : ' + this.r);
-    this.r += side * Math.PI / 8;
-    //console.log('turning car : ' + this.r);
-  },
-  getShared : function(){
-    return {x : this.x, y : this.y, r : this.r};
-  },
-  updateVelocity : function(){
-    this.velocity.x += this.acceleration.x;
-    this.velocity.y += this.acceleration.y;
-    this.acceleration = {x : 0, y : 0};
 
-  },
-  updatePos : function(){
-    this.updateVelocity();    
-    this.x += this.velocity.x;
-    this.y += this.velocity.y;
-    this.reduceVelocity();
-    //console.log(this.acceleration);
-  }
-});
 
-var CarsCollection = backbone.Collection.extend({
-  model : Car,
-  getShared : function(){
-    var myCars = Array();
-    //console.log("get shared list", this);
-    _.each(this.models, function(c){
-      //console.log(c);
-      myCars.push(c.getShared());
-    });
-    return myCars;
-  }
-});
+
+// var Car = require('./classes/car');
+
+// var c1 = new Car();
+// c1.position.x = 42;
+// console.log(c1.position.x);
+
+// var c2 = new Car();
+// //c2.position.x = 42;
+//ole.log(c2.position.x);
+
+
+
+
+
+
+var Car = require('./classes/car');
+var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection;
-
-
-//cars.add(new Car({}));
 
 var clients = [];
 
@@ -130,29 +72,8 @@ io.sockets.on('connection', function (client) {
   console.log('client connected');
   clients.push(client);
 
-  var carID = cars.length + 1;
-  client.car = new Car({
-    r : 0,
-    id : 0,
-    x : 0,
-    y : 0,
-    velocity : {
-      x : 0,
-      y : 0
-    },
-    acceleration : {
-      x : 0,
-      y : 0
-    }    
-  });  
-  client.car.carID = carID;
+  client.car = new Car();
   cars.add(client.car);
-//  console.log(client.car.acceleration);
-//  console.log(client.car.velocity );
-  client.car.velocity = {x : 0, y : 0};
-
-  //console.log('message', "Hi !! your car ID is : " + carID);
-  //
    
   client.interval = setInterval(function () {
     var allCars = cars.getShared();
@@ -178,6 +99,4 @@ io.sockets.on('connection', function (client) {
       clients[i].emit('chat_msg', msg);
     }
   });
-
-  
 });

@@ -10,7 +10,9 @@ html
     script(type='text/javascript')
       var karmaracer_server = '#{server}';
     script(type='text/javascript', src='/js/connection.js')
+    script(type='text/javascript', src='/js/chat.js')    
     script(type='text/javascript', src='/js/race.js')
+    script(type='text/javascript', src='/js/game.js')
     script#shader-fs(type='x-shader/x-fragment').
           #ifdef GL_ES
           precision highp float;
@@ -33,7 +35,7 @@ html
           }
         
     link(rel='stylesheet', href='/css/race.css')
-  body(onload='webGLStart();')
+  body
     canvas#game-canvas(width='500', height='500')
     #right_panel
       #info
