@@ -40,6 +40,7 @@ var carPosY = 9.9;
 var cameraHeight = 10;
 
 $(function() {
+  initSockets();  
   webGLStart();  
 })
 
@@ -318,7 +319,7 @@ function drawScene() {
     mvPushMatrix();    
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
     mat4.translate(mvMatrix, [0, -cameraHeight, 0]);      
-    mat4.translate(mvMatrix, [-car.x - xPos, -carPosY, car.y- zPos]);      
+    mat4.translate(mvMatrix, [-car.x - xPos, -carPosY, car.y- zPos]);  
     mat4.rotate(mvMatrix, -car.r, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);

@@ -1,7 +1,7 @@
-var cars = null;
+var cars = [];
 
 var nodeserver = null;
-function intiSockets(){
+function initSockets(){
   nodeserver = io.connect(karmaracer_server);
 
   nodeserver.on('connect', function (data) {
@@ -16,13 +16,8 @@ function intiSockets(){
     $('#chat_msgs').append('<li>' + msg + '</li>');
   });
 
-  nodeserver.on('chat_msg', function (msg) {
-    $('#chat_msgs').append('<li>' + msg + '</li>');
-  });
-
   nodeserver.on('objects', function (objects) {
       cars = objects.cars;
   });
 }
 
-intiSockets();
