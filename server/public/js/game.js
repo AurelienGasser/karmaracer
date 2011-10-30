@@ -9,4 +9,6 @@ $(function(){
 	  var canvas = document.getElementById("game-canvas");
 	  initGL(canvas);		
 	});
+
+
 });

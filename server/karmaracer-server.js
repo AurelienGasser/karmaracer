@@ -44,29 +44,16 @@ app.dynamicHelpers({
 });
 
 
-
-
-
-// var Car = require('./classes/car');
-
-// var c1 = new Car();
-// c1.position.x = 42;
-// console.log(c1.position.x);
-
-// var c2 = new Car();
-// //c2.position.x = 42;
-//ole.log(c2.position.x);
-
-
-
-
-
-
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection;
 
 var clients = [];
+
+// update all cars positions
+setInterval(function () {
+  cars.updatePos();
+}, 20); 
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
@@ -76,9 +63,7 @@ io.sockets.on('connection', function (client) {
   cars.add(client.car);
    
   client.interval = setInterval(function () {
-    var allCars = cars.getShared();
-    client.emit('objects', {myCar: client.car.getShared(), cars: allCars});
-    client.car.updatePos();
+    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars});
   }, 100);
 
   client.on('disconnect', function (socket) {

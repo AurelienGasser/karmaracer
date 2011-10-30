@@ -18,6 +18,10 @@ var Car = backbone.Model.extend({
       x : 0,
       y : 0
     };
+    this.size = {
+      w : 55,
+      h : 70
+    }
   },
   accelerationMax : 50,
   accelerate : function (ac){
@@ -67,21 +71,5 @@ var Car = backbone.Model.extend({
   }
 });
 
-/*
-Car.newCar = new Car({
-    r : 0,
-    id : 0,
-    x : 0,
-    y : 0,
-    velocity : {
-      x : 0,
-      y : 0
-    },
-    acceleration : {
-      x : 0,
-      y : 0
-    }    
-  });
-*/
 module.exports = Car;
 
