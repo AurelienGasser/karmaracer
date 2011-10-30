@@ -179,32 +179,32 @@ function handleKeys() {
     if (currentlyPressedKeys[37]) {
       // Left cursor key or A
       xPos -= 0.1;
-    } else if (currentlyPressedKeys[39]) {
+    }  if (currentlyPressedKeys[39]) {
       // Right cursor key or D
       xPos += 0.1;
     } 
     if (currentlyPressedKeys[38]) {
       // Up cursor key or W
       zPos -= 0.1;
-    } else if (currentlyPressedKeys[40]) {
+    }  if (currentlyPressedKeys[40]) {
       // Down cursor key
       zPos += 0.1;
-    } else if (currentlyPressedKeys[65]) {
+    }  if (currentlyPressedKeys[65]) {
       // Q
       nodeserver.emit('turnCar', -0.2);
-    } else if (currentlyPressedKeys[68]) {
+    }  if (currentlyPressedKeys[68]) {
       // D
       nodeserver.emit('turnCar', 0.2);
-    } else if (currentlyPressedKeys[87]) {
+    }  if (currentlyPressedKeys[87]) {
       // W
       nodeserver.emit('accelerate', 300.0);
-    } else if (currentlyPressedKeys[83]) {
+    }  if (currentlyPressedKeys[83]) {
      // S
     nodeserver.emit('accelerate', -300.0);
-    }   else if (currentlyPressedKeys[76]) {
+    }    if (currentlyPressedKeys[76]) {
     // S
       cameraHeight += 0.1;
-    }   else if (currentlyPressedKeys[80]) {
+    }    if (currentlyPressedKeys[80]) {
       // S
       cameraHeight -= 0.1;
     }
