@@ -2,6 +2,7 @@ $(function(){
 
 	webGLStart();
 	initSockets();
+	
 	//init2DCanvas("game-canvas");
 	//drawCarsInCanvas(cars, 'game-canvas');
 

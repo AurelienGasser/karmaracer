@@ -298,6 +298,7 @@ function loadWorld() {
 
 
 function drawScene() {
+//  console.log(cars);
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   if (worldVertexTextureCoordBuffer.road == null || worldVertexPositionBuffer.road == null ||  worldVertexTextureCoordBuffer.grass == null || worldVertexPositionBuffer.grass == null) {
@@ -306,6 +307,7 @@ function drawScene() {
   mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
   mat4.identity(mvMatrix);
   _.each(cars, function(car) {
+
     var item = 'car';
     mvPushMatrix();    
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
