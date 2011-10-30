@@ -16,8 +16,8 @@ var Car = backbone.Model.extend({
       y : 0
     };
     this.size = {
-      w : 66.0,
-      h : 34.0
+      w : 1.0,
+      h : 1.0
     };
     //this.world = _world;
     var bodyDef = new b2d.b2BodyDef();
@@ -39,7 +39,7 @@ var Car = backbone.Model.extend({
    
     //this.body.SetLinearVelocity(v);
      //if (Math.abs(this.body.m_linearVelocity.x) < 30.0 && Math.abs(this.body.m_linearVelocity.y < 30.0)){
-        var v = {x : ac * Math.sin(this.r) * 100, y : ac * Math.cos(this.r) * 100};
+        var v = {x : ac * Math.sin(this.r), y : ac * Math.cos(this.r)};
         this.body.ApplyForce(v, this.body.GetPosition());
      //} 
    

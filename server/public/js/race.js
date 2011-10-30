@@ -197,10 +197,10 @@ function handleKeys() {
       nodeserver.emit('turnCar', 0.2);
     }  if (currentlyPressedKeys[87]) {
       // W
-      nodeserver.emit('accelerate', 300.0);
+      nodeserver.emit('accelerate', 10.0);
     }  if (currentlyPressedKeys[83]) {
      // S
-    nodeserver.emit('accelerate', -300.0);
+    nodeserver.emit('accelerate', -5.0);
     }    if (currentlyPressedKeys[76]) {
     // S
       cameraHeight += 0.1;
