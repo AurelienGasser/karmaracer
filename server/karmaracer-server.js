@@ -6,6 +6,9 @@ var app = express.createServer();
 var io = require('socket.io').listen(app);
 
 
+var sys = require("sys");
+var b2d = require("box2d");
+
 io.set('log level', 1);
 
 var port = 8090;
@@ -44,14 +47,40 @@ app.dynamicHelpers({
 });
 
 
+// Define world
+var worldAABB = new b2d.b2AABB();
+worldAABB.lowerBound.Set(0, 0);
+worldAABB.upperBound.Set(800.0, 600.0);
+
+var gravity = new b2d.b2Vec2(0.0, 0.0);
+var doSleep = true;
+
+var world = new b2d.b2World(worldAABB, gravity, doSleep);
+
+
+// // Ground Box
+// var groundBodyDef = new b2d.b2BodyDef();
+// groundBodyDef.position.Set(0.0, 0);
+// var groundBody = world.CreateBody(groundBodyDef);
+// var groundShapeDef = new b2d.b2PolygonDef();
+// groundShapeDef.SetAsBox(800.0, 600.0);
+// groundBody.CreateShape(groundShapeDef);
+
+
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
-var cars = new CarsCollection;
+var cars = new CarsCollection();
 
 var clients = [];
 
+
+// Run Simulation!
+var timeStep = 1.0 / 60.0;
+
+var iterations = 10;
 // update all cars positions
 setInterval(function () {
+  world.Step(timeStep, iterations);
   cars.updatePos();
 }, 20); 
 
@@ -59,11 +88,11 @@ io.sockets.on('connection', function (client) {
   console.log('client connected');
   clients.push(client);
 
-  client.car = new Car();
+  client.car = new Car(world);
   cars.add(client.car);
    
   client.interval = setInterval(function () {
-    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars});
+    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars}); 
   }, 100);
 
   client.on('disconnect', function (socket) {
@@ -79,7 +108,7 @@ io.sockets.on('connection', function (client) {
     client.car.accelerate(ac);
   });
 
-  client.on('chat_msg', function (msg) {
+  client.on('chat', function (msg) {
     for (var i in clients) {
       clients[i].emit('chat_msg', msg);
     }

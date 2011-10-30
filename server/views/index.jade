@@ -13,6 +13,7 @@ html
     script(type='text/javascript', src='/js/chat.js')    
     script(type='text/javascript', src='/js/race.js')
     script(type='text/javascript', src='/js/game.js')
+    
     script#shader-fs(type='x-shader/x-fragment').
           #ifdef GL_ES
           precision highp float;
@@ -20,10 +21,11 @@ html
           varying vec2 vTextureCoord;
           uniform sampler2D uSampler;
           void main(void) {
-            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+           gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
           }
         
     script#shader-vs(type='x-shader/x-vertex').
+    
           attribute vec3 aVertexPosition;
           attribute vec2 aTextureCoord;
           uniform mat4 uMVMatrix;
@@ -33,10 +35,10 @@ html
             gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
             vTextureCoord = aTextureCoord;
           }
-        
+     
     link(rel='stylesheet', href='/css/race.css')
   body
-    canvas#game-canvas(width='500', height='500')
+    canvas#game-canvas
     #right_panel
       #info
         | Tip: Press L or P to zoom

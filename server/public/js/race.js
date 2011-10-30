@@ -39,10 +39,6 @@ var currentlyPressedKeys = {};
 var carPosY = 9.9;
 var cameraHeight = 10;
 
-$(function() {
-  initSockets();  
-  webGLStart();  
-})
 
 function initGL(canvas) {
   try {
@@ -176,6 +172,7 @@ function handleKeyUp(event) {
 
 
 function handleKeys() {
+
   if (!($('#chat_input').is(':focus')))
   {
     if (currentlyPressedKeys[37]) {
@@ -199,10 +196,11 @@ function handleKeys() {
       nodeserver.emit('turnCar', 0.2);
     } else if (currentlyPressedKeys[87]) {
       // W
-      nodeserver.emit('accelerate', 0.1);
+      nodeserver.emit('accelerate', 300.0);
+      //console.log('avance');
     } else if (currentlyPressedKeys[83]) {
      // S
-    nodeserver.emit('accelerate', -0.1);
+    nodeserver.emit('accelerate', -300.0);
     }   else if (currentlyPressedKeys[76]) {
     // S
       cameraHeight += 0.1;
@@ -212,6 +210,7 @@ function handleKeys() {
     }
   } else {
     if (currentlyPressedKeys[13]) {
+      console.log('key pressed');
       sendMsg();
     }
   }

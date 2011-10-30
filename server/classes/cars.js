@@ -10,9 +10,8 @@ var Cars = backbone.Collection.extend({
   },
   getShared : function(){
     var myCars = Array();
-
     _.each(this.models, function(c){
-
+      //console.log(c.getPosition());
       myCars.push(c.getShared());
     });
     return myCars;
