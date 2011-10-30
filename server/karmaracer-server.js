@@ -32,7 +32,7 @@ app.get('/', function(req, res){
   res.render("index.jade", {
     layout:false, 
     'title' : 'Karma Racer', 
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.105' : 'happyfunkyfoundation.com') + ':' + port + '/'
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? 'localhost' : 'happyfunkyfoundation.com') + ':' + port + '/'
   });
 });
 

@@ -19,7 +19,7 @@ var tabTextures = {
 var tabTexturesSources = {
   grass: "../sprites/grass.gif", 
   road: "../sprites/road.jpg", 
-  car: "../sprites/car.gif"
+  car: "../sprites/car.png"
 };
 var tabItems = ['road', 'grass', 'car'];  
 var pitch = -90;
@@ -42,7 +42,8 @@ var cameraHeight = 10;
 
 function initGL(canvas) {
   try {
-    gl = canvas.getContext("experimental-webgl");
+    gl = canvas.getContext("experimental-webgl", { antialias: false});
+      //                                  stencil: true);
     canvas.width = $('#game-canvas').width() - 10;
     canvas.height = $('#game-canvas').height();
     gl.viewportWidth = canvas.width;
@@ -197,7 +198,6 @@ function handleKeys() {
     } else if (currentlyPressedKeys[87]) {
       // W
       nodeserver.emit('accelerate', 300.0);
-      //console.log('avance');
     } else if (currentlyPressedKeys[83]) {
      // S
     nodeserver.emit('accelerate', -300.0);
