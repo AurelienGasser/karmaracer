@@ -1,5 +1,5 @@
 var cars = [];
-alert('deploy 5!');
+alert('deploy 4!');
 var nodeserver = null;
 function initSockets(){
   nodeserver = io.connect(karmaracer_server);
