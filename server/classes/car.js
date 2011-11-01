@@ -21,14 +21,14 @@ var Car = backbone.Model.extend({
     };
     //this.world = _world;
     var bodyDef = new b2d.b2BodyDef();
-    bodyDef.position.Set(2.0, 2.0);
+    bodyDef.position.Set(1.0, 1.0);
     this.body = _world.CreateBody(bodyDef);
     var shapeDef = new b2d.b2PolygonDef();
     shapeDef.SetAsBox(this.size.w, this.size.h);
     shapeDef.density = 0.1;
     shapeDef.friction = 0.1;
     this.body.CreateShape(shapeDef);
-    this.body.SetMassFromShapes();    
+    this.body.SetMassFromShapes();
   },
   getPosition : function(){
     var pos = this.body.GetPosition();

@@ -10,7 +10,9 @@
   width:800px;
   height:600px;
   background-color:green;
-	}
+  float: left;
+  margin-right: 20px;
+}
 
 #right_panel {
   width: 20%;
@@ -25,7 +27,6 @@
 }
 
 #chat_msgs {
-  width: 100%;
   height: 70%;
   border: 1px solid buttonface;
 }
