@@ -12,9 +12,8 @@ function initSockets(){
   });
 
   nodeserver.on('objects', function (objects) {
-      cars = objects.cars;
-      //console.log('cars received, ', cars);
-      //drawCarsInCanvas(cars, "game-canvas");
+    cars = objects.cars;
+    //drawCarsInCanvas(cars, "game-canvas");
   });
 }
 

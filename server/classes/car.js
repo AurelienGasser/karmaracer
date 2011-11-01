@@ -8,8 +8,8 @@ var Car = backbone.Model.extend({
   initialize : function(_world){
     this.r = 0;
     this.size = {
-      w : 1.0,
-      h : 1.0
+      w : 0.5,
+      h : 0.5
     };
     this.car_model = {
       tires_resistance : .05
