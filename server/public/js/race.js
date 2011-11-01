@@ -39,11 +39,10 @@ var currentlyPressedKeys = {};
 var carPosY = 9.9;
 var cameraHeight = 10;
 
-
 function initGL(canvas) {
   try {
     gl = canvas.getContext("experimental-webgl", { antialias: false});
-      //                                  stencil: true);
+      //                                  
     canvas.width = $('#game-canvas').width() - 10;
     canvas.height = $('#game-canvas').height();
     gl.viewportWidth = canvas.width;
@@ -51,9 +50,9 @@ function initGL(canvas) {
   } catch (e) {
     alert('Unable to init WebGL Canvas');
   }
-  if (!gl) {
-    alert("Could not initialise WebGL, sorry :-(");
-  }
+   if (!gl) {
+     alert("Could not initialise WebGL, sorry :-(");
+   }
 }
 
 function getShader(gl, id) {
@@ -84,6 +83,7 @@ function getShader(gl, id) {
     return null;
   }
   return shader;
+  z
 }
 
 
@@ -200,7 +200,7 @@ function handleKeys() {
       nodeserver.emit('accelerate', 10.0);
     }  if (currentlyPressedKeys[83]) {
      // S
-    nodeserver.emit('accelerate', -5.0);
+      nodeserver.emit('accelerate', -5.0);
     }    if (currentlyPressedKeys[76]) {
     // S
       cameraHeight += 0.1;
@@ -382,8 +382,10 @@ function tick() {
 }
 
 
-function webGLStart() {
-  var canvas = document.getElementById("game-canvas");
+
+
+function webGLStart(canvasID) {
+  var canvas = document.getElementById(canvasID);
   initGL(canvas);
   initShaders();
   initTexture();
@@ -394,4 +396,7 @@ function webGLStart() {
   document.onkeyup = handleKeyUp;
   tick();
 }
+
+
+
 

@@ -16,16 +16,16 @@ var Car = backbone.Model.extend({
       y : 0
     };
     this.size = {
-      w : 1.0,
-      h : 1.0
+      w : 30.0,
+      h : 90.0
     };
     //this.world = _world;
     var bodyDef = new b2d.b2BodyDef();
-    bodyDef.position.Set(2.0, 2.0);
+    bodyDef.position.Set(200.0, 300.0);
     this.body = _world.CreateBody(bodyDef);
     var shapeDef = new b2d.b2PolygonDef();
     shapeDef.SetAsBox(this.size.w, this.size.h);
-    shapeDef.density = 0.1;
+    shapeDef.density = 0.0005;
     shapeDef.friction = 0.1;
     this.body.CreateShape(shapeDef);
     this.body.SetMassFromShapes();    
@@ -39,7 +39,8 @@ var Car = backbone.Model.extend({
    
     //this.body.SetLinearVelocity(v);
      //if (Math.abs(this.body.m_linearVelocity.x) < 30.0 && Math.abs(this.body.m_linearVelocity.y < 30.0)){
-        var v = {x : ac * Math.sin(this.r), y : ac * Math.cos(this.r)};
+        var acc_helper = 1000;
+        var v = {x : acc_helper * ac * Math.sin(this.r), y : acc_helper * ac * Math.cos(this.r)};
         this.body.ApplyForce(v, this.body.GetPosition());
      //} 
    
