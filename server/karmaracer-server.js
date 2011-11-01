@@ -57,16 +57,6 @@ var doSleep = true;
 
 var world = new b2d.b2World(worldAABB, gravity, doSleep);
 
-
-// // Ground Box
-// var groundBodyDef = new b2d.b2BodyDef();
-// groundBodyDef.position.Set(0.0, 0);
-// var groundBody = world.CreateBody(groundBodyDef);
-// var groundShapeDef = new b2d.b2PolygonDef();
-// groundShapeDef.SetAsBox(800.0, 600.0);
-// groundBody.CreateShape(groundShapeDef);
-
-
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection();
