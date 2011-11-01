@@ -12,7 +12,7 @@ var Car = backbone.Model.extend({
       h : 0.5
     };
     this.car_model = {
-      tires_resistance : .05
+      tires_resistance : .1
     };
     //this.world = _world;
     var bodyDef = new b2d.b2BodyDef();
@@ -20,7 +20,7 @@ var Car = backbone.Model.extend({
     this.body = _world.CreateBody(bodyDef);
     var shapeDef = new b2d.b2PolygonDef();
     shapeDef.SetAsBox(this.size.w, this.size.h);
-    shapeDef.density = 0.1;
+    shapeDef.density = 0.3;
     shapeDef.friction = 0.1;
     this.body.CreateShape(shapeDef);
     this.body.SetMassFromShapes();
