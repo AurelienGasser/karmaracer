@@ -14,10 +14,6 @@ function initSockets(){
 
   nodeserver.on('objects', function (objects) {
       cars = objects.cars;
-      //console.log(drawEngine, cars);
-      if (drawEngine == "CANVAS"){
-        drawCarsInCanvas(cars, "game-canvas");
-      }
   });
 }
 

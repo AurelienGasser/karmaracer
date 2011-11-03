@@ -26,9 +26,6 @@ var pitch = -90;
 var pitchRate = 0;
 var yaw = 0;
 var yawRate = 0;
-var xPos = 0;
-var yPos = 10;
-var zPos = 0;
 var speed = 0;  
 var shaderProgram;
 var grassTexture;
@@ -37,7 +34,14 @@ var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
 var carPosY = 9.9;
-var cameraHeight = 10;
+//var cameraHeight = 10;
+
+var camera = {
+  xPos : 0,
+  yPos : 0,
+  zPos : 0,
+  cameraHeight : 10
+}
 
 function initGL(canvas) {
   try {
@@ -178,23 +182,23 @@ function handleKeys() {
   {
     if (currentlyPressedKeys[37]) {
       // Left cursor key or A
-      xPos -= 0.1;
+      camera.xPos -= 0.1;
     }  if (currentlyPressedKeys[39]) {
       // Right cursor key or D
-      xPos += 0.1;
+      camera.xPos += 0.1;
     } 
     if (currentlyPressedKeys[38]) {
       // Up cursor key or W
-      zPos -= 0.1;
+      camera.zPos -= 0.1;
     }  if (currentlyPressedKeys[40]) {
       // Down cursor key
-      zPos += 0.1;
+      camera.zPos += 0.1;
     }  if (currentlyPressedKeys[65]) {
       // Q
-      nodeserver.emit('turnCar', -0.2);
+      nodeserver.emit('turnCar', +0.2);
     }  if (currentlyPressedKeys[68]) {
       // D
-      nodeserver.emit('turnCar', 0.2);
+      nodeserver.emit('turnCar', -0.2);
     }  if (currentlyPressedKeys[87]) {
       // W
       nodeserver.emit('accelerate', 10.0);
@@ -312,7 +316,7 @@ function drawScene() {
     mvPushMatrix();    
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
     mat4.translate(mvMatrix, [0, -cameraHeight, 0]);      
-    mat4.translate(mvMatrix, [-car.x - xPos, -carPosY, car.y- zPos]);  
+    mat4.translate(mvMatrix, [-car.x - camera.xPos, -carPosY, car.y- camera.zPos]);  
     mat4.rotate(mvMatrix, -car.r, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
@@ -339,7 +343,7 @@ function drawScene() {
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
     mat4.translate(mvMatrix, [0, -cameraHeight, 0]);          
     mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
-    mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);      
+    mat4.translate(mvMatrix, [-camera.xPos, -camera.yPos, -camera.zPos]);      
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
@@ -363,9 +367,9 @@ function animate() {
   if (lastTime != 0) {
     var elapsed = timeNow - lastTime;
     if (speed != 0) {
-      xPos -= Math.sin(degToRad(yaw)) * speed * elapsed;
-      zPos -= Math.cos(degToRad(yaw)) * speed * elapsed;
-      yPos = 0.4;
+      camera.xPos -= Math.sin(degToRad(yaw)) * speed * elapsed;
+      camera.zPos -= Math.cos(degToRad(yaw)) * speed * elapsed;
+      camera.yPos = 0.4;
     }
     yaw += yawRate * elapsed;
     pitch += pitchRate * elapsed;
@@ -384,8 +388,8 @@ function tick() {
 
 
 
-function webGLStart(canvasID) {
-  var canvas = document.getElementById(canvasID);
+function webGLStart(canvas) {
+  //var canvas = document.getElementById(canvasID);
   initGL(canvas);
   initShaders();
   initTexture();

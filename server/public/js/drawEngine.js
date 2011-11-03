@@ -4,8 +4,11 @@ var drawEngine = "WEBGL";
 
 function hasWebGL(canvas){	
   try {
-    gl = canvas.getContext("experimental-webgl", { antialias: false});
-    //console.log('gl');
+    var gl = canvas.getContext("experimental-webgl", { antialias: false});
+    canvas.width = $('#game-canvas').width() - 10;
+    canvas.height = $('#game-canvas').height();
+    gl.viewportWidth = canvas.width;
+    gl.viewportHeight = canvas.height;
     return true;
   }
   catch (e) {
@@ -25,7 +28,7 @@ function initDrawEngine(canvasID){
 		drawEngine = "CANVAS";
 		init2DCanvas(canvasID);
 	}
-	console.log('draw engine : ', drawEngine);
+	//console.log('draw engine : ', drawEngine);
 }
 
 function init2DCanvas(selector){
@@ -36,14 +39,24 @@ function init2DCanvas(selector){
 
 	document.onkeydown = handleKeyDown;
 	document.onkeyup = handleKeyUp;
-
 	$('#loadingtext').html('');
+
+	tick2DCanvas();
 }
+
+function tick2DCanvas() {
+  requestAnimFrame(tick2DCanvas);
+  handleKeys();
+  drawCarsInCanvas(cars, "game-canvas");
+}
+
+
+//Image carImage = new Image();
+//carImage.src = "../sprites/car.png";
 
 function drawCarsInCanvas(cars, selector){
 	try
 	{
-		handleKeys();
 		var canvas = document.getElementById(selector);
 		var ctx = canvas.getContext("2d");
 	    ctx.canvas.width = $('#' + selector).width();
@@ -61,6 +74,7 @@ function drawCarsInCanvas(cars, selector){
 			ctx.rotate(-c.r);
 			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
 			//ctx.translate(-c.x, -c.y);
+			//ctx.drawImage(carImage, ) 
 			ctx.fillStyle = "#F00";
 			ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
 			ctx.fillStyle = "#000";
