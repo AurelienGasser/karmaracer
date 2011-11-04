@@ -13,7 +13,6 @@ function initSockets(){
 
   nodeserver.on('objects', function (objects) {
     cars = objects.cars;
-    //drawCarsInCanvas(cars, "game-canvas");
   });
 }
 

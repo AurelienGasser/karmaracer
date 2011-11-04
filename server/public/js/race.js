@@ -26,9 +26,6 @@ var pitch = -90;
 var pitchRate = 0;
 var yaw = 0;
 var yawRate = 0;
-var xPos = 0;
-var yPos = 10;
-var zPos = 0;
 var speed = 0;  
 var shaderProgram;
 var grassTexture;
@@ -37,13 +34,17 @@ var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
 var carPosY = 9.9;
-var cameraHeight = 10;
+//var cameraHeight = 10;
 
+
+var xPos = 0;
+var yPos = 0;
+var zPos = 0;
 
 function initGL(canvas) {
   try {
     gl = canvas.getContext("experimental-webgl", { antialias: false});
-      //                                  stencil: true);
+      //                                  
     canvas.width = $('#game-canvas').width() - 10;
     canvas.height = $('#game-canvas').height();
     gl.viewportWidth = canvas.width;
@@ -51,9 +52,9 @@ function initGL(canvas) {
   } catch (e) {
     alert('Unable to init WebGL Canvas');
   }
-  if (!gl) {
-    alert("Could not initialise WebGL, sorry :-(");
-  }
+   if (!gl) {
+     alert("Could not initialise WebGL, sorry :-(");
+   }
 }
 
 function getShader(gl, id) {
@@ -84,6 +85,7 @@ function getShader(gl, id) {
     return null;
   }
   return shader;
+  z
 }
 
 
@@ -175,30 +177,30 @@ function handleKeys() {
 
   if (!($('#chat_input').is(':focus'))) {
     if (currentlyPressedKeys[37]) {
-      // Q
-      nodeserver.emit('turnCar', -0.2);
-    }  if (currentlyPressedKeys[39]) {
-      // D
-      nodeserver.emit('turnCar', 0.2);
-    } 
-    if (currentlyPressedKeys[38]) {
-      // W
-      nodeserver.emit('accelerate', 10.0);
-    }  if (currentlyPressedKeys[40]) {
-       // S
-      nodeserver.emit('accelerate', -5.0);
-    }  if (currentlyPressedKeys[65]) {
       // Left cursor key or A
       xPos -= 0.1;
-    }  if (currentlyPressedKeys[68]) {
+    }  if (currentlyPressedKeys[39]) {
       // Right cursor key or D
       xPos += 0.1;
-    }  if (currentlyPressedKeys[87]) {
+    } 
+    if (currentlyPressedKeys[38]) {
       // Up cursor key or W
       zPos -= 0.1;
-    }  if (currentlyPressedKeys[83]) {
+    }  if (currentlyPressedKeys[40]) {
       // Down cursor key
       zPos += 0.1;
+    }  if (currentlyPressedKeys[65]) {
+      // Q
+      nodeserver.emit('turnCar', +0.2);
+    }  if (currentlyPressedKeys[68]) {
+      // D
+      nodeserver.emit('turnCar', -0.2);
+    }  if (currentlyPressedKeys[87]) {
+      // Up cursor key or W
+      nodeserver.emit('accelerate', 5.0);
+    }  if (currentlyPressedKeys[83]) {
+     // S
+      nodeserver.emit('accelerate', -5.0);
     }    if (currentlyPressedKeys[76]) {
     // S
       cameraHeight += 0.1;
@@ -381,8 +383,10 @@ function tick() {
 }
 
 
-function webGLStart() {
-  var canvas = document.getElementById("game-canvas");
+
+
+function webGLStart(canvas) {
+  //var canvas = document.getElementById(canvasID);
   initGL(canvas);
   initShaders();
   initTexture();
@@ -393,4 +397,7 @@ function webGLStart() {
   document.onkeyup = handleKeyUp;
   tick();
 }
+
+
+
 
