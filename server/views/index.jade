@@ -10,11 +10,12 @@ html
     script(type='text/javascript')
       var karmaracer_server = '#{server}';
     script(type='text/javascript', src='/js/connection.js')
-    script(type='text/javascript', src='/js/chat.js')    
-    script(type='text/javascript', src='/js/drawEngine.js')  
-    script(type='text/javascript', src='/js/race.js')
+    script(type='text/javascript', src='/js/chat.js')
+    script(type='text/javascript', src='/js/drawEngine.js')
+    script(type='text/javascript', src='/js/webgl.js')
+    script(type='text/javascript', src='/js/keyboard.js')
     script(type='text/javascript', src='/js/game.js')
-    
+
     script#shader-fs(type='x-shader/x-fragment').
           #ifdef GL_ES
           precision highp float;
@@ -24,7 +25,7 @@ html
           void main(void) {
            gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
           }
-        
+
     script#shader-vs(type='x-shader/x-vertex').
           attribute vec3 aVertexPosition;
           attribute vec2 aTextureCoord;
@@ -35,7 +36,7 @@ html
             gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
             vTextureCoord = aTextureCoord;
           }
-     
+
     link(rel='stylesheet', href='/css/race.css')
   body
     canvas#game-canvas
