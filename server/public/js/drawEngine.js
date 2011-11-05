@@ -75,7 +75,7 @@ ctx.save();
       //ctx.translate(-c.x, -c.y);
       //
       //ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
-      
+
  ctx.fillStyle = "#F00";
     ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
     ctx.fillStyle = "#000";
@@ -91,7 +91,7 @@ ctx.save();
 			//ctx.translate(-c.x, -c.y);
       //
 			//ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
-			
+
    // ctx.fillStyle = "#F00";
 			// ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
 			// ctx.fillStyle = "#000";

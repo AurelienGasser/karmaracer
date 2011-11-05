@@ -34,8 +34,8 @@ var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
-var carPosY = 9.9;
-var cameraHeight = 10;
+var carPosY = 1.9;
+var cameraHeight = 0;
 
 
 var xPos = 0;
@@ -169,7 +169,7 @@ function handleLoadedWorld(data) {
   for (var item in data) {
     for (var i in data[item]) {
       var vals = data[item][i];
-      // It is a line describing a vertex; get X, Y and Z first
+        // It is a line describing a vertex; get X, Y and Z first
       vertexPositions[item].push(parseFloat(vals[0]));
       vertexPositions[item].push(parseFloat(vals[1]));
       vertexPositions[item].push(parseFloat(vals[2]));
@@ -246,8 +246,8 @@ function drawScene() {
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
     mat4.translate(mvMatrix, [0, -cameraHeight, 0]);
-    mat4.translate(mvMatrix, [-mycar.y/100, -carPosY, mycar.x/100]);
-    mat4.translate(mvMatrix, [+car.y/100-xPos, -carPosY, -car.x/100-zPos]);
+    mat4.translate(mvMatrix, [-mycar.y/100    , -carPosY  , mycar.x/100]);
+    mat4.translate(mvMatrix, [+car.y/100-xPos , -carPosY  , -car.x/100-zPos]);
     mat4.rotate(mvMatrix, car.r+Math.PI/2, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
@@ -276,8 +276,7 @@ function drawScene() {
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
     mat4.translate(mvMatrix, [0, -cameraHeight, 0]);
-    mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
-    mat4.translate(mvMatrix, [-mycar.y/100-xPos, -yPos, mycar.x/100-zPos]);
+    mat4.translate(mvMatrix, [-mycar.y/100-xPos, -carPosY, mycar.x/100-zPos]);
     mat4.rotate(mvMatrix, Math.PI/2, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
