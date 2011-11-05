@@ -8,8 +8,8 @@ var Car = backbone.Model.extend({
   initialize : function(_world){
     this.r = 0;
     this.size = {
-      w : 30.0,
-      h : 90.0
+      w : 18.0,
+      h : 33.0
     };
     //this.world = _world;
     var bodyDef = new b2d.b2BodyDef();
@@ -21,6 +21,7 @@ var Car = backbone.Model.extend({
     shapeDef.friction = 0.1;
     this.body.CreateShape(shapeDef);
     this.body.SetMassFromShapes();
+    this.tireResistance = 1.22;
   },
   getPosition : function(){
     var pos = this.body.GetPosition();
@@ -64,8 +65,7 @@ var Car = backbone.Model.extend({
         if (this.velocity[i] > SLOWER){
           this.velocity[i] = 0;
         }
-      }
-
+      }      
     }
   },
   turn : function (side) {
@@ -76,8 +76,9 @@ var Car = backbone.Model.extend({
     return {x : pos.x, y : pos.y, r : this.r, w : this.size.w, h : this.size.h};
   },
   updatePos : function(){
-    this.body.m_linearVelocity.x /= 1;
-    this.body.m_linearVelocity.y /= 1;
+
+    this.body.m_linearVelocity.x /= 1 * this.tireResistance;
+    this.body.m_linearVelocity.y /= 1 * this.tireResistance;
   }
 });
 

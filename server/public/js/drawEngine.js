@@ -50,8 +50,8 @@ function tick2DCanvas() {
 }
 
 
-//Image carImage = new Image();
-//carImage.src = "../sprites/car.png";
+var carImage = new Image();
+carImage.src = '/sprites/car.png';
 
 function drawCarsInCanvas(cars, selector){
 	try
@@ -67,18 +67,40 @@ function drawCarsInCanvas(cars, selector){
 			//ctx.strokeStyle = "#0F0";
 			//ctx.strokeRect(c.x, c.y, c.w, c.h );
 
+ctx.save();
+      //ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
+      ctx.translate(c.x +  c.w / 2, c.y + c.h / 2);
+      ctx.rotate(-c.r);
+      //ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
+      //ctx.translate(-c.x, -c.y);
+      //
+      //ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
+      
+ ctx.fillStyle = "#F00";
+    ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+    ctx.fillStyle = "#000";
+    ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
+      ctx.restore();
+
+
 			ctx.save();
 			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
 			ctx.translate(c.x +  c.w / 2, c.y + c.h / 2);
 			ctx.rotate(-c.r);
 			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
 			//ctx.translate(-c.x, -c.y);
-			//ctx.drawImage(carImage, )
-			ctx.fillStyle = "#F00";
-			ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
-			ctx.fillStyle = "#000";
-			ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
+      //
+			//ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
+			
+   // ctx.fillStyle = "#F00";
+			// ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+			// ctx.fillStyle = "#000";
+			// ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
 			ctx.restore();
+
+
+
+
 
 		});
 
