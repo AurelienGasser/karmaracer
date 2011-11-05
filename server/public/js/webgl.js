@@ -17,12 +17,6 @@ var tabTextures = {
   car: null
 }
 
-var textureSize = {
-  grass: 256,
-  road: 128,
-  car: 128
-}
-
 var tabTexturesSources = {
   grass: "../sprites/grass.gif",
   road: "../sprites/road.jpg",
@@ -41,7 +35,7 @@ var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
 var carPosY = 9.9;
-var cameraHeight = 500;
+var cameraHeight = 10;
 
 
 var xPos = 0;
@@ -175,11 +169,10 @@ function handleLoadedWorld(data) {
   for (var item in data) {
     for (var i in data[item]) {
       var vals = data[item][i];
-      //var tex_size = textureSize[item];
       // It is a line describing a vertex; get X, Y and Z first
-      vertexPositions[item].push(parseFloat(vals[0]) * textureSize[item]);
-      vertexPositions[item].push(parseFloat(vals[1]) * textureSize[item]);
-      vertexPositions[item].push(parseFloat(vals[2]) * textureSize[item]);
+      vertexPositions[item].push(parseFloat(vals[0]));
+      vertexPositions[item].push(parseFloat(vals[1]));
+      vertexPositions[item].push(parseFloat(vals[2]));
       // And then the texture coords
       vertexTextureCoords[item].push(parseFloat(vals[3]));
       vertexTextureCoords[item].push(parseFloat(vals[4]));
