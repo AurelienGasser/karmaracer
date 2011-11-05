@@ -1,5 +1,6 @@
 var gl;
 var lastTime = 0;
+var mycar;
 var worldVertexPositionBuffer = {
   road: null,
   grass: null,
@@ -14,6 +15,12 @@ var tabTextures = {
   grass: null,
   road: null,
   car: null
+}
+
+var textureSize = {
+  grass: 256,
+  road: 128,
+  car: 128
 }
 
 var tabTexturesSources = {
@@ -34,7 +41,7 @@ var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
 var carPosY = 9.9;
-var cameraHeight = 10;
+var cameraHeight = 500;
 
 
 var xPos = 0;
@@ -168,10 +175,11 @@ function handleLoadedWorld(data) {
   for (var item in data) {
     for (var i in data[item]) {
       var vals = data[item][i];
+      //var tex_size = textureSize[item];
       // It is a line describing a vertex; get X, Y and Z first
-      vertexPositions[item].push(parseFloat(vals[0]));
-      vertexPositions[item].push(parseFloat(vals[1]));
-      vertexPositions[item].push(parseFloat(vals[2]));
+      vertexPositions[item].push(parseFloat(vals[0]) * textureSize[item]);
+      vertexPositions[item].push(parseFloat(vals[1]) * textureSize[item]);
+      vertexPositions[item].push(parseFloat(vals[2]) * textureSize[item]);
       // And then the texture coords
       vertexTextureCoords[item].push(parseFloat(vals[3]));
       vertexTextureCoords[item].push(parseFloat(vals[4]));
@@ -200,21 +208,21 @@ function handleLoadedWorld(data) {
 function loadWorld() {
   handleLoadedWorld({
     grass: [
-      [-1.0,  0.0, -1.0, 0.0, 2.0],
-      [-1.0,  0.0,  1.0, 0.0, 0.0],
-      [1.0,  0.0,  1.0, 2.0, 0.0],
-      [-1.0,  0.0, -1.0, 0.0, 2.0],
-      [1.0,  0.0, -1.0, 2.0, 2.0],
-      [1.0,  0.0,  1.0, 2.0, 0.0]
+      [-0.5,  0.0, -0.5,  0.0, 1.0],
+      [-0.5,  0.0,  0.5,  0.0, 0.0],
+      [0.5,  0.0,  0.5, 1.0, 0.0],
+      [-0.5,  0.0, -0.5,  0.0, 1.0],
+      [0.5,  0.0, -0.5, 1.0, 1.0],
+      [0.5,  0.0,  0.5, 1.0, 0.0]
     ],
 
     road: [
-      [1.0,  0.0, -1.0, 0.0, 2.0],
-      [1.0,  0.0,  1.0, 0.0, 0.0],
-      [3.0,  0.0,  1.0, 2.0, 0.0],
-      [1.0,  0.0, -1.0, 0.0, 2.0],
-      [3.0,  0.0, -1.0, 2.0, 2.0],
-      [3.0,  0.0,  1.0, 2.0, 0.0]
+      [-0.5,  0.0, -0.5,  0.0, 1.0],
+      [-0.5,  0.0,  0.5,  0.0, 0.0],
+      [0.5,  0.0,  0.5, 1.0, 0.0],
+      [-0.5,  0.0, -0.5,  0.0, 1.0],
+      [0.5,  0.0, -0.5, 1.0, 1.0],
+      [0.5,  0.0,  0.5, 1.0, 0.0]
     ],
 
     car: [
@@ -238,14 +246,15 @@ function drawScene() {
   }
   mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
   mat4.identity(mvMatrix);
-  var mycar = { x: 1, y: 1 };
+
+  console.log(cars.length);
   _.each(cars, function(car) {
-    mycar = car;
     var item = 'car';
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
     mat4.translate(mvMatrix, [0, -cameraHeight, 0]);
-    mat4.translate(mvMatrix, [-xPos, -carPosY, -zPos]);
+    mat4.translate(mvMatrix, [-mycar.y/100, -carPosY, mycar.x/100]);
+    mat4.translate(mvMatrix, [+car.y/100-xPos, -carPosY, -car.x/100-zPos]);
     mat4.rotate(mvMatrix, car.r+Math.PI/2, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
@@ -267,6 +276,9 @@ function drawScene() {
     var item = tabItems[i];
     if (item == 'car') {
       continue;
+    }
+    if (mycar == undefined) {
+      mycar = { x: 0, y: 0 };
     }
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
@@ -314,8 +326,6 @@ function tick() {
   drawScene();
   animate();
 }
-
-
 
 
 function webGLStart() {

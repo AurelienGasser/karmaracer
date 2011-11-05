@@ -30,9 +30,9 @@ app.configure(function(){
 
 app.get('/', function(req, res){
   res.render("index.jade", {
-    layout:false, 
-    'title' : 'Karma Racer', 
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? 'localhost' : 'happyfunkyfoundation.com') + ':' + port + '/'
+    layout:false,
+    'title' : 'Karma Racer',
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.19' : 'happyfunkyfoundation.com') + ':' + port + '/'
   });
 });
 
@@ -72,7 +72,7 @@ var iterations = 10;
 setInterval(function () {
   world.Step(timeStep, iterations);
   cars.updatePos();
-}, 20); 
+}, 20);
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
@@ -80,9 +80,9 @@ io.sockets.on('connection', function (client) {
 
   client.car = new Car(world);
   cars.add(client.car);
-   
+
   client.interval = setInterval(function () {
-    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars}); 
+    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars});
   }, 100);
 
   client.on('disconnect', function (socket) {
