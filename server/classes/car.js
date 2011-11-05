@@ -35,7 +35,7 @@ var Car = backbone.Model.extend({
       var acc_helper = 1000;
       var v = {x : acc_helper * ac * Math.sin(this.r), y : acc_helper * ac * Math.cos(this.r)};
       this.body.ApplyForce(v, this.body.GetPosition());
-   //} 
+   //}
 
   /*
   this.acceleration.x += ac * Math.sin(this.r);
@@ -44,7 +44,7 @@ var Car = backbone.Model.extend({
   for (var i in this.acceleration){
     if (this.acceleration[i] > this.accelerationMax) {
       this.acceleration[i] = this.accelerationMax;
-    }      
+    }
   }
   */
   //this.body.SetLinearVelocity({x:0, y:0})
@@ -57,12 +57,12 @@ var Car = backbone.Model.extend({
     for (var i in this.velocity){
       if (this.velocity[i] > 0){
         this.velocity[i] /= 3;
-        if (this.velocity[i] < SLOWER){ 
+        if (this.velocity[i] < SLOWER){
           this.velocity[i] = 0;
         }
       }else{
         this.velocity[i] /= 3;
-        if (this.velocity[i] > SLOWER){ 
+        if (this.velocity[i] > SLOWER){
           this.velocity[i] = 0;
         }
       }      
