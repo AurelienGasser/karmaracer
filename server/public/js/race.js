@@ -9,24 +9,24 @@ var worldVertexTextureCoordBuffer = {
   road: null,
   grass: null,
   car: null
-};  
+};
 var tabTextures = {
-  grass: null, 
-  road: null, 
+  grass: null,
+  road: null,
   car: null
 }
 
 var tabTexturesSources = {
-  grass: "../sprites/grass.gif", 
-  road: "../sprites/road.jpg", 
+  grass: "../sprites/grass.gif",
+  road: "../sprites/road.jpg",
   car: "../sprites/car.png"
 };
-var tabItems = ['road', 'grass', 'car'];  
+var tabItems = ['road', 'grass', 'car'];
 var pitch = -90;
 var pitchRate = 0;
 var yaw = 0;
 var yawRate = 0;
-var speed = 0;  
+var speed = 0;
 var shaderProgram;
 var grassTexture;
 var mvMatrix = mat4.create();
@@ -34,28 +34,13 @@ var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
 var carPosY = 9.9;
-//var cameraHeight = 10;
+var cameraHeight = 10;
 
 
 var xPos = 0;
 var yPos = 0;
 var zPos = 0;
 
-function initGL(canvas) {
-  try {
-    gl = canvas.getContext("experimental-webgl", { antialias: false});
-      //                                  
-    canvas.width = $('#game-canvas').width() - 10;
-    canvas.height = $('#game-canvas').height();
-    gl.viewportWidth = canvas.width;
-    gl.viewportHeight = canvas.height;
-  } catch (e) {
-    alert('Unable to init WebGL Canvas');
-  }
-   if (!gl) {
-     alert("Could not initialise WebGL, sorry :-(");
-   }
-}
 
 function getShader(gl, id) {
   var shaderScript = document.getElementById(id);
@@ -182,7 +167,7 @@ function handleKeys() {
     }  if (currentlyPressedKeys[39]) {
       // Right cursor key or D
       xPos += 0.1;
-    } 
+    }
     if (currentlyPressedKeys[38]) {
       // Up cursor key or W
       zPos -= 0.1;
@@ -208,7 +193,7 @@ function handleKeys() {
       // S
       cameraHeight -= 0.1;
     }
-    
+
   } else {
     if (currentlyPressedKeys[13]) {
       console.log('key pressed');
@@ -227,7 +212,7 @@ function handleLoadedWorld(data) {
   var vertexPositions = {
     road: [],
     grass: [],
-    car: [] 
+    car: []
   };
   var vertexTextureCoords = {
     road: [],
@@ -259,7 +244,7 @@ function handleLoadedWorld(data) {
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer[item]);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexTextureCoords[item]), gl.STATIC_DRAW);
     worldVertexTextureCoordBuffer[item].itemSize = 2;
-    worldVertexTextureCoordBuffer[item].numItems = vertexCount[item];      
+    worldVertexTextureCoordBuffer[item].numItems = vertexCount[item];
   }
 
   document.getElementById("loadingtext").textContent = "";
@@ -305,32 +290,33 @@ function drawScene() {
   if (worldVertexTextureCoordBuffer.road == null || worldVertexPositionBuffer.road == null ||  worldVertexTextureCoordBuffer.grass == null || worldVertexPositionBuffer.grass == null) {
     return;
   }
-  mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+  mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 1000.0, pMatrix);
   mat4.identity(mvMatrix);
+  var mycar = { x: 1, y: 1 };
   _.each(cars, function(car) {
-
+    mycar = car;
     var item = 'car';
-    mvPushMatrix();    
+    mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
-    mat4.translate(mvMatrix, [0, -cameraHeight, 0]);      
-    mat4.translate(mvMatrix, [-car.x - xPos, -carPosY, car.y- zPos]);  
-    mat4.rotate(mvMatrix, -car.r, [0, 1, 0]);
+    mat4.translate(mvMatrix, [0, -cameraHeight, 0]);
+    mat4.translate(mvMatrix, [-xPos, -carPosY, -zPos]);
+    mat4.rotate(mvMatrix, car.r+Math.PI/2, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     gl.enable(gl.BLEND);
     gl.disable(gl.DEPTH_TEST);
-    gl.uniform1f(shaderProgram.alphaUniform, 0);      
+    gl.uniform1f(shaderProgram.alphaUniform, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer[item]);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer[item]);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, worldVertexPositionBuffer[item].numItems);
-    mvPopMatrix();    
+    mvPopMatrix();
   });
-  
+
   for (var i in tabItems) {
     var item = tabItems[i];
     if (item == 'car') {
@@ -338,23 +324,24 @@ function drawScene() {
     }
     mvPushMatrix();
     mat4.rotate(mvMatrix, degToRad(-pitch), [1, 0, 0]);
-    mat4.translate(mvMatrix, [0, -cameraHeight, 0]);          
+    mat4.translate(mvMatrix, [0, -cameraHeight, 0]);
     mat4.rotate(mvMatrix, degToRad(-yaw), [0, 1, 0]);
-    mat4.translate(mvMatrix, [-xPos, -yPos, -zPos]);      
+    mat4.translate(mvMatrix, [-mycar.y/100-xPos, -yPos, mycar.x/100-zPos]);
+    mat4.rotate(mvMatrix, Math.PI/2, [0, 1, 0]);
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, tabTextures[item]);
     gl.uniform1i(shaderProgram.samplerUniform, 0);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
     gl.enable(gl.BLEND);
     gl.disable(gl.DEPTH_TEST);
-    gl.uniform1f(shaderProgram.alphaUniform, 0);      
+    gl.uniform1f(shaderProgram.alphaUniform, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexTextureCoordBuffer[item]);
     gl.vertexAttribPointer(shaderProgram.textureCoordAttribute, worldVertexTextureCoordBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
     gl.bindBuffer(gl.ARRAY_BUFFER, worldVertexPositionBuffer[item]);
     gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, worldVertexPositionBuffer[item].itemSize, gl.FLOAT, false, 0, 0);
     setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, worldVertexPositionBuffer[item].numItems);
-    mvPopMatrix();      
+    mvPopMatrix();
   }
 }
 
@@ -385,9 +372,7 @@ function tick() {
 
 
 
-function webGLStart(canvas) {
-  //var canvas = document.getElementById(canvasID);
-  initGL(canvas);
+function webGLStart() {
   initShaders();
   initTexture();
   loadWorld();

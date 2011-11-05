@@ -2,9 +2,9 @@
 var drawEngine = "WEBGL";
 
 
-function hasWebGL(canvas){	
+function hasWebGL(canvas){
   try {
-    var gl = canvas.getContext("experimental-webgl", { antialias: false});
+    gl = canvas.getContext("experimental-webgl", { antialias: false});
     canvas.width = $('#game-canvas').width() - 10;
     canvas.height = $('#game-canvas').height();
     gl.viewportWidth = canvas.width;
@@ -13,7 +13,7 @@ function hasWebGL(canvas){
   }
   catch (e) {
   	//console.log('no-gl');
-    return false;    
+    return false;
   }
 }
 
@@ -22,8 +22,7 @@ function initDrawEngine(canvasID){
 	var canvas = document.getElementById(canvasID);
 	if (hasWebGL(canvas)){
 		drawEngine = "WEBGL";
-		webGLStart(canvasID);
-
+		webGLStart();
 	} else {
 		drawEngine = "CANVAS";
 		init2DCanvas(canvasID);
@@ -61,20 +60,20 @@ function drawCarsInCanvas(cars, selector){
 		var ctx = canvas.getContext("2d");
 	    ctx.canvas.width = $('#' + selector).width();
 	    ctx.canvas.height = $('#' + selector).height();
-	    //console.log('cars received, ', cars.length);	
+	    //console.log('cars received, ', cars.length);
 		//ctx.clearRect(0, 0, 800, 600);
-		
+
 		_.each(cars, function(c) {
 			//ctx.strokeStyle = "#0F0";
 			//ctx.strokeRect(c.x, c.y, c.w, c.h );
-			
+
 			ctx.save();
 			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
 			ctx.translate(c.x +  c.w / 2, c.y + c.h / 2);
 			ctx.rotate(-c.r);
 			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
 			//ctx.translate(-c.x, -c.y);
-			//ctx.drawImage(carImage, ) 
+			//ctx.drawImage(carImage, )
 			ctx.fillStyle = "#F00";
 			ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
 			ctx.fillStyle = "#000";
@@ -99,7 +98,7 @@ var cameraCanvas = {
 		$(canvasSelector)
 	},
 	applyChanges : function (){
-		
+
 	}
 }
 */
