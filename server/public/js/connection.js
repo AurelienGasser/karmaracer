@@ -1,5 +1,5 @@
 var cars = [];
-var myCar = undefined;
+var mycar = null;
 var walls = [];
 var nodeserver = null;
 

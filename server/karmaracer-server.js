@@ -32,7 +32,8 @@ app.get('/', function(req, res){
   res.render("index.jade", {
     layout:false,
     'title' : 'Karma Racer',
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'happyfunkyfoundation.com') + ':' + port + '/'
+    default_draw_engine : "WEBGL",
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'origamix.fr') + ':' + port + '/'
   });
 });
 
@@ -40,7 +41,17 @@ app.get('/m', function(req, res){
   res.render("mobile.jade", {
     layout:false,
     'title' : 'Karma Racer',
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'happyfunkyfoundation.com') + ':' + port + '/'
+    default_draw_engine : "CANVAS",
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'origamix.fr') + ':' + port + '/'
+  });
+});
+
+app.get('/canvas', function(req, res){
+  res.render("index.jade", {
+    layout:false,
+    'title' : 'Karma Racer',
+    default_draw_engine : "CANVAS",
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'origamix.fr') + ':' + port + '/'
   });
 });
 

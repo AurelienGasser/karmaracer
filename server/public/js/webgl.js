@@ -1,6 +1,6 @@
 var gl;
 var lastTime = 0;
-var mycar;
+
 var worldVertexPositionBuffer = {
   road: null,
   grass: null,
@@ -33,16 +33,9 @@ var grassTexture;
 var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
-var currentlyPressedKeys = {};
-
-var carPosY = 1.9;
-var cameraHeight = 0;
 
 
 
-var xPos = 0;
-var yPos = 0;
-var zPos = 0;
 
 
 function getShader(gl, id) {

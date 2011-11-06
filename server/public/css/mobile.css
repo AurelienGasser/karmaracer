@@ -1,53 +1,65 @@
 .pad{
  position:absolute;
- width:320px;
+ width:40%;
  color:black;
  border:1px dotted black;
- height:200px;
  text-align:center;
- z-index:500;
+ z-index:505;
  background-color: white;
  opacity: 0.1;
  -moz-opacity: 0.1;
  filter:alpha(opacity=1);
  padding:0px;
  margin:0px;
- -webkit-user-select: none;
+
 }
 /*
 .pad:hover{
   background-color:red;
 }*/
 
-#pad-right{
-  left:320px;
-  bottom:0px;
-}
+
 #pad-left{
   left:0px;
   bottom:0px;
+  height:75%;
 }
 
 
 #pad-top{
-  right:0px;
-  bottom:200px;
-}
-#pad-bottom{
+  height:75%;
   right:0px;
   bottom:0px;
 }
-
+/*
+#pad-bottom{
+  right:0px;
+  bottom:0px;
+  height:150px;
+}
+*/
 #camera-debug{
-  display:none;
+display:none;
+position: absolute;
+top:0px;
+left:0px;
+}
+
+#touch-debug{
+/*display:none;*/
+position: absolute;
+top:0px;
+left:0px;
 }
 
 #game-canvas{
   width:100%;
   height:100%;
+/*display:none;*/
   
 }
 
 body{
+  -webkit-user-select: none;
   overflow:hidden;
 }
