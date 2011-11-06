@@ -1,15 +1,15 @@
 .pad{
  position:absolute;
- width:200px;
+ width:320px;
  color:black;
  border:1px dotted black;
  height:200px;
  text-align:center;
  z-index:500;
  background-color: white;
- opacity: 0.3;
- -moz-opacity: 0.3;
- filter:alpha(opacity=3);
+ opacity: 0.1;
+ -moz-opacity: 0.1;
+ filter:alpha(opacity=1);
  padding:0px;
  margin:0px;
  -webkit-user-select: none;
@@ -20,7 +20,7 @@
 }*/
 
 #pad-right{
-  left:200px;
+  left:320px;
   bottom:0px;
 }
 #pad-left{
