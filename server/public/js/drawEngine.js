@@ -1,6 +1,6 @@
 var camera = null;
 
-var carPosY = 1.9;
+var carPosY = 1;
 var cameraHeight = 0;
 var xPos = 0;
 var yPos = 0;
@@ -114,6 +114,7 @@ Camera.prototype.updateScale = function (){
   var screenRatio = this.getScreenRatio();;
   carPosY = screenRatio;
   this.scale = screenRatio;
+  //this.scale = carPosY;
 }
 
 
@@ -129,13 +130,7 @@ Camera.prototype.resizeCanvas = function(newSize){
       this.ctx.canvas.height = newSize.h;
       $('#game-canvas').width(newSize.w);
       $('#game-canvas').height(newSize.h);
-      // this.updateScale();
-      // var screenRatio = this.getScreenRatio();;
-      
-      // carPosY = screenRatio;
-      // this.scale = screenRatio;        
-      //this.drawDebug();
-      //this.update();
+
   }
 
 }
@@ -148,6 +143,7 @@ Camera.prototype.getScreenRatio = function(){
 
   //console.log('canvasSize: ', canvasSize, ', real world : ', this.realWorldSize, ', ratioX : ', ratioX, ' ratioY:', ratioY);
   if (ratioX < ratioY) return ratioX;
+
   return ratioY;
 }
 
@@ -211,7 +207,6 @@ carImage.src = '/sprites/caronly.png';
 function drawCarsInCanvas(cars, selector){
 	try
 	{
-      //console.log(cars);
   		var canvas = document.getElementById(selector);
   		var ctx = canvas.getContext("2d");
 	    ctx.canvas.width = $('#' + selector).width();
@@ -222,37 +217,24 @@ function drawCarsInCanvas(cars, selector){
 
       if (cars != null){
         _.each(cars, function(c) {
-          //ctx.strokeStyle = "#0F0";
-          //ctx.strokeRect(c.x, c.y, c.w, c.h );
-
           ctx.save();
-          ctx.translate(c.x +  c.w / 2, c.y + c.h / 2);
+          ctx.translate(c.x,c.y);
           ctx.rotate(-c.r);
-          //ctx.fillStyle = "#F00";
-          //ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
-          //ctx.fillStyle = "#000";
-          //ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
+          //ctx.drawImage(carImage, 44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
           ctx.drawImage(carImage, -c.w / 2, -c.h / 2, c.w, c.h);
-          //ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
+          //ctx.fillStyle = "#F00";          
+          //ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
           ctx.restore();
         });        
       }
 
-
-
     var i = 0;
-    var colors = ['#F00', '#FF0', '#FF', '#0FF' ];
+    var colors = ['#F00', '#FF0', '#FEE', '#0FF', '#FFF'];
     if (walls != null){
       _.each(walls, function(c) {
-        
-        //ctx.save();
-        //ctx.translate(c.x, c.y );
-        //ctx.rotate(-c.r);
         ctx.fillStyle = colors[i];
-        ctx.fillRect(c.x, c.y, c.w, c.h);
+        ctx.fillRect(c.x -c.w / 2 , c.y - c.h / 2, c.w, c.h);
         i += 1;
-  //      ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
-        //ctx.restore();
       });      
     }
 
@@ -264,16 +246,3 @@ function drawCarsInCanvas(cars, selector){
 }
 
 
-/*
-var cameraCanvas = {
-	canvasID : 'game-canvas',
-	canvas : null,
-	ctx : null,
-	init : function(canvasSelector){
-		$(canvasSelector)
-	},
-	applyChanges : function (){
-
-	}
-}
-*/

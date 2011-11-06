@@ -13,8 +13,8 @@ var PhysicsEngine = backbone.Model.extend({
 
     // Define world
     var worldAABB = new b2d.b2AABB();
-    worldAABB.lowerBound.Set(0, 0);
-    worldAABB.upperBound.Set(_size.w, _size.h);
+    worldAABB.lowerBound.Set(-10.0, -10.0);
+    worldAABB.upperBound.Set(_size.w + 10.0, _size.h + 10.0);
 
     var gravity = new b2d.b2Vec2(0.0, 0.0);
     var doSleep = true;
@@ -22,11 +22,6 @@ var PhysicsEngine = backbone.Model.extend({
 
     this.walls = [];
 
-    
-    //var _pos = {x : 10, y : 10};
-    //var _size = '&';//{w : 5, h : 5};
-    //var b1 = new PhysicsItem(this, _pos, _size, 1, 0);
-    //this.walls.push(b1);
   },
   getShareWalls : function (){
     var shareWalls = [];
@@ -39,13 +34,14 @@ var PhysicsEngine = backbone.Model.extend({
     // Run Simulation!
     this.world.Step(this.timeStep, this.iterations);
   },
+
   createSquareBody : function(_position, _size, _density, _friction){    
     try{
       var bodyDef = new b2d.b2BodyDef();
       bodyDef.position.Set(_position.x, _position.y);
       var body = this.world.CreateBody(bodyDef);
       var shapeDef = new b2d.b2PolygonDef();
-      shapeDef.SetAsBox(_size.w, _size.h);
+      shapeDef.SetAsBox(_size.w / 2, _size.h / 2);
       shapeDef.density = _density;
       shapeDef.friction = _friction;
       shapeDef.restitution = 0;
@@ -60,21 +56,22 @@ var PhysicsEngine = backbone.Model.extend({
 
   },
   createWalls : function(worldSize){
-
-    var borderSize = 1;
-    var density = 0;
-    var friction = 0;
-    var padding = 10;
-    var wallTop = {physicsEngine : this, position:{x : padding, y : padding}, size : {w : worldSize.w - (2 * padding), h : borderSize}, density : density, friction: friction};
-    var wallBottom = {physicsEngine : this, position:{x : padding, y : worldSize.h - borderSize - padding}, size : {w : worldSize.w - (2 * padding), h : borderSize }, density : density, friction: friction};
-    var wallLeft = {physicsEngine : this, position:{x : padding, y : padding + borderSize}, size : {w : borderSize, h : worldSize.h - (borderSize * 2) - (2 * padding)}, density : density, friction: friction};
-    var wallRight = {physicsEngine : this, position:{x : worldSize.w - borderSize - padding, y : borderSize + padding}, size : {w : borderSize, h : worldSize.h - (borderSize * 2) - (2 * padding)}, density : density, friction: friction};
-
+    var borderSize = 2.0;
+    var density = 0.0;
+    var friction = 0.0;    
+    var wallTop = {physicsEngine : this, position:{x :  worldSize.w / 2, y :  borderSize / 2}, size : {w : worldSize.w, h : borderSize}, density : density, friction: friction};
+    var wallBottom = {physicsEngine : this, position:{x : worldSize.w / 2 , y : worldSize.h - borderSize / 2}, size : {w : worldSize.w , h : borderSize }, density : density, friction: friction};
+    var worldYminusBorder = worldSize.h - 2 * borderSize;
+    var wallLeft = {physicsEngine : this, position:{x : borderSize / 2, y :  borderSize + worldYminusBorder / 2}, size : {w : borderSize, h : worldYminusBorder}, density : density, friction: friction};
+    var wallRight = {physicsEngine : this, position:{x : worldSize.w - borderSize / 2, y : borderSize + worldYminusBorder / 2 }, size : {w : borderSize, h : worldYminusBorder}, density : density, friction: friction};
+    var wallMiddle = {physicsEngine : this, position:{x : 300.0, y : 300.0}, size : {w : 100, h : 100.0}, density : 0.0, friction: 0.0};
 
     this.walls.push(new PhysicsItem(wallTop));
     this.walls.push(new PhysicsItem(wallBottom));
     this.walls.push(new PhysicsItem(wallLeft));
     this.walls.push(new PhysicsItem(wallRight));    
+
+    this.walls.push(new PhysicsItem(wallMiddle));    
     
   }
 });

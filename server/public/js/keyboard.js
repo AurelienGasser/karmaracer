@@ -17,20 +17,20 @@ function handleKeys() {
     if (currentlyPressedKeys[37]) {
       // Left cursor key or A
       //xPos -= 0.1;
-      nodeserver.emit('turnCar', +0.2);
+      nodeserver.emit('turnCar', +6);
     }  if (currentlyPressedKeys[39]) {
       // Right cursor key or D
       //xPos += 0.1;
-      nodeserver.emit('turnCar', -0.2);
+      nodeserver.emit('turnCar', -6);
     }
     if (currentlyPressedKeys[38]) {
       // Up cursor key or W
       //zPos -= 0.1;
-      nodeserver.emit('accelerate', 5.0);
+      nodeserver.emit('accelerate', 6.0);
     }  if (currentlyPressedKeys[40]) {
       // Down cursor key
       //zPos += 0.1;
-      nodeserver.emit('accelerate', -5.0);
+      nodeserver.emit('accelerate', -6.0);
     }  if (currentlyPressedKeys[65]) {
       // Q
       

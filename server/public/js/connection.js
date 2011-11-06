@@ -18,7 +18,7 @@ function initSockets(){
     cars = objects.cars;
     mycar = objects.myCar;
     walls = objects.walls;
-    //console.log(walls);
+    console.log('walls', walls);
     //console.log('my car : ', mycar);
   });
 }

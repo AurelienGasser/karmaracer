@@ -24,7 +24,7 @@ var driveSide = 0;
 var diff_driveSide = 0;
 var accelerationTouch = 0;
 var localAcceleration = 0;
-var maxTurn = 0.5;
+var maxTurn = 3;
 $(function(){
 
 
@@ -33,7 +33,7 @@ $(function(){
 
 
       //if (localAcceleration < -0.2) localAcceleration = 0.2;
-      diff_driveSide /= 100;
+      //diff_driveSide /= 50;
 
       if (diff_driveSide <= -maxTurn) diff_driveSide = -maxTurn;
       if (diff_driveSide >= maxTurn) diff_driveSide = maxTurn;
