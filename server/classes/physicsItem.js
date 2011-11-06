@@ -50,10 +50,11 @@ var PhysicsItem = backbone.Model.extend({
   },
   reduceVelocityOfBody : function(reduceBy){
     if (this.body != null){
+      //this.body.m_angularVelocity = 0;      
       this.body.m_linearVelocity.x /= 1 * reduceBy;
       this.body.m_linearVelocity.y /= 1 * reduceBy;
-      if (this.body.m_linearVelocity.x < 0.005) this.body.m_linearVelocity.x = 0;    
-      if (this.body.m_linearVelocity.y < 0.005) this.body.m_linearVelocity.y = 0;
+      if (Math.abs(this.body.m_linearVelocity.x) < 0.005) this.body.m_linearVelocity.x = 0;    
+      if (Math.abs(this.body.m_linearVelocity.y) < 0.005) this.body.m_linearVelocity.y = 0;
     }
   }
 });

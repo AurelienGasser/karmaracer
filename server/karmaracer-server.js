@@ -103,13 +103,13 @@ io.sockets.on('connection', function (client) {
   });
 
   client.on('turnCar', function (side) {
-    console.log('turn ', side);
+    //console.log('turn ', side);
     client.car.turn(side);
   });
 
   client.on('accelerate', function (ac) {
     client.car.accelerate(ac);
-    console.log('accelerate ', ac);
+    //console.log('accelerate ', ac);
   });
 
   client.on('chat', function (msg) {

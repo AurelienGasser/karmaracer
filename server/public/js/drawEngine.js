@@ -103,7 +103,7 @@ Camera.prototype.update = function() {
 };
 
 var carImage = new Image();
-carImage.src = '/sprites/car.png';
+carImage.src = '/sprites/caronly.png';
 
 function drawCarsInCanvas(cars, selector){
 	try
@@ -128,8 +128,8 @@ function drawCarsInCanvas(cars, selector){
       //ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
       //ctx.fillStyle = "#000";
       //ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
-
-      ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.drawImage(carImage, -c.w / 2, -c.h / 2, c.w, c.h);
+      //ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
       ctx.restore();
 		});
 
