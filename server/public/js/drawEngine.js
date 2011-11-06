@@ -130,19 +130,10 @@ function drawCarsInCanvas(cars, selector){
       //ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
       ctx.drawImage(carImage, -c.w / 2, -c.h / 2, c.w, c.h);
       //ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
-<<<<<<< HEAD
-=======
-
- ctx.fillStyle = "#F00";
-    ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
-    ctx.fillStyle = "#000";
-    ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
->>>>>>> 50b68f12096742383d5990c0b40dce4679b6f0f4
       ctx.restore();
 		});
 
 
-<<<<<<< HEAD
     var i = 0;
     var colors = ['#F00', '#FF0', '#FF', '#0FF' ];
     _.each(walls, function(c) {
@@ -152,30 +143,12 @@ function drawCarsInCanvas(cars, selector){
       //ctx.rotate(-c.r);
       ctx.fillStyle = colors[i];
       ctx.fillRect(c.x, c.y, c.w, c.h);
-=======
-			ctx.save();
-			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
-			ctx.translate(c.x +  c.w / 2, c.y + c.h / 2);
-			ctx.rotate(-c.r);
-			//ctx.translate(-c.x - c.w / 2, -c.y - c.h / 2);
-			//ctx.translate(-c.x, -c.y);
-      //
-			//ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
 
-   // ctx.fillStyle = "#F00";
-			// ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
-			// ctx.fillStyle = "#000";
-			// ctx.fillRect(-c.w / 2, c.h - c.h / 2 - 10, c.w, 10);
-			ctx.restore();
-
-
->>>>>>> 50b68f12096742383d5990c0b40dce4679b6f0f4
 
       i += 1;
 //      ctx.drawImage(carImage,44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
       //ctx.restore();
     });
-
 
 
 	} catch (e) {
