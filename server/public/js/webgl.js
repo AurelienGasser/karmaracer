@@ -40,7 +40,7 @@ var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
 var currentlyPressedKeys = {};
-var carPosY = 9.9;
+var carPosY = 0.6;
 var cameraHeight = 500;
 
 

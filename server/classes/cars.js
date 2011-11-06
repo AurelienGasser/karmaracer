@@ -24,4 +24,3 @@ var Cars = backbone.Collection.extend({
 });
 
 module.exports = Cars;
-

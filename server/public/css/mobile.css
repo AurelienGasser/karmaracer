@@ -1,0 +1,53 @@
+.pad{
+ position:absolute;
+ width:200px;
+ color:black;
+ border:1px dotted black;
+ height:200px;
+ text-align:center;
+ z-index:500;
+ background-color: white;
+ opacity: 0.3;
+ -moz-opacity: 0.3;
+ filter:alpha(opacity=3);
+ padding:0px;
+ margin:0px;
+ -webkit-user-select: none;
+}
+/*
+.pad:hover{
+  background-color:red;
+}*/
+
+#pad-right{
+  left:200px;
+  bottom:0px;
+}
+#pad-left{
+  left:0px;
+  bottom:0px;
+}
+
+
+#pad-top{
+  right:0px;
+  bottom:200px;
+}
+#pad-bottom{
+  right:0px;
+  bottom:0px;
+}
+
+#camera-debug{
+  display:none;
+}
+
+#game-canvas{
+  width:100%;
+  height:100%;
+  
+}
+
+body{
+  overflow:hidden;
+}

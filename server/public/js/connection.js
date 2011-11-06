@@ -1,6 +1,8 @@
 var cars = [];
 var myCar = undefined;
+var walls = [];
 var nodeserver = null;
+
 function initSockets(){
   nodeserver = io.connect(karmaracer_server);
 
@@ -15,6 +17,9 @@ function initSockets(){
   nodeserver.on('objects', function (objects) {
     cars = objects.cars;
     mycar = objects.myCar;
+    walls = objects.walls;
+    //console.log(walls);
+    //console.log('my car : ', mycar);
   });
 }
 

@@ -7,16 +7,18 @@
 }
 
 #game-canvas{
-  width:800px;
-  height:600px;
-  background-color:green;
+  width:100%;
+  height:100%;
+  background-color:#333;
   float: left;
   margin-right: 20px;
 }
 
 #right_panel {
   width: 20%;
-  float: right;
+  position:absolute;
+  right:0px;
+  top:0px;
   height: 100%;
   margin:0;
   padding:0;
@@ -44,4 +46,24 @@
 body{
 	margin:0px;
 	padding:0px;
+}
+
+#camera-debug{
+  position: absolute;
+  top:0px;
+  left:0px;
+  z-index:20;
+  /*background-color: black;*/
+  color:black;
+  font-size:0.8em;
+}
+
+#camera-debug ul{
+  margin:0px;
+  padding: 0px;
+}
+
+#camera-debug li{
+
+  list-style:none;
 }

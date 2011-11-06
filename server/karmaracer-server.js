@@ -32,7 +32,15 @@ app.get('/', function(req, res){
   res.render("index.jade", {
     layout:false,
     'title' : 'Karma Racer',
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.19' : 'happyfunkyfoundation.com') + ':' + port + '/'
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'happyfunkyfoundation.com') + ':' + port + '/'
+  });
+});
+
+app.get('/m', function(req, res){
+  res.render("mobile.jade", {
+    layout:false,
+    'title' : 'Karma Racer',
+    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'happyfunkyfoundation.com') + ':' + port + '/'
   });
 });
 
@@ -46,16 +54,15 @@ app.dynamicHelpers({
   }
 });
 
+var PhysicsItem = require('./classes/physicsItem');
+var PhysicsEngine = require('./classes/physicsEngine');
 
-// Define world
-var worldAABB = new b2d.b2AABB();
-worldAABB.lowerBound.Set(0, 0);
-worldAABB.upperBound.Set(800.0, 600.0);
 
-var gravity = new b2d.b2Vec2(0.0, 0.0);
-var doSleep = true;
+var worldSize = {w : 800, h : 600};
+var physicsEngine = new PhysicsEngine(worldSize);
+physicsEngine.createWalls(worldSize);
 
-var world = new b2d.b2World(worldAABB, gravity, doSleep);
+
 
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
@@ -64,26 +71,31 @@ var cars = new CarsCollection();
 var clients = [];
 
 
-// Run Simulation!
-var timeStep = 1.0 / 60.0;
 
-var iterations = 10;
 // update all cars positions
 setInterval(function () {
-  world.Step(timeStep, iterations);
-  cars.updatePos();
+  try{
+    physicsEngine.step();
+    cars.updatePos();    
+    //console.log(cars);
+  }
+  catch (e){
+    console.log(e);
+  }
 }, 20);
+
+
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
   clients.push(client);
 
-  client.car = new Car(world);
+  client.car = new Car(physicsEngine);
   cars.add(client.car);
 
   client.interval = setInterval(function () {
-    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars});
-  }, 100);
+    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars, walls : physicsEngine.getShareWalls()});
+  }, 20);
 
   client.on('disconnect', function (socket) {
     cars.remove(client.car);
@@ -91,11 +103,13 @@ io.sockets.on('connection', function (client) {
   });
 
   client.on('turnCar', function (side) {
+    console.log('turn ', side);
     client.car.turn(side);
   });
 
   client.on('accelerate', function (ac) {
     client.car.accelerate(ac);
+    console.log('accelerate ', ac);
   });
 
   client.on('chat', function (msg) {
