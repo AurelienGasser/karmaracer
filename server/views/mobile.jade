@@ -7,16 +7,13 @@ html
     script(type='text/javascript', src='/js/libs/jquery-1.6.4.min.js')
     script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type='text/javascript', src='/js/libs/underscore.js')
-    //script(type='text/javascript', src='/js/libs/glMatrix-0.9.5.min.js')
-    //script(type='text/javascript', src='/js/libs/webgl-utils.js')    
     script(type='text/javascript')
       var karmaracer_server = '#{server}';
       var drawEngine = '#{default_draw_engine}';
     script(type='text/javascript', src='/js/connection.js')
     script(type='text/javascript', src='/js/drawEngine.js')    
     script(type='text/javascript', src='/js/keyboard.js')
-
-    //script(type='text/javascript', src='/js/webgl.js')
+    script(type='text/javascript', src='/js/camera.js')
     script(type='text/javascript', src='/js/mobile.js')
     script(type='text/javascript', src='/js/chat.js')
 
@@ -33,4 +30,3 @@ html
     div(id='touch-debug')
     div(id='pad-left', class="pad", data-role="button") DRIVE
     div(id='pad-top', class="pad") FORWARD
-    //div(id='pad-bottom', class="pad") REWARD

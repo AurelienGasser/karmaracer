@@ -1,0 +1,787 @@
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+   [36minfo  -[39m socket.io started
+
+node.js:134
+        throw e; // process.nextTick error, or 'error' event on first tick
+        ^
+Error: Cannot find module 'box2d'
+    at Function._resolveFilename (module.js:317:11)
+    at Function._load (module.js:262:25)
+    at require (module.js:346:19)
+    at Object.<anonymous> (/home/karmaracer/server/karmaracer-server.js:10:11)
+    at Module._compile (module.js:402:26)
+    at Object..js (module.js:408:10)
+    at Module.load (module.js:334:31)
+    at Function._load (module.js:293:12)
+    at Array.<anonymous> (module.js:421:10)
+    at EventEmitter._tickCallback (node.js:126:26)
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+   [36minfo  -[39m socket.io started
+
+node.js:134
+        throw e; // process.nextTick error, or 'error' event on first tick
+        ^
+Error: EADDRINUSE, Address already in use
+    at HTTPServer._doListen (net.js:1106:5)
+    at net.js:1077:14
+    at Object.lookup (dns.js:153:45)
+    at HTTPServer.listen (net.js:1071:20)
+    at Object.<anonymous> (/home/karmaracer/server/karmaracer-server.js:15:5)
+    at Module._compile (module.js:402:26)
+    at Object..js (module.js:408:10)
+    at Module.load (module.js:334:31)
+    at Function._load (module.js:293:12)
+    at Array.<anonymous> (module.js:421:10)
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+
+/home/karmaracer/node_modules/box2d/box2dnode.js:2883
+				tBound1.value = tBound2.value;
+                  ^
+TypeError: Cannot set property 'value' of undefined
+    at [object Object].DestroyProxy (/home/karmaracer/node_modules/box2d/box2dnode.js:2883:19)
+    at [object Object].DestroyProxy (/home/karmaracer/node_modules/box2d/box2dnode.js:3658:15)
+    at [object Object].SynchronizeShapes (/home/karmaracer/node_modules/box2d/box2dnode.js:5339:7)
+    at [object Object].Solve (/home/karmaracer/node_modules/box2d/box2dnode.js:10558:20)
+    at [object Object].Step (/home/karmaracer/node_modules/box2d/box2dnode.js:10366:9)
+    at Timer.callback (/home/karmaracer/server/karmaracer-server.js:73:9)
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+
+/home/karmaracer/node_modules/box2d/box2dnode.js:2599
+				if (bound.IsLower())
+              ^
+TypeError: Cannot call method 'IsLower' of undefined
+    at [object Object].Query (/home/karmaracer/node_modules/box2d/box2dnode.js:2599:15)
+    at [object Object].DestroyProxy (/home/karmaracer/node_modules/box2d/box2dnode.js:2914:9)
+    at [object Object].DestroyProxy (/home/karmaracer/node_modules/box2d/box2dnode.js:3658:15)
+    at [object Object].SynchronizeShapes (/home/karmaracer/node_modules/box2d/box2dnode.js:5339:7)
+    at [object Object].Solve (/home/karmaracer/node_modules/box2d/box2dnode.js:10558:20)
+    at [object Object].Step (/home/karmaracer/node_modules/box2d/box2dnode.js:10366:9)
+    at Timer.callback (/home/karmaracer/server/karmaracer-server.js:73:9)
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+
+/home/karmaracer/node_modules/box2d/box2dnode.js:2599
+				if (bound.IsLower())
+              ^
+TypeError: Cannot call method 'IsLower' of undefined
+    at [object Object].Query (/home/karmaracer/node_modules/box2d/box2dnode.js:2599:15)
+    at [object Object].DestroyProxy (/home/karmaracer/node_modules/box2d/box2dnode.js:2914:9)
+    at [object Object].DestroyProxy (/home/karmaracer/node_modules/box2d/box2dnode.js:3658:15)
+    at [object Object].SynchronizeShapes (/home/karmaracer/node_modules/box2d/box2dnode.js:5339:7)
+    at [object Object].Solve (/home/karmaracer/node_modules/box2d/box2dnode.js:10558:20)
+    at [object Object].Step (/home/karmaracer/node_modules/box2d/box2dnode.js:10366:9)
+    at Timer.callback (/home/karmaracer/server/karmaracer-server.js:73:9)
+   [36minfo  -[39m socket.io started
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+ReferenceError: /home/karmaracer/server/views/index.jade:11
+    9|     script(type='text/javascript', src='/js/libs/underscore.js')
+    10|     script(type='text/javascript')
+  > 11|       var karmaracer_server = '#{server}';
+    12|       var drawEngine = '#{default_draw_engine}';      
+    13|     script(type='text/javascript', src='/js/connection.js')
+    14|     script(type='text/javascript', src='/js/chat.js')
+
+default_draw_engine is not defined
+    at anonymous (eval at <anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:161:8))
+    at Object.<anonymous> (/home/karmaracer/node_modules/jade/lib/jade.js:166:12)
+    at ServerResponse._render (/home/karmaracer/node_modules/express/lib/view.js:422:21)
+    at ServerResponse.render (/home/karmaracer/node_modules/express/lib/view.js:315:17)
+    at /home/karmaracer/server/karmaracer-server.js:32:7
+    at callbacks (/home/karmaracer/node_modules/express/lib/router/index.js:272:11)
+    at param (/home/karmaracer/node_modules/express/lib/router/index.js:246:11)
+    at pass (/home/karmaracer/node_modules/express/lib/router/index.js:253:5)
+    at Router._dispatch (/home/karmaracer/node_modules/express/lib/router/index.js:280:4)
+    at Object.handle (/home/karmaracer/node_modules/express/lib/router/index.js:45:10)
+   [36minfo  -[39m socket.io started
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+client connected
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+   [33mwarn  -[39m websocket connection invalid
+client connected
+   [33mwarn  -[39m websocket connection invalid
+FATAL ERROR: JS Allocation failed - process out of memory
+   [36minfo  -[39m socket.io started

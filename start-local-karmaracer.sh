@@ -1,0 +1,1 @@
+NODE_ENV=dev nodemon server/karmaracer-server.js

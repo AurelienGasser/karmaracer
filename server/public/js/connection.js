@@ -3,10 +3,17 @@ var mycar = null;
 var walls = [];
 var nodeserver = null;
 
+
+
 function initSockets(){
   nodeserver = io.connect(karmaracer_server);
 
   nodeserver.on('connect', function (data) {
+  });
+
+  nodeserver.on('init', function (data) {
+
+    camera.setWorldSize(data.size);
   });
 
 
@@ -18,7 +25,7 @@ function initSockets(){
     cars = objects.cars;
     mycar = objects.myCar;
     walls = objects.walls;
-    console.log('walls', walls);
+    //console.log('walls', walls);
     //console.log('my car : ', mycar);
   });
 }
