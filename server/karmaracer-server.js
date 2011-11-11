@@ -11,7 +11,7 @@ var b2d = require("box2d");
 
 io.set('log level', 1);
 
-var port = 8090;
+var port = 8082;
 app.listen(port);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
