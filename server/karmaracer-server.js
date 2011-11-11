@@ -6,15 +6,20 @@ var app = express.createServer();
 var io = require('socket.io').listen(app);
 
 
-var sys = require("sys");
+var sys = require("util");
 var b2d = require("box2d");
 
 io.set('log level', 1);
 
-var port = 8090;
+var port = 8082;
 app.listen(port);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
+var serverHost = 'origamix.fr';
+
+app.configure('dev', function(){
+  serverHost = 'localhost';
+});
 
 app.configure(function(){
   app.use(express.methodOverride());
@@ -33,7 +38,7 @@ app.get('/', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : "WEBGL",
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'origamix.fr') + ':' + port + '/'
+    server: 'http://' + serverHost + ':' + port + '/'
   });
 });
 
@@ -42,7 +47,7 @@ app.get('/m', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : "CANVAS",
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'origamix.fr') + ':' + port + '/'
+    server: 'http://' + serverHost + ':' + port + '/'
   });
 });
 
@@ -51,7 +56,7 @@ app.get('/canvas', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : "CANVAS",
-    server: 'http://' + (process.env.NODE_ENV == 'dev' ? '192.168.1.14' : 'origamix.fr') + ':' + port + '/'
+    server: 'http://' + serverHost + ':' + port + '/'
   });
 });
 
@@ -69,7 +74,7 @@ var PhysicsItem = require('./classes/physicsItem');
 var PhysicsEngine = require('./classes/physicsEngine');
 
 
-var worldSize = {w : 800, h : 600};
+var worldSize = {w : 600, h : 800};
 var physicsEngine = new PhysicsEngine(worldSize);
 physicsEngine.createWalls(worldSize);
 
@@ -99,6 +104,9 @@ setInterval(function () {
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
+
+  client.emit('init', {size: worldSize});
+
   clients.push(client);
 
   client.car = new Car(physicsEngine);
