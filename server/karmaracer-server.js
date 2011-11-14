@@ -21,6 +21,10 @@ app.configure('dev', function(){
   serverHost = 'localhost';
 });
 
+app.configure('pouya', function(){
+  serverHost = 'pouya';
+});
+
 app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.bodyParser());
@@ -74,7 +78,7 @@ var PhysicsItem = require('./classes/physicsItem');
 var PhysicsEngine = require('./classes/physicsEngine');
 
 
-var worldSize = {w : 600, h : 800};
+var worldSize = {w : 800, h : 600};
 var physicsEngine = new PhysicsEngine(worldSize);
 physicsEngine.createWalls(worldSize);
 
@@ -106,15 +110,17 @@ io.sockets.on('connection', function (client) {
   console.log('client connected');
 
   client.emit('init', {size: worldSize});
-
   clients.push(client);
 
-  client.car = new Car(physicsEngine);
-  cars.add(client.car);
+  client.on('init_done', function () {
+    console.log('client init done');
+    client.car = new Car(physicsEngine);
+    cars.add(client.car);
 
-  client.interval = setInterval(function () {
-    client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars, walls : physicsEngine.getShareWalls()});
-  }, 20);
+    client.interval = setInterval(function () {
+      client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars, walls : physicsEngine.getShareWalls()});
+    }, 20);
+  });  
 
   client.on('disconnect', function (socket) {
     cars.remove(client.car);
@@ -122,12 +128,22 @@ io.sockets.on('connection', function (client) {
   });
 
   client.on('turnCar', function (side) {
+    try{
+      client.car.turn(side);
+    } catch (e){
+      console.log(e);
+    }
     //console.log('turn ', side);
-    client.car.turn(side);
+    
   });
 
   client.on('accelerate', function (ac) {
-    client.car.accelerate(ac);
+    try{
+      client.car.accelerate(ac);
+    } catch (e){
+      console.log(e);
+    }
+    
     //console.log('accelerate ', ac);
   });
 
