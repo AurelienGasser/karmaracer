@@ -3,3 +3,5 @@ node_modules
 .monitor
 .DS_Store
 *.sublime-projectnohup.out
+npm-debug.log
+*~
