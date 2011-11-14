@@ -1,1 +1,1 @@
-NODE_ENV=dev nodemon server/karmaracer-server.js
+NODE_ENV=$1 nodemon server/karmaracer-server.js

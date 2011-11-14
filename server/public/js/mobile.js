@@ -2,17 +2,15 @@
 
 
 function updateOrientation(){
-  
-
-
+ 
   //alert($(window).width()+ ', '+$(window).height());
   //alert('orientation changed');
   //$('#game-canvas').width($(window).width()); 
   //$('#game-canvas').height($(window).height());
-  if (camera != null){
+  if (game.drawEngine.camera != null){
     //alert('wtf?');
     //$('body').append({w:$(window).width(), h:$(window).height()});
-    camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
+    game.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
     //camera.update();
   }else{
     //alert('camera is null');
@@ -25,25 +23,12 @@ var diff_driveSide = 0;
 var accelerationTouch = 0;
 var localAcceleration = 0;
 var maxTurn = 3;
+
+var MOBILE_DEVICE = true;
 $(function(){
 
 
-  setInterval(function(){
-    if(nodeserver != null){
-
-
-      //if (localAcceleration < -0.2) localAcceleration = 0.2;
-      //diff_driveSide /= 50;
-
-      if (diff_driveSide <= -maxTurn) diff_driveSide = -maxTurn;
-      if (diff_driveSide >= maxTurn) diff_driveSide = maxTurn;
-      $('#touch-debug').html('turn: '+  diff_driveSide + ", acc:" + localAcceleration);
-      nodeserver.emit('accelerate', localAcceleration);  
-      nodeserver.emit('turnCar', diff_driveSide);  
-    }
-  }, 10);
-
-  updateOrientation();
+  
   //alert('welcome');
   //document.ontouchmove = function(e){ e.preventDefault();}
   window.ontouchmove = function(e){ e.preventDefault();}

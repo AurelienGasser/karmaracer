@@ -1,4 +1,4 @@
-var camera = null;
+//var camera = null;
 
 var carPosY = 1;
 var cameraHeight = 0;
@@ -7,62 +7,89 @@ var yPos = 0;
 var zPos = 0;
 
 
-function hasWebGL(canvas){
-  try {
-    gl = canvas.getContext("experimental-webgl", { antialias: false});
-    canvas.width = $('#game-canvas').width() - 10;
-    canvas.height = $('#game-canvas').height();
-    gl.viewportWidth = canvas.width;
-    gl.viewportHeight = canvas.height;
-    return true;
-  }
-  catch (e) {
-  	//console.log('no-gl');
-    return false;
-  }
-}
 
-function initDrawEngine(canvasID){
-	var canvas = document.getElementById(canvasID);
 
+function DrawEngine(canvasID, game){
+  this.canvas = document.getElementById(canvasID);
+  this.canvasID = canvasID;
+  this.game = game;
+  this.camera = null;
+
+  this.game = game;
   switch(drawEngine){
     case 'WEBGL' :
-      if (hasWebGL(canvas)){
+      if (this.hasWebGL(this.canvas)){
         drawEngine = "WEBGL";
         webGLStart();
         $('#camera-debug').css('display', 'none');
       } else {
         drawEngine = "CANVAS";
-        initDrawEngine(canvasID);
+        this.init2DCanvas();
       }
     break;
     case 'CANVAS' :
-        init2DCanvas(canvasID);    
+        this.init2DCanvas();    
     break;
   }
-
-
-	//console.log('draw engine : ', drawEngine);
 }
 
-function init2DCanvas(selector){
-	var canvas = document.getElementById(selector);
-	var ctx = canvas.getContext("2d");
-    canvas.width = $('#' + selector).width();
-    canvas.height = $('#' + selector).height();
+DrawEngine.prototype.hasWebGL = function() {
+  try {
+    gl = this.canvas.getContext("experimental-webgl", { antialias: false});
+    this.canvas.width = $('#game-canvas').width() - 10;
+    this.canvas.height = $('#game-canvas').height();
+    gl.viewportWidth = canvas.width;
+    gl.viewportHeight = canvas.height;
+    return true;
+  }
+  catch (e) {
+    //console.log('no-gl');
+    return false;
+  }
+};
 
-	document.onkeydown = handleKeyDown;
-	document.onkeyup = handleKeyUp;
-	$('#loadingtext').html('');
-  camera = new Camera(ctx);
-	tick2DCanvas();
+
+
+DrawEngine.prototype.init2DCanvas = function() {
+  
+  this.ctx = this.canvas.getContext("2d"); 
+  this.canvas.width = $('#' + this.canvasID).width();
+  this.canvas.height = $('#' + this.canvasID).height();
+
+  document.onkeydown = handleKeyDown;
+  document.onkeyup = handleKeyUp;
+  $('#loadingtext').html('');
+  this.camera = new Camera(this.ctx);
+  //this.tick = tick2DCanvas;
+  this.tick = tick2DCanvas;
 }
+
+DrawEngine.prototype.draw = function(game) {
+//  try{
+    
+    //var canvas = document.getElementById(selector);
+    //var ctx = canvas.getContext("2d");
+    this.camera.ctx.canvas.width = $('#' + this.canvasID).width();
+    this.camera.ctx.canvas.height = $('#' + this.canvasID).height();
+
+    this.camera.update(this.game.mycar);
+
+    this.game.drawItems();
+
+  // }catch(e){
+  //   console.log(e);
+  //   return;
+  // }
+};
+
 
 function tick2DCanvas() {
   requestAnimFrame(tick2DCanvas);
   handleKeys();
-  
-  drawCarsInCanvas(cars, "game-canvas");
+  game.run();
+  //if (socketManager != null){
+    //drawCarsInCanvas(this.game.cars, "game-canvas");  
+  //}
 
 }
 
@@ -82,54 +109,5 @@ window.requestAnimFrame = (function() {
 
 
 
-var carImage = new Image();
-carImage.src = '/sprites/caronly.png';
-
-function drawCarsInCanvas(cars, selector){
-	try
-	{
-  		var canvas = document.getElementById(selector);
-  		var ctx = canvas.getContext("2d");
-	    ctx.canvas.width = $('#' + selector).width();
-	    ctx.canvas.height = $('#' + selector).height();
-	    //console.log('cars received, ', cars.length);
-    
-
-      ctx.rotate(-Math.PI / 2);
-      ctx.translate(-camera.realWorldSize.w, 0);
-
-      
-		  //ctx.clearRect(0, 0, 800, 600);
-      camera.update();  
-
-      if (cars != null){
-        _.each(cars, function(c) {
-          ctx.save();
-          ctx.translate(c.x,c.y);
-          ctx.rotate(-c.r);
-          //ctx.drawImage(carImage, 44, 32, 36, 66, -c.w / 2, -c.h / 2, c.w, c.h);
-          ctx.drawImage(carImage, -c.w / 2, -c.h / 2, c.w, c.h);
-          //ctx.fillStyle = "#F00";          
-          //ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
-          ctx.restore();
-        });        
-      }
-
-    var i = 0;
-    var colors = ['#F00', '#FF0', '#FEE', '#0FF', '#FFF'];
-    if (walls != null){
-      _.each(walls, function(c) {
-        ctx.fillStyle = colors[i];
-        ctx.fillRect(c.x -c.w / 2 , c.y - c.h / 2, c.w, c.h);
-        i += 1;
-      });      
-    }
-
-
-	} catch (e) {
-    	console.log('Unable to Load Canvas', e);
-  	}
-
-}
 
 

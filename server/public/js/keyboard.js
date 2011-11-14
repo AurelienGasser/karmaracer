@@ -17,20 +17,20 @@ function handleKeys() {
     if (currentlyPressedKeys[37]) {
       // Left cursor key or A
       //xPos -= 0.1;
-      nodeserver.emit('turnCar', +6);
+      game.SocketManager.nodeserver.emit('turnCar', +6);
     }  if (currentlyPressedKeys[39]) {
       // Right cursor key or D
       //xPos += 0.1;
-      nodeserver.emit('turnCar', -6);
+      game.SocketManager.nodeserver.emit('turnCar', -6);
     }
     if (currentlyPressedKeys[38]) {
       // Up cursor key or W
       //zPos -= 0.1;
-      nodeserver.emit('accelerate', 6.0);
+      game.SocketManager.nodeserver.emit('accelerate', 6.0);
     }  if (currentlyPressedKeys[40]) {
       // Down cursor key
       //zPos += 0.1;
-      nodeserver.emit('accelerate', -6.0);
+      game.SocketManager.nodeserver.emit('accelerate', -6.0);
     }  if (currentlyPressedKeys[65]) {
       // Q
       
@@ -48,10 +48,12 @@ function handleKeys() {
         //console.log('zoom');
       cameraHeight += 0.1
       carPosY *= 1.1;
+      game.drawEngine.camera.scale *= 1.1;
     }    if (currentlyPressedKeys[80]) {
       // S
       carPosY *= 0.9;
       cameraHeight -= 0.1;
+      game.drawEngine.camera.scale *= 0.9;
     }
 
   } else {
