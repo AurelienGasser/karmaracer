@@ -1,18 +1,14 @@
 var currentlyPressedKeys = {};
 
-
 function handleKeyDown(event) {
   currentlyPressedKeys[event.keyCode] = true;
 }
-
 
 function handleKeyUp(event) {
   currentlyPressedKeys[event.keyCode] = false;
 }
 
-
 function handleKeys() {
-
   if (!($('#chat_input').is(':focus'))) {
     if (currentlyPressedKeys[37]) {
       // Left cursor key or A
