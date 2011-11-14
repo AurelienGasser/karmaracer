@@ -3,7 +3,6 @@ var diff_driveSide = 0;
 var accelerationTouch = 0;
 var localAcceleration = 0;
 var maxTurn = 3;
-var MOBILE_DEVICE = true;
 
 function updateOrientation(){
   if (game.drawEngine.camera != null){
@@ -11,7 +10,7 @@ function updateOrientation(){
   }
 }
 
-$(function(){
+function handleKeysMobile() {
   window.ontouchmove = function(e){ e.preventDefault();}
   $('#pad-top').bind('touchstart', function(event){
     accelerationTouch = event.pageY;
@@ -31,4 +30,4 @@ $(function(){
   $('#pad-left').bind('touchend', function(){
     diff_driveSide = 0;
   });
-});
+}

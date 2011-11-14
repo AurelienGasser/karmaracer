@@ -11,12 +11,13 @@ html
       var karmaracer_server = '#{server}';
       var drawEngine = '#{default_draw_engine}';
     script(type='text/javascript', src='/js/camera.js')
-    script(type='text/javascript', src='/js/SocketManager.js')    
+    script(type='text/javascript', src='/js/SocketManager.js')
     script(type='text/javascript', src='/js/chat.js')
     script(type='text/javascript', src='/js/drawEngine.js')
     script(type='text/javascript', src='/js/webgl.js')
     script(type='text/javascript', src='/js/keyboard.js')
     script(type='text/javascript', src='/js/game.js')
+    script(type='text/javascript', src='/js/startup.js')
 
     script#shader-fs(type='x-shader/x-fragment').
           #ifdef GL_ES

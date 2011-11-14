@@ -1,37 +1,17 @@
-var game = null;
-var MOBILE_DEVICE = false;
+var game;
 
-$(function(){
-  game = new Game();
-  game.SocketManager = new SocketManager(
-    karmaracer_server,
-    function(data){
-      // once socket init has been done
-      game.drawEngine = new DrawEngine("game-canvas", game);
-      game.drawEngine.camera.setWorldSize(data.size);
-      if (MOBILE_DEVICE){
-        setInterval(function(){
-          if(game.SocketManager.nodeserver != null){
-            if (diff_driveSide <= -maxTurn) diff_driveSide = -maxTurn;
-            if (diff_driveSide >= maxTurn) diff_driveSide = maxTurn;
-            $('#touch-debug').html('turn: '+  diff_driveSide + ", acc:" + localAcceleration);
-            game.SocketManager.nodeserver.emit('accelerate', localAcceleration);
-            game.SocketManager.nodeserver.emit('turnCar', diff_driveSide);
-          }
-          }, 10);
-        }
-
-        game.drawEngine.tick();
-      },
-      game
-    );
-  });
+function onSocketLoad(world) {
+  // once socket init has been done
+  game.drawEngine = new DrawEngine("game-canvas", game);
+  game.drawEngine.camera.setWorldSize(world.size);
+  game.drawEngine.tick();
+}
 
 function Game(){
   this.cars = [];
-  this.mycar = null;
+  this.mycar;
   this.walls = [];
-  this.drawEngine = null;
+  this.drawEngine;
 }
 
 Game.prototype.run = function() {
