@@ -4,9 +4,7 @@ function Camera(ctx){
   this.scale = 1;
   this.realWorldSize = {w:0, h:0};
   // take care of browser resizes
-  $(window).resize(function(){
-    game.drawEngine.camera.resizeCanvas({w: $(window).width(), h: $(window).height()});
-  });
+
 }
 
 Camera.prototype.setWorldSize = function(realWorldSize) {

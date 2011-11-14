@@ -1,24 +1,22 @@
 var game;
 
-function onSocketLoad(world) {
-  // once socket init has been done
-  game.drawEngine = new DrawEngine("game-canvas", game);
-  game.drawEngine.camera.setWorldSize(world.size);
-  game.drawEngine.tick();
-}
-
 function Game(){
   this.cars = [];
   this.mycar;
   this.walls = [];
   this.drawEngine;
+  this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived);
+  document.onkeydown = handleKeyDown;
+  document.onkeyup = handleKeyUp;  
 }
 
-Game.prototype.run = function() {
-  if (this.walls.length > 0){
-    this.drawEngine.draw();
-  }
-}
+Game.prototype.onInitReceived = function(err, world) {
+  // once socket init has been done
+  G_game.drawEngine = DrawEngineFactory(G_game, "game-canvas", G_defaultDrawEngineType);
+  G_game.drawEngine.camera.setWorldSize(world.size);
+  G_game.drawEngine.tick();
+};
+
 
 var carImage = new Image();
 carImage.src = '/sprites/car.png';
@@ -30,7 +28,7 @@ Game.prototype.drawItems = function() {
       thegame.drawEngine.ctx.save();
       thegame.drawEngine.ctx.translate(c.x , c.y);
       thegame.drawEngine.ctx.rotate(c.r);
-      thegame.drawEngine.ctx.drawImage(carImage, -c.w / 2, -c.h / 2, c.w, c.h);
+      thegame.drawEngine.ctx.drawImage(carImage, 31, 48, 65, 36, -c.w / 2, -c.h / 2, c.w, c.h);
       thegame.drawEngine.ctx.restore();
     });
   }
