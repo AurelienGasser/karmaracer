@@ -3,5 +3,5 @@ function sendMsg() {
     var msg = $('#player_name').val() + ': ' + $('#chat_input').val();
     nodeserver.emit('chat', msg);
   }
-  $('#chat_input').val('');    
+  $('#chat_input').val('');
 }

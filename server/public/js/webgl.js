@@ -34,10 +34,6 @@ var mvMatrix = mat4.create();
 var mvMatrixStack = [];
 var pMatrix = mat4.create();
 
-
-
-
-
 function getShader(gl, id) {
   var shaderScript = document.getElementById(id);
   if (!shaderScript) {
@@ -66,7 +62,6 @@ function getShader(gl, id) {
     return null;
   }
   return shader;
-  z
 }
 
 
@@ -164,7 +159,7 @@ function handleLoadedWorld(data) {
   for (var item in data) {
     for (var i in data[item]) {
       var vals = data[item][i];
-        // It is a line describing a vertex; get X, Y and Z first
+      // It is a line describing a vertex; get X, Y and Z first
       vertexPositions[item].push(parseFloat(vals[0]));
       vertexPositions[item].push(parseFloat(vals[1]));
       vertexPositions[item].push(parseFloat(vals[2]));
@@ -196,37 +191,37 @@ function handleLoadedWorld(data) {
 function loadWorld() {
   handleLoadedWorld({
     grass: [
-      [-0.5,  0.0, -0.5,  0.0, 1.0],
-      [-0.5,  0.0,  0.5,  0.0, 0.0],
-      [0.5,  0.0,  0.5, 1.0, 0.0],
-      [-0.5,  0.0, -0.5,  0.0, 1.0],
-      [0.5,  0.0, -0.5, 1.0, 1.0],
-      [0.5,  0.0,  0.5, 1.0, 0.0]
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [-0.5,  0.0,  0.5,  0.0, 0.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0],
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [0.5,  0.0, -0.5, 1.0, 1.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0]
     ],
 
     road: [
-      [-0.5,  0.0, -0.5,  0.0, 1.0],
-      [-0.5,  0.0,  0.5,  0.0, 0.0],
-      [0.5,  0.0,  0.5, 1.0, 0.0],
-      [-0.5,  0.0, -0.5,  0.0, 1.0],
-      [0.5,  0.0, -0.5, 1.0, 1.0],
-      [0.5,  0.0,  0.5, 1.0, 0.0]
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [-0.5,  0.0,  0.5,  0.0, 0.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0],
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [0.5,  0.0, -0.5, 1.0, 1.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0]
     ],
 
     car: [
-      [-0.5,  0.0, -0.5,  0.0, 1.0],
-      [-0.5,  0.0,  0.5,  0.0, 0.0],
-      [0.5,  0.0,  0.5, 1.0, 0.0],
-      [-0.5,  0.0, -0.5,  0.0, 1.0],
-      [0.5,  0.0, -0.5, 1.0, 1.0],
-      [0.5,  0.0,  0.5, 1.0, 0.0]
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [-0.5,  0.0,  0.5,  0.0, 0.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0],
+    [-0.5,  0.0, -0.5,  0.0, 1.0],
+    [0.5,  0.0, -0.5, 1.0, 1.0],
+    [0.5,  0.0,  0.5, 1.0, 0.0]
     ]
   });
 }
 
 
 function drawScene() {
-//  console.log(cars);
+  //  console.log(cars);
   gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
   if (worldVertexTextureCoordBuffer.road == null || worldVertexPositionBuffer.road == null ||  worldVertexTextureCoordBuffer.grass == null || worldVertexPositionBuffer.grass == null) {
@@ -325,7 +320,3 @@ function webGLStart() {
   document.onkeyup = handleKeyUp;
   tick();
 }
-
-
-
-

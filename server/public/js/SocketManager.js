@@ -12,7 +12,6 @@ function SocketManager(server, init_function, game){
     this.init_done = true;
   });
 
-
   nodeserver.on('chat_msg', function (msg) {
     $('#chat_msgs').append('<li>' + msg + '</li>');
   });
@@ -21,7 +20,7 @@ function SocketManager(server, init_function, game){
     game.cars = objects.cars;
     game.mycar = objects.myCar;
     game.walls = objects.walls;
-  }); 
+  });
 
   this.nodeserver = nodeserver;
 }
