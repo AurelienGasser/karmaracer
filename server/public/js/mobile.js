@@ -5,8 +5,8 @@ var localAcceleration = 0;
 var maxTurn = 3;
 
 function updateOrientation(){
-  if (game.drawEngine.camera != null){
-    game.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
+  if (G_game.drawEngine.camera != null){
+    G_game.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
   }
 }
 

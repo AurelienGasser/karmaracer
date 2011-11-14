@@ -1,5 +1,7 @@
 $(function(){
   G_game = new Game();
 
-  //handleKeysMobile();
+  if (G_MOBILE_DEVICE == true){
+    handleKeysMobile();  
+  }    
 });

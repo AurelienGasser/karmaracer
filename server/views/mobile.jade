@@ -8,13 +8,15 @@ html
     script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type='text/javascript', src='/js/libs/underscore.js')
     script(type='text/javascript')
-      var karmaracer_server = '#{server}';
-      var drawEngine = '#{default_draw_engine}';
+      var G_serverHost = '#{server}';
+      var G_defaultDrawEngineType = '#{default_draw_engine}';
+      var G_MOBILE_DEVICE = true;
     script(type='text/javascript', src='/js/SocketManager.js')
-    script(type='text/javascript', src='/js/drawEngine.js')
+    script(type='text/javascript', src='/js/drawEngine/camera.js')
+    script(type='text/javascript', src='/js/drawEngine/drawEngineFactory.js')
+    script(type='text/javascript', src='/js/drawEngine/2DCanvas.js')   
     script(type='text/javascript', src='/js/game.js')
     script(type='text/javascript', src='/js/keyboard.js')
-    script(type='text/javascript', src='/js/camera.js')
     script(type='text/javascript', src='/js/mobile.js')
     script(type='text/javascript', src='/js/chat.js')
     script(type='text/javascript', src='/js/startup.js')
