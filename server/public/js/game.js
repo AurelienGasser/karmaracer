@@ -1,5 +1,3 @@
-var game;
-
 function Game(){
   this.cars = [];
   this.mycar;
@@ -12,8 +10,8 @@ function Game(){
 
 Game.prototype.onInitReceived = function(err, world) {
   // once socket init has been done
+  G_game.world = world;
   G_game.drawEngine = DrawEngineFactory(G_game, "game-canvas", G_defaultDrawEngineType);
-  G_game.drawEngine.camera.setWorldSize(world.size);
 
   if (G_MOBILE_DEVICE){
     setInterval(function(){
