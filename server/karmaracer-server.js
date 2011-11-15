@@ -42,8 +42,7 @@ app.get('/', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
-    server: 'http://karma.origamix.fr'
-  });
+    server: 'http://' + serverHost + ':' + port + '/'
 });
 
 app.get('/m', function(req, res){
