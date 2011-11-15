@@ -1,17 +1,26 @@
-var carPosY = 1;
-var cameraHeight = 0;
-var xPos = 0;
-var yPos = 0;
-var zPos = 0;
+/**
+* Provides requestAnimationFrame in a cross browser way.
+*/
+window.requestAnimFrame = (function() {
+  return window.requestAnimationFrame ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame ||
+          window.oRequestAnimationFrame ||
+          window.msRequestAnimationFrame ||
+          function(callback, element) {
+            window.setTimeout(callback, 1000/60);
+          };
+})();
 
 function DrawEngineFactory(game, canvasID, defaultDrawEngineType){
-  var canvas = document.getElementById(canvasID);  
+  var canvas = document.getElementById(canvasID);
   var drawEngineType = defaultDrawEngineType;
+  var gl;
 
-  var factory = function(game, drawEngineType, canvasID, canvas) {
+  var factory = function(game, drawEngineType, canvasID, canvas, gl) {
     switch(drawEngineType){
       case 'WEBGL' :
-        return new EngineWebGL();
+        return new EngineWebGL(game, canvas, canvasID, gl);
         $('#camera-debug').css('display', 'none');
         break;
       case 'CANVAS' :
@@ -20,28 +29,28 @@ function DrawEngineFactory(game, canvasID, defaultDrawEngineType){
     }
   };
 
-  var hasWebGL = function(canvas) {
+  var getWebGL = function(canvas) {
     try {
       gl = canvas.getContext("experimental-webgl", { antialias: false});
       canvas.width = $('#game-canvas').width() - 10;
       canvas.height = $('#game-canvas').height();
       gl.viewportWidth = canvas.width;
       gl.viewportHeight = canvas.height;
-      return true;
+      return gl;
     }
     catch (e) {
-      return false;
+      return null;
     }
   };
 
   if ("WEBGL" == drawEngineType){
-    if (hasWebGL(canvas)){
+    if (gl = getWebGL(canvas)){
       drawEngineType = "WEBGL";
     } else {
       drawEngineType = "CANVAS";
-    }    
+    }
   }
 
-  return factory(game, drawEngineType, canvasID, canvas);
+  return factory(game, drawEngineType, canvasID, canvas, gl);
 }
 

@@ -41,7 +41,7 @@ app.get('/', function(req, res){
   res.render("index.jade", {
     layout:false,
     'title' : 'Karma Racer',
-    default_draw_engine : "WEBGL",
+    default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
     server: 'http://karma.origamix.fr'
   });
 });
@@ -96,7 +96,7 @@ var clients = [];
 setInterval(function () {
   try{
     physicsEngine.step();
-    cars.updatePos();    
+    cars.updatePos();
     //console.log(cars);
   }
   catch (e){
@@ -120,7 +120,7 @@ io.sockets.on('connection', function (client) {
     client.interval = setInterval(function () {
       client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars, walls : physicsEngine.getShareWalls()});
     }, 20);
-  });  
+  });
 
   client.on('disconnect', function (socket) {
     cars.remove(client.car);
@@ -134,7 +134,7 @@ io.sockets.on('connection', function (client) {
       console.log(e);
     }
     //console.log('turn ', side);
-    
+
   });
 
   client.on('accelerate', function (ac) {
@@ -143,7 +143,7 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-    
+
     //console.log('accelerate ', ac);
   });
 
@@ -153,5 +153,11 @@ io.sockets.on('connection', function (client) {
     }
   });
 });
- 
- 
+
+
+
+
+
+
+
+

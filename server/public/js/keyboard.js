@@ -33,13 +33,9 @@ function handleKeys() {
       // S
     }    if (currentlyPressedKeys[76]) {
       // S
-      cameraHeight += 0.1
-      carPosY *= 1.1;
       G_game.drawEngine.camera.scale *= 1.1;
     }    if (currentlyPressedKeys[80]) {
       // S
-      carPosY *= 0.9;
-      cameraHeight -= 0.1;
       G_game.drawEngine.camera.scale *= 0.9;
     }
 

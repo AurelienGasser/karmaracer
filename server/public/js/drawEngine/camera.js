@@ -3,8 +3,6 @@ function Camera(ctx){
   this.translate = {x : 0, y : 0};
   this.scale = 1;
   this.realWorldSize = {w:0, h:0};
-  // take care of browser resizes
-
 }
 
 Camera.prototype.setWorldSize = function(realWorldSize) {
@@ -28,7 +26,6 @@ Camera.prototype.resizeCanvas = function(newSize){
     this.ctx.canvas.height = newSize.h;
     $('#game-canvas').width(newSize.w);
     $('#game-canvas').height(newSize.h);
-
   }
 }
 
