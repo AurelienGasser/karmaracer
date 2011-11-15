@@ -43,7 +43,7 @@ app.get('/', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
-    server: 'http://' + serverHost + '/'
+    server: 'http://' + serverHost + ':' + port + '/'
   });
 });
 
