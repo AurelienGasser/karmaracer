@@ -15,7 +15,8 @@ var port = 8082;
 app.listen(port);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
-var serverHost = 'origamix.fr';
+var serverHost = 'karma.origamix.fr';
+
 
 app.configure('dev', function(){
   serverHost = 'localhost';
@@ -42,7 +43,8 @@ app.get('/', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
-    server: 'http://' + serverHost + ':' + port + '/'
+    server: 'http://' + serverHost + '/'
+  });
 });
 
 app.get('/m', function(req, res){
