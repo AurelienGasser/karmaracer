@@ -42,7 +42,7 @@ app.get('/', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : "WEBGL",
-    server: 'http://' + serverHost + ':' + port + '/'
+    server: 'http://karma.origamix.fr'
   });
 });
 
