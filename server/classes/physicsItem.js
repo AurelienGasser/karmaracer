@@ -43,8 +43,8 @@ var PhysicsItem = backbone.Model.extend({
   },
   applyForceToBody : function(v){
     if (this.body != null){
-      //this.body.ApplyForce(v, this.body.GetPosition());
-      this.body.ApplyImpulse(v, this.body.GetPosition());
+      var pos = this.body.GetPosition();
+      this.body.ApplyImpulse(v, {x : pos.x , y : pos.y});
     }
   },
   reduceVelocityOfBody : function(reduceBy){

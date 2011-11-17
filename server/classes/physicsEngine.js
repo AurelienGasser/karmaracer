@@ -32,6 +32,7 @@ var PhysicsEngine = backbone.Model.extend({
   },
   step : function(){
     // Run Simulation!
+    //console.log(this.world.GetBodyCount());
     this.world.Step(this.timeStep, this.iterations);
   },
 

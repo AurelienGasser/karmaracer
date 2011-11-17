@@ -6,8 +6,8 @@
  text-align:center;
  z-index:505;
  background-color: white;
- opacity: 0.1;
- -moz-opacity: 0.1;
+ opacity: 0.05;
+ -moz-opacity: 0.05;
  filter:alpha(opacity=1);
  padding:0px;
  margin:0px;
@@ -31,6 +31,13 @@
   right:0px;
   bottom:0px;
 }
+
+#pad-zoom{
+  height:25%;
+  left:0px;
+  top:0px;
+}
+
 /*
 #pad-bottom{
   right:0px;
@@ -49,7 +56,7 @@ left:0px;
 /*display:none;*/
 position: absolute;
 top:0px;
-left:0px;
+right:0px;
 }
 
 #game-canvas{

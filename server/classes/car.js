@@ -10,6 +10,7 @@ var Car = require("./physicsItem").extend({
     var a = {physicsEngine : _physicsEngine, position : {x : 60.0, y : 60.0}, size:{w : 16.75, h : 8.5}, density:0.0001, friction:1};
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
+    this.life = 100;
   },
   accelerationMax : 50,
   accelerate : function (ac){

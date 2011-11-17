@@ -19,7 +19,6 @@ function SocketManager(serverHost, game, onInitCallback){
   connection.on('objects', function (objects) {
     game.cars = objects.cars;
     game.mycar = objects.myCar;
-    game.walls = objects.walls;
   });
 
   this.connection = connection;

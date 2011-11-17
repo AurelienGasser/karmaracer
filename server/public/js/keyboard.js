@@ -41,7 +41,7 @@ function handleKeys() {
 
   } else {
     if (currentlyPressedKeys[13]) {
-      console.log('key pressed');
+      //console.log('key pressed');
       sendMsg();
     }
   }

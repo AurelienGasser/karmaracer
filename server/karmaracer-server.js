@@ -84,7 +84,6 @@ var physicsEngine = new PhysicsEngine(worldSize);
 physicsEngine.createWalls(worldSize);
 
 
-
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection();
@@ -98,6 +97,8 @@ setInterval(function () {
   try{
     physicsEngine.step();
     cars.updatePos();
+
+    
     //console.log(cars);
   }
   catch (e){
@@ -110,7 +111,7 @@ setInterval(function () {
 io.sockets.on('connection', function (client) {
   console.log('client connected');
 
-  client.emit('init', {size: worldSize});
+  client.emit('init', {size: worldSize, walls : physicsEngine.getShareWalls()});
   clients.push(client);
 
   client.on('init_done', function () {
@@ -119,23 +120,43 @@ io.sockets.on('connection', function (client) {
     cars.add(client.car);
 
     client.interval = setInterval(function () {
-      client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars, walls : physicsEngine.getShareWalls()});
+      client.emit('objects', {myCar: client.car.getShared(), cars: cars.shareCars});
     }, 20);
   });
 
   client.on('disconnect', function (socket) {
-    cars.remove(client.car);
-    clearInterval(client.interval);
+    try{
+      physicsEngine.world.DestroyBody(client.car.body);
+      cars.remove(client.car);
+      clearInterval(client.interval);
+      console.log('client left');      
+    } catch (e){
+      console.log(e);
+    }
+
+
   });
+
+
+  client.on('drive', function (navigate) {
+    try{      
+      //console.log('drive ', navigate);
+      client.car.turn(navigate.turnCar);
+      client.car.accelerate(navigate.accelerate);
+    } catch (e){
+      console.log(e);
+    }
+  });
+
+
 
   client.on('turnCar', function (side) {
     try{
       client.car.turn(side);
     } catch (e){
       console.log(e);
+      //console.log('turn ', side);
     }
-    //console.log('turn ', side);
-
   });
 
   client.on('accelerate', function (ac) {
@@ -144,8 +165,7 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-
-    //console.log('accelerate ', ac);
+    console.log('accelerate ', ac);
   });
 
   client.on('chat', function (msg) {
