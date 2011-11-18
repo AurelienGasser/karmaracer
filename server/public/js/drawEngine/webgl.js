@@ -147,12 +147,12 @@ EngineWebGL.prototype.loadWorld = function() {
     ],
 
     car: [
-    [-0.5,  0.0, -0.5,  0.0, 1.0],
-    [-0.5,  0.0,  0.5,  0.0, 0.0],
-    [0.5,  0.0,  0.5, 1.0, 0.0],
-    [-0.5,  0.0, -0.5,  0.0, 1.0],
-    [0.5,  0.0, -0.5, 1.0, 1.0],
-    [0.5,  0.0,  0.5, 1.0, 0.0]
+    [-5.0,  0.0, -5.0,  0.0, 1.0],
+    [-5.0,  0.0,  5.0,  0.0, 0.0],
+    [5.0,  0.0,  5.0, 1.0, 0.0],
+    [-5.0,  0.0, -5.0,  0.0, 1.0],
+    [5.0,  0.0, -5.0, 1.0, 1.0],
+    [5.0,  0.0,  5.0, 1.0, 0.0]
     ]
   });
 }
@@ -163,15 +163,6 @@ EngineWebGL.prototype.loadWalls = function(data) {
   var vertexCount = [];
 
   this.walls = G_game.walls;
-  for (var i in this.walls) {
-    this.walls[i].x /= 100;
-    this.walls[i].y /= 100;
-    this.walls[i].h /= 100;
-    this.walls[i].w /= 100;
-    if (this.walls[i].h < 1) this.walls[i].h *= 10;
-    if (this.walls[i].w < 1) this.walls[i].w *= 10;
-    // this.walls[i].y = -this.walls[i].y;
-  }
   var walls = this.walls;
 
    for (var i in walls) {
@@ -288,7 +279,7 @@ EngineWebGL.prototype.setMatrixUniforms = function() {
 }
 
 EngineWebGL.prototype.drawScene = function() {
-  var cameraHeight = G_game.drawEngine.camera.scale * 10;
+  var cameraHeight = G_game.drawEngine.camera.scale * 1000;
   if (G_game.mycar == undefined) {
     G_game.mycar = { x: 0, y: 0 };
   }
@@ -314,7 +305,7 @@ EngineWebGL.prototype.drawWalls = function(cameraHeight) {
     this.mvPushMatrix();
     mat4.rotate(this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
     mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
-    mat4.translate(this.mvMatrix, [-G_game.mycar.x/100, 0, G_game.mycar.y/100]);
+    mat4.translate(this.mvMatrix, [-G_game.mycar.x, 0, G_game.mycar.y]);
     mat4.translate(this.mvMatrix, [0.6, 0, -0.6]);
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.road);
@@ -342,7 +333,7 @@ EngineWebGL.prototype.drawGround = function(cameraHeight) {
     this.mvPushMatrix();
     mat4.rotate(this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
     mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
-    mat4.translate(this.mvMatrix, [-G_game.mycar.x/100, 0, G_game.mycar.y/100]);
+    mat4.translate(this.mvMatrix, [-G_game.mycar.x, 0, G_game.mycar.y]);
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
     this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
@@ -366,8 +357,8 @@ EngineWebGL.prototype.drawCars = function(cameraHeight) {
     this.mvPushMatrix();
     mat4.rotate(this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
     mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
-    mat4.translate(this.mvMatrix, [-G_game.mycar.x/100    , 0  , G_game.mycar.y/100]);
-    mat4.translate(this.mvMatrix, [+car.x/100 , 0  , -car.y/100]);
+    mat4.translate(this.mvMatrix, [-G_game.mycar.x    , 0  , G_game.mycar.y]);
+    mat4.translate(this.mvMatrix, [+car.x , 0  , -car.y]);
     mat4.rotate(this.mvMatrix, car.r, [0, 1, 0]);
     this.gl.activeTexture(this.gl.TEXTURE0);
     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
