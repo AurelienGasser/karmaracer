@@ -147,16 +147,16 @@ EngineWebGL.prototype.loadWorld = function() {
     ],
 
     car: [
-    [-1.0 * car_width,  0.0, -1.0 * car_width,  0.0, 1.0],
-    [-1.0 * car_width,  0.0,  1.0 * car_width,  0.0, 0.0],
-    [1.0 * car_width,  0.0,  1.0 * car_width, 1.0, 0.0],
-    [-1.0 * car_width,  0.0, -1.0 * car_width,  0.0, 1.0],
-    [1.0 * car_width,  0.0, -1.0 * car_width, 1.0, 1.0],
-    [1.0 * car_width,  0.0,  1.0 * car_width, 1.0, 0.0]
+    [-car_width/2,  0.0, -car_width/2,  0.0, 1.0],
+    [-car_width/2,  0.0,  car_width/2,  0.0, 0.0],
+    [car_width/2,  0.0,  car_width/2, 1.0, 0.0],
+    [-car_width/2,  0.0, -car_width/2,  0.0, 1.0],
+    [car_width/2,  0.0, -car_width/2, 1.0, 1.0],
+    [car_width/2,  0.0,  car_width/2, 1.0, 0.0]
     ]
   });
 }
-var car_width = 128 / 2;
+var car_width = 128;
 EngineWebGL.prototype.loadWalls = function(data) {
   var vertexPositions = [];
   var vertexTextureCoords = [];
