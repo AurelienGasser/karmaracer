@@ -178,12 +178,12 @@ EngineWebGL.prototype.loadWalls = function(data) {
 
      vertexTextureCoords[i] =
      [
-       0.0          , walls[i].h,
+       0.0          , walls[i].h / 100,
        0.0          , 0.0,
-       walls[i].w   , 0.0,
-       0.0          , walls[i].h,
-       walls[i].w   , walls[i].h,
-       walls[i].w   , 0.0,
+       walls[i].w / 100   , 0.0,
+       0.0          , walls[i].h / 100,
+       walls[i].w / 100   , walls[i].h / 100,
+       walls[i].w / 100   , 0.0,
      ];
 
      vertexCount[i] = 6;
