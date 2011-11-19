@@ -31,31 +31,26 @@ Engine2DCanvas.prototype.draw = function() {
 };
 
 Engine2DCanvas.prototype.drawCars = function() {
-
   if (this.game.cars != null) {
-
-    var ctx = this.ctx;
-    var carImage = this.carImage;
-    _.each(this.game.cars, function(c) {      
-      ctx.save();
-      ctx.translate(c.x , c.y);
-      ctx.rotate(c.r);
-      ctx.drawImage(carImage, 31, 48, 65, 36, -c.w / 2, -c.h / 2, c.w, c.h);
-      ctx.restore();
-    }); // pouya c'etait ca le tip ;), sa merde sur mobile
+    _.each(this.game.cars, function(c) {
+      this.ctx.save();
+      this.ctx.translate(c.x , c.y);
+      this.ctx.rotate(c.r);
+      this.ctx.drawImage(this.carImage, 31, 48, 65, 36, -c.w / 2, -c.h / 2, c.w, c.h);
+      this.ctx.restore();
+    }.bind(this));
   }
 }
 
 Engine2DCanvas.prototype.drawWalls = function() {
   var i = 0;
   var colors = ['#F00', '#FF0', '#FEE', '#0FF', '#FFF'];
-  var ctx = this.ctx;
   if (this.game.walls != null){
     _.each(this.game.walls, function(c) {
-      ctx.fillStyle = colors[i];
-      ctx.fillRect(c.x -c.w / 2 , c.y - c.h / 2, c.w, c.h);
+      this.ctx.fillStyle = colors[i];
+      this.ctx.fillRect(c.x -c.w / 2 , c.y - c.h / 2, c.w, c.h);
       i += 1;
-    });
+    }.bind(this));
   }
 }
 
@@ -66,12 +61,6 @@ Engine2DCanvas.prototype.drawItems = function() {
 
 Engine2DCanvas.prototype.tick = function() {
   requestAnimFrame(this.tick.bind(this));
-  handleKeys();  
-  G_game.drawEngine.draw();
-}
-
-
-function Engine2DCanvasTick(){
-  requestAnimFrame(Engine2DCanvasTick);
+  handleKeys();
   G_game.drawEngine.draw();
 }

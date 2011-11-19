@@ -46,7 +46,7 @@ function handleKeysMobile() {
     if (diff_zoomLevel < 0){
       var zoomFactor = 1.05;
     }
-    G_game.drawEngine.camera.scale *= zoomFactor;    
+    G_game.drawEngine.camera.scale *= zoomFactor;
   });
   $('#pad-zoom').bind('touchend', function(){
 
@@ -56,6 +56,42 @@ function handleKeysMobile() {
 
 }
 
+/*
+ * Compatibility
+ */
 
+if (!Function.prototype.bind) {
+  Function.prototype.bind = function (oThis) {
+    if (typeof this !== "function") {
+      // closest thing possible to the ECMAScript 5 internal IsCallable function
+      throw new TypeError("Function.prototype.bind - what is trying to be bound is not callable");
+    }
+    var fSlice = Array.prototype.slice,
+    aArgs = fSlice.call(arguments, 1),
+    fToBind = this,
+    fNOP = function () {},
+    fBound = function () {
+      return fToBind.apply(this instanceof fNOP
+        ? this
+        : oThis || window,
+        aArgs.concat(fSlice.call(arguments)));
+      };
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+      return fBound;
+    };
+}
 
-
+/*
+ * Keyboard
+ */
+setInterval(function(){
+  if (diff_driveSide != 0 || localAcceleration != 0){
+    if(G_game.socketManager.getConnection() != null){
+      if (diff_driveSide <= -maxTurn) diff_driveSide = -maxTurn;
+      if (diff_driveSide >= maxTurn) diff_driveSide = maxTurn;
+      $('#touch-debug').html('turn: '+  diff_driveSide + ", acc:" + localAcceleration);
+      G_game.socketManager.getConnection().emit('drive', {'accelerate' :localAcceleration, 'turnCar': diff_driveSide});
+    }
+  }
+}, 5);

@@ -19,7 +19,7 @@ var serverHost = 'karma.origamix.fr';
 
 
 app.configure('dev', function(){
-  serverHost = 'localhost';
+  serverHost = '192.168.1.7';
 });
 
 app.configure('pouya', function(){
@@ -39,32 +39,25 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-  res.render("index.jade", {
-    layout:false,
-    'title' : 'Karma Racer',
-    default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
-    server: 'http://' + serverHost + ':' + port + '/'
-  });
+  index(req, res, "index.jade", "WEBGL");
 });
 
 app.get('/m', function(req, res){
-  res.render("mobile.jade", {
-    layout:false,
-    'title' : 'Karma Racer',
-    default_draw_engine : "CANVAS",
-    server: 'http://' + serverHost + ':' + port + '/'
-  });
+  index(req, res, "mobile.jade", "CANVAS");
 });
 
 app.get('/canvas', function(req, res){
-  res.render("index.jade", {
-    layout:false,
-    'title' : 'Karma Racer',
-    default_draw_engine : "CANVAS",
-    server: 'http://' + serverHost + ':' + port + '/'
-  });
+  index(req, res, "index.jade", "CANVAS");
 });
 
+function index(req, res, view, draw_engine) {
+  res.render(view, {
+    layout: false,
+    'title': 'Karma Racer',
+    default_draw_engine: draw_engine,
+    server: 'http://' + serverHost + ':' + port + '/'
+  });
+}
 
 app.dynamicHelpers({
   'session' : function(req, res) {
@@ -98,7 +91,7 @@ setInterval(function () {
     physicsEngine.step();
     cars.updatePos();
 
-    
+
     //console.log(cars);
   }
   catch (e){
@@ -129,7 +122,7 @@ io.sockets.on('connection', function (client) {
       physicsEngine.world.DestroyBody(client.car.body);
       cars.remove(client.car);
       clearInterval(client.interval);
-      console.log('client left');      
+      console.log('client left');
     } catch (e){
       console.log(e);
     }
@@ -139,7 +132,7 @@ io.sockets.on('connection', function (client) {
 
 
   client.on('drive', function (navigate) {
-    try{      
+    try{
       //console.log('drive ', navigate);
       client.car.turn(navigate.turnCar);
       client.car.accelerate(navigate.accelerate);
