@@ -14,9 +14,9 @@ function EngineWebGL(game, canvas, canvasID, gl) {
     car: null
   };
   this.tabTexturesSources = {
-    grass: "../sprites/grass.gif",
-    road: "../sprites/road.jpg",
-    car: "../sprites/car.png"
+    grass: { file: "../sprites/grass.gif", size: 128 },
+    road: { file: "../sprites/road.jpg", size: 128 },
+    car: { file: "../sprites/car.png", size: 128 }
   };
   this.worldVertexPositionBuffer = {
     road: null,
@@ -104,7 +104,7 @@ EngineWebGL.prototype.initTexture = function() {
     var item = this.tabItems[i];
     this.tabTextures[item] = this.gl.createTexture();
     this.tabTextures[item].image = new Image();
-    this.tabTextures[item].image.src = this.tabTexturesSources[item];
+    this.tabTextures[item].image.src = this.tabTexturesSources[item].file;
   }
   this.tabTextures.grass.image.onload = function () {
     this.handleLoadedTexture(this.tabTextures.grass)
@@ -127,6 +127,8 @@ EngineWebGL.prototype.handleLoadedTexture = function(texture) {
 }
 
 EngineWebGL.prototype.loadWorld = function() {
+  var car_width = 16.75 * this.tabTexturesSources.car.size / 65;
+
   this.handleLoadedWorld({
     grass: [
     [-0.5,  0.0, -0.5,  0.0, 1.0],
@@ -156,7 +158,7 @@ EngineWebGL.prototype.loadWorld = function() {
     ]
   });
 }
-var car_width = 16.75 * 128 / 65;
+
 EngineWebGL.prototype.loadWalls = function(data) {
   var vertexPositions = [];
   var vertexTextureCoords = [];
