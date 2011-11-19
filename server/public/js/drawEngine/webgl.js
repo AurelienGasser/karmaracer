@@ -156,7 +156,7 @@ EngineWebGL.prototype.loadWorld = function() {
     ]
   });
 }
-var car_width = 128;
+var car_width = 16.75 * 128 / 65;
 EngineWebGL.prototype.loadWalls = function(data) {
   var vertexPositions = [];
   var vertexTextureCoords = [];
@@ -279,7 +279,7 @@ EngineWebGL.prototype.setMatrixUniforms = function() {
 }
 
 EngineWebGL.prototype.drawScene = function() {
-  var cameraHeight = G_game.drawEngine.camera.scale * 1000;
+  var cameraHeight = G_game.drawEngine.camera.scale * 600;
   if (G_game.mycar == undefined) {
     G_game.mycar = { x: 0, y: 0 };
   }
