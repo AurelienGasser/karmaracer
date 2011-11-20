@@ -1,6 +1,15 @@
 var express = require ('express');
 var backbone = require('backbone');
 var _ = require('underscore');
+var fs = require('fs');
+
+
+// FOR SSL IF REQUIRED
+var ssl_options = {
+  key: fs.readFileSync(__dirname + '/keys/karma-key.pem'),
+  cert: fs.readFileSync(__dirname + '/keys/karma-cert.pem')
+};
+
 
 var app = express.createServer();
 var io = require('socket.io').listen(app);
@@ -9,9 +18,11 @@ var io = require('socket.io').listen(app);
 var sys = require("util");
 var b2d = require("box2d");
 
-io.set('log level', 1);
+io.set('log level', 3);
+io.set('transports', ['websocket']);
 
 var port = 8082;
+
 app.listen(port);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
@@ -23,7 +34,7 @@ app.configure('dev', function(){
 });
 
 app.configure('pouya', function(){
-  serverHost = 'pouya';
+  serverHost = 'karma.pouya';
 });
 
 app.configure(function(){
@@ -35,7 +46,6 @@ app.configure(function(){
   app.use(express.session({secret:"grand mere"}));
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-
 });
 
 app.get('/', function(req, res){
@@ -43,7 +53,7 @@ app.get('/', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
-    server: 'http://' + serverHost + ':' + port + '/'
+    server: 'http://' + serverHost + '/'
   });
 });
 
@@ -52,7 +62,7 @@ app.get('/m', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : "CANVAS",
-    server: 'http://' + serverHost + ':' + port + '/'
+    server: 'http://' + serverHost +'/'
   });
 });
 
@@ -61,7 +71,7 @@ app.get('/canvas', function(req, res){
     layout:false,
     'title' : 'Karma Racer',
     default_draw_engine : "CANVAS",
-    server: 'http://' + serverHost + ':' + port + '/'
+    server: 'http://' + serverHost + '/'
   });
 });
 
@@ -133,8 +143,6 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-
-
   });
 
 
@@ -165,7 +173,7 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-    console.log('accelerate ', ac);
+    //console.log('accelerate ', ac);
   });
 
   client.on('chat', function (msg) {
