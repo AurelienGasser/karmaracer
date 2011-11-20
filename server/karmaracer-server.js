@@ -17,6 +17,7 @@ var io = require('socket.io').listen(app);
 
 var sys = require("util");
 var b2d = require("box2d");
+var fs = require('fs');
 
 io.set('log level', 3);
 io.set('transports', ['websocket']);
@@ -87,6 +88,9 @@ app.dynamicHelpers({
 
 var PhysicsItem = require('./classes/physicsItem');
 var PhysicsEngine = require('./classes/physicsEngine');
+
+
+var map = fs.readFile('./public/maps/map1.json');
 
 
 var worldSize = {w : 800, h : 600};
