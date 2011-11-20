@@ -15,6 +15,8 @@ Engine2DCanvas.prototype.init = function() {
   this.camera.setWorldSize(G_game.world.size);
   this.carImage = new Image();
   this.carImage.src = '/sprites/car.png';
+  this.wallImage = new Image();
+  this.wallImage.src = '/sprites/wall.png';  
 };
 
 Engine2DCanvas.prototype.loaded = function() {
@@ -47,14 +49,12 @@ Engine2DCanvas.prototype.drawCars = function() {
 }
 
 Engine2DCanvas.prototype.drawWalls = function() {
-  var i = 0;
-  var colors = ['#F00', '#FF0', '#FEE', '#0FF', '#FFF'];
   var ctx = this.ctx;
+  var wallPattern = ctx.createPattern(this.wallImage,'repeat');
   if (this.game.walls != null){
     _.each(this.game.walls, function(c) {
-      ctx.fillStyle = colors[i];
+      ctx.fillStyle = wallPattern;
       ctx.fillRect(c.x -c.w / 2 , c.y - c.h / 2, c.w, c.h);
-      i += 1;
     });
   }
 }

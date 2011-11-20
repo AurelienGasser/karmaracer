@@ -10,7 +10,6 @@ var ssl_options = {
   cert: fs.readFileSync(__dirname + '/keys/karma-cert.pem')
 };
 
-
 var app = express.createServer();
 var io = require('socket.io').listen(app);
 
@@ -19,7 +18,7 @@ var sys = require("util");
 var b2d = require("box2d");
 var fs = require('fs');
 
-io.set('log level', 3);
+io.set('log level', 0);
 io.set('transports', ['websocket']);
 
 var port = 8082;
@@ -89,38 +88,31 @@ app.dynamicHelpers({
 var PhysicsItem = require('./classes/physicsItem');
 var PhysicsEngine = require('./classes/physicsEngine');
 
+var map1_path = __dirname + '/public/maps/map1.json';
 
-var map = fs.readFile('./public/maps/map1.json');
-
+var map1String = fs.readFileSync(map1_path);
+var map1 = JSON.parse(map1String);
 
 var worldSize = {w : 800, h : 600};
-var physicsEngine = new PhysicsEngine(worldSize);
-physicsEngine.createWalls(worldSize);
 
+var physicsEngine = new PhysicsEngine(map1.size);
+physicsEngine.createWalls(map1.size, map1.items);
 
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection();
-
 var clients = [];
-
-
 
 // update all cars positions
 setInterval(function () {
   try{
     physicsEngine.step();
     cars.updatePos();
-
-    
-    //console.log(cars);
   }
   catch (e){
     console.log(e);
   }
 }, 20);
-
-
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
@@ -149,10 +141,8 @@ io.sockets.on('connection', function (client) {
     }
   });
 
-
   client.on('drive', function (navigate) {
     try{      
-      //console.log('drive ', navigate);
       client.car.turn(navigate.turnCar);
       client.car.accelerate(navigate.accelerate);
     } catch (e){
@@ -160,14 +150,11 @@ io.sockets.on('connection', function (client) {
     }
   });
 
-
-
   client.on('turnCar', function (side) {
     try{
       client.car.turn(side);
     } catch (e){
       console.log(e);
-      //console.log('turn ', side);
     }
   });
 
@@ -177,7 +164,6 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-    //console.log('accelerate ', ac);
   });
 
   client.on('chat', function (msg) {

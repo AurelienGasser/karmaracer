@@ -1,18 +1,30 @@
 {
   "name" : "map1",
   "size" : {
-    "w" : 400,
-    "h" : 400
+    "w" : 800,
+    "h" : 600
   },
-  itemInstances : [{
-    "item" : "rock",
-    "position" : {
-      "x" : 4,
-      "y" : 4
+  "items" : [
+    {
+      "item" : "rock",
+      "position" : {
+        "x" : 400,
+        "y" : 400
+      },
+      "size" : {
+        "w" : 100,
+        "h" : 100
+      }
     },
-    "size" : {
-      "w" : 10,
-      "h" : 10
-    }
-  }]
+    {
+      "item" : "rock",
+      "position" : {
+        "x" : 250,
+        "y" : 250
+      },
+      "size" : {
+        "w" : 50,
+        "h" : 50
+      }    
+    }]
 }

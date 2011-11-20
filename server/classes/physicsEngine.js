@@ -56,7 +56,7 @@ var PhysicsEngine = backbone.Model.extend({
 
 
   },
-  createWalls : function(worldSize){
+  createWalls : function(worldSize, wallItems){
     var borderSize = 2.0;
     var density = 0.0;
     var friction = 0.0;    
@@ -65,14 +65,16 @@ var PhysicsEngine = backbone.Model.extend({
     var worldYminusBorder = worldSize.h - 2 * borderSize;
     var wallLeft = {physicsEngine : this, position:{x : borderSize / 2, y :  borderSize + worldYminusBorder / 2}, size : {w : borderSize, h : worldYminusBorder}, density : density, friction: friction};
     var wallRight = {physicsEngine : this, position:{x : worldSize.w - borderSize / 2, y : borderSize + worldYminusBorder / 2 }, size : {w : borderSize, h : worldYminusBorder}, density : density, friction: friction};
-    var wallMiddle = {physicsEngine : this, position:{x : 300.0, y : 300.0}, size : {w : 100, h : 100.0}, density : 0.0, friction: 0.0};
 
     this.walls.push(new PhysicsItem(wallTop));
     this.walls.push(new PhysicsItem(wallBottom));
     this.walls.push(new PhysicsItem(wallLeft));
     this.walls.push(new PhysicsItem(wallRight));    
 
-    this.walls.push(new PhysicsItem(wallMiddle));    
+    _.each(wallItems, function(w){
+      var _wallOptions = {"physicsEngine" : this, "position" : w.position, "size" : w.size, "density" : 0.0, "friction": 0.0};
+      this.walls.push(new PhysicsItem(_wallOptions));
+    }.bind(this));
     
   }
 });
