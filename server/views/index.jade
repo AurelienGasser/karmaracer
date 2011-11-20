@@ -11,6 +11,16 @@ html
       var G_serverHost = '#{server}';
       var G_defaultDrawEngineType = '#{default_draw_engine}';
       var G_MOBILE_DEVICE = false;
+      // Google Analytics
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-27170619-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
     script(type='text/javascript', src='/js/SocketManager.js')
     script(type='text/javascript', src='/js/chat.js')
     script(type='text/javascript', src='/js/drawEngine/camera.js')
