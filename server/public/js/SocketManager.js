@@ -1,9 +1,11 @@
 function SocketManager(serverHost, game, onInitCallback){
   var connection = io.connect(serverHost);
+  //console.log(connection);
   this.game = game;
   this.init_done = false;
 
   connection.on('connect', function (data) {
+    //console.log('client connected');
   });
 
   connection.on('init', function (worldInfo) {

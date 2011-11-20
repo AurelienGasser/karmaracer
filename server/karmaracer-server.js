@@ -1,6 +1,14 @@
 var express = require ('express');
 var backbone = require('backbone');
 var _ = require('underscore');
+var fs = require('fs');
+
+
+// FOR SSL IF REQUIRED
+var ssl_options = {
+  key: fs.readFileSync(__dirname + '/keys/karma-key.pem'),
+  cert: fs.readFileSync(__dirname + '/keys/karma-cert.pem')
+};
 
 var app = express.createServer();
 var io = require('socket.io').listen(app);
@@ -8,42 +16,40 @@ var io = require('socket.io').listen(app);
 
 var sys = require("util");
 var b2d = require("box2d");
+var fs = require('fs');
 
-io.set('log level', 1);
+io.set('log level', 0);
+io.set('transports', ['websocket']);
 
 var port = 8082;
-app.listen(port);
+
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
 var serverHost = 'karma.origamix.fr';
 
-
 app.configure('dev', function(){
   serverHost = '192.168.1.103';
+  port = 80;
 });
 
 app.configure('pouya', function(){
-  serverHost = 'pouya';
+  serverHost = 'karma.pouya';
 });
+
+app.listen(port);
 
 app.configure(function(){
   app.use(express.methodOverride());
   app.use(express.bodyParser());
   app.use(express.cookieParser());
-
   app.use(express.static(__dirname + '/public'));
   app.use(express.session({secret:"grand mere"}));
   app.use(app.router);
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
-
 });
 
 app.get('/', function(req, res){
   index(req, res, "index.jade", "WEBGL");
-});
-
-app.get('/m', function(req, res){
-  index(req, res, "mobile.jade", "CANVAS");
 });
 
 app.get('/canvas', function(req, res){
@@ -71,35 +77,31 @@ app.dynamicHelpers({
 var PhysicsItem = require('./classes/physicsItem');
 var PhysicsEngine = require('./classes/physicsEngine');
 
+var map1_path = __dirname + '/public/maps/map1.json';
+
+var map1String = fs.readFileSync(map1_path);
+var map1 = JSON.parse(map1String);
 
 var worldSize = {w : 800, h : 600};
-var physicsEngine = new PhysicsEngine(worldSize);
-physicsEngine.createWalls(worldSize);
 
+var physicsEngine = new PhysicsEngine(map1.size);
+physicsEngine.createWalls(map1.size, map1.items);
 
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection();
-
 var clients = [];
-
-
 
 // update all cars positions
 setInterval(function () {
   try{
     physicsEngine.step();
     cars.updatePos();
-
-
-    //console.log(cars);
   }
   catch (e){
     console.log(e);
   }
 }, 20);
-
-
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
@@ -130,7 +132,6 @@ io.sockets.on('connection', function (client) {
 
   client.on('drive', function (events) {
     try{
-      //console.log('drive ', navigate);
       for (var event in events) {
         var state = events[event];
         if (state == 'start') {
@@ -143,26 +144,6 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-  });
-
-
-
-  client.on('turnCar', function (side) {
-    try{
-      client.car.turn(side);
-    } catch (e){
-      console.log(e);
-      //console.log('turn ', side);
-    }
-  });
-
-  client.on('accelerate', function (ac) {
-    try{
-      client.car.accelerate(ac);
-    } catch (e){
-      console.log(e);
-    }
-    console.log('accelerate ', ac);
   });
 
   client.on('chat', function (msg) {
