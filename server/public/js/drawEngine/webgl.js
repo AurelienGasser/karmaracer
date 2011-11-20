@@ -45,8 +45,6 @@ EngineWebGL.prototype.init = function() {
   this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
   this.gl.enable(this.gl.DEPTH_TEST);
   this.camera = new Camera(null);
-  document.onkeydown = handleKeyDown;
-  document.onkeyup = handleKeyUp;
 };
 
 EngineWebGL.prototype.initShaders = function() {
@@ -254,7 +252,6 @@ EngineWebGL.prototype.handleLoadedWorld = function(data) {
 
 EngineWebGL.prototype.tick = function() {
   requestAnimFrame(this.tick.bind(this));
-  handleKeys();
   this.drawScene();
 }
 

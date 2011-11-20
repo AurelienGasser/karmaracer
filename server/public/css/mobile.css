@@ -1,36 +1,45 @@
 .pad{
- position:absolute;
- width:40%;
- color:black;
- border:1px dotted black;
- text-align:center;
- z-index:505;
- background-color: white;
- opacity: 0.05;
- -moz-opacity: 0.05;
- filter:alpha(opacity=1);
- padding:0px;
- margin:0px;
-
+  position:absolute;
+  color:black;
+  border:1px dotted black;
+  text-align:center;
+  z-index:505;
+  background-color: white;
+  opacity: 0.05;
+  -moz-opacity: 0.05;
+  filter:alpha(opacity=1);
+  padding:0px;
+  margin:0px;
 }
-/*
-.pad:hover{
-  background-color:red;
-}*/
-
 
 #pad-left{
+  height:75%;
+  width:22%;
   left:0px;
   bottom:0px;
-  height:75%;
 }
 
-
-#pad-top{
+#pad-right{
   height:75%;
+  width:20%;
+  left:20%;
+  bottom:0px;
+}
+
+#pad-forward{
+  height:32%;
+  width:40%;
+  right:0px;
+  bottom:34%;
+}
+
+#pad-backward{
+  height:32%;
+  width:40%;
   right:0px;
   bottom:0px;
 }
+
 
 #pad-zoom{
   height:25%;
@@ -38,32 +47,22 @@
   top:0px;
 }
 
-/*
-#pad-bottom{
-  right:0px;
-  bottom:0px;
-  height:150px;
-}
-*/
 #camera-debug{
-display:none;
-position: absolute;
-top:0px;
-left:0px;
+  display:none;
+  position: absolute;
+  top:0px;
+  left:0px;
 }
 
 #touch-debug{
-/*display:none;*/
-position: absolute;
-top:0px;
-right:0px;
+  position: absolute;
+  top:0px;
+  right:0px;
 }
 
 #game-canvas{
   width:100%;
   height:100%;
-/*display:none;*/
-  
 }
 
 body{

@@ -2,11 +2,12 @@ html
   head
     title Karma Racer, baby!
     meta(http-equiv='content-type', content='text/html; charset=utf-8')
-    script(type='text/javascript', src='/js/libs/jquery-1.6.4.min.js')
+    meta(name="viewport", content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
     script(type='text/javascript', src='/socket.io/socket.io.js')
-    script(type='text/javascript', src='/js/libs/glMatrix-0.9.5.min.js')
-    script(type='text/javascript', src='/js/libs/webgl-utils.js')
     script(type='text/javascript', src='/js/libs/underscore.js')
+    script(type='text/javascript', src='/js/libs/modernizr.min.js')
+    script(type='text/javascript', src='/js/drawEngine/2DCanvas.js')
     script(type='text/javascript')
       var G_serverHost = '#{server}';
       var G_defaultDrawEngineType = '#{default_draw_engine}';
@@ -15,8 +16,6 @@ html
     script(type='text/javascript', src='/js/chat.js')
     script(type='text/javascript', src='/js/drawEngine/camera.js')
     script(type='text/javascript', src='/js/drawEngine/drawEngineFactory.js')
-    script(type='text/javascript', src='/js/drawEngine/webgl.js')
-    script(type='text/javascript', src='/js/drawEngine/2DCanvas.js')
     script(type='text/javascript', src='/js/keyboard.js')
     script(type='text/javascript', src='/js/game.js')
     script(type='text/javascript', src='/js/startup.js')

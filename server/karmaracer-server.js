@@ -19,7 +19,7 @@ var serverHost = 'karma.origamix.fr';
 
 
 app.configure('dev', function(){
-  serverHost = '192.168.1.7';
+  serverHost = '192.168.1.103';
 });
 
 app.configure('pouya', function(){
@@ -103,7 +103,7 @@ setInterval(function () {
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
-
+  client.keyboard = {};
   client.emit('init', {size: worldSize, walls : physicsEngine.getShareWalls()});
   clients.push(client);
 
@@ -126,16 +126,20 @@ io.sockets.on('connection', function (client) {
     } catch (e){
       console.log(e);
     }
-
-
   });
 
-
-  client.on('drive', function (navigate) {
+  client.on('drive', function (events) {
     try{
       //console.log('drive ', navigate);
-      client.car.turn(navigate.turnCar);
-      client.car.accelerate(navigate.accelerate);
+      for (var event in events) {
+        var state = events[event];
+        if (state == 'start') {
+          client.keyboard[event] = true;
+        } else
+        {
+          client.keyboard[event] = false;
+        }
+      }
     } catch (e){
       console.log(e);
     }
@@ -169,7 +173,32 @@ io.sockets.on('connection', function (client) {
 });
 
 
+function handleClientKeyboard() {
+  for (var i in clients) {
+    var client = clients[i];
+    for (var event in client.keyboard) {
+      var state = client.keyboard[event];
+      if (state) {
+        switch (event) {
+          case 'forward':
+            client.car.accelerate(6.0)
+            break;
+          case 'backward':
+            client.car.accelerate(-6.0)
+            break;
+          case 'left':
+            client.car.turn(3.0)
+            break;
+          case 'right':
+            client.car.turn(-3.0)
+            break;
+        }
+      }
+    }
+  }
+}
 
+setInterval(handleClientKeyboard, 10);
 
 
 

@@ -15,6 +15,7 @@
 }
 
 #right_panel {
+  display: none;
   width: 20%;
   position:absolute;
   right:0px;
@@ -28,24 +29,25 @@
   height: 10%;
 }
 
-#chat_msgs {
-  height: 70%;
-  border: 1px solid buttonface;
-}
 
 #player_name_div {
   width: 100%;
   height: 9%;
 }
 
-#chat_input {
-  width: 100%;
-  height: 10%;
-}
-
 body{
 	margin:0px;
 	padding:0px;
+}
+
+#chat_msgs {
+  height: 70%;
+  border: 1px solid buttonface;
+}
+
+#chat_input {
+  width: 100%;
+  height: 10%;
 }
 
 #camera-debug{

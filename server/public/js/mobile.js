@@ -1,64 +1,70 @@
-var driveSide = 0;
-var diff_driveSide = 0;
-var accelerationTouch = 0;
-var localAcceleration = 0;
-var zoomLevel = 1;
-var diff_zoomLevel = 0;
-var maxTurn = 3;
-
-function updateOrientation(){
-  if (G_game.drawEngine.camera != null){
-    //console.log('update orientation')
-    G_game.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
-  }
+function MobileTerminalHandler() {
+  return this;
 }
 
-function handleKeysMobile() {
+MobileTerminalHandler.prototype.init = function() {
+  $("head").append('<link rel="apple-touch-icon" href="/images/karmaracer-logo.png"/>');
+  $("body").attr('onorientationchange', "updateOrientation();");
+  $("body").append('<div id="camera-debug"/>');
+  this.addTouchScreenAreas();
+  this.initTouchScreenEvents();
+}
+
+MobileTerminalHandler.prototype.addTouchScreenAreas = function() {
+  $("body").append('<div id="touch-debug">toto</div>');
+  $("body").append('<div id="pad-left" class="pad">LEFT</div>');
+  $("body").append('<div id="pad-right" class="pad">RIGHT</div>');
+  $("body").append('<div id="pad-forward" class="pad">FORWARD</div>');
+  $("body").append('<div id="pad-backward" class="pad">BACKWARD</div>');
+  $("body").append('<div id="pad-zoom" class="pad">ZOOM</div>');
+}
+
+MobileTerminalHandler.prototype.initTouchScreenEvents = function() {
   window.ontouchmove = function(e){ e.preventDefault();}
   window.touchstart = function(e){ e.preventDefault();}
-
-
-  $('#pad-top').bind('touchstart', function(event){
-    accelerationTouch = event.pageY;
-  });
-  $('#pad-top').bind('touchmove', function(event){
-    localAcceleration = accelerationTouch - event.pageY;
-    //G_game.socketManager.getConnection().emit('drive', {'accelerate' :localAcceleration, 'turnCar': diff_driveSide});
-  });
-  $('#pad-top').bind('touchend', function(){
-    localAcceleration = 0;
-  });
-  $('#pad-left').bind('touchstart', function(event){
-    driveSide = event.pageX;
-  });
-  $('#pad-left').bind('touchmove', function(event){
-    diff_driveSide = driveSide - event.pageX;
-  });
-  $('#pad-left').bind('touchend', function(){
-    diff_driveSide = 0;
-  });
-  $('#pad-zoom').bind('touchstart', function(event){
-    zoomLevel = event.pageX;
+  $('#pad-forward').bind('touchstart', function(event){
+     G_game.keyboardHandler.event('forward', 'start');
+   });
+   $('#pad-forward').bind('touchend', function(){
+     G_game.keyboardHandler.event('forward', 'end');
+   });
+   $('#pad-backward').bind('touchstart', function(event){
+     G_game.keyboardHandler.event('backward', 'start');
+   });
+   $('#pad-backward').bind('touchend', function(){
+     G_game.keyboardHandler.event('backward', 'end');
+   });
+   $('#pad-left').bind('touchstart', function(event){
+     G_game.keyboardHandler.event('left', 'start');
+   });
+   $('#pad-left').bind('touchend', function(){
+     G_game.keyboardHandler.event('left', 'stop');
+   });
+   $('#pad-right').bind('touchstart', function(event){
+     G_game.keyboardHandler.event('right', 'start');
+   });
+   $('#pad-right').bind('touchend', function(){
+     G_game.keyboardHandler.event('right', 'stop');
+   });
+   $('#pad-zoom').bind('touchstart', function(event){
+    this.zoomLevel = event.pageX;
   });
   $('#pad-zoom').bind('touchmove', function(event){
-    diff_zoomLevel = zoomLevel - event.pageX;
-    var zoomFactor = 0.95;
-    if (diff_zoomLevel < 0){
+    var zoomFactor;
+    if (this.zoomLevel - event.pageX < 0){
       var zoomFactor = 1.05;
+    } else {
+      zoomFactor = 0.95;
     }
     G_game.drawEngine.camera.scale *= zoomFactor;
   });
-  $('#pad-zoom').bind('touchend', function(){
-
-
-    diff_zoomLevel = 0;
-  });
-
 }
 
-/*
- * Compatibility
- */
+function updateOrientation(){
+  if (G_game.drawEngine.camera != null){
+    G_game.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
+  }
+}
 
 if (!Function.prototype.bind) {
   Function.prototype.bind = function (oThis) {
@@ -71,27 +77,12 @@ if (!Function.prototype.bind) {
     fToBind = this,
     fNOP = function () {},
     fBound = function () {
-      return fToBind.apply(this instanceof fNOP
-        ? this
-        : oThis || window,
+      return fToBind.apply(this instanceof fNOP ? this : oThis || window,
         aArgs.concat(fSlice.call(arguments)));
-      };
-      fNOP.prototype = this.prototype;
-      fBound.prototype = new fNOP();
-      return fBound;
     };
+    fNOP.prototype = this.prototype;
+    fBound.prototype = new fNOP();
+    return fBound;
+  };
 }
 
-/*
- * Keyboard
- */
-setInterval(function(){
-  if (diff_driveSide != 0 || localAcceleration != 0){
-    if(G_game.socketManager.getConnection() != null){
-      if (diff_driveSide <= -maxTurn) diff_driveSide = -maxTurn;
-      if (diff_driveSide >= maxTurn) diff_driveSide = maxTurn;
-      $('#touch-debug').html('turn: '+  diff_driveSide + ", acc:" + localAcceleration);
-      G_game.socketManager.getConnection().emit('drive', {'accelerate' :localAcceleration, 'turnCar': diff_driveSide});
-    }
-  }
-}, 5);

@@ -61,6 +61,5 @@ Engine2DCanvas.prototype.drawItems = function() {
 
 Engine2DCanvas.prototype.tick = function() {
   requestAnimFrame(this.tick.bind(this));
-  handleKeys();
   G_game.drawEngine.draw();
 }
