@@ -45,6 +45,7 @@ Engine2DCanvas.prototype.drawCars = function() {
 }
 
 Engine2DCanvas.prototype.drawWalls = function() {
+  if (!this.wallImage.complete) return;
   this.wallPattern = this.ctx.createPattern(this.wallImage,'repeat');
   if (this.game.walls != null){
     _.each(this.game.walls, function(c) {

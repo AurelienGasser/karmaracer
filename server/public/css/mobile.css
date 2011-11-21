@@ -12,34 +12,19 @@
   margin:0px;
 }
 
-#pad-left{
+#pad-turn{
   height:75%;
-  width:22%;
+  width:45%;
   left:0px;
   bottom:0px;
 }
 
-#pad-right{
+#pad-accelerate{
   height:75%;
-  width:20%;
-  left:20%;
-  bottom:0px;
-}
-
-#pad-forward{
-  height:32%;
-  width:40%;
-  right:0px;
-  bottom:34%;
-}
-
-#pad-backward{
-  height:32%;
   width:40%;
   right:0px;
   bottom:0px;
 }
-
 
 #pad-zoom{
   height:25%;

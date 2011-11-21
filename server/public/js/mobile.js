@@ -6,47 +6,120 @@ MobileTerminalHandler.prototype.init = function() {
   $("head").append('<link rel="apple-touch-icon" href="/images/karmaracer-logo.png"/>');
   $("body").attr('onorientationchange', "updateOrientation();");
   $("body").append('<div id="camera-debug"/>');
+  this.touch = {
+    forward: false,
+    backward: false,
+    left: false,
+    right: false
+  }
   this.addTouchScreenAreas();
   this.initTouchScreenEvents();
 }
 
 MobileTerminalHandler.prototype.addTouchScreenAreas = function() {
   $("body").append('<div id="touch-debug">toto</div>');
-  $("body").append('<div id="pad-left" class="pad">LEFT</div>');
-  $("body").append('<div id="pad-right" class="pad">RIGHT</div>');
-  $("body").append('<div id="pad-forward" class="pad">FORWARD</div>');
-  $("body").append('<div id="pad-backward" class="pad">BACKWARD</div>');
+  $("body").append('<div id="pad-turn" class="pad">TURN</div>');
+  $("body").append('<div id="pad-accelerate" class="pad">ACCELERATE</div>');
   $("body").append('<div id="pad-zoom" class="pad">ZOOM</div>');
+}
+
+
+// Turn left, stop turning or turn right depending on the event position
+MobileTerminalHandler.prototype.touchEventTurn = function(event) {
+  if (
+    event.originalEvent.targetTouches[0].pageY < event.target.offsetTop
+    || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight
+    || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft
+    || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth
+  ) {
+    this.userTurn('stop');
+  } else if (event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft + event.target.clientWidth / 2) {
+    this.userTurn('left');
+  } else {
+    this.userTurn('right');
+  }
+}
+
+// Accelerate, stop or descelerate depending on the event position
+MobileTerminalHandler.prototype.touchEventAccelerate = function(event) {
+  if (
+    event.originalEvent.targetTouches[0].pageY < event.target.offsetTop
+    || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight
+    || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft
+    || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth
+  ) {
+    this.userAccelerate('stop');
+  } else if (event.originalEvent.targetTouches[0].pageY < event.target.offsetTop + event.target.clientHeight / 2) {
+    this.userAccelerate('forward');
+  } else {
+    this.userAccelerate('backward');
+  }
+}
+
+// Send a turn instruction to the server if necessary
+MobileTerminalHandler.prototype.userTurn = function(direction) {
+  switch (direction) {
+    case 'stop':
+      if (this.touch.left) G_game.keyboardHandler.event('left', 'end');
+      if (this.touch.right) G_game.keyboardHandler.event('right', 'end');
+      break;
+    case 'left':
+      if (this.touch.right) G_game.keyboardHandler.event('right', 'end');
+      if (!this.touch.left) G_game.keyboardHandler.event('left', 'start');
+      break;
+    case 'right':
+      if (this.touch.left) G_game.keyboardHandler.event('left', 'end');
+      if (!this.touch.right) G_game.keyboardHandler.event('right', 'start');
+      break;
+  }
+  this.touch.left = false;
+  this.touch.right = false;
+  if (direction != 'stop') this.touch[direction] = true;
+}
+
+// Send an accelerate instruction to the server if necessary
+MobileTerminalHandler.prototype.userAccelerate = function(direction) {
+  switch (direction) {
+    case 'stop':
+      if (this.touch.forward) G_game.keyboardHandler.event('forward', 'end');
+      if (this.touch.backward) G_game.keyboardHandler.event('backward', 'end');
+      break;
+    case 'forward':
+      if (this.touch.backward) G_game.keyboardHandler.event('backward', 'end');
+      if (!this.touch.forward) G_game.keyboardHandler.event('forward', 'start');
+      break;
+    case 'backward':
+      if (this.touch.forward) G_game.keyboardHandler.event('forward', 'end');
+      if (!this.touch.backward) G_game.keyboardHandler.event('backward', 'start');
+      break;
+  }
+  this.touch.forward = false;
+  this.touch.backward = false;
+  if (direction != 'stop') this.touch[direction] = true;
 }
 
 MobileTerminalHandler.prototype.initTouchScreenEvents = function() {
   window.ontouchmove = function(e){ e.preventDefault();}
   window.touchstart = function(e){ e.preventDefault();}
-  $('#pad-forward').bind('touchstart', function(event){
-     G_game.keyboardHandler.event('forward', 'start');
-   });
-   $('#pad-forward').bind('touchend', function(){
-     G_game.keyboardHandler.event('forward', 'end');
-   });
-   $('#pad-backward').bind('touchstart', function(event){
-     G_game.keyboardHandler.event('backward', 'start');
-   });
-   $('#pad-backward').bind('touchend', function(){
-     G_game.keyboardHandler.event('backward', 'end');
-   });
-   $('#pad-left').bind('touchstart', function(event){
-     G_game.keyboardHandler.event('left', 'start');
-   });
-   $('#pad-left').bind('touchend', function(){
-     G_game.keyboardHandler.event('left', 'stop');
-   });
-   $('#pad-right').bind('touchstart', function(event){
-     G_game.keyboardHandler.event('right', 'start');
-   });
-   $('#pad-right').bind('touchend', function(){
-     G_game.keyboardHandler.event('right', 'stop');
-   });
-   $('#pad-zoom').bind('touchstart', function(event){
+  $('#pad-accelerate').bind('touchstart', function(event){
+    this.touchEventAccelerate(event);
+  }.bind(this));
+  $('#pad-accelerate').bind('touchend', function(){
+    this.userAccelerate('stop');
+  }.bind(this));
+  $('#pad-accelerate').bind('touchmove', function(event){
+    this.touchEventAccelerate(event);
+  }.bind(this));
+  $('#pad-turn').bind('touchstart', function(event){
+    this.touchEventTurn(event);
+  }.bind(this));
+  $('#pad-turn').bind('touchend', function(){
+    this.userTurn('stop');
+  }.bind(this));
+  $('#pad-turn').bind('touchmove', function(event){
+    this.touchEventTurn(event);
+  }.bind(this));
+  $('#pad-zoom').bind('touchstart', function(event){
     this.zoomLevel = event.pageX;
   });
   $('#pad-zoom').bind('touchmove', function(event){
@@ -79,10 +152,10 @@ if (!Function.prototype.bind) {
     fBound = function () {
       return fToBind.apply(this instanceof fNOP ? this : oThis || window,
         aArgs.concat(fSlice.call(arguments)));
+      };
+      fNOP.prototype = this.prototype;
+      fBound.prototype = new fNOP();
+      return fBound;
     };
-    fNOP.prototype = this.prototype;
-    fBound.prototype = new fNOP();
-    return fBound;
-  };
-}
+  }
 
