@@ -1,20 +1,15 @@
 function KeyboardHandler() {
-  this.eventsToEmit = {};
-  setInterval(this.tick.bind(this), 5);
   return this;
 };
 
-KeyboardHandler.prototype.tick = function() {
-  var connection = G_game.socketManager.getConnection();
-  if (connection && !$.isEmptyObject(this.eventsToEmit)){
-    $('#touch-debug').html(this.eventsToEmit);
-    connection.emit('drive', this.eventsToEmit);
-    this.eventsToEmit = {};
-  }
-}
-
 KeyboardHandler.prototype.event = function(event, state) {
-  this.eventsToEmit[event] = state;
+  var connection = G_game.socketManager.getConnection();
+  if (connection) {
+    $('#touch-debug').html(event + ' ' + state);
+    var eventToSend = {};
+    eventToSend[event] = state;
+    connection.emit('drive', eventToSend);
+  }
 }
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
