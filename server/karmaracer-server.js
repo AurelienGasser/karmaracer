@@ -61,7 +61,7 @@ function index(req, res, view, draw_engine) {
     layout: false,
     'title': 'Karma Racer',
     default_draw_engine: draw_engine,
-    server: 'http://' + serverHost + ':' + port + '/'
+    server: 'http://' + serverHost + '/'
   });
 }
 
