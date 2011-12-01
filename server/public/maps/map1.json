@@ -1,12 +1,13 @@
 {
   "name" : "map1",
+  "backgroundImage" : "/sprites/road.jpg",
   "size" : {
     "w" : 800,
     "h" : 600
   },
-  "items" : [
+  "staticItems" : [
     {
-      "item" : "rock",
+      "name" : "wall",
       "position" : {
         "x" : 400,
         "y" : 400
@@ -17,7 +18,18 @@
       }
     },
     {
-      "item" : "rock",
+      "name" : "grass",
+      "position" : {
+        "x" : 600,
+        "y" : 500
+      },
+      "size" : {
+        "w" : 20,
+        "h" : 20
+      }
+    },
+    {
+      "name" : "grass",
       "position" : {
         "x" : 250,
         "y" : 250

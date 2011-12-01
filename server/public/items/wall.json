@@ -1,0 +1,13 @@
+{
+  "name" : "wall",
+  "image" : {
+    "path" : "/sprites/wall.png",
+    "size" : 128,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 128,
+      "h" : 128
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "name" : "grass",
+  "image" : {
+    "path" : "/sprites/grass.gif",
+    "size" : 256,
+    "crop" : {
+      "x" : 64,
+      "y" : 64,
+      "w" : 128,
+      "h" : 128
+    }
+  }
+}

@@ -49,19 +49,23 @@ Engine2DCanvas.prototype.drawCars = function() {
 }
 
 Engine2DCanvas.prototype.drawWalls = function() {
-  var ctx = this.ctx;
-  var wallPattern = ctx.createPattern(this.wallImage,'repeat');
   if (this.game.walls != null){
     _.each(this.game.walls, function(c) {
-      ctx.fillStyle = wallPattern;
-      ctx.fillRect(c.x -c.w / 2 , c.y - c.h / 2, c.w, c.h);
-    });
+      this.ctx.fillStyle = this.game.itemsInMap[c.name].pattern;
+      this.ctx.fillRect(c.position.x -c.size.w / 2 , c.position.y - c.size.h / 2, c.size.w, c.size.h);
+    }.bind(this));
   }
 }
 
+Engine2DCanvas.prototype.drawBackground = function() {
+  this.ctx.fillStyle = this.game.backgroundPattern;
+  this.ctx.fillRect(0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
+}
+
 Engine2DCanvas.prototype.drawItems = function() {
-  this.drawCars();
+  this.drawBackground();  
   this.drawWalls();
+  this.drawCars();
 };
 
 Engine2DCanvas.prototype.tick = function() {
