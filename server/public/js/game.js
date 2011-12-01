@@ -4,14 +4,10 @@ function Game(){
   this.walls = [];
   this.drawEngine;
   this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived);
-  document.onkeydown = handleKeyDown;
-  document.onkeyup = handleKeyUp;
 }
 
 Game.prototype.onInitReceived = function(err, worldInfo) {
-  // once socket init has been done  
-
-  //console.log(worldInfo);
+  // once socket init has been done
   G_game.world = {};
   G_game.world.size = worldInfo.size;
   G_game.walls = worldInfo.staticItems;
@@ -19,6 +15,7 @@ Game.prototype.onInitReceived = function(err, worldInfo) {
   
   G_game.drawEngine = DrawEngineFactory(G_game, "game-canvas", G_defaultDrawEngineType);
 
+  // create background pattern
   var bgImage = new Image();
   bgImage.src = worldInfo.backgroundImage;
   bgImage.onload = function(){
@@ -26,6 +23,7 @@ Game.prototype.onInitReceived = function(err, worldInfo) {
     G_game.backgroundPattern = bgPattern;    
   }
 
+  // enhance items with patterns
   _.each(G_game.itemsInMap, function(i, item){
       var img = new Image();
       img.src = i.image.path;
@@ -35,22 +33,11 @@ Game.prototype.onInitReceived = function(err, worldInfo) {
       }
   }.bind(this));
 
-  if (G_MOBILE_DEVICE){
-    setInterval(function(){
-      if (diff_driveSide != 0 || localAcceleration != 0){
-        if(G_game.socketManager.getConnection() != null){
-          if (diff_driveSide <= -maxTurn) diff_driveSide = -maxTurn;
-          if (diff_driveSide >= maxTurn) diff_driveSide = maxTurn;
-          $('#touch-debug').html('turn: '+  diff_driveSide + ", acc:" + localAcceleration);          
-          G_game.socketManager.getConnection().emit('drive', {'accelerate' :localAcceleration, 'turnCar': diff_driveSide});
-        }        
-      }
-    }, 5);
-    Engine2DCanvasTick();    
-  }else{
-    G_game.drawEngine.tick();          
-  }
-  
 
+  
+  G_game.keyboardHandler = new KeyboardHandler();
+  document.onkeydown = G_game.keyboardHandler.handleKeyDown.bind(G_game.keyboardHandler);
+  document.onkeyup = G_game.keyboardHandler.handleKeyUp.bind(G_game.keyboardHandler);
+  G_game.drawEngine.tick();
 };
 

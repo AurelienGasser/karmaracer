@@ -16,7 +16,7 @@ Engine2DCanvas.prototype.init = function() {
   this.carImage = new Image();
   this.carImage.src = '/sprites/car.png';
   this.wallImage = new Image();
-  this.wallImage.src = '/sprites/wall.png';  
+  this.wallImage.src = '/sprites/wall.png';
 };
 
 Engine2DCanvas.prototype.loaded = function() {
@@ -33,18 +33,14 @@ Engine2DCanvas.prototype.draw = function() {
 };
 
 Engine2DCanvas.prototype.drawCars = function() {
-
   if (this.game.cars != null) {
-
-    var ctx = this.ctx;
-    var carImage = this.carImage;
-    _.each(this.game.cars, function(c) {      
-      ctx.save();
-      ctx.translate(c.x , c.y);
-      ctx.rotate(c.r);
-      ctx.drawImage(carImage, 31, 48, 65, 36, -c.w / 2, -c.h / 2, c.w, c.h);
-      ctx.restore();
-    }); // pouya c'etait ca le tip ;), sa merde sur mobile
+    _.each(this.game.cars, function(c) {
+      this.ctx.save();
+      this.ctx.translate(c.x , c.y);
+      this.ctx.rotate(c.r);
+      this.ctx.drawImage(this.carImage, 31, 48, 65, 36, -c.w / 2, -c.h / 2, c.w, c.h);
+      this.ctx.restore();
+    }.bind(this));
   }
 }
 
@@ -70,12 +66,5 @@ Engine2DCanvas.prototype.drawItems = function() {
 
 Engine2DCanvas.prototype.tick = function() {
   requestAnimFrame(this.tick.bind(this));
-  handleKeys();  
-  G_game.drawEngine.draw();
-}
-
-
-function Engine2DCanvasTick(){
-  requestAnimFrame(Engine2DCanvasTick);
   G_game.drawEngine.draw();
 }

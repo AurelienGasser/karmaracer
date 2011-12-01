@@ -23,19 +23,20 @@ io.set('transports', ['websocket']);
 
 var port = 8082;
 
-app.listen(port);
 app.set ('views', __dirname + '/views');
 app.set ('view engine', 'jade');
 var serverHost = 'karma.origamix.fr';
 
-
 app.configure('dev', function(){
-  serverHost = 'localhost';
+  serverHost = '192.168.1.103';
+  port = 80;
 });
 
 app.configure('pouya', function(){
   serverHost = 'pouya';
 });
+
+app.listen(port);
 
 app.configure(function(){
   app.use(express.methodOverride());
@@ -48,32 +49,21 @@ app.configure(function(){
 });
 
 app.get('/', function(req, res){
-  res.render("index.jade", {
-    layout:false,
-    'title' : 'Karma Racer',
-    default_draw_engine : req.query.forcecanvas ? "CANVAS" : "WEBGL",
-    server: 'http://' + serverHost + '/'
-  });
-});
-
-app.get('/m', function(req, res){
-  res.render("mobile.jade", {
-    layout:false,
-    'title' : 'Karma Racer',
-    default_draw_engine : "CANVAS",
-    server: 'http://' + serverHost +'/'
-  });
+  index(req, res, "index.jade", "WEBGL");
 });
 
 app.get('/canvas', function(req, res){
-  res.render("index.jade", {
-    layout:false,
-    'title' : 'Karma Racer',
-    default_draw_engine : "CANVAS",
-    server: 'http://' + serverHost + '/'
-  });
+  index(req, res, "index.jade", "CANVAS");
 });
 
+function index(req, res, view, draw_engine) {
+  res.render(view, {
+    layout: false,
+    'title': 'Karma Racer',
+    default_draw_engine: draw_engine,
+    server: 'http://' + serverHost + '/'
+  });
+}
 
 app.dynamicHelpers({
   'session' : function(req, res) {
@@ -115,10 +105,10 @@ setInterval(function () {
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
-
   var worldInfo = physicsEngine.getWorldInfo();
-//  console.log(worldInfo);
-  client.emit('init', worldInfo);
+  
+  client.keyboard = {};
+  client.emit('init', {size: worldSize, walls : physicsEngine.getShareWalls()});
   clients.push(client);
 
   client.on('init_done', function () {
@@ -136,32 +126,23 @@ io.sockets.on('connection', function (client) {
       physicsEngine.world.DestroyBody(client.car.body);
       cars.remove(client.car);
       clearInterval(client.interval);
-      console.log('client left');      
+      console.log('client left');
     } catch (e){
       console.log(e);
     }
   });
 
-  client.on('drive', function (navigate) {
-    try{      
-      client.car.turn(navigate.turnCar);
-      client.car.accelerate(navigate.accelerate);
-    } catch (e){
-      console.log(e);
-    }
-  });
-
-  client.on('turnCar', function (side) {
+  client.on('drive', function (events) {
     try{
-      client.car.turn(side);
-    } catch (e){
-      console.log(e);
-    }
-  });
-
-  client.on('accelerate', function (ac) {
-    try{
-      client.car.accelerate(ac);
+      for (var event in events) {
+        var state = events[event];
+        if (state == 'start') {
+          client.keyboard[event] = true;
+        } else
+        {
+          client.keyboard[event] = false;
+        }
+      }
     } catch (e){
       console.log(e);
     }
@@ -175,7 +156,32 @@ io.sockets.on('connection', function (client) {
 });
 
 
+function handleClientKeyboard() {
+  for (var i in clients) {
+    var client = clients[i];
+    for (var event in client.keyboard) {
+      var state = client.keyboard[event];
+      if (state) {
+        switch (event) {
+          case 'forward':
+            client.car.accelerate(6.0)
+            break;
+          case 'backward':
+            client.car.accelerate(-6.0)
+            break;
+          case 'left':
+            client.car.turn(3.0)
+            break;
+          case 'right':
+            client.car.turn(-3.0)
+            break;
+        }
+      }
+    }
+  }
+}
 
+setInterval(handleClientKeyboard, 10);
 
 
 
