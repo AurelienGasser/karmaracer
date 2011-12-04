@@ -217,6 +217,52 @@ MapCanvas.prototype.moveSelectedItemsUsingMousePosition = function() {
   this.mouseDownPosition = this.canvasMousePosition;
 };
 
+MapCanvas.prototype.releaseItems = function() {
+  _.each(this.canvasItems, function(item){
+    item.isSelected = false;
+  }.bind(this));
+};
+
+MapCanvas.prototype.mouseDownInItemScaleZone = function(item, scaleZonePercentage) {
+  if (this.canvasMousePosition.x < item.position.x + item.size.w * scaleZonePercentage) return false;
+  if (this.canvasMousePosition.x > item.position.x + item.size.w) return false;
+  if (this.canvasMousePosition.y < item.position.y + item.size.h * scaleZonePercentage) return false;
+  if (this.canvasMousePosition.y > item.position.y + item.size.h) return false;
+  return true;
+};
+
+MapCanvas.prototype.mouseDown = function(e) {
+  //this.actionTranslate = false;
+  this.mouseDownPosition = this.canvasMousePosition;
+  this.action = '';
+  if (this.keyPress.shift) {
+    _.each(this.canvasItems, function(item) {
+      if (this.isMousePositionInItem(item)) {
+        item.isSelected = !item.isSelected;
+      }
+    }.bind(this));
+  } else {
+    _.each(this.canvasItems, function(item) {
+      if (this.isMousePositionInItem(item)) {
+        if (!item.isSelected) {
+          this.releaseItems();
+        }
+        this.mouseDownOnItem = item;
+        item.isSelected = true;
+        if (this.mouseDownInItemScaleZone(item, 0.9)) {
+          this.action = 'scale';
+        } else {
+          this.action = 'translate';
+        }
+      }
+    }.bind(this));
+    if (this.action != 'translate' && this.action != 'scale') {
+      this.releaseItems();
+      this.action = 'selectZone';
+    }
+  }
+};
+
 MapCanvas.prototype.mouseMove = function(e) {
   this.canvasMousePosition = {
     "x" : e.pageX - this.canvas.offsetLeft - this.translate.x,
@@ -237,46 +283,19 @@ MapCanvas.prototype.mouseMove = function(e) {
   }
 };
 
-MapCanvas.prototype.releaseItems = function() {
-  _.each(this.canvasItems, function(item){
-    item.isSelected = false;
-  }.bind(this));
-};
-
 MapCanvas.prototype.mouseUp = function(e) {
-  if (this.action == 'selectZone'){
-    this.selectItemsInSelectedZone();
+  switch (this.action) {
+    case 'selectZone' :
+      this.selectItemsInSelectedZone();
+      break;
+    case 'scale':
+    case 'translate':
+      break;
+    default:
+      break;
   }
   this.action = '';
 }
-
-MapCanvas.prototype.mouseDownInItemScaleZone = function(item, scaleZonePercentage) {
-  if (this.canvasMousePosition.x < item.position.x + item.size.w * scaleZonePercentage) return false;
-  if (this.canvasMousePosition.x > item.position.x + item.size.w) return false;
-  if (this.canvasMousePosition.y < item.position.y + item.size.h * scaleZonePercentage) return false;
-  if (this.canvasMousePosition.y > item.position.y + item.size.h) return false;
-  return true;
-};
-
-MapCanvas.prototype.mouseDown = function(e) {
-  //this.actionTranslate = false;
-  this.mouseDownPosition = this.canvasMousePosition;
-  _.each(this.canvasItems, function(item) {
-    if (this.isMousePositionInItem(item)) {
-      item.isSelected = true;
-      if (this.mouseDownInItemScaleZone(item, 0.9)){
-        this.action = 'scale';
-      } else {
-        this.action = 'translate';
-      }
-      throw "break";
-    }
-  }.bind(this));
-  if (this.action != 'translate' && this.action != 'scale'){
-    this.releaseItems();
-    this.action = 'selectZone';
-  }
-};
 
 MapCanvas.prototype.selectItemsInSelectedZone = function() {
   _.each(this.canvasItems, function(item){
