@@ -1,0 +1,14 @@
+{
+  "name" : "stone_r",
+  "image" : {
+    "path" : "/sprites/stone_to_grass_right.png",
+    "size" : 40,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 40,
+      "h" : 40
+    }
+  },
+  "isPattern" : true
+}

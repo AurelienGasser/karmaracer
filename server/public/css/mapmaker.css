@@ -1,0 +1,24 @@
+#map-canvas{
+  position:absolute;
+  width:80%;
+  height:90%;
+  right:0px;
+  top:0px;
+  /*border:1px solid blue;*/
+}
+
+body{
+  margin:0px;
+  padding:0px;
+}
+
+.item{
+  border:1px solid green;
+  width:100px;
+  cursor:pointer;
+}
+
+#canvas-debug{
+  margin:0px;
+  padding:0px;
+}

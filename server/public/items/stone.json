@@ -1,0 +1,14 @@
+{
+  "name" : "stone",
+  "image" : {
+    "path" : "/sprites/bg_stone1.png",
+    "size" : 40,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 40,
+      "h" : 40
+    }
+  },
+  "isPattern" : true
+}

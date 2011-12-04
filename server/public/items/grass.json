@@ -1,7 +1,7 @@
 {
   "name" : "grass",
   "image" : {
-    "path" : "/sprites/grass.gif",
+    "path" : "/sprites/bg_grass1.png",
     "size" : 256,
     "crop" : {
       "x" : 64,
@@ -9,5 +9,6 @@
       "w" : 128,
       "h" : 128
     }
-  }
+  },
+  "isPattern" : true
 }

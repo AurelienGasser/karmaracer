@@ -26,6 +26,14 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
     case 40: // down arrow
       this.event('backward', state);
       break;
+    case 76: // L
+      G_game.drawEngine.camera.scale *= 1.05;
+      break;
+    case 80: // P
+      G_game.drawEngine.camera.scale *= 0.95;
+      break;
+    default :
+      //console.log(key);
   }
 }
 

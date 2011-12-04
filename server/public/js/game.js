@@ -28,13 +28,11 @@ Game.prototype.onInitReceived = function(err, worldInfo) {
       var img = new Image();
       img.src = i.image.path;
       img.onload = function(){
-        var _pattern = G_game.drawEngine.ctx.createPattern(img,'repeat');d
+        var _pattern = G_game.drawEngine.ctx.createPattern(img,'repeat');
         G_game.itemsInMap[item].pattern = _pattern;        
       }
   }.bind(this));
 
-
-  
   G_game.keyboardHandler = new KeyboardHandler();
   document.onkeydown = G_game.keyboardHandler.handleKeyDown.bind(G_game.keyboardHandler);
   document.onkeyup = G_game.keyboardHandler.handleKeyUp.bind(G_game.keyboardHandler);

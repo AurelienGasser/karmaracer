@@ -1,13 +1,13 @@
 {
   "name" : "map1",
-  "backgroundImage" : "/sprites/road.jpg",
+  "backgroundImage" : "/sprites/bg_grass1.png",
   "size" : {
     "w" : 800,
     "h" : 600
   },
   "staticItems" : [
     {
-      "name" : "wall",
+      "name" : "stone",
       "position" : {
         "x" : 400,
         "y" : 400
@@ -17,8 +17,30 @@
         "h" : 100
       }
     },
+   {
+      "name" : "stone_r",
+      "position" : {
+        "x" : 460,
+        "y" : 400
+      },
+      "size" : {
+        "w" : 40,
+        "h" : 100
+      }
+    },
     {
-      "name" : "grass",
+      "name" : "stone_l",
+      "position" : {
+        "x" : 300,
+        "y" : 400
+      },
+      "size" : {
+        "w" : 40,
+        "h" : 100
+      }
+    },  
+    {
+      "name" : "wall",
       "position" : {
         "x" : 600,
         "y" : 500
@@ -29,7 +51,7 @@
       }
     },
     {
-      "name" : "grass",
+      "name" : "wall",
       "position" : {
         "x" : 250,
         "y" : 250

@@ -1,8 +1,11 @@
-function Camera(ctx){
+function Camera(ctx, _canvasSelector){
   this.ctx = ctx;
-  this.translate = {x : 0, y : 0};
+  this.translate = {"x" : 0, "y" : 0};
+  this.center = {"x" : 0, "y" : 0};
   this.scale = 1;
-  this.realWorldSize = {w:0, h:0};
+  this.realWorldSize = {"w" : 0, "h" : 0};
+  this.canvasSelector = _canvasSelector;
+  
 }
 
 Camera.prototype.setWorldSize = function(realWorldSize) {
@@ -24,8 +27,8 @@ Camera.prototype.resizeCanvas = function(newSize){
   if (this.ctx != null){
     this.ctx.canvas.width = newSize.w;
     this.ctx.canvas.height = newSize.h;
-    $('#game-canvas').width(newSize.w);
-    $('#game-canvas').height(newSize.h);
+    $(this.canvasSelector).width(newSize.w);
+    $(this.canvasSelector).height(newSize.h);
   }
 }
 
@@ -46,7 +49,7 @@ Camera.prototype.drawDebug = function() {
   cameraDebug.push('<li>', 'Translate Y : ', this.translate.y, '</li>');
   cameraDebug.push('<li>', 'Scale : ', this.scale, '</li>');
   cameraDebug.push('<li>', 'Scaled Size : ', this.scaledSized.w, ', ', this.scaledSized.h, '</li>');
-  cameraDebug.push('<li>', 'myCar Pos : ', this.center.x, ', ', this.center.y, ', r°:', this.center.r,'</li>');
+  cameraDebug.push('<li>', 'myCar Pos : ', this.center.x, ', ', this.center.y, ', r°:', this.center.r,'</li>');      
   cameraDebug.push('<li>', 'Orientation : ',  window.orientation ,'</li>');
   if (window.orientation != null){
   }
@@ -55,13 +58,16 @@ Camera.prototype.drawDebug = function() {
 };
 
 Camera.prototype.update = function(center) {
-  if (center == null) return;
-  this.center = center;
+  //if (center == null) return;
+  if (typeof center !== "undefined"){
+    this.center = center;
+  }
   this.updateScale();
   var canvasSize = this.getCanvasSize();
   this.scaledSized = {w : canvasSize.w / (this.scale), h : canvasSize.h / (this.scale)};
-  this.translate.x = this.scaledSized.w / 2 - center.x;
-  this.translate.y = this.scaledSized.h / 2 - center.y;
+  this.translate.x = this.scaledSized.w / 2 - this.center.x;
+  this.translate.y = this.scaledSized.h / 2 - this.center.y;
+  
   // do the translate for the oriented view
   this.ctx.translate(0, canvasSize.h);
   // scale the canvas & make the horizontal mirror

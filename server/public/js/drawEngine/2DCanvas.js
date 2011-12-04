@@ -11,12 +11,10 @@ Engine2DCanvas.prototype.init = function() {
   this.ctx = this.canvas.getContext("2d");
   this.canvas.width = $('#' + this.canvasID).width();
   this.canvas.height = $('#' + this.canvasID).height();
-  this.camera = new Camera(this.ctx);
+  this.camera = new Camera(this.ctx, '#' + this.canvasID);
   this.camera.setWorldSize(G_game.world.size);
   this.carImage = new Image();
   this.carImage.src = '/sprites/car.png';
-  this.wallImage = new Image();
-  this.wallImage.src = '/sprites/wall.png';
 };
 
 Engine2DCanvas.prototype.loaded = function() {
@@ -47,7 +45,8 @@ Engine2DCanvas.prototype.drawCars = function() {
 Engine2DCanvas.prototype.drawWalls = function() {
   if (this.game.walls != null){
     _.each(this.game.walls, function(c) {
-      this.ctx.fillStyle = this.game.itemsInMap[c.name].pattern;
+      var staticItem = this.game.itemsInMap[c.name];
+      this.ctx.fillStyle = staticItem.pattern;
       this.ctx.fillRect(c.position.x -c.size.w / 2 , c.position.y - c.size.h / 2, c.size.w, c.size.h);
     }.bind(this));
   }

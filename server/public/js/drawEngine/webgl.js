@@ -44,7 +44,7 @@ EngineWebGL.prototype.init = function() {
   this.loaded();
   this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
   this.gl.enable(this.gl.DEPTH_TEST);
-  this.camera = new Camera(null);
+  this.camera = new Camera(null, this.canvasID);
 };
 
 EngineWebGL.prototype.initShaders = function() {

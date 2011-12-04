@@ -48,6 +48,11 @@ app.configure(function(){
   app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
+
+app.get('/mm', function(req, res){
+  index(req, res, "mapmaker.jade", "WEBGL");
+});
+
 app.get('/', function(req, res){
   index(req, res, "index.jade", "WEBGL");
 });
@@ -105,10 +110,10 @@ setInterval(function () {
 
 io.sockets.on('connection', function (client) {
   console.log('client connected');
-  var worldInfo = physicsEngine.getWorldInfo();
-  
   client.keyboard = {};
-  client.emit('init', {size: worldSize, walls : physicsEngine.getShareWalls()});
+  var worldInfo = physicsEngine.getWorldInfo();
+//  console.log(worldInfo);
+  client.emit('init', worldInfo);
   clients.push(client);
 
   client.on('init_done', function () {
