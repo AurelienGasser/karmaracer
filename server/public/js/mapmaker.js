@@ -14,8 +14,7 @@ function CanvasItem(_jsonItem, _canvasMap){
   this.image.src = this.jsonItem.image.path;
   if (this.isPattern){
     this.image.onload = function(){
-      this.pattern = this.canvasMap.ctx.createPattern(this.image,'repeat');
-      console.log('pattern', this.pattern);
+      this.pattern = this.canvasMap.ctx.createPattern(this.image, 'repeat');
     }.bind(this);
   }
 }
@@ -48,10 +47,19 @@ function MapCanvas(selector){
 }
 
 MapCanvas.prototype.scaleItemsUsingCanvasMouse = function() {
-  var translateVector = {
-    "x" : this.canvasMousePosition.x - this.mouseDownPosition.x,
-    "y" : this.canvasMousePosition.y - this.mouseDownPosition.y,
-  };
+  var translateVector;
+  if (this.keyPress.shift) {
+    var min = Math.min(this.canvasMousePosition.x - this.mouseDownPosition.x, this.canvasMousePosition.y - this.mouseDownPosition.y);
+    translateVector = {
+      "x" : min,
+      "y" : min,
+    };
+  } else {
+    translateVector = {
+      "x" : this.canvasMousePosition.x - this.mouseDownPosition.x,
+      "y" : this.canvasMousePosition.y - this.mouseDownPosition.y,
+    };
+  }
   this.ctx.fillStyle = '0f0';
   _.each(this.canvasItems, function(item){
     if (item.isSelected){
@@ -110,10 +118,11 @@ MapCanvas.prototype.drawItem = function(item) {
   }
   if (item.isPattern) {
     this.ctx.fillStyle = item.pattern;
+    this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
   } else {
-     this.ctx.fillStyle = '0f0';
+    this.ctx.drawImage(item.image, item.position.x, item.position.y, item.size.w, item.size.h);
+    this.ctx.fillStyle = '0f0';
   }
-  this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
   if (item.isSelected) {
     this.ctx.fillStyle = '000';
     this.ctx.fillRect(item.position.x + item.size.w * 0.9, item.position.y + item.size.h * 0.9, item.size.w * 0.1, item.size.h * 0.1);
@@ -270,6 +279,26 @@ MapCanvas.prototype.mouseMove = function(e) {
   };
   this.canvasMousePosition.x *= 1 / this.scale;
   this.canvasMousePosition.y *= 1 / this.scale;
+  var scale_cursor = 's-resize';
+  if (this.action == 'scale') {
+    document.body.style.cursor = scale_cursor;
+  } else {
+    var inScaleZone = false;
+    _.each(this.canvasItems, function(item) {
+      if (inScaleZone) {
+        return;
+      }
+      if (this.mouseDownInItemScaleZone(item, 0.9)) {
+        // cursor over scale zome
+        inScaleZone = true;
+      }
+    }.bind(this));
+    if (inScaleZone) {
+      document.body.style.cursor = scale_cursor;
+    } else {
+      document.body.style.cursor = 'default';
+    }
+  }
   // left click is pressed
   if (e.button == 0 && e.which == 1) {
     switch (this.action) {
