@@ -1,10 +1,6 @@
-
 var map;
 
-
-
 function CanvasItem(_jsonItem, _canvasMap){
-  
   this.jsonItem = _jsonItem;
   this.position = {"x" : 0, "y" : 0};
   this.size = {"w" : this.jsonItem.image.size, "h" : this.jsonItem.image.size};
@@ -24,7 +20,6 @@ function CanvasItem(_jsonItem, _canvasMap){
   }
 }
 
-
 function MapCanvas(selector){
   this.canvas = $(selector)[0];
 
@@ -35,10 +30,11 @@ function MapCanvas(selector){
   this.canvas.onmousemove = this.mouseMove.bind(this);
   this.canvas.onmousedown = this.mouseDown.bind(this);
   this.canvas.onmouseup = this.mouseUp.bind(this);
-  
-  this.actionTranslate = false;
-  this.actionSelectZone = false;
-  this.actionScaleItems = false;
+
+  this.keyPress = {
+    shift: false
+  };
+
   this.selectedZone = {"x" : 0, "y" : 0, "w" : 0, "h" : 0};
   this.keyboardHandler = new KeyboardHandlerMap(this);
 
@@ -55,9 +51,9 @@ MapCanvas.prototype.scaleItemsUsingCanvasMouse = function() {
   var translateVector = {
     "x" : this.canvasMousePosition.x - this.mouseDownPosition.x,
     "y" : this.canvasMousePosition.y - this.mouseDownPosition.y,
-  }; 
+  };
   this.ctx.fillStyle = '0f0';
-  _.each(this.canvasItems, function(item){    
+  _.each(this.canvasItems, function(item){
     if (item.isSelected){
       item.size.w += translateVector.x;
       item.size.h += translateVector.y;
@@ -71,34 +67,75 @@ MapCanvas.prototype.zoomToSelectedItems = function() {
   var itemMostLeft;
   var itemMostRight;
   var itemMostTop;
-  var itemMostBottom;  
+  var itemMostBottom;
   var itemSelected = 0;
-  _.each(this.canvasItems, function(item){    
+  _.each(this.canvasItems, function(item){
     if (item.isSelected){
       itemSelected++;
       if (typeof itemMostLeft === "undefined"){
-        itemMostLeft = item;        
+        itemMostLeft = item;
       }
       if (typeof itemMostRight === "undefined"){
-        itemMostRight = item;        
+        itemMostRight = item;
       }
       if (typeof itemMostTop === "undefined"){
-        itemMostTop = item;        
+        itemMostTop = item;
       }
       if (typeof itemMostBottom === "undefined"){
-        itemMostBottom = item;        
-      }                 
-      if (item.position.x < itemMostLeft.position.x) itemMostLeft = item; 
+        itemMostBottom = item;
+      }
+      if (item.position.x < itemMostLeft.position.x) itemMostLeft = item;
       if (item.position.x + item.size.w > itemMostRight.position.x + itemMostRight.size.w) itemMostRight = item;
-      if (item.position.y < itemMostTop.position.y) itemMostTop = item; 
+      if (item.position.y < itemMostTop.position.y) itemMostTop = item;
       if (item.position.y + item.size.h > itemMostBottom.position.y + itemMostBottom.size.h) itemMostBottom = item;
     }
   }.bind(this));
   var margin = 20;
   if (itemSelected > 0){
-    this.zoomBox = {"x" : itemMostLeft.position.x - margin, "y" : itemMostTop.position.y - margin, "w" : itemMostRight.position.x + itemMostRight.size.w - itemMostLeft.position.x + 2 * margin,  "h" : itemMostBottom.position.y + itemMostBottom.size.h - itemMostTop.position.y + 2 * margin};      
-  }  
+    this.zoomBox = {"x" : itemMostLeft.position.x - margin, "y" : itemMostTop.position.y - margin, "w" : itemMostRight.position.x + itemMostRight.size.w - itemMostLeft.position.x + 2 * margin,  "h" : itemMostBottom.position.y + itemMostBottom.size.h - itemMostTop.position.y + 2 * margin};
+  }
 };
+
+MapCanvas.prototype.drawItem = function(item) {
+  //this.ctx.fillRect(item.position.x - item.size.w / 2, item.position.y - item.size.h / 2, item.size.w, item.size.h);
+  if (item.isSelected){
+    this.ctx.shadowOffsetX = 2;
+    this.ctx.shadowOffsetY = 2;
+    this.ctx.shadowBlur    = 4;
+    this.ctx.shadowColor   = 'rgba(0, 0, 0, 0.5)';
+  } else {
+    this.ctx.shadowBlur    = 0;
+    this.ctx.shadowOffsetX = 0;
+    this.ctx.shadowOffsetY = 0;
+  }
+  if (item.isPattern) {
+    this.ctx.fillStyle = item.pattern;
+  } else {
+     this.ctx.fillStyle = '0f0';
+  }
+  this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
+  if (item.isSelected) {
+    this.ctx.fillStyle = '000';
+    this.ctx.fillRect(item.position.x + item.size.w * 0.9, item.position.y + item.size.h * 0.9, item.size.w * 0.1, item.size.h * 0.1);
+  }
+}
+
+MapCanvas.prototype.drawSelectedZone = function() {
+  this.selectedZone.x = this.mouseDownPosition.x;
+  this.selectedZone.y = this.mouseDownPosition.y;
+  this.selectedZone.w = this.canvasMousePosition.x - this.mouseDownPosition.x;
+  this.selectedZone.h = this.canvasMousePosition.y - this.mouseDownPosition.y;
+  if (this.selectedZone.w < 0){
+    this.selectedZone.x += this.selectedZone.w;
+    this.selectedZone.w *= -1;
+  }
+  if (this.selectedZone.h < 0){
+    this.selectedZone.y += this.selectedZone.h;
+    this.selectedZone.h *= -1;
+  }
+  this.ctx.strokeStyle = 'f00';
+  this.ctx.strokeRect( this.selectedZone.x, this.selectedZone.y, this.selectedZone.w, this.selectedZone.h);
+}
 
 MapCanvas.prototype.canvasDraw = function() {
   this.ctx.canvas.width = $(this.canvas).width();
@@ -109,68 +146,28 @@ MapCanvas.prototype.canvasDraw = function() {
   this.ctx.translate(this.translate.x, this.translate.y);
   this.ctx.scale(this.scale, this.scale);
 
-
   this.ctx.fillStyle = '00f';
   this.ctx.strokeRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
 
   // if (this.zoomBox != null){
-  //   this.ctx.fillRect(this.zoomBox.x, this.zoomBox.y, this.zoomBox.w, this.zoomBox.h); 
+  //   this.ctx.fillRect(this.zoomBox.x, this.zoomBox.y, this.zoomBox.w, this.zoomBox.h);
   // }
-    
-// draw items  
-  _.each(this.canvasItems, function(item){
-    //this.ctx.fillRect(item.position.x - item.size.w / 2, item.position.y - item.size.h / 2, item.size.w, item.size.h);
-    if (item.isSelected){
-      this.ctx.shadowOffsetX = 2;
-      this.ctx.shadowOffsetY = 2;
-      this.ctx.shadowBlur    = 4;
-      this.ctx.shadowColor   = 'rgba(0, 0, 0, 0.5)';
-    }else{
-      this.ctx.shadowBlur    = 0;      
-      this.ctx.shadowOffsetX = 0;
-      this.ctx.shadowOffsetY = 0;
-    }
-    
-    if (item.isPattern){
-      this.ctx.fillStyle = item.pattern;  
-    }else{
-       this.ctx.fillStyle = '0f0';
-    }
-    
-    this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
-    
-    if (item.isSelected){
-      this.ctx.fillStyle = '000';
-      this.ctx.fillRect(item.position.x + item.size.w * 0.9, item.position.y + item.size.h * 0.9, item.size.w * 0.1, item.size.h * 0.1);
-    }
-  }.bind(this));
 
-// draw selected Zone
-  if (this.actionSelectZone){
-    this.selectedZone.x = this.mouseDownPosition.x;
-    this.selectedZone.y = this.mouseDownPosition.y;
-    this.selectedZone.w = this.canvasMousePosition.x - this.mouseDownPosition.x;
-    this.selectedZone.h = this.canvasMousePosition.y - this.mouseDownPosition.y;
-    if (this.selectedZone.w < 0){
-      this.selectedZone.x += this.selectedZone.w;
-      this.selectedZone.w *= -1;
-    }
-    if (this.selectedZone.h < 0){
-      this.selectedZone.y += this.selectedZone.h;
-      this.selectedZone.h *= -1;
-    }
-    this.ctx.strokeStyle = 'f00';  
-    this.ctx.strokeRect( this.selectedZone.x, this.selectedZone.y, this.selectedZone.w, this.selectedZone.h);
+  _.each(this.canvasItems, this.drawItem.bind(this));
+
+  // draw selected Zone
+  if (this.action == 'selectZone') {
+    this.drawSelectedZone();
   }
 
-  if (this.zoomBox != null){
+  if (this.zoomBox != null) {
     this.scale = this.realWorldSize.w * this.scale / this.zoomBox.w;
     this.translate.x = -this.zoomBox.x * this.scale;
     this.translate.y = -this.zoomBox.y * this.scale;
     this.zoomBox = null;
   }
   // if (this.selectedItem != null){
-  //   this.ctx.strokeStyle = 'f00';  
+  //   this.ctx.strokeStyle = 'f00';
   //   this.ctx.beginPath();
   //   this.ctx.moveTo(this.selectedItem.position.x + this.sel, this.selectedItem.position.y);
   //   this.ctx.lineTo(this.canvasMousePosition.x, this.canvasMousePosition.y);
@@ -186,34 +183,30 @@ MapCanvas.prototype.tick = function() {
   var debugoutput = [];
   debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y ,'</li>');
   debugoutput.push('<li>Canvas Down Pos : ', this.mouseDownPosition.x, ', ', this.mouseDownPosition.y ,'</li>');
-  debugoutput.push('<li>Translating Items : ', this.actionTranslate ,'</li>');
-  debugoutput.push('<li>Scaling Items : ', this.actionScaleItems ,'</li>');
 
-  debugoutput.push('<li>Select Zone : ', this.actionSelectZone ,'</li>');
-  debugoutput.push('<li>ScaleCanvas : ', this.scale ,'</li>');  
-  debugoutput.push('<li>TranslateCanvas : ', this.translate.x, ', ', this.translate.y ,'</li>');    
+  debugoutput.push('<li>Action : ', this.action ,'</li>');
+  debugoutput.push('<li>ScaleCanvas : ', this.scale ,'</li>');
+  debugoutput.push('<li>TranslateCanvas : ', this.translate.x, ', ', this.translate.y ,'</li>');
 
-  debugoutput.push('<li>--------</li>');      
-  debugoutput.push('<li>Help</li>');      
-  debugoutput.push('<li>Arrows (move canvas)</li>');      
-  debugoutput.push('<li>R (release items)</li>');      
+  debugoutput.push('<li>--------</li>');
+  debugoutput.push('<li>Help</li>');
+  debugoutput.push('<li>Arrows (move canvas)</li>');
+  debugoutput.push('<li>R (release items)</li>');
   debugoutput.push('<li>P/L (zoom/unzoom)</li>');
-  debugoutput.push('<li>S (set scale to 1)</li>');      
-  debugoutput.push('<li>Z (zoom to selected items)</li>');      
+  debugoutput.push('<li>S (set scale to 1)</li>');
+  debugoutput.push('<li>Z (zoom to selected items)</li>');
 
   $("#canvas-debug").html(debugoutput.join(''));
-  if (this.actionTranslate){
+  if (this.action == 'translate'){
     this.moveSelectedItemsUsingMousePosition();
   }
 };
-
-
 
 MapCanvas.prototype.moveSelectedItemsUsingMousePosition = function() {
   var translateVector = {
     "x" : this.canvasMousePosition.x - this.mouseDownPosition.x,
     "y" : this.canvasMousePosition.y - this.mouseDownPosition.y,
-  }; 
+  };
   _.each(this.canvasItems, function(item){
       if (item.isSelected == false) return;
       item.position = {
@@ -224,26 +217,24 @@ MapCanvas.prototype.moveSelectedItemsUsingMousePosition = function() {
   this.mouseDownPosition = this.canvasMousePosition;
 };
 
-
 MapCanvas.prototype.mouseMove = function(e) {
   this.canvasMousePosition = {
-    "x" : e.pageX - this.canvas.offsetLeft - this.translate.x, 
+    "x" : e.pageX - this.canvas.offsetLeft - this.translate.x,
     "y" : e.pageY - this.canvas.offsetTop - this.translate.y
   };
   this.canvasMousePosition.x *= 1 / this.scale;
   this.canvasMousePosition.y *= 1 / this.scale;
   // left click is pressed
-  if (e.button == 0 && e.which == 1){
-    if (this.actionTranslate == true){
-      // move items according to mouse position
-      this.moveSelectedItemsUsingMousePosition();      
-    }
-    if (this.actionScaleItems == true){
-      // move items according to mouse position
-      this.scaleItemsUsingCanvasMouse();
+  if (e.button == 0 && e.which == 1) {
+    switch (this.action) {
+      case 'translate':
+        this.moveSelectedItemsUsingMousePosition();
+        break;
+      case 'scale':
+        this.scaleItemsUsingCanvasMouse();
+        break;
     }
   }
-
 };
 
 MapCanvas.prototype.releaseItems = function() {
@@ -253,15 +244,11 @@ MapCanvas.prototype.releaseItems = function() {
 };
 
 MapCanvas.prototype.mouseUp = function(e) {
-  this.actionTranslate = false;
-  this.actionScaleItems = false;
-  if (this.actionSelectZone){
+  if (this.action == 'selectZone'){
     this.selectItemsInSelectedZone();
   }
-  this.actionSelectZone = false;
+  this.action = '';
 }
-
-
 
 MapCanvas.prototype.mouseDownInItemScaleZone = function(item, scaleZonePercentage) {
   if (this.canvasMousePosition.x < item.position.x + item.size.w * scaleZonePercentage) return false;
@@ -271,27 +258,25 @@ MapCanvas.prototype.mouseDownInItemScaleZone = function(item, scaleZonePercentag
   return true;
 };
 
-
 MapCanvas.prototype.mouseDown = function(e) {
   //this.actionTranslate = false;
-  this.mouseDownPosition = this.canvasMousePosition; 
-  _.each(this.canvasItems, function(item){
-    if (this.mousePositionInItem(item)){      
+  this.mouseDownPosition = this.canvasMousePosition;
+  _.each(this.canvasItems, function(item) {
+    if (this.isMousePositionInItem(item)) {
       item.isSelected = true;
       if (this.mouseDownInItemScaleZone(item, 0.9)){
-        this.actionScaleItems = true;
-      }else{
-        this.actionTranslate = true;      
+        this.action = 'scale';
+      } else {
+        this.action = 'translate';
       }
       throw "break";
     }
   }.bind(this));
-  if (!this.actionTranslate && !this.actionScaleItems){
+  if (this.action != 'translate' && this.action != 'scale'){
     this.releaseItems();
-    this.actionSelectZone = true;
+    this.action = 'selectZone';
   }
 };
-
 
 MapCanvas.prototype.selectItemsInSelectedZone = function() {
   _.each(this.canvasItems, function(item){
@@ -303,7 +288,7 @@ MapCanvas.prototype.selectItemsInSelectedZone = function() {
   }.bind(this));
 };
 
-MapCanvas.prototype.mousePositionInItem = function(item) {
+MapCanvas.prototype.isMousePositionInItem = function(item) {
   if (this.canvasMousePosition.x < item.position.x) return false;
   if (this.canvasMousePosition.x > item.position.x + item.size.w) return false;
   if (this.canvasMousePosition.y < item.position.y) return false;
@@ -311,25 +296,23 @@ MapCanvas.prototype.mousePositionInItem = function(item) {
   return true;
 };
 
-
 $(function(){
   G_map = new MapCanvas("#map-canvas");
-  //console.log('map loaded');  
+  //console.log('map loaded');
   G_map.addItem('wall');
   G_map.addItem('stone');
-  G_map.addItem('grass');  
-  G_map.addItem('stone_l');  
-  G_map.addItem('stone_r');    
-  
-});
+  G_map.addItem('grass');
+  G_map.addItem('stone_l');
+  G_map.addItem('stone_r');
 
+});
 
 MapCanvas.prototype.addItem = function(itemName) {
   var items = $('#items');
   $.getJSON('/items/' + itemName + '.json', function(item){
     //console.log(item);
     var itemID = 'item-' + item.name;
-    items.append('<li class="item" id="' + itemID + '">' + item.name+  '</li>'); 
+    items.append('<li class="item" id="' + itemID + '">' + item.name+  '</li>');
     $('#' + itemID).click(function(){
       this.canvasItems.push(new CanvasItem(item, this));
     }.bind(this));

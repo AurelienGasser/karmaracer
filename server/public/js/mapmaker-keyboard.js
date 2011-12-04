@@ -4,7 +4,7 @@ function KeyboardHandlerMap(_canvasMap) {
   document.onkeyup = this.handleKeyUp.bind(this);
 };
 
-KeyboardHandlerMap.prototype.handleKey = function(key, state) {
+KeyboardHandlerMap.prototype.handleKey = function(key, down) {
   switch (key) {
     case 37: // left arrow
       this.canvasMap.translate.x += 5;
@@ -19,35 +19,36 @@ KeyboardHandlerMap.prototype.handleKey = function(key, state) {
       this.canvasMap.translate.y -= 5;
       break;
     case 90: // Z
-      if (!state) break;
+      if (!down) break;
       this.canvasMap.zoomToSelectedItems();
       break;
     case 83: // S
-      if (!state) break;
+      if (!down) break;
       this.canvasMap.scale = 1;
       this.canvasMap.translate = {"x" : 0, "y" : 0};
       break;
     case 76: // L
-      if (!state) break;
+      if (!down) break;
       this.canvasMap.scale *= 1.1;
       break;
     case 77: // M
-      this.canvasMap.actionTranslate = state;
-      if (state){
+      this.canvasMap.actionTranslate = down;
+      if (down){
         this.canvasMap.mouseDownPosition = this.canvasMap.canvasMousePosition;
       }
       break;
     case 80: // P
-      if (!state) break;
+      if (!down) break;
       this.canvasMap.scale *= 0.9;
       break;
     case 82: // R
       //console.log('release items');
-      if (state){
-        this.canvasMap.releaseItems();  
+      if (down){
+        this.canvasMap.releaseItems();
       }
-      
       break;
+    case 16: // Shift
+      this.canvasMap.keyPress.shift = down;
 
     default :
       console.log(key);
