@@ -1,7 +1,7 @@
 {
-  "name" : "stone",
+  "name" : "stone_t",
   "image" : {
-    "path" : "/sprites/bg_stone1.png",
+    "path" : "/sprites/stone_to_grass_top.png",
     "size" : 40,
     "crop" : {
       "x" : 0,
@@ -10,5 +10,5 @@
       "h" : 40
     }
   },
-  "patternType" : "both"
+  "patternType" : "horizontal"
 }

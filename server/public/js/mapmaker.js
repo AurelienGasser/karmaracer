@@ -142,14 +142,16 @@ MapCanvas.prototype.drawItem = function(item) {
   }
   if (item.patternType != "none") {
     this.ctx.fillStyle = item.pattern;
-    this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
+    this.ctx.save();
+    this.ctx.translate(item.position.x, item.position.y);
+    this.ctx.fillRect(0, 0, item.size.w, item.size.h);
+    this.ctx.restore();
   } else {
     this.ctx.drawImage(item.image, item.position.x, item.position.y, item.size.w, item.size.h);
-    this.ctx.fillStyle = '0f0';
   }
   if (item.isSelected) {
-    this.ctx.fillStyle = '000';
-    this.ctx.fillRect(item.position.x + item.size.w * 0.9, item.position.y + item.size.h * 0.9, item.size.w * 0.1, item.size.h * 0.1);
+    this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+    this.ctx.fillRect(item.position.x + item.size.w * 0.8, item.position.y + item.size.h * 0.8, item.size.w * 0.2, item.size.h * 0.2);
   }
 }
 
@@ -282,7 +284,7 @@ MapCanvas.prototype.mouseDown = function(e) {
         }
         this.mouseDownOnItem = item;
         item.isSelected = true;
-        if (this.mouseDownInItemScaleZone(item, 0.9)) {
+        if (this.mouseDownInItemScaleZone(item, 0.8)) {
           this.startScaling();
         } else {
           this.startTranslating();
@@ -376,6 +378,14 @@ $(function(){
   G_map.addItem('grass');
   G_map.addItem('stone_l');
   G_map.addItem('stone_r');
+  G_map.addItem('stone_t');
+  G_map.addItem('stone_b');
+  G_map.addItem('tree1');
+
+  $("#save-canvas").click(function(){
+    var img = Canvas2Image.saveAsPNG(G_map.canvas, true);
+    $("body").append(img);
+  });
 
 });
 
