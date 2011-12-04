@@ -10,5 +10,5 @@
       "h" : 40
     }
   },
-  "isPattern" : true
+  "patternType" : "vertical"
 }

@@ -7,12 +7,13 @@ function CanvasItem(_jsonItem, _canvasMap){
   this.name = this.jsonItem.name;
   this.isSelected = false;
   this.canvasMap = _canvasMap;
-  this.isPattern = this.jsonItem.isPattern;
+  this.patternType = this.jsonItem.patternType;
   this.pattern;
 
   this.image = new Image();
   this.image.src = this.jsonItem.image.path;
-  if (this.isPattern){
+  this.image.crop = this.jsonItem.image.crop;
+  if (this.patternType != "none"){
     this.image.onload = function(){
       this.pattern = this.canvasMap.ctx.createPattern(this.image, 'repeat');
     }.bind(this);
@@ -46,29 +47,52 @@ function MapCanvas(selector){
   this.tick();
 }
 
+MapCanvas.prototype.startScaling = function() {
+  this.action = 'scale';
+  this.scaleMousePosition = this.mouseDownPosition;
+}
+
+MapCanvas.prototype.startTranslating = function() {
+  this.action = 'translate';
+  this.translateMousePosition = this.mouseDownPosition;
+}
+
 MapCanvas.prototype.scaleItemsUsingCanvasMouse = function() {
-  var translateVector;
-  if (this.keyPress.shift) {
-    var min = Math.min(this.canvasMousePosition.x - this.mouseDownPosition.x, this.canvasMousePosition.y - this.mouseDownPosition.y);
-    translateVector = {
-      "x" : min,
-      "y" : min,
-    };
-  } else {
-    translateVector = {
-      "x" : this.canvasMousePosition.x - this.mouseDownPosition.x,
-      "y" : this.canvasMousePosition.y - this.mouseDownPosition.y,
-    };
-  }
-  this.ctx.fillStyle = '0f0';
   _.each(this.canvasItems, function(item){
+    var translateVector;
+    var diffx = this.canvasMousePosition.x - this.scaleMousePosition.x;
+    var diffy = this.canvasMousePosition.y - this.scaleMousePosition.y;
+    if (this.keyPress.shift) {
+      var min = Math.min(diffx, diffy);
+      translateVector = {
+        "x" : min,
+        "y" : min,
+      };
+    } else {
+      translateVector = {
+        "x" : diffx,
+        "y" : diffy,
+      };
+    }
+    this.ctx.fillStyle = '0f0';
     if (item.isSelected){
-      item.size.w += translateVector.x;
-      item.size.h += translateVector.y;
+      if (item.patternType == 'vertical') {
+        item.size.w = item.image.crop.w;
+      } else {
+        item.size.w += translateVector.x;
+      }
+      if (item.patternType == 'horizontal') {
+        item.size.h = item.image.crop.h;
+      } else {
+        item.size.h += translateVector.y;
+      }
+      // To prevent negative dimensions
+      item.size.w = Math.max(item.size.w, 1);
+      item.size.h = Math.max(item.size.h, 1);
     }
     //this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
   }.bind(this));
-  this.mouseDownPosition = this.canvasMousePosition;
+  this.scaleMousePosition = this.canvasMousePosition;
 };
 
 MapCanvas.prototype.zoomToSelectedItems = function() {
@@ -116,7 +140,7 @@ MapCanvas.prototype.drawItem = function(item) {
     this.ctx.shadowOffsetX = 0;
     this.ctx.shadowOffsetY = 0;
   }
-  if (item.isPattern) {
+  if (item.patternType != "none") {
     this.ctx.fillStyle = item.pattern;
     this.ctx.fillRect(item.position.x, item.position.y, item.size.w, item.size.h);
   } else {
@@ -213,8 +237,8 @@ MapCanvas.prototype.tick = function() {
 
 MapCanvas.prototype.moveSelectedItemsUsingMousePosition = function() {
   var translateVector = {
-    "x" : this.canvasMousePosition.x - this.mouseDownPosition.x,
-    "y" : this.canvasMousePosition.y - this.mouseDownPosition.y,
+    "x" : this.canvasMousePosition.x - this.translateMousePosition.x,
+    "y" : this.canvasMousePosition.y - this.translateMousePosition.y,
   };
   _.each(this.canvasItems, function(item){
       if (item.isSelected == false) return;
@@ -223,7 +247,7 @@ MapCanvas.prototype.moveSelectedItemsUsingMousePosition = function() {
         "y" : item.position.y + translateVector.y
       };
   }.bind(this));
-  this.mouseDownPosition = this.canvasMousePosition;
+  this.translateMousePosition = this.canvasMousePosition;
 };
 
 MapCanvas.prototype.releaseItems = function() {
@@ -259,9 +283,9 @@ MapCanvas.prototype.mouseDown = function(e) {
         this.mouseDownOnItem = item;
         item.isSelected = true;
         if (this.mouseDownInItemScaleZone(item, 0.9)) {
-          this.action = 'scale';
+          this.startScaling();
         } else {
-          this.action = 'translate';
+          this.startTranslating();
         }
       }
     }.bind(this));

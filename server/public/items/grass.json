@@ -10,5 +10,5 @@
       "h" : 128
     }
   },
-  "isPattern" : true
+  "patternType" : "both"
 }
