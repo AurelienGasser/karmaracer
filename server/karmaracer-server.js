@@ -82,15 +82,11 @@ app.dynamicHelpers({
 var PhysicsItem = require('./classes/physicsItem');
 var PhysicsEngine = require('./classes/physicsEngine');
 
-
 // LOAD THE MAP
 var map1_path = __dirname + '/public/maps/map1.json';
 var map1String = fs.readFileSync(map1_path);
 var map = JSON.parse(map1String);
-
-
 var physicsEngine = new PhysicsEngine(map);
-
 
 var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
@@ -109,7 +105,7 @@ setInterval(function () {
 }, 20);
 
 io.sockets.on('connection', function (client) {
-  console.log('client connected');
+  console.log('client connected ');
   client.keyboard = {};
   var worldInfo = physicsEngine.getWorldInfo();
 //  console.log(worldInfo);

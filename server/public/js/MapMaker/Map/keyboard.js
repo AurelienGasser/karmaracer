@@ -44,7 +44,7 @@ KeyboardHandlerMap.prototype.handleKey = function(key, down) {
     case 82: // R
       //console.log('release items');
       if (down){
-        this.canvasMap.releaseItems();
+        this.canvasMap.deselectAllItems();
       }
       break;
     case 16: // Shift

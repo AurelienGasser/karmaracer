@@ -23,6 +23,10 @@ body{
   padding:0px;
 }
 
-#save-canvas{
+#save-canvas, #save-map-node{
   cursor:pointer;
 }
+
+ #save-map-node:hover{
+   text-decoration:underline;
+ }
