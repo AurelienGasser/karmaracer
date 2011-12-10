@@ -7,6 +7,7 @@ function Map(selector){
 
   this.canvasMousePosition = {"x" : 0, "y" : 0};
   this.mouseDownPosition = {"x" : 0, "y" : 0};
+  this.translateMousePosition = {"x" : 0, "y" : 0};
   this.canvas.onmousemove = this.mouseMove.bind(this);
   this.canvas.onmousedown = this.mouseDown.bind(this);
   this.canvas.onmouseup = this.mouseUp.bind(this);
@@ -62,13 +63,10 @@ Map.prototype.canvasDraw = function() {
   }
 };
 
-
 Map.prototype.tick = function() {
   this.tickCount++;
-
   var debugoutput = [];
-  var now = new Date();
-  
+  var now = new Date();  
   var tickDiff = now.getTime() - this.tickStart;
   //console.log(tickDiff);
   if (tickDiff > 1000){
@@ -76,15 +74,12 @@ Map.prototype.tick = function() {
     this.tickCount = 0;
     this.tickStart = now.getTime();
   }
-
-  
-
   requestAnimFrame(this.tick.bind(this));
   this.canvasDraw();
-
  
   debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y ,'</li>');
   debugoutput.push('<li>Canvas Down Pos : ', this.mouseDownPosition.x, ', ', this.mouseDownPosition.y ,'</li>');
+  debugoutput.push('<li>Translate Down Pos : ', this.translateMousePosition.x, ', ', this.translateMousePosition.y ,'</li>');
 
   debugoutput.push('<li>Action : ', this.action ,'</li>');
   debugoutput.push('<li>ScaleCanvas : ', this.scale ,'</li>');
@@ -99,9 +94,9 @@ Map.prototype.tick = function() {
   debugoutput.push('<li>Z (zoom to selected items)</li>');
 
   $("#canvas-debug").html(debugoutput.join(''));
-  if (this.action == 'translate'){
-    this.translateSelectedItemsUsingMousePosition();
-  }
+//   if (this.action == 'translate'){
+//    this.translateSelectedItemsUsingMousePosition();
+//   }
  
 };
 

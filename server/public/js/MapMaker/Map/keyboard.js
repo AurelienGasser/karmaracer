@@ -51,7 +51,7 @@ KeyboardHandlerMap.prototype.handleKey = function(key, down) {
       this.canvasMap.keyPress.shift = down;
 
     default :
-      console.log(key);
+      //console.log(key);
   }
 }
 

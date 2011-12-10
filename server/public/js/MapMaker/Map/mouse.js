@@ -1,6 +1,5 @@
 
 Map.prototype.mouseDown = function(e) {
-  //this.actionTranslate = false;
   this.mouseDownPosition = this.canvasMousePosition;
   this.action = '';
   if (this.keyPress.shift) {
@@ -11,17 +10,16 @@ Map.prototype.mouseDown = function(e) {
         } else {
           this.selectItem(item.id);
         }
-      }
-      
+      }      
     }.bind(this));
   } else {
     _.each(this.MapItems, function(item) {
-      if (this.isMousePositionInItem(item)) {
+      if (this.isMousePositionInItem(item)) {        
         if (!this.isItemSelected(item.id)) {
           this.deselectAllItems();
+          this.selectItem(item.id)  
         }
-        this.mouseDownOnItem = item;
-        this.selectedItems.push(item.id);
+        this.mouseDownOnItem = item;        
         if (this.mouseDownInItemScaleZone(item, 0.8)) {
           this.startScaling();
         } else {
