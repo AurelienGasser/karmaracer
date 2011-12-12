@@ -9,7 +9,9 @@ html
     script(type='text/javascript', src='/js/libs/modernizr.min.js')
     script(type='text/javascript', src='/js/drawEngine/2DCanvas.js')
     script(type='text/javascript')
-      var SERVER_HOST = '#{server}';
+      var G_serverHost = '#{server}';
+      var G_defaultDrawEngineType = '#{default_draw_engine}';
+      var G_MOBILE_DEVICE = false;
       // Google Analytics
       var _gaq = _gaq || [];
       _gaq.push(['_setAccount', 'UA-27170619-1']);
