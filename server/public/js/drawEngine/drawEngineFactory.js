@@ -14,19 +14,19 @@ window.requestAnimFrame = (function() {
   );
 })();
 
-function DrawEngineFactory(game, canvasID, defaultDrawEngineType){
+function DrawEngineFactory(gameInstance, canvasID, defaultDrawEngineType){
   var canvas = document.getElementById(canvasID);
   var drawEngineType = defaultDrawEngineType;
   var gl;
 
-  var factory = function(game, drawEngineType, canvasID, canvas, gl) {
+  var factory = function(gameInstance, drawEngineType, canvasID, canvas, gl) {
     switch(drawEngineType){
       case 'WEBGL' :
-        return new EngineWebGL(game, canvas, canvasID, gl);
+        return new EngineWebGL(gameInstance, canvas, canvasID, gl);
         $('#camera-debug').css('display', 'none');
         break;
       case 'CANVAS' :
-        return new Engine2DCanvas(game, canvas, canvasID);
+        return new Engine2DCanvas(gameInstance, canvas, canvasID);
         break;
     }
   };
@@ -53,6 +53,6 @@ function DrawEngineFactory(game, canvasID, defaultDrawEngineType){
     }
   }
 
-  return factory(game, drawEngineType, canvasID, canvas, gl);
+  return factory(gameInstance, drawEngineType, canvasID, canvas, gl);
 }
 

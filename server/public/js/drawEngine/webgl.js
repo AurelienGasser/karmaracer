@@ -2,10 +2,10 @@ function degToRad(degrees) {
   return degrees * Math.PI / 180;
 }
 
-function EngineWebGL(game, canvas, canvasID, gl) {
+function EngineWebGL(gameInstance, canvas, canvasID, gl) {
   this.canvas = canvas;
   this.canvasID = canvasID;
-  this.game = game;
+  this.gameInstance = gameInstance;
   this.gl = gl;
   this.tabItems = ['road', 'grass', 'car'];
   this.tabTextures = {

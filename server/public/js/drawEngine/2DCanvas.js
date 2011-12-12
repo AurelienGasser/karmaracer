@@ -1,7 +1,7 @@
-function Engine2DCanvas(game, canvas, canvasID) {
+function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.canvas = canvas;
   this.canvasID = canvasID;
-  this.game = game;
+  this.gameInstance = gameInstance;
   this.init();
   this.loaded();
   return this;
@@ -22,17 +22,17 @@ Engine2DCanvas.prototype.loaded = function() {
 };
 
 Engine2DCanvas.prototype.draw = function() {
-  if (this.game.walls.length > 0){
+  if (this.gameInstance.walls.length > 0){
     this.camera.ctx.canvas.width = $('#' + this.canvasID).width();
     this.camera.ctx.canvas.height = $('#' + this.canvasID).height();
-    this.camera.update(this.game.mycar);
+    this.camera.update(this.gameInstance.mycar);
     this.drawItems();
   }
 };
 
 Engine2DCanvas.prototype.drawCars = function() {
-  if (this.game.cars != null) {
-    _.each(this.game.cars, function(c) {
+  if (this.gameInstance.cars != null) {
+    _.each(this.gameInstance.cars, function(c) {
       this.ctx.save();
       this.ctx.translate(c.x , c.y);
       this.ctx.rotate(c.r);
@@ -43,9 +43,9 @@ Engine2DCanvas.prototype.drawCars = function() {
 }
 
 Engine2DCanvas.prototype.drawWalls = function() {
-  if (this.game.walls != null){
-    _.each(this.game.walls, function(c) {
-      var staticItem = this.game.itemsInMap[c.name];
+  if (this.gameInstance.walls != null){
+    _.each(this.gameInstance.walls, function(c) {
+      var staticItem = this.gameInstance.itemsInMap[c.name];
       this.ctx.fillStyle = staticItem.pattern;
       this.ctx.fillRect(c.position.x -c.size.w / 2 , c.position.y - c.size.h / 2, c.size.w, c.size.h);
     }.bind(this));
@@ -53,12 +53,12 @@ Engine2DCanvas.prototype.drawWalls = function() {
 }
 
 Engine2DCanvas.prototype.drawBackground = function() {
-  this.ctx.fillStyle = this.game.backgroundPattern;
+  this.ctx.fillStyle = this.gameInstance.backgroundPattern;
   this.ctx.fillRect(0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
 }
 
 Engine2DCanvas.prototype.drawItems = function() {
-  this.drawBackground();  
+  this.drawBackground();
   this.drawWalls();
   this.drawCars();
 };

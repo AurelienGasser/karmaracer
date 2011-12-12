@@ -1,7 +1,7 @@
-function SocketManager(serverHost, game, onInitCallback){
+function SocketManager(serverHost, gameInstance, onInitCallback){
   var connection = io.connect(serverHost);
   //console.log(connection);
-  this.game = game;
+  this.gameInstance = gameInstance;
   this.init_done = false;
 
   connection.on('connect', function (data) {
@@ -19,8 +19,8 @@ function SocketManager(serverHost, game, onInitCallback){
   });
 
   connection.on('objects', function (objects) {
-    game.cars = objects.cars;
-    game.mycar = objects.myCar;
+    gameInstance.cars = objects.cars;
+    gameInstance.mycar = objects.myCar;
   });
 
   this.connection = connection;
