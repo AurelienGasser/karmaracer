@@ -1,4 +1,5 @@
-function MobileTerminalHandler() {
+function MobileTerminalHandler(gameInstance) {
+  this.gameInstance = gameInstance;
   return this;
 }
 
@@ -60,16 +61,16 @@ MobileTerminalHandler.prototype.touchEventAccelerate = function(event) {
 MobileTerminalHandler.prototype.userTurn = function(direction) {
   switch (direction) {
     case 'stop':
-      if (this.touch.left) G_gameInstance.keyboardHandler.event('left', 'end');
-      if (this.touch.right) G_gameInstance.keyboardHandler.event('right', 'end');
+      if (this.touch.left) this.gameInstance.keyboardHandler.event('left', 'end');
+      if (this.touch.right) this.gameInstance.keyboardHandler.event('right', 'end');
       break;
     case 'left':
-      if (this.touch.right) G_gameInstance.keyboardHandler.event('right', 'end');
-      if (!this.touch.left) G_gameInstance.keyboardHandler.event('left', 'start');
+      if (this.touch.right) this.gameInstance.keyboardHandler.event('right', 'end');
+      if (!this.touch.left) this.gameInstance.keyboardHandler.event('left', 'start');
       break;
     case 'right':
-      if (this.touch.left) G_gameInstance.keyboardHandler.event('left', 'end');
-      if (!this.touch.right) G_gameInstance.keyboardHandler.event('right', 'start');
+      if (this.touch.left) this.gameInstance.keyboardHandler.event('left', 'end');
+      if (!this.touch.right) this.gameInstance.keyboardHandler.event('right', 'start');
       break;
   }
   this.touch.left = false;
@@ -81,16 +82,16 @@ MobileTerminalHandler.prototype.userTurn = function(direction) {
 MobileTerminalHandler.prototype.userAccelerate = function(direction) {
   switch (direction) {
     case 'stop':
-      if (this.touch.forward) G_gameInstance.keyboardHandler.event('forward', 'end');
-      if (this.touch.backward) G_gameInstance.keyboardHandler.event('backward', 'end');
+      if (this.touch.forward) this.gameInstance.keyboardHandler.event('forward', 'end');
+      if (this.touch.backward) this.gameInstance.keyboardHandler.event('backward', 'end');
       break;
     case 'forward':
-      if (this.touch.backward) G_gameInstance.keyboardHandler.event('backward', 'end');
-      if (!this.touch.forward) G_gameInstance.keyboardHandler.event('forward', 'start');
+      if (this.touch.backward) this.gameInstance.keyboardHandler.event('backward', 'end');
+      if (!this.touch.forward) this.gameInstance.keyboardHandler.event('forward', 'start');
       break;
     case 'backward':
-      if (this.touch.forward) G_gameInstance.keyboardHandler.event('forward', 'end');
-      if (!this.touch.backward) G_gameInstance.keyboardHandler.event('backward', 'start');
+      if (this.touch.forward) this.gameInstance.keyboardHandler.event('forward', 'end');
+      if (!this.touch.backward) this.gameInstance.keyboardHandler.event('backward', 'start');
       break;
   }
   this.touch.forward = false;
@@ -129,13 +130,13 @@ MobileTerminalHandler.prototype.initTouchScreenEvents = function() {
     } else {
       zoomFactor = 0.95;
     }
-    G_gameInstance.drawEngine.camera.scale *= zoomFactor;
+    this.gameInstance.drawEngine.camera.scale *= zoomFactor;
   });
 }
 
 function updateOrientation(){
-  if (G_gameInstance.drawEngine.camera != null){
-    G_gameInstance.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
+  if (this.gameInstance.drawEngine.camera != null){
+    this.gameInstance.drawEngine.camera.resizeCanvas({w:$(window).width(), h:$(window).height()});
   }
 }
 

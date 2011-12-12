@@ -50,11 +50,11 @@ app.configure(function(){
 
 
 app.get('/mm', function(req, res){
-  index(req, res, "mapmaker.jade", "WEBGL");
+  index(req, res, "mapmaker.jade", "CANVAS");
 });
 
 app.get('/', function(req, res){
-  index(req, res, "index.jade", "WEBGL");
+  index(req, res, "index.jade", "CANVAS");
 });
 
 app.get('/canvas', function(req, res){

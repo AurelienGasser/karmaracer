@@ -1,9 +1,10 @@
-function KeyboardHandler() {
+function KeyboardHandler(gameInstance) {
+  this.gameInstance = gameInstance;
   return this;
 };
 
 KeyboardHandler.prototype.event = function(event, state) {
-  var connection = G_gameInstance.socketManager.getConnection();
+  var connection = this.gameInstance.socketManager.getConnection();
   if (connection) {
     $('#touch-debug').html(event + ' ' + state);
     var eventToSend = {};
@@ -27,10 +28,10 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
       this.event('backward', state);
       break;
     case 76: // L
-      G_gameInstance.drawEngine.camera.scale *= 1.05;
+      this.gameInstance.drawEngine.camera.scale *= 1.05;
       break;
     case 80: // P
-      G_gameInstance.drawEngine.camera.scale *= 0.95;
+      this.gameInstance.drawEngine.camera.scale *= 0.95;
       break;
     default :
       //console.log(key);

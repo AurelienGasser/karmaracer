@@ -21,10 +21,6 @@ function DrawEngineFactory(gameInstance, canvasID, defaultDrawEngineType){
 
   var factory = function(gameInstance, drawEngineType, canvasID, canvas, gl) {
     switch(drawEngineType){
-      case 'WEBGL' :
-        return new EngineWebGL(gameInstance, canvas, canvasID, gl);
-        $('#camera-debug').css('display', 'none');
-        break;
       case 'CANVAS' :
         return new Engine2DCanvas(gameInstance, canvas, canvasID);
         break;
@@ -45,13 +41,7 @@ function DrawEngineFactory(gameInstance, canvasID, defaultDrawEngineType){
     }
   };
 
-  if ("WEBGL" == drawEngineType){
-    if (gl = getWebGL(canvas)){
-      drawEngineType = "WEBGL";
-    } else {
-      drawEngineType = "CANVAS";
-    }
-  }
+  drawEngineType = "CANVAS";
 
   return factory(gameInstance, drawEngineType, canvasID, canvas, gl);
 }
