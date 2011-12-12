@@ -3,7 +3,7 @@ Modernizr.load([{
   complete: function() {
     Modernizr.load([{
       test: $("html.touch").length,
-      yep: ['/js/mobile.js', '/css/mobile.css'],
+      yep: ['/js/mobile.js', '/js/mobile_compatibility.js', '/css/mobile.css'],
       nope: ['css/no-touch.css'],
       complete: function() {
         gameInstance = new GameInstance();
