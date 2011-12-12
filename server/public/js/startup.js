@@ -19,7 +19,7 @@ Modernizr.load([
         yep: ['/js/drawEngine/webgl.js', '/js/libs/glMatrix-0.9.5.min.js', '/js/libs/webgl-utils.js'],
         both: '/js/drawEngine/2DCanvas.js',
         complete: function() {
-          G_game = new Game();
+          G_gameInstance = new GameInstance();
         }
       }]);
     }

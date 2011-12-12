@@ -3,7 +3,7 @@ function KeyboardHandler() {
 };
 
 KeyboardHandler.prototype.event = function(event, state) {
-  var connection = G_game.socketManager.getConnection();
+  var connection = G_gameInstance.socketManager.getConnection();
   if (connection) {
     $('#touch-debug').html(event + ' ' + state);
     var eventToSend = {};
@@ -27,10 +27,10 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
       this.event('backward', state);
       break;
     case 76: // L
-      G_game.drawEngine.camera.scale *= 1.05;
+      G_gameInstance.drawEngine.camera.scale *= 1.05;
       break;
     case 80: // P
-      G_game.drawEngine.camera.scale *= 0.95;
+      G_gameInstance.drawEngine.camera.scale *= 0.95;
       break;
     default :
       //console.log(key);

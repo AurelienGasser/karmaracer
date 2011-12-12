@@ -12,7 +12,7 @@ Engine2DCanvas.prototype.init = function() {
   this.canvas.width = $('#' + this.canvasID).width();
   this.canvas.height = $('#' + this.canvasID).height();
   this.camera = new Camera(this.ctx, '#' + this.canvasID);
-  this.camera.setWorldSize(G_game.world.size);
+  this.camera.setWorldSize(G_gameInstance.world.size);
   this.carImage = new Image();
   this.carImage.src = '/sprites/car.png';
 };
@@ -65,5 +65,5 @@ Engine2DCanvas.prototype.drawItems = function() {
 
 Engine2DCanvas.prototype.tick = function() {
   requestAnimFrame(this.tick.bind(this));
-  G_game.drawEngine.draw();
+  G_gameInstance.drawEngine.draw();
 }
