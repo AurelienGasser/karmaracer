@@ -3,7 +3,7 @@ function GameInstance(){
   this.mycar;
   this.walls = [];
   this.drawEngine;
-  this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived.bind(this));
+  this.socketManager = new SocketManager(SERVER_HOST, this, this.onInitReceived.bind(this));
 }
 
 GameInstance.prototype.onInitReceived = function(err, worldInfo) {
@@ -12,7 +12,7 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   this.world.size = worldInfo.size;
   this.walls = worldInfo.staticItems;
   this.itemsInMap = worldInfo.itemsInMap;
-  this.drawEngine = DrawEngineFactory(this, "game-canvas", G_defaultDrawEngineType);
+  this.drawEngine = DrawEngineFactory(this, "game-canvas", "CANVAS");
 
   // create background pattern
   var bgImage = new Image();
