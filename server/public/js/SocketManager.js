@@ -21,6 +21,8 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   connection.on('objects', function (objects) {
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
+    gameInstance.bullets = objects.bullets;
+    console.log(gameInstance.bullets);
   });
 
   this.connection = connection;

@@ -2,8 +2,8 @@
   "name" : "map1",
   "backgroundImage" : "/sprites/bg_grass1.png",
   "size" : {
-    "w" : 2000,
-    "h" : 2000
+    "w" : 1024,
+    "h" : 1024
   },
   "staticItems" : [
     {
@@ -64,12 +64,12 @@
     {
       "name" : "wall",
       "position" : {
-        "x" : 1000,
-        "y" : 1000
+        "x" : 768,
+        "y" : 768
       },
       "size" : {
-        "w" : 256,
-        "h" : 256
+        "w" : 200,
+        "h" : 200
       }
     }]
 }

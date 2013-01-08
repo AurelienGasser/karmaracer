@@ -6,6 +6,10 @@
   color: white;
 }
 
+#fps{
+  position: fixed;
+  top:300px;
+}
 #game-canvas{
   width:100%;
   height:100%;

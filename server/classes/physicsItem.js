@@ -7,6 +7,7 @@ var PhysicsItem = backbone.Model.extend({
   initialize : function( _arguments){
     this.size = {w : _arguments['size'].w , h : _arguments['size'].h};
     this.body = _arguments['physicsEngine'].createSquareBody(_arguments['position'], this.size, _arguments['density'], _arguments['friction']);
+    this.engine = _arguments['physicsEngine'];
   },
   getPosition : function(){
     if (this.body != null){

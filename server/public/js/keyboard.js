@@ -14,7 +14,10 @@ KeyboardHandler.prototype.event = function(event, state) {
 }
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
+  //console.log(key);
   switch (key) {
+    case 32: // space
+      this.event('shoot', state);
     case 37: // left arrow
       this.event('left', state);
       break;
@@ -31,7 +34,7 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
       this.gameInstance.drawEngine.camera.scale *= 1.05;
       break;
     case 80: // P
-      this.gameInstance.drawEngine.camera.scale *= 0.95;
+      this.gameInstance.drawEngine.camera.scale *= 0.95;      
       break;
     default :
       //console.log(key);
