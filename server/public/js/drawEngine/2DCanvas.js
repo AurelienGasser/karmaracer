@@ -6,7 +6,7 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.loaded();
   this.timer = new Date().getTime();
   this.frames = 0;
-  $('#camera-debug').after('<div id="fps"/>');
+  $('#debug').append('<div id="fps" class="info"/>');
   return this;
 }
 
@@ -64,12 +64,12 @@ Engine2DCanvas.prototype.drawBullets = function(ctx) {
   if(this.gameInstance.bullets !== null) {
     ctx.fillStyle = '#FFFFFF';
     _.each(this.gameInstance.bullets, function(c) {
-      console.log(c);
-      ctx.save();
+      //      console.log(c);
+      //    ctx.save();
       // ctx.translate(c.x, c.y);
       // ctx.rotate(c.r);
       ctx.fillRect(c.x, c.y, c.w, c.h);
-      ctx.restore();
+      //ctx.restore();
     }.bind(this));
   }
 }
@@ -78,10 +78,16 @@ Engine2DCanvas.prototype.drawWalls = function(ctx) {
   var that = this;
   if(that.gameInstance.walls != null) {
     _.each(that.gameInstance.walls, function(c) {
+      //console.log(c);
       var staticItem = that.gameInstance.itemsInMap[c.name];
-      if(!_.isUndefined(staticItem.pattern)) {
-        ctx.fillStyle = staticItem.pattern;
-        ctx.fillRect(c.position.x - c.size.w / 2, c.position.y - c.size.h / 2, c.size.w, c.size.h);
+      if(!_.isUndefined(staticItem) && !_.isUndefined(staticItem.pattern)) {
+        if(staticItem.pattern === null) {
+          ctx.drawImage(staticItem.img, c.position.x - c.size.w / 2, c.position.y - c.size.h / 2, c.size.w, c.size.h);
+        } else {
+          ctx.fillStyle = staticItem.pattern;
+          ctx.fillRect(c.position.x - c.size.w / 2, c.position.y - c.size.h / 2, c.size.w, c.size.h);
+
+        }
       }
     });
   }
@@ -110,7 +116,7 @@ Engine2DCanvas.prototype.tick = function() {
   var now = new Date().getTime();
   if(now - this.timer > 1000) {
     this.timer = now;
-    $('#fps').html(this.frames);
+    $('#fps').html("fps: " + this.frames);
     this.frames = 0;
   }
 

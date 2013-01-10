@@ -6,8 +6,8 @@ var fs = require('fs');
 var PhysicsItem = require("./physicsItem");
 
 var PhysicsEngine = backbone.Model.extend({
-  urlRoot : '/physicsEngine',
-  initialize : function(_map){
+  urlRoot: '/physicsEngine',
+  initialize: function(_map) {
 
     this.map = _map;
     this.timeStep = 1.0 / 60.0;
@@ -25,35 +25,58 @@ var PhysicsEngine = backbone.Model.extend({
 
     // LOAD STATIC ITEMS ONCE FOR CLIENT
     this.itemsInMap = {};
-    _.each(this.map.staticItems, function(i){
-      var itemJSONPath = __dirname + '/../public/items/' + i.name+ '.json';
+    _.each(this.map.staticItems, function(i) {
+      var itemJSONPath = __dirname + '/../public/items/' + i.name + '.json';
       var itemJSONString = fs.readFileSync(itemJSONPath);
       var itemJSON = JSON.parse(itemJSONString);
-      if (this.itemsInMap[itemJSON.name] == undefined){
-        this.itemsInMap[itemJSON.name] = itemJSON;        
-      }      
+      if(this.itemsInMap[itemJSON.name] == undefined) {
+        this.itemsInMap[itemJSON.name] = itemJSON;
+      }
     }.bind(this));
+
+
+    var listener = new b2d.b2ContactListener();
+    listener.BeginContact = function(contact) {
+      console.log(contact.GetFixtureA().GetBody().GetUserData());
+    }
+    listener.EndContact = function(contact) {
+      console.log(contact.GetFixtureA().GetBody().GetUserData());
+    }
+    listener.PostSolve = function(contact, impulse) {
+      console.log('post solve');
+    }
+    listener.PreSolve = function(contact, oldManifold) {
+      console.log('pre solve');
+    }
+    this.world.SetContactListener(listener);
+
+
 
     this.createBorders(this.map.size);
     this.loadStaticItems(this.map.staticItems);
   },
-  getWorldInfo : function(){
-    return {"size": this.map.size, "staticItems" : this.map.staticItems, "itemsInMap" : this.itemsInMap, "backgroundImage" : this.map.backgroundImage};
+  getWorldInfo: function() {
+    return {
+      "size": this.map.size,
+      "staticItems": this.map.staticItems,
+      "itemsInMap": this.itemsInMap,
+      "backgroundImage": this.map.backgroundImage
+    };
   },
-  getShareStaticItems : function (){
+  getShareStaticItems: function() {
     var shareStaticItems = [];
-    _.each(this.staticItems, function(w){
+    _.each(this.staticItems, function(w) {
       shareStaticItems.push(w.getShared());
     });
     return shareStaticItems;
   },
-  step : function(){
+  step: function() {
     // Run Simulation!
     //console.log(this.world.GetBodyCount());
     this.world.Step(this.timeStep, this.iterations);
   },
-  createSquareBody : function(_position, _size, _density, _friction){    
-    try{
+  createSquareBody: function(_position, _size, _density, _friction) {
+    try {
       var bodyDef = new b2d.b2BodyDef();
       bodyDef.position.Set(_position.x, _position.y);
       var body = this.world.CreateBody(bodyDef);
@@ -64,39 +87,109 @@ var PhysicsEngine = backbone.Model.extend({
       shapeDef.restitution = 0;
       body.CreateShape(shapeDef);
       body.SetMassFromShapes();
-      return body;         
-    } catch(e){
+      return body;
+    } catch(e) {
       //console.log(e);
       return null;
     }
   },
-  createBorders : function(mapSize){
+  createBorders: function(mapSize) {
     var borderSize = 2.0;
     var density = 0.0;
-    var friction = 0.0;    
-    var wallTop = {physicsEngine : this, position:{x :  mapSize.w / 2, y :  borderSize / 2}, size : {w : mapSize.w, h : borderSize}, density : density, friction: friction};
-    var wallBottom = {physicsEngine : this, position:{x : mapSize.w / 2 , y : mapSize.h - borderSize / 2}, size : {w : mapSize.w , h : borderSize }, density : density, friction: friction};
+    var friction = 0.0;
+    var wallTop = {
+      physicsEngine: this,
+      position: {
+        x: mapSize.w / 2,
+        y: borderSize / 2
+      },
+      size: {
+        w: mapSize.w,
+        h: borderSize
+      },
+      density: density,
+      friction: friction
+    };
+    var wallBottom = {
+      physicsEngine: this,
+      position: {
+        x: mapSize.w / 2,
+        y: mapSize.h - borderSize / 2
+      },
+      size: {
+        w: mapSize.w,
+        h: borderSize
+      },
+      density: density,
+      friction: friction
+    };
     var worldYminusBorder = mapSize.h - 2 * borderSize;
-    var wallLeft = {physicsEngine : this, position:{x : borderSize / 2, y :  borderSize + worldYminusBorder / 2}, size : {w : borderSize, h : worldYminusBorder}, density : density, friction: friction};
-    var wallRight = {physicsEngine : this, position:{x : mapSize.w - borderSize / 2, y : borderSize + worldYminusBorder / 2 }, size : {w : borderSize, h : worldYminusBorder}, density : density, friction: friction};
+    var wallLeft = {
+      physicsEngine: this,
+      position: {
+        x: borderSize / 2,
+        y: borderSize + worldYminusBorder / 2
+      },
+      size: {
+        w: borderSize,
+        h: worldYminusBorder
+      },
+      density: density,
+      friction: friction
+    };
+    var wallRight = {
+      physicsEngine: this,
+      position: {
+        x: mapSize.w - borderSize / 2,
+        y: borderSize + worldYminusBorder / 2
+      },
+      size: {
+        w: borderSize,
+        h: worldYminusBorder
+      },
+      density: density,
+      friction: friction
+    };
 
     this.staticItems.push(new PhysicsItem(wallTop));
     this.staticItems.push(new PhysicsItem(wallBottom));
     this.staticItems.push(new PhysicsItem(wallLeft));
-    this.staticItems.push(new PhysicsItem(wallRight));     
-    
-    this.map.staticItems.push({"name":"wall", "size": wallTop.size, "position" : wallTop.position});
-    this.map.staticItems.push({"name":"wall", "size": wallBottom.size, "position" : wallBottom.position});
-    this.map.staticItems.push({"name":"wall", "size": wallLeft.size, "position" : wallLeft.position});
-    this.map.staticItems.push({"name":"wall", "size": wallRight.size, "position" : wallRight.position});
-       
+    this.staticItems.push(new PhysicsItem(wallRight));
+
+    this.map.staticItems.push({
+      "name": "wall",
+      "size": wallTop.size,
+      "position": wallTop.position
+    });
+    this.map.staticItems.push({
+      "name": "wall",
+      "size": wallBottom.size,
+      "position": wallBottom.position
+    });
+    this.map.staticItems.push({
+      "name": "wall",
+      "size": wallLeft.size,
+      "position": wallLeft.position
+    });
+    this.map.staticItems.push({
+      "name": "wall",
+      "size": wallRight.size,
+      "position": wallRight.position
+    });
+
   },
-  loadStaticItems : function(_staticItems){
-    _.each(_staticItems, function(w){
-      var _staticItemOptions = {"physicsEngine" : this, "position" : w.position, "size" : w.size, "density" : 0.0, "friction": 0.0};
+  loadStaticItems: function(_staticItems) {
+    _.each(_staticItems, function(w) {
+      var _staticItemOptions = {
+        "physicsEngine": this,
+        "position": w.position,
+        "size": w.size,
+        "density": 0.0,
+        "friction": 0.0
+      };
       this.staticItems.push(new PhysicsItem(_staticItemOptions));
     }.bind(this));
-    
+
   }
 });
 

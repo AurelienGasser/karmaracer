@@ -4,10 +4,10 @@
     "path" : "/sprites/tree1.png",
     "size" : 256,
     "crop" : {
-      "x" : 128,
-      "y" : 128,
-      "w" : 128,
-      "h" : 128
+      "x" : 0,
+      "y" : 0,
+      "w" : 256,
+      "h" : 256
     }
   },
   "patternType" : "none"

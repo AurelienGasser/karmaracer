@@ -1,0 +1,29 @@
+{
+  "name": "map2",
+  "size": {
+    "w": 1024,
+    "h": 1024
+  },
+  "staticItems": [{
+    "name": "tree1",
+    "position": {
+      "x": 550,
+      "y": 436
+    },
+    "size": {
+      "w": 92,
+      "h": 97
+    }
+  }, {
+    "name": "tree1",
+    "position": {
+      "x": 336,
+      "y": 356
+    },
+    "size": {
+      "w": 256,
+      "h": 256
+    }
+  }],
+  "backgroundImage": "/sprites/bg_grass1.png"
+}

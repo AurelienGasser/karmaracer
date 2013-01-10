@@ -14,15 +14,20 @@ Map.prototype.saveMap = function() {
     }
   };
   map.staticItems = [];
+  map.backgroundImage = "/sprites/bg_grass1.png";
 
   $.each(this.MapItems, function(id, item) {
     var jsonItem = {};
     jsonItem.name = item.name;
     jsonItem.position = item.position;
+    // {
+    //   x: item.position.y,
+    //   y: item.position.x
+    // }
     jsonItem.size = item.size;
     map.staticItems.push(jsonItem);
   });
-    var mapString = JSON.stringify(map);
+  var mapString = JSON.stringify(map);
 
   console.log(map, mapString);
 }

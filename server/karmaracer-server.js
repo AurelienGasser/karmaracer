@@ -109,7 +109,7 @@ var Car = require('./classes/car');
 var CarsCollection = require('./classes/cars');
 var cars = new CarsCollection();
 var clients = [];
-var bullets = [];
+var bullets = {};
 
 // update all cars positions
 setInterval(function() {
@@ -118,34 +118,58 @@ setInterval(function() {
     cars.updatePos();
     updateBullets();
   } catch(e) {
-    console.log(e);
+    console.log("error", e);
   }
 }, 20);
 
 function updateBullets() {
-  _.each(bullets, function(bullet) {
-    if(bullet.dead === false) {
-      bullet.accelerate(300);
+
+  var deads = [];
+
+
+  for(var id in bullets) {
+    if(bullets.hasOwnProperty(id)) {
+      var bullet = bullets[id];
+      //console.log(bullet);
+      bullet.accelerate(500);
       bullet.life -= 1;
-      console.log(bullet.life);
       if(bullet.life < 0) {
-        physicsEngine.world.DestroyBody(bullet.body);
-        bullet.dead = true;
+        deads.push(id);
       }
     }
-  });
+  }
+
+
+  //console.log(Object.keys(bullets).length, deads);
+  for(var i = 0; i < deads.length; i++) {
+    var id = deads[i];
+    physicsEngine.world.DestroyBody(bullets[id].body);
+    delete bullets[id];
+
+  };
 }
 
+//cars.push(new Car(physicsEngine));
+
+
+
+
 function getGraphicBullets() {
-  return _.map(bullets, function(bullet, num) {
-    var b = {
-      x: bullet.getPosition().x,
-      y: bullet.getPosition().y,
-      w: bullet.size.w,
-      h: bullet.size.h
-    };
-    return b;
-  });
+
+  var graphics = [];
+  for(var id in bullets) {
+    if(bullets.hasOwnProperty(id)) {
+      var bullet = bullets[id];
+      var b = {
+        x: bullet.getPosition().x,
+        y: bullet.getPosition().y,
+        w: bullet.size.w,
+        h: bullet.size.h
+      };
+      graphics.push(b);
+    }
+  }
+  return graphics;
 }
 
 
@@ -169,7 +193,7 @@ io.sockets.on('connection', function(client) {
         cars: cars.shareCars,
         bullets: getGraphicBullets()
       });
-    }, 20);
+    }, 64);
   });
 
   client.on('disconnect', function(socket) {
@@ -214,7 +238,8 @@ function handleClientKeyboard() {
         switch(event) {
         case 'shoot':
           var b = new Bullet(client.car);
-          bullets.push(b);
+          //          console.log(b.id);
+          bullets[b.id] = b;
           break;
         case 'forward':
           client.car.accelerate(6.0)

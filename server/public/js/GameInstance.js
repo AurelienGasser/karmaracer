@@ -39,8 +39,14 @@ GameInstance.prototype.loadImages = function(callback) {
     var img = new Image();
     img.src = i.image.path;
     img.onload = function() {
-      var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
-      this.itemsInMap[item].pattern = _pattern;
+      console.log(i);
+      if(i.patternType !== 'none') {
+        var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
+        this.itemsInMap[item].pattern = _pattern;
+      } else {
+        this.itemsInMap[item].pattern = null;
+        this.itemsInMap[item].img = img;
+      }
       imageLoaded();
     }.bind(this)
   }.bind(this));

@@ -6,10 +6,27 @@
   color: white;
 }
 
-#fps{
+
+#debug{
+  position: absolute;
+  top: 200px;
+}
+/*
+.info{
+  position: absolute;
+  min-height: 24px;
+}
+*/
+/*#fps{
   position: fixed;
   top:300px;
 }
+*/
+/*#socketps{
+  position: fixed;
+  top:200px;
+}
+*/
 #game-canvas{
   width:100%;
   height:100%;
