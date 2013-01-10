@@ -36,7 +36,7 @@
 }
 
 #right_panel {
-  display: none;
+  /*display: none;*/
   width: 20%;
   position:absolute;
   right:0px;
