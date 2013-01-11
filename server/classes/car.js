@@ -7,7 +7,7 @@ var b2d = require("box2d");
 var Car = require("./physicsItem").extend({
   urlRoot : '/cars',
   initialize : function(_physicsEngine){
-    var a = {physicsEngine : _physicsEngine, position : {x : 60.0, y : 60.0}, size:{w : 16.75, h : 8.5}, density:0.0001, friction:1};
+    var a = {physicsEngine : _physicsEngine, position : {x : 60.0, y : 60.0}, size:{w : 50, h : 25}, density:0.0001, friction:1};
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
     this.life = 100;

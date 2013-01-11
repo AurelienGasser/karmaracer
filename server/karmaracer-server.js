@@ -25,6 +25,11 @@ var port = 8085;
 // app.set('view engine', 'jade');
 var serverHost = 'karma.origamix.fr';
 
+app.configure('local', function() {
+  serverHost = 'localhost';
+  port = 80;
+});
+
 app.configure('dev', function() {
   serverHost = '192.168.1.103';
   port = 80;

@@ -54,7 +54,7 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(c.r);
-      ctx.drawImage(this.carImage, 31, 48, 65, 36, -c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
       ctx.restore();
     }.bind(this));
   }
