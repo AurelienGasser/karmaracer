@@ -4,6 +4,7 @@ KEY_LEFT    = 37;
 KEY_RIGHT   = 39;
 KEY_UP      = 38;
 KEY_DOWN    = 40;
+KEY_ESCAPE  = 27;
 
 function KeyboardHandler(gameInstance) {
   this.gameInstance = gameInstance;
@@ -49,12 +50,15 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
 }
 
 KeyboardHandler.prototype.handleKeyDown = function(event) {
-  if ([KEY_UP, KEY_DOWN].indexOf(event.keyCode) != -1) {
-    hideChat();
+  if ($('#chat_input').is(':focus')) {
+    if ([KEY_ESCAPE, KEY_UP, KEY_DOWN].indexOf(event.keyCode) != -1) {
+      if (event.keyCode == KEY_ESCAPE) {
+        clearChatInputField();
+      }
+      hideChat();
+    }
   }
-  if (!($('#chat_input').is(':focus'))) {
-    this.handleKey(event.keyCode, 'start')
-  }
+  this.handleKey(event.keyCode, 'start')
 }
 
 KeyboardHandler.prototype.handleKeyUp = function(event) {

@@ -37,3 +37,6 @@ function hideChat() {
   $('#chat_input_label_wrapper').css('display', 'none');
 }
 
+function clearChatInputField() {
+  $('#chat_input').val('');
+}
