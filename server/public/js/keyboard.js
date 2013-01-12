@@ -1,3 +1,10 @@
+KEY_ENTER   = 13;
+KEY_SPACE   = 32;
+KEY_LEFT    = 37;
+KEY_RIGHT   = 39;
+KEY_UP      = 38;
+KEY_DOWN    = 40;
+
 function KeyboardHandler(gameInstance) {
   this.gameInstance = gameInstance;
   return this;
@@ -14,21 +21,20 @@ KeyboardHandler.prototype.event = function(event, state) {
 }
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
-  //console.log(key);
   switch (key) {
-    case 32: // space
+    case KEY_SPACE: // space
       this.event('shoot', state);
       break;
-    case 37: // left arrow
+    case KEY_LEFT: // left arrow
       this.event('left', state);
       break;
-    case 39: // right arrow
+    case KEY_RIGHT: // right arrow
       this.event('right', state);
       break;
-    case 38: // up arrow
+    case KEY_UP: // up arrow
       this.event('forward', state);
       break;
-    case 40: // down arrow
+    case KEY_DOWN: // down arrow
       this.event('backward', state);
       break;
     case 76: // L
@@ -43,6 +49,8 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
 }
 
 KeyboardHandler.prototype.handleKeyDown = function(event) {
+  if ([KEY_SPACE, KEY_UP, KEY_DOWN].indexOf(event.keyCode))
+  hideChat();
   if (!($('#chat_input').is(':focus'))) {
     this.handleKey(event.keyCode, 'start')
   }
@@ -50,7 +58,7 @@ KeyboardHandler.prototype.handleKeyDown = function(event) {
 
 KeyboardHandler.prototype.handleKeyUp = function(event) {
   switch (event.keyCode) {
-    case 13:
+    case KEY_ENTER:
       if (!($('#chat_input').is(':focus'))) {
         showChat();
       } else {
