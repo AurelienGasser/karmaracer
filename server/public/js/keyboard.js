@@ -49,10 +49,19 @@ KeyboardHandler.prototype.handleKeyDown = function(event) {
 }
 
 KeyboardHandler.prototype.handleKeyUp = function(event) {
-  if (!($('#chat_input').is(':focus'))) {
-    this.handleKey(event.keyCode, 'end');
-  } else if (event.keyCode == 13){
-    sendMsg();
-  }
+  switch (event.keyCode) {
+    case 13:
+      if (!($('#chat_input').is(':focus'))) {
+        showChat();
+      } else {
+        sendMsg();
+      }
+      break;
+    default:
+      if (!($('#chat_input').is(':focus'))) {
+        this.handleKey(event.keyCode, 'end');
+      }
+      break;
+    }
 }
 
