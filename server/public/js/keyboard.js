@@ -49,8 +49,9 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
 }
 
 KeyboardHandler.prototype.handleKeyDown = function(event) {
-  if ([KEY_SPACE, KEY_UP, KEY_DOWN].indexOf(event.keyCode))
-  hideChat();
+  if ([KEY_UP, KEY_DOWN].indexOf(event.keyCode) != -1) {
+    hideChat();
+  }
   if (!($('#chat_input').is(':focus'))) {
     this.handleKey(event.keyCode, 'start')
   }
