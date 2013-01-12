@@ -1,0 +1,3 @@
+[submodule "vendor/JigLibJS2"]
+	path = vendor/JigLibJS2
+	url = git@github.com:bartdeboer/JigLibJS2.git
