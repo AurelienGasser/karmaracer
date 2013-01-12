@@ -14,7 +14,7 @@ Map.prototype.saveMap = function() {
     }
   };
   map.staticItems = [];
-  map.backgroundImage = "/sprites/bg_grass1.png";
+  // map.backgroundImage = "/sprites/bg_grass1.png";
 
   $.each(this.MapItems, function(id, item) {
     var jsonItem = {};
