@@ -5,6 +5,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   this.init_done = false;
   this.socketCounter = 0;
   this.timestamp = new Date().getTime();
+  this.msg_id = 0;
 
 
   var that = this;
@@ -14,7 +15,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     //
     if (now - that.timestamp > 1000){
       //console.log(that.socketCounter);
-      that.timestamp = now;  
+      that.timestamp = now;
       $('#socketps').html('socket/ps: ' + that.socketCounter);
       that.socketCounter = 0;
     }
@@ -35,7 +36,9 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   });
 
   connection.on('chat_msg', function (msg) {
-    $('#chat_msgs').append('<li>' + msg + '</li>');
+    var key = 'msg_' + that.msg_id;
+    onChatMsgReceived(msg, key);
+    ++that.msg_id;
   });
 
   connection.on('objects', function (objects) {

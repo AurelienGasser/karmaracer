@@ -48,27 +48,15 @@
 
 #info {
   height: 10%;
+  position: absolute;
+  left: 0;
+  top: 150px;
 }
 
-
-#player_name_div {
-  width: 100%;
-  height: 9%;
-}
 
 body{
 	margin:0px;
 	padding:0px;
-}
-
-#chat_msgs {
-  height: 70%;
-  border: 1px solid buttonface;
-}
-
-#chat_input {
-  width: 100%;
-  height: 10%;
 }
 
 #camera-debug{
@@ -87,6 +75,5 @@ body{
 }
 
 #camera-debug li{
-
   list-style:none;
 }

@@ -18,6 +18,7 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
   switch (key) {
     case 32: // space
       this.event('shoot', state);
+      break;
     case 37: // left arrow
       this.event('left', state);
       break;
@@ -34,7 +35,7 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
       this.gameInstance.drawEngine.camera.scale *= 1.05;
       break;
     case 80: // P
-      this.gameInstance.drawEngine.camera.scale *= 0.95;      
+      this.gameInstance.drawEngine.camera.scale *= 0.95;
       break;
     default :
       //console.log(key);
@@ -48,10 +49,19 @@ KeyboardHandler.prototype.handleKeyDown = function(event) {
 }
 
 KeyboardHandler.prototype.handleKeyUp = function(event) {
-  if (!($('#chat_input').is(':focus'))) {
-    this.handleKey(event.keyCode, 'end');
-  } else if (event.keyCode == 13){
-    sendMsg();
-  }
+  switch (event.keyCode) {
+    case 13:
+      if (!($('#chat_input').is(':focus'))) {
+        showChat();
+      } else {
+        sendMsg();
+      }
+      break;
+    default:
+      if (!($('#chat_input').is(':focus'))) {
+        this.handleKey(event.keyCode, 'end');
+      }
+      break;
+    }
 }
 
