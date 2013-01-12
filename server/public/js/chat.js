@@ -1,6 +1,15 @@
+var default_player_name = 'unknown player';
+
+$(function() {
+  $('#player_name').val(localStorage.username);
+  $('#player_name').on('keyup', function() {
+    localStorage.username = $('#player_name').val();
+  })
+})
+
 function sendMsg() {
   if ($('#chat_input').val().trim() != '') {
-    var msg = $('#player_name').val() + ': ' + $('#chat_input').val();
+    var msg = $('#player_name').val() || default_player_name + ': ' + $('#chat_input').val();
     gameInstance.socketManager.getConnection().emit('chat', msg);
   }
   $('#chat_input').val('');
@@ -17,7 +26,7 @@ function onChatMsgReceived(msg, key) {
 }
 
 function showChat() {
-  $('#chat_input_label').html(localStorage.username + ' :');
+  $('#chat_input_label').html((localStorage.username || default_player_name) + ' :');
   $('#chat_input').show();
   $('#chat_input').focus();
   $('#chat_input_label_wrapper').css('display', 'inline-block');
@@ -28,9 +37,3 @@ function hideChat() {
   $('#chat_input_label_wrapper').css('display', 'none');
 }
 
-$(function() {
-  $('#player_name').val(localStorage.username);
-  $('#player_name').on('keyup', function() {
-    localStorage.username = $('#player_name').val();
-  })
-})

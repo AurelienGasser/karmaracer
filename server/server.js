@@ -35,6 +35,11 @@ app.configure('dev', function() {
   port = 80;
 });
 
+app.configure('aurel', function() {
+  serverHost = '192.168.0.31';
+  port = 80;
+});
+
 app.configure('pouya', function() {
   serverHost = 'pouyaair';
 });
