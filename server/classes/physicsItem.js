@@ -12,6 +12,7 @@ var PhysicsItem = backbone.Model.extend({
     };
     this.body = _arguments['physicsEngine'].createSquareBody(_arguments['position'], this.size, _arguments['density'], _arguments['friction']);
     this.engine = _arguments['physicsEngine'];
+    this.gScale = this.engine.gScale;
   },
   getPosition: function() {
     if(this.body != null) {
@@ -51,12 +52,13 @@ var PhysicsItem = backbone.Model.extend({
   getShared: function() {
     var pos = this.getPosition();
     var share = {
-      x: pos.x,
-      y: pos.y,
+      x: pos.x * this.gScale,
+      y: pos.y * this.gScale,
       r: this.getAngle(),
-      w: this.size.w,
-      h: this.size.h
+      w: this.size.w * this.gScale,
+      h: this.size.h * this.gScale
     };
+    console.log(share)
     return share;
   },
   applyForceToBody: function(v) {

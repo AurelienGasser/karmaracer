@@ -1,3 +1,5 @@
+var worldScale = 128;
+
 function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.canvas = canvas;
   this.canvasID = canvasID;
@@ -13,12 +15,12 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
 Engine2DCanvas.prototype.initBackgroundCanvas = function() {
   this.backgroundCanvas = document.createElement('canvas');
 
-  this.backgroundCanvas.width = this.camera.realWorldSize.w;
-  this.backgroundCanvas.height = this.camera.realWorldSize.h;
+  this.backgroundCanvas.width = this.camera.realWorldSize.w * worldScale;
+  this.backgroundCanvas.height = this.camera.realWorldSize.h * worldScale;
 
   this.backgroundContext = this.backgroundCanvas.getContext("2d");
   this.backgroundContext.save();
-  this.drawBackground(this.backgroundContext);
+  // this.drawBackgroundInBuffer(this.backgroundContext);
   this.drawWalls(this.backgroundContext);
   this.backgroundContext.restore();
 };
@@ -93,16 +95,39 @@ Engine2DCanvas.prototype.drawWalls = function(ctx) {
   }
 }
 
-Engine2DCanvas.prototype.drawBackground = function(ctx) {
-  if(_.isUndefined(this.gameInstance.backgroundPattern)) {
+Engine2DCanvas.prototype.drawBackgroundInBuffer = function(ctx) {
+  if (_.isUndefined(this.gameInstance.backgroundPattern)) {
     return;
   }
-  ctx.fillStyle = this.gameInstance.backgroundPattern;
-  ctx.fillRect(0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
+  var scale = 1024;
+  for (var x = 0; x < this.camera.realWorldSize.w; x += scale) {
+    for (var y = 0; y < this.camera.realWorldSize.h; y += scale) {
+      ctx.drawImage(this.gameInstance.backgroundImage, x, y, scale, scale)
+    }
+  }
+  // ctx.fillStyle = this.gameInstance.backgroundPattern;
+  // ctx.fillRect(0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
 }
 
 Engine2DCanvas.prototype.drawItems = function() {
-  this.ctx.drawImage(this.backgroundCanvas, 0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
+  var pad = 10000;
+  var start = {
+    // x: this.camera.translate.x - pad,
+    // y: this.camera.translate.y - pad
+    x: 0,
+    y: 0
+  };
+  var size = {
+    w: pad * 2,
+    h: pad * 2
+  };
+  var canvasSize = this.camera.getCanvasSize();
+  // canvasSize.w = 1000;
+  //   canvasSize.h = 1000;
+  console.log(canvasSize)
+  // this.ctx.drawImage(this.carImage, start.x, start.y, size.w, size.h, this.camera.center.x, this.camera.center.y, canvasSize.w, canvasSize.h);
+  this.ctx.drawImage(this.backgroundCanvas, 0,0, 50, 50,this.camera.center.x - canvasSize.w / 2, this.camera.center.y - canvasSize.h / 2, canvasSize.w, canvasSize.h);
+  
   this.drawCars(this.ctx);
   this.drawBullets(this.ctx);
 };

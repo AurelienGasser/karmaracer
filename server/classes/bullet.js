@@ -18,11 +18,11 @@ var Bullet = require("./physicsItem").extend({
         y: car.getPosition().y + initPos.y
       },
       size: {
-        w: 2,
-        h: 2
+        w: 0.2,
+        h: 0.2
       },
-      density: 5000,
-      friction: 0
+      density: 1,
+      friction: 1
     };
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();

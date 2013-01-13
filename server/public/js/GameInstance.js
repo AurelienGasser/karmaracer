@@ -6,23 +6,18 @@ function GameInstance() {
   this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived.bind(this));
 }
 
-
 GameInstance.prototype.loadImages = function(callback) {
 
   var that = this;
-
   var imagesNumToLoad = Object.keys(this.itemsInMap).length + 1;
   var imageNumLoaded = 0;
-
+  
   function imageLoaded() {
-    //console.log(imageNumLoaded, imagesNumToLoad);
     if(imageNumLoaded === imagesNumToLoad - 1) {
       return callback();
     }
     imageNumLoaded += 1;
-
   }
-
 
   // create background pattern
   var bgImage = new Image();
@@ -31,6 +26,7 @@ GameInstance.prototype.loadImages = function(callback) {
   bgImage.onload = function() {
     var bgPattern = game.drawEngine.ctx.createPattern(this, 'repeat');
     game.backgroundPattern = bgPattern;
+    game.backgroundImage = this;
     imageLoaded();
   };
 

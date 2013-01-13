@@ -30,6 +30,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   });
 
   connection.on('init', function (worldInfo) {
+    console.log(worldInfo);
     onInitCallback(null, worldInfo);
     connection.emit('init_done');
     this.init_done = true;

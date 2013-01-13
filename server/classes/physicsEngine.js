@@ -5,6 +5,7 @@ var fs = require('fs');
 
 var PhysicsItem = require("./physicsItem");
 
+
 var PhysicsEngine = backbone.Model.extend({
   urlRoot: '/physicsEngine',
   initialize: function(_map) {
@@ -12,10 +13,11 @@ var PhysicsEngine = backbone.Model.extend({
     this.map = _map;
     this.timeStep = 1.0 / 60.0;
     this.iterations = 10;
+    this.gScale = 128; // graphical scale
 
     // Define world
     var worldAABB = new b2d.b2AABB();
-    worldAABB.lowerBound.Set(-10.0, -10.0);
+    worldAABB.lowerBound.Set(-10.0 - _map.size.w, -10.0 - _map.size.h);
     worldAABB.upperBound.Set(_map.size.w + 10.0, _map.size.h + 10.0);
 
     var gravity = new b2d.b2Vec2(0.0, 0.0);
@@ -55,11 +57,47 @@ var PhysicsEngine = backbone.Model.extend({
     this.createBorders(this.map.size);
     this.loadStaticItems(this.map.staticItems);
   },
-  getWorldInfo: function() {
+  getGraphicalStaticItems: function() {
+    var that = this;
+    return this.map.staticItems.map(function(item) { return that.scaleStaticItem(item) })    
+  },
+  scaleStaticItem: function(staticItem) {    
     return {
-      "size": this.map.size,
-      "staticItems": this.map.staticItems,
-      "itemsInMap": this.itemsInMap,
+      name: staticItem.name,
+      size: {
+        w: staticItem.size.w * this.gScale,
+        h: staticItem.size.h * this.gScale
+      },
+      position: {
+        x: staticItem.position.x * this.gScale,
+        y: staticItem.position.y * this.gScale
+      }
+    }
+  },  
+  // scaleItemInMap: function(itemInMap) {
+  //   return {
+  //     name: itemInMap.name,
+  //     size: {
+  //       w: itemInMap.size.w * this.gScale,
+  //       h: itemInMap.size.h * this.gScale
+  //     },
+  //     position: {
+  //       x: itemInMap.position.x * this.gScale,
+  //       y: itemInMap.position.y * this.gScale
+  //     }
+  //   }
+  //   }
+  // }
+  getGraphicalItemsInMap: function() {
+    return this.itemsInMap;
+    // return this.itemsInMap.map(this.scaleItemInMap);
+  },
+  getWorldInfo: function() {
+    var res = { w: this.map.size.w * this.gScale, h: this.map.size.h * this.gScale };
+    return {
+      "size": res,
+      "staticItems": this.getGraphicalStaticItems(),
+      "itemsInMap": this.getGraphicalItemsInMap(),
       "backgroundImage": this.map.backgroundImage
     };
   },
