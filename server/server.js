@@ -36,7 +36,7 @@ app.configure('dev', function() {
 });
 
 app.configure('aurel', function() {
-  serverHost = '192.168.0.31';
+  serverHost = '192.168.1.101';
   port = 80;
 });
 

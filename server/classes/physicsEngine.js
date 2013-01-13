@@ -7,12 +7,13 @@ var PhysicsItem = require("./physicsItem");
 
 var PhysicsEngine = backbone.Model.extend({
   urlRoot: '/physicsEngine',
-  initialize: function(_map) {
-
+  initialize: function(_map, gameServer) {
+    var that = this;
     this.gScale = 32;
     this.map = _map;
     this.timeStep = 1.0 / 60.0;
     this.iterations = 10;
+    this.gameServer = gameServer;
 
     // Define world
     var worldAABB = new b2d.b2AABB();
@@ -22,6 +23,28 @@ var PhysicsEngine = backbone.Model.extend({
     var gravity = new b2d.b2Vec2(0.0, 0.0);
     var doSleep = true;
     this.world = new b2d.b2World(worldAABB, gravity, doSleep);
+    var listener = new b2d.b2ContactListener;
+    listener.Add(function(point) {
+      // console.log('add');
+    })
+    listener.Persist = function(point) {
+      // console.log('persist');
+    }
+    listener.Remove = function(point) {
+      // console.log('remove');
+    }
+    listener.Result = function(point) {
+      // console.log('collision between', point.shape1.m_userData, 'and', point.shape2.m_userData);
+      if (point.shape1.m_userData.type == 'wall' && point.shape2.m_userData.type == 'bullet'
+          || point.shape2.m_userData.type == 'wall' && point.shape1.m_userData.type == 'bullet') {
+              if (point.shape1.m_userData.type == 'bullet') {
+                that.gameServer.bullets[point.shape1.m_userData.id].life = -1
+              } else if (point.shape2.m_userData.type == 'bullet') {
+                that.gameServer.bullets[point.shape2.m_userData.id].life = -1
+              }
+          }
+    }
+    this.world.SetContactListener(listener);
     this.staticItems = [];
 
     // LOAD STATIC ITEMS ONCE FOR CLIENT
@@ -34,22 +57,6 @@ var PhysicsEngine = backbone.Model.extend({
         this.itemsInMap[itemJSON.name] = itemJSON;
       }
     }.bind(this));
-
-
-    var listener = new b2d.b2ContactListener;
-    listener.BeginContact = function(contact) {
-      console.log(contact.GetFixtureA().GetBody().GetUserData());
-    }
-    listener.EndContact = function(contact) {
-      console.log(contact.GetFixtureA().GetBody().GetUserData());
-    }
-    listener.PostSolve = function(contact, impulse) {
-      console.log('post solve');
-    }
-    listener.PreSolve = function(contact, oldManifold) {
-      console.log('pre solve');
-    }
-    this.world.SetContactListener(listener);
 
     this.createBorders(this.map.size);
     this.loadStaticItems(this.map.staticItems);
@@ -78,7 +85,7 @@ var PhysicsEngine = backbone.Model.extend({
     //console.log(this.world.GetBodyCount());
     this.world.Step(this.timeStep, this.iterations);
   },
-  createSquareBody: function(_position, _size, _density, _friction) {
+  createSquareBody: function(userData, _position, _size, _density, _friction) {
     try {
       var bodyDef = new b2d.b2BodyDef();
       bodyDef.position.Set(_position.x, _position.y);
@@ -88,6 +95,7 @@ var PhysicsEngine = backbone.Model.extend({
       shapeDef.density = _density;
       shapeDef.friction = _friction;
       shapeDef.restitution = 0;
+      shapeDef.userData = userData;
       body.CreateShape(shapeDef);
       body.SetMassFromShapes();
       return body;
@@ -136,7 +144,7 @@ var PhysicsEngine = backbone.Model.extend({
     this.staticItems.push(new PhysicsItem(wallBottom));
     this.staticItems.push(new PhysicsItem(wallLeft));
     this.staticItems.push(new PhysicsItem(wallRight));
- 
+
   },
   loadStaticItems: function(_staticItems) {
     _.each(_staticItems, function(w) {

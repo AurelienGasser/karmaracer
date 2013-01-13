@@ -10,12 +10,12 @@ var PhysicsItem = backbone.Model.extend({
       w: _arguments['size'].w,
       h: _arguments['size'].h
     };
-    this.body = _arguments['physicsEngine'].createSquareBody(_arguments['position'], this.size, _arguments['density'], _arguments['friction']);
-    this.engine = _arguments['physicsEngine'];
     if (!_.isUndefined(_arguments['name'])){
       this.name = _arguments['name'];
       //console.log('name', this.name);
     }
+    this.body = _arguments['physicsEngine'].createSquareBody({ type: this.name, id: this.id }, _arguments['position'], this.size, _arguments['density'], _arguments['friction']);
+    this.engine = _arguments['physicsEngine'];
   },
   getPosition: function() {
     if(this.body != null) {

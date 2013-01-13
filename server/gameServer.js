@@ -11,7 +11,7 @@ var gameServer = function(app) {
     var map1_path = __dirname + '/public/maps/map1.json';
     var map1String = fs.readFileSync(map1_path);
     var map = JSON.parse(map1String);
-    this.physicsEngine = new PhysicsEngine(map);
+    this.physicsEngine = new PhysicsEngine(map, this);
 
     var Bullet = require('./classes/bullet');
     var Car = require('./classes/car');
