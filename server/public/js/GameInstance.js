@@ -1,5 +1,6 @@
 function GameInstance() {
   this.cars = [];
+  this.explosions = [];
   this.mycar;
   this.walls = [];
   this.drawEngine;

@@ -42,6 +42,11 @@ var PhysicsEngine = backbone.Model.extend({
               } else if (point.shape2.m_userData.type == 'bullet') {
                 that.gameServer.bullets[point.shape2.m_userData.id].life = -1
               }
+              var e = { engine: that, position: point.position, id: Math.random() };
+              that.gameServer.explosions[e.id] = e;
+              setTimeout(function() {
+                delete that.gameServer.explosions[e.id]
+              }, 1000)
           }
     }
     this.world.SetContactListener(listener);
@@ -100,7 +105,7 @@ var PhysicsEngine = backbone.Model.extend({
       body.SetMassFromShapes();
       return body;
     } catch(e) {
-      //console.log(e);
+      console.log(e);
       return null;
     }
   },

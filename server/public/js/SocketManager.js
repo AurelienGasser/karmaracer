@@ -42,6 +42,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   });
 
   connection.on('objects', function (objects) {
+    gameInstance.explosions = objects.explosions;
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
     gameInstance.bullets = objects.bullets;

@@ -18,6 +18,7 @@ var gameServer = function(app) {
     var CarsCollection = require('./classes/cars');
 
     this.cars = new CarsCollection();
+    this.explosions = {};
     this.bullets = {};
     this.clients = []
 
@@ -36,10 +37,7 @@ var gameServer = function(app) {
     }, 20);
 
     function updateBullets() {
-
       var deads = [];
-
-
       for(var id in that.bullets) {
         if(that.bullets.hasOwnProperty(id)) {
           var bullet = that.bullets[id];
@@ -51,13 +49,10 @@ var gameServer = function(app) {
           }
         }
       }
-
-
       for(var i = 0; i < deads.length; i++) {
         var id = deads[i];
         that.physicsEngine.world.DestroyBody(that.bullets[id].body);
         delete that.bullets[id];
-
       };
     }
 
@@ -72,6 +67,17 @@ var gameServer = function(app) {
       return graphics;
     }
 
+    this.getGraphicExplosions = function() {
+      var res = [];
+      for (var i in this.explosions) {
+        var gScale = 32;
+        res.push( {
+          x: this.explosions[i].position.x * gScale,
+          y: this.explosions[i].position.y * gScale
+        });
+      }
+      return res;
+    }
 
     this.gameServerSocket = require('./gameServerSocket')(this);
 
@@ -105,6 +111,8 @@ var gameServer = function(app) {
     }
 
     setInterval(handleClientKeyboard, 10);
-  }
+}
+
+
 
 module.exports = gameServer;

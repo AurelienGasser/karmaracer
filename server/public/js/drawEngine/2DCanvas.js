@@ -36,6 +36,8 @@ Engine2DCanvas.prototype.init = function() {
   this.camera.setWorldSize(this.gameInstance.world.size);
   this.carImage = new Image();
   this.carImage.src = '/sprites/car.png';
+  this.explosionImage = new Image();
+  this.explosionImage.src = '/sprites/explosion.png';
 };
 
 Engine2DCanvas.prototype.loaded = function() {
@@ -60,6 +62,19 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.translate(c.x, c.y);
       ctx.rotate(c.r);
       ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.restore();
+    };
+  }
+}
+
+Engine2DCanvas.prototype.drawExplosions = function(ctx) {
+  if(this.gameInstance.explosions != null) {
+    ctx.fillStyle = '#FFFFFF';
+    for(var i = 0; i < this.gameInstance.explosions.length; i++) {
+      var c = this.gameInstance.explosions[i];
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.drawImage(this.explosionImage, 0, 0, 56, 51, -56 / 2, -51 / 2, 56 / 2, 51 / 2);
       ctx.restore();
     };
   }
@@ -123,6 +138,7 @@ Engine2DCanvas.prototype.drawItems = function() {
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, cs.w, cs.h, this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);
   this.drawCars(this.ctx);
+  this.drawExplosions(this.ctx);
   this.drawBullets(this.ctx);
 };
 
