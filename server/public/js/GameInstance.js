@@ -39,7 +39,7 @@ GameInstance.prototype.loadImages = function(callback) {
     var img = new Image();
     img.src = i.image.path;
     img.onload = function() {
-      console.log(i);
+      //console.log(i);
       if(i.patternType !== 'none') {
         var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
         this.itemsInMap[item].pattern = _pattern;
@@ -60,12 +60,14 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   this.world.size = worldInfo.size;
   this.walls = worldInfo.staticItems;
   this.itemsInMap = worldInfo.itemsInMap;
+  this.bullets = []
 
   var that = this;
+
   that.drawEngine = DrawEngineFactory(that, "game-canvas", G_defaultDrawEngineType);
 
   that.loadImages(function() {
-    that.drawEngine.initBackgroundCanvas();
+//    that.drawEngine.initBackgroundCanvas();
 
     //console.log('ready');
     that.keyboardHandler = new KeyboardHandler(that);

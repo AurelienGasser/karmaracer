@@ -8,8 +8,12 @@ var b2d = require("box2d");
 var Bullet = require("./physicsItem").extend({
   urlRoot: '/cars',
   initialize: function(car) {
-    var initPos = car.getVector(20);
-    this.acc_helper = 5000;
+    var distanceFromCar = 1.2;
+    var initPos = car.getVector({
+      x: distanceFromCar * car.size.w,
+      y: distanceFromCar * car.size.w
+    });
+    this.acc_helper = 5;
     //console.log(initPos);
     var a = {
       physicsEngine: car.engine,
@@ -18,11 +22,11 @@ var Bullet = require("./physicsItem").extend({
         y: car.getPosition().y + initPos.y
       },
       size: {
-        w: 2,
-        h: 2
+        w: 0.1,
+        h: 0.1
       },
-      density: 5000,
-      friction: 0
+      density: 1,
+      friction: 5
     };
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();
@@ -30,7 +34,7 @@ var Bullet = require("./physicsItem").extend({
     this.dead = false;
   },
   accelerate: function(ac) {
-    this.acc_helper += 5000;
+    this.acc_helper += 2;
     var v = {
       x: this.acc_helper * ac * Math.cos(this.angle),
       y: this.acc_helper * ac * Math.sin(this.angle)

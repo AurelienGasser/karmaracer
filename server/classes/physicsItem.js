@@ -12,6 +12,10 @@ var PhysicsItem = backbone.Model.extend({
     };
     this.body = _arguments['physicsEngine'].createSquareBody(_arguments['position'], this.size, _arguments['density'], _arguments['friction']);
     this.engine = _arguments['physicsEngine'];
+    if (!_.isUndefined(_arguments['name'])){
+      this.name = _arguments['name'];
+      //console.log('name', this.name);
+    }
   },
   getPosition: function() {
     if(this.body != null) {
@@ -26,8 +30,8 @@ var PhysicsItem = backbone.Model.extend({
     var angle = this.getAngle();
     //console.log(power, this.getAngle());
     var v = {
-      x: power * Math.cos(angle),
-      y: power * Math.sin(angle)
+      x: power.x * Math.cos(angle),
+      y: power.y * Math.sin(angle)
     };
     return v;
   },
@@ -35,28 +39,37 @@ var PhysicsItem = backbone.Model.extend({
     return this.size;
   },
   addAngle: function(a) {
-    if(this.body != null) {
+    if(this.body !== null) {
       this.body.m_angularVelocity += a;
     }
   },
   getAngle: function() {
-    if(this.body != null) {
+    if(this.body !== null) {
       return this.body.GetAngle();
     }
     return 0;
   },
   turn: function(side) {
-    this.addAngle(side * Math.PI / 8);
+    var angleToAdd = side * Math.PI / 8;
+//    console.log('b', this.getAngle(), side, this.body !== null, angleToAdd);
+    this.addAngle(angleToAdd);
+//    console.log('a', this.getAngle());
   },
   getShared: function() {
     var pos = this.getPosition();
+
+    //console.log(this.name);
     var share = {
-      x: pos.x,
-      y: pos.y,
+      x: pos.x * this.engine.gScale,
+      y: pos.y * this.engine.gScale,
       r: this.getAngle(),
-      w: this.size.w,
-      h: this.size.h
+      w: this.size.w * this.engine.gScale,
+      h: this.size.h * this.engine.gScale
     };
+    if (!_.isUndefined(this.name)){
+      share.name = this.name;
+      //console.log('name s', this.name);
+    }
     return share;
   },
   applyForceToBody: function(v) {

@@ -22,7 +22,9 @@ KeyboardHandler.prototype.event = function(event, state) {
 }
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
+    // console.log(key);
   switch (key) {
+
     case KEY_SPACE: // space
       this.event('shoot', state);
       break;

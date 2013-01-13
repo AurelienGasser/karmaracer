@@ -74,5 +74,5 @@ Camera.prototype.update = function(center) {
   this.ctx.scale(this.scale, -this.scale);
   // translate to center the car
   this.ctx.translate(this.translate.x, this.translate.y);
-  this.drawDebug();
+  //this.drawDebug();
 };

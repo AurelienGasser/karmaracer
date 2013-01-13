@@ -18,7 +18,7 @@
       }
     },
    {
-      "name" : "stone_r",
+      "name" : "stone",
       "position" : {
         "x" : 460,
         "y" : 400
@@ -29,7 +29,7 @@
       }
     },
     {
-      "name" : "stone_l",
+      "name" : "stone",
       "position" : {
         "x" : 300,
         "y" : 400
