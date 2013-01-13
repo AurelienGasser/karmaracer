@@ -74,7 +74,7 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
       var c = this.gameInstance.explosions[i];
       ctx.save();
       ctx.translate(c.x, c.y);
-      ctx.drawImage(this.explosionImage, 0, 0, 56, 51, -56 / 2, -51 / 2, 56 / 2, 51 / 2);
+      ctx.drawImage(this.explosionImage, 0, 0, 56, 51, -56 / 2, -51 / 2, 56, 51);
       ctx.restore();
     };
   }

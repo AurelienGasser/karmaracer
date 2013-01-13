@@ -46,7 +46,7 @@ var PhysicsEngine = backbone.Model.extend({
               that.gameServer.explosions[e.id] = e;
               setTimeout(function() {
                 delete that.gameServer.explosions[e.id]
-              }, 1000)
+              }, 200)
           }
     }
     this.world.SetContactListener(listener);
