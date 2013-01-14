@@ -16,7 +16,7 @@ var gameServerSocket = function(gameServer) {
       client.on('init_done', function() {
         console.log('client init done');
         client.car = new Car(physicsEngine);
-        that.gameServer.cars.add(client.car);
+        that.gameServer.addCar(client.car);
         client.interval = setInterval(function() {
           var share = {
             myCar: client.car.getShared(),
@@ -29,7 +29,7 @@ var gameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          that.physicsEngine.world.DestroyBody(client.car.body);
+          physicsEngine.world.DestroyBody(client.car.body);
           that.gameServer.cars.remove(client.car);
           clearInterval(client.interval);
           console.log('client left');
@@ -49,6 +49,14 @@ var gameServerSocket = function(gameServer) {
               client.keyboard[event] = false;
             }
           }
+        } catch(e) {
+          console.log(e);
+        }
+      });
+
+      client.on('add bot', function() {
+        try {
+          that.gameServer.botManager.addBot();
         } catch(e) {
           console.log(e);
         }

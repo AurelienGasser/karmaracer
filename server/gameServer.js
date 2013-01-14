@@ -7,6 +7,7 @@ var gameServer = function(app) {
   var Bullet = require('./classes/bullet');
   var Car = require('./classes/car');
   var CarsCollection = require('./classes/cars');
+  var BotManager = require('./BotManager');
 
   // LOAD THE MAP
   var map1_path = __dirname + '/public/maps/map1.json';
@@ -18,6 +19,7 @@ var gameServer = function(app) {
   this.cars = new CarsCollection();
   this.bullets = {};
   this.clients = [];
+  this.botManager = new BotManager(this);
 
   var that = this;
 
@@ -97,9 +99,8 @@ gameServer.prototype.getGraphicBullets = function() {
   return graphics;
 }
 
-
-gameServer.prototype.addBot = function() {
-
+gameServer.prototype.addCar = function(car) {
+  this.cars.add(car);
 }
 
 module.exports = gameServer;

@@ -1,5 +1,7 @@
+var connection;
+
 function SocketManager(serverHost, gameInstance, onInitCallback){
-  var connection = io.connect(serverHost);
+  connection = io.connect(serverHost);
   //console.log(connection);
   this.gameInstance = gameInstance;
   this.init_done = false;
@@ -62,3 +64,9 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
 SocketManager.prototype.getConnection = function() {
   return this.connection;
 };
+
+$(function() {
+  $('#addBot').click(function() {
+    connection.emit('add bot');
+  })
+})
