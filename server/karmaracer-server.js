@@ -1,2 +1,4 @@
 var app = require('./server.js');
-var gameServer = require('./gameServer')(app);
+var gameServer = new (require('./gameServer'))(app);
+var gameServerSocket = new (require('./gameServerSocket'))(gameServer);
+

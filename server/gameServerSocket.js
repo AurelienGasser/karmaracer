@@ -5,9 +5,10 @@ var gameServerSocket = function(gameServer) {
     var that = this;
 
     this.gameServer.app.io.sockets.on('connection', function(client) {
+      var physicsEngine = that.gameServer.physicsEngine;
       console.log('client connected ');
       client.keyboard = {};
-      var worldInfo = that.physicsEngine.getWorldInfo();
+      var worldInfo = physicsEngine.getWorldInfo();
       //  console.log(worldInfo);
       client.emit('init', worldInfo);
       that.gameServer.clients[client.id] = client;
