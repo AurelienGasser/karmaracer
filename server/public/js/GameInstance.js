@@ -1,6 +1,6 @@
 function GameInstance() {
   this.cars = [];
-  this.explosions = [];
+  this.explosions = {};
   this.mycar;
   this.walls = [];
   this.drawEngine;
@@ -21,9 +21,7 @@ GameInstance.prototype.loadImages = function(callback) {
       return callback();
     }
     imageNumLoaded += 1;
-
   }
-
 
   // create background pattern
   var bgImage = new Image();
@@ -54,8 +52,8 @@ GameInstance.prototype.loadImages = function(callback) {
 };
 
 GameInstance.prototype.onInitReceived = function(err, worldInfo) {
-  console.log(worldInfo);
-  // once socket init has been done
+  var that = this;
+
   this.world = {};
   this.worldInfo = worldInfo;
   this.world.size = worldInfo.size;
@@ -63,19 +61,24 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   this.itemsInMap = worldInfo.itemsInMap;
   this.bullets = []
 
-  var that = this;
-
   that.drawEngine = DrawEngineFactory(that, "game-canvas", G_defaultDrawEngineType);
 
   that.loadImages(function() {
-//    that.drawEngine.initBackgroundCanvas();
-
-    //console.log('ready');
     that.keyboardHandler = new KeyboardHandler(that);
     document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);
     document.onkeyup = that.keyboardHandler.handleKeyUp.bind(that.keyboardHandler);
     that.drawEngine.tick();
-
   });
-
 };
+
+GameInstance.prototype.addExplosion = function(explosion) {
+  var that = this;
+  var explosionId = Math.random();
+  this.explosions[explosionId] = {
+    x: explosion.x,
+    y: explosion.y
+  };
+  setTimeout(function() {
+    delete that.explosions[explosionId];
+  }, 200)
+}

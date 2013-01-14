@@ -10,7 +10,7 @@ var gameServerSocket = function(gameServer) {
       var worldInfo = that.physicsEngine.getWorldInfo();
       //  console.log(worldInfo);
       client.emit('init', worldInfo);
-      clients.push(client);
+      that.gameServer.clients[client.id] = client;
 
       client.on('init_done', function() {
         console.log('client init done');
@@ -20,7 +20,6 @@ var gameServerSocket = function(gameServer) {
           var share = {
             myCar: client.car.getShared(),
             cars: that.gameServer.cars.shareCars,
-            explosions: that.gameServer.getGraphicExplosions(),
             bullets: that.gameServer.getGraphicBullets()
           };
           client.emit('objects', share);
@@ -36,6 +35,7 @@ var gameServerSocket = function(gameServer) {
         } catch(e) {
           console.log(e);
         }
+        delete that.gameServer.clients[client.id];
       });
 
       client.on('drive', function(events) {
@@ -54,8 +54,8 @@ var gameServerSocket = function(gameServer) {
       });
 
       client.on('chat', function(msg) {
-        for(var i in clients) {
-          clients[i].emit('chat_msg', msg);
+        for(var i in that.gameServer.clients) {
+          that.gameServer.clients[i].emit('chat_msg', msg);
         }
       });
     });

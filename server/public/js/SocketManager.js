@@ -42,7 +42,6 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   });
 
   connection.on('objects', function (objects) {
-    gameInstance.explosions = objects.explosions;
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
     gameInstance.bullets = objects.bullets;
@@ -51,6 +50,10 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
       return list.length;
     })));
     socketReceived();
+  });
+
+  connection.on('explosion', function (explosion) {
+    gameInstance.addExplosion(explosion);
   });
 
   this.connection = connection;

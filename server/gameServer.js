@@ -18,7 +18,6 @@ var gameServer = function(app) {
     var CarsCollection = require('./classes/cars');
 
     this.cars = new CarsCollection();
-    this.explosions = {};
     this.bullets = {};
     this.clients = []
 
@@ -65,18 +64,6 @@ var gameServer = function(app) {
         }
       }
       return graphics;
-    }
-
-    this.getGraphicExplosions = function() {
-      var res = [];
-      for (var i in this.explosions) {
-        var gScale = 32;
-        res.push( {
-          x: this.explosions[i].position.x * gScale,
-          y: this.explosions[i].position.y * gScale
-        });
-      }
-      return res;
     }
 
     this.gameServerSocket = require('./gameServerSocket')(this);

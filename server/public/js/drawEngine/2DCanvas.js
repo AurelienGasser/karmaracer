@@ -67,14 +67,19 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
   }
 }
 
+var explosionWidth = 56;
+var explosionHeight = 51;
+
 Engine2DCanvas.prototype.drawExplosions = function(ctx) {
   if(this.gameInstance.explosions != null) {
     ctx.fillStyle = '#FFFFFF';
-    for(var i = 0; i < this.gameInstance.explosions.length; i++) {
+    for (var i in this.gameInstance.explosions) {
       var c = this.gameInstance.explosions[i];
       ctx.save();
       ctx.translate(c.x, c.y);
-      ctx.drawImage(this.explosionImage, 0, 0, 56, 51, -56 / 2, -51 / 2, 56, 51);
+      var h = explosionHeight;
+      var w = explosionWidth;
+      ctx.drawImage(this.explosionImage, 0, 0, w, h, -h / 2, -h / 2, w, h);
       ctx.restore();
     };
   }

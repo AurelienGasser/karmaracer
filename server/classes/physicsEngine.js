@@ -42,11 +42,12 @@ var PhysicsEngine = backbone.Model.extend({
               } else if (point.shape2.m_userData.type == 'bullet') {
                 that.gameServer.bullets[point.shape2.m_userData.id].life = -1
               }
-              var e = { engine: that, position: point.position, id: Math.random() };
-              that.gameServer.explosions[e.id] = e;
-              setTimeout(function() {
-                delete that.gameServer.explosions[e.id]
-              }, 200)
+              for (var i in that.gameServer.clients) {
+                that.gameServer.clients[i].emit('explosion', {
+                  x: point.position.x * that.gScale,
+                  y: point.position.y * that.gScale
+                });
+              }
           }
     }
     this.world.SetContactListener(listener);
