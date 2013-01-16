@@ -13,7 +13,7 @@ var Bullet = require("./physicsItem").extend({
       x: distanceFromCar * car.size.w,
       y: distanceFromCar * car.size.w
     });
-    this.acc_helper = 5;
+    this.acc_helper = 100;
     //console.log(initPos);
     var a = {
       physicsEngine: car.engine,

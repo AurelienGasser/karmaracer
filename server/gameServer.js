@@ -54,10 +54,10 @@ var gameServer = function(app) {
               that.bulletManager.add(client.car);
               break;
             case 'forward':
-              client.car.accelerate(6.0)
+              client.car.accelerate(1.0)
               break;
             case 'backward':
-              client.car.accelerate(-6.0)
+              client.car.accelerate(-1.0)
               break;
             case 'left':
               client.car.turn(3.0)

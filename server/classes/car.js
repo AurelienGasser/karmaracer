@@ -15,7 +15,7 @@ var Car = require("./physicsItem").extend({
   },
   accelerationMax : 50,
   accelerate : function (ac){
-    var acc_helper = 1;
+    var acc_helper = 4;
     var v = {x : acc_helper * ac * Math.cos(this.getAngle()), y : acc_helper * ac * Math.sin(this.getAngle())};
     //console.log(v);
     this.applyForceToBody(v);

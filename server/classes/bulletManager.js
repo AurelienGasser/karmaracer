@@ -27,6 +27,7 @@ var bulletManager = function() {
     var add = function(car) {
 
         var b = new Bullet(car);
+        b.accelerate(1);
         that.bullets[b.id] = b;
 
       }
