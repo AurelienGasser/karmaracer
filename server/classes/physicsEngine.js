@@ -34,22 +34,31 @@ var PhysicsEngine = backbone.Model.extend({
       // console.log('remove');
     }
     listener.Result = function(point) {
+      //      console.log("c", point, impact);
       // console.log('collision between', point.shape1.m_userData, 'and', point.shape2.m_userData);
-      if (point.shape1.m_userData.type == 'wall' && point.shape2.m_userData.type == 'bullet'
-          || point.shape2.m_userData.type == 'wall' && point.shape1.m_userData.type == 'bullet') {
-              if (point.shape1.m_userData.type == 'bullet') {
-                that.gameServer.bullets[point.shape1.m_userData.id].life = -1
-              } else if (point.shape2.m_userData.type == 'bullet') {
-                that.gameServer.bullets[point.shape2.m_userData.id].life = -1
-              }
-              for (var i in that.gameServer.clients) {
-                that.gameServer.clients[i].emit('explosion', {
-                  x: point.position.x * that.gScale,
-                  y: point.position.y * that.gScale
-                });
-              }
-          }
+      var o1 = point.shape1.m_userData;
+      var o2 = point.shape2.m_userData;
+      //console.log(o1);
+      if(o1.name === 'bullet' && o2.name !== 'bullet') {
+        o1.explode(point);
+      } else if(o2.name === 'bullet' && o1.name !== 'bullet') {
+        o2.explode(point);
+      } else {
+        return;
+      }
+      //console.log(o1.name, o2.name);
+
+
+      //   if(point.shape1.m_userData.type == 'wall' && point.shape2.m_userData.type == 'bullet' || point.shape2.m_userData.type == 'wall' && point.shape1.m_userData.type == 'bullet') {
+      //     if(point.shape1.m_userData.type == 'bullet') {
+      //       that.gameServer.bullets[point.shape1.m_userData.id].life = -1
+      //     } else if(point.shape2.m_userData.type == 'bullet') {
+      //       that.gameServer.bullets[point.shape2.m_userData.id].life = -1
+      //     }
+      //   }
     }
+
+
     this.world.SetContactListener(listener);
     this.staticItems = [];
 

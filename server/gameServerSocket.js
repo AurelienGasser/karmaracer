@@ -21,7 +21,7 @@ var gameServerSocket = function(gameServer) {
           var share = {
             myCar: client.car.getShared(),
             cars: that.gameServer.cars.shareCars,
-            bullets: that.gameServer.getGraphicBullets()
+            bullets: that.gameServer.bulletManager.getGraphicBullets()
           };
           client.emit('objects', share);
         }, 1000 / 16);

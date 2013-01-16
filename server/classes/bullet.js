@@ -34,6 +34,13 @@ var Bullet = require("./physicsItem").extend({
     this.life = 200;
     this.dead = false;
   },
+  die : function(){
+    this.life = -1;
+  },
+  explode: function(point) {
+    this.die();
+    this.engine.gameServer.broadcastExplosion(point);
+  },
   accelerate: function(ac) {
     this.acc_helper += 2;
     var v = {
