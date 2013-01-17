@@ -20,7 +20,7 @@ var gameServerSocket = function(gameServer) {
         client.interval = setInterval(function() {
           var share = {
             myCar: client.car.getShared(),
-            cars: that.gameServer.cars.shareCars,
+            cars: that.gameServer.cars.getShared(),
             bullets: that.gameServer.bulletManager.getGraphicBullets()
           };
           client.emit('objects', share);
@@ -30,7 +30,7 @@ var gameServerSocket = function(gameServer) {
       client.on('disconnect', function(socket) {
         try {
           physicsEngine.world.DestroyBody(client.car.body);
-          that.gameServer.cars.remove(client.car);
+          that.gameServer.removeCar(client.car);
           clearInterval(client.interval);
           console.log('client left');
         } catch(e) {
@@ -49,6 +49,16 @@ var gameServerSocket = function(gameServer) {
               client.keyboard[event] = false;
             }
           }
+        } catch(e) {
+          console.log(e);
+        }
+      });
+
+
+      client.on('updatePlayerName', function(name) {
+        try {
+          console.log('ipda name', name);
+          client.car.updatePlayerName(name);
         } catch(e) {
           console.log(e);
         }

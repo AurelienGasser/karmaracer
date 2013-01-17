@@ -43,6 +43,17 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     ++that.msg_id;
   });
 
+  connection.on('scores', function (scores) {
+    // console.log(scores);
+    var o = [];
+    for (var i = 0; i < scores.length; i++) {
+      var s = scores[i];
+      o.push('<li>', s.name, ':', s.score, '</li>');
+    };
+    $('#scores').html(o.join(''));
+  });
+
+
   connection.on('objects', function (objects) {
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
@@ -64,6 +75,10 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
 SocketManager.prototype.getConnection = function() {
   return this.connection;
 };
+
+SocketManager.prototype.emit = function(key, data){
+  this.connection.emit(key, data);
+}
 
 $(function() {
   $('#addBot').click(function() {

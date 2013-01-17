@@ -28,6 +28,7 @@ var Bullet = require("./physicsItem").extend({
       density: 1,
       friction: 5
     };
+    this.car = car;
     this.name = 'bullet';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();

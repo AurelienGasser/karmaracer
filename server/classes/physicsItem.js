@@ -5,7 +5,7 @@ var b2d = require("box2d");
 var PhysicsItem = backbone.Model.extend({
   urlRoot: '/physicsItem',
   initialize: function(_arguments) {
-    this.id = Math.floor(Math.random() * 1e10);
+    this.id = Math.floor(Math.random() * 1e100);
     this.size = {
       w: _arguments['size'].w,
       h: _arguments['size'].h

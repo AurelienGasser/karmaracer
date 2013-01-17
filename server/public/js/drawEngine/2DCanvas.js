@@ -54,7 +54,7 @@ Engine2DCanvas.prototype.draw = function() {
 };
 
 Engine2DCanvas.prototype.drawCars = function(ctx) {
-  if(this.gameInstance.cars != null) {
+  if(this.gameInstance.cars !== null) {
     ctx.fillStyle = '#FFFFFF';
     for(var i = 0; i < this.gameInstance.cars.length; i++) {
       var c = this.gameInstance.cars[i];

@@ -41,8 +41,15 @@ var PhysicsEngine = backbone.Model.extend({
       //console.log(o1);
       if(o1.name === 'bullet' && o2.name !== 'bullet') {
         o1.explode(point);
+        if (o2.name === 'car'){
+          o1.car.score += 1;
+        }
       } else if(o2.name === 'bullet' && o1.name !== 'bullet') {
         o2.explode(point);
+        if (o1.name === 'car'){
+          o2.car.score += 1;
+        }
+
       } else {
         return;
       }

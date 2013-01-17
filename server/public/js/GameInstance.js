@@ -5,8 +5,16 @@ function GameInstance() {
   this.walls = [];
   this.drawEngine;
   this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived.bind(this));
+  this.setUIEvents();
 }
 
+
+GameInstance.prototype.setUIEvents = function() {
+  var that = this;
+  $('#player_name').keyup(function(e){
+    that.socketManager.emit('updatePlayerName', $(this).val());
+  });
+};
 
 GameInstance.prototype.loadImages = function(callback) {
 
