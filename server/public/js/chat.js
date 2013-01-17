@@ -9,8 +9,8 @@ $(function() {
 
 function sendMsg() {
   if ($('#chat_input').val().trim() != '') {
-    var msg = $('#player_name').val() || default_player_name + ': ' + $('#chat_input').val();
-    gameInstance.socketManager.getConnection().emit('chat', msg);
+    var msg = ($('#player_name').val() || default_player_name) + ': ' + $('#chat_input').val();
+    gameInstance.socketManager.emit('chat', msg);
   }
   $('#chat_input').val('');
   hideChat();

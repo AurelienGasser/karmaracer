@@ -53,8 +53,8 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
 
 KeyboardHandler.prototype.handleKeyDown = function(event) {
   if ($('#chat_input').is(':focus')) {
-    if ([KEY_ESCAPE, KEY_UP, KEY_DOWN].indexOf(event.keyCode) != -1) {
-      if (event.keyCode == KEY_ESCAPE) {
+    if ([KEY_ESCAPE, KEY_UP, KEY_DOWN].indexOf(event.keyCode) !== -1) {
+      if (event.keyCode === KEY_ESCAPE) {
         clearChatInputField();
       }
       hideChat();
