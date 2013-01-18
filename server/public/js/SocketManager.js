@@ -53,6 +53,10 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     $('#scores').html(o.join(''));
   });
 
+  connection.on('dead', function () {
+    alert ("you're dead !");
+  });
+
 
   connection.on('objects', function (objects) {
     gameInstance.cars = objects.cars;
@@ -60,7 +64,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     gameInstance.bullets = objects.bullets;
     //console.log(ga.bullets);
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list){
-      return list.length;
+      return list ? list.length : 0;
     })));
     socketReceived();
   });

@@ -5,14 +5,16 @@ var b2d = require("box2d");
 
 
 var Car = require("./physicsItem").extend({
+  startPosition: {
+    x: 10.0,
+    y: 11.5,
+  },
   urlRoot: '/cars',
-  initialize: function(_physicsEngine) {
+  client: null,
+  initialize: function(_physicsEngine, client) {
     var a = {
       physicsEngine: _physicsEngine,
-      position: {
-        x: 10.0,
-        y: 11.5
-      },
+      position: this.startPosition,
       size: {
         w: 1,
         h: 0.5
@@ -21,6 +23,8 @@ var Car = require("./physicsItem").extend({
       friction: 0.2
     };
     this.name = 'car';
+    this.client = client;
+    this.physicsEngine = _physicsEngine;
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
     this.score = 0;
@@ -42,6 +46,16 @@ var Car = require("./physicsItem").extend({
   },
   updatePlayerName: function(name) {
     this.playerName = name;
+  },
+  receiveHit: function() {
+    this.life -= 10;
+    if (this.life <= 0) {
+      if (this.client) {
+        this.physicsEngine.gameServer.client_die(this.client);
+      } else {
+        // bot: do nothing, bots are invlunerable (for now ;)
+      }
+    }
   }
 });
 

@@ -1,3 +1,5 @@
+var Car = require('./classes/car');
+
 var gameServer = function(app) {
     var backbone = require('backbone');
     var _ = require('underscore');
@@ -105,5 +107,20 @@ gameServer.prototype.removeCar = function(car) {
   this.scoreManager.unregister(car);
 }
 
+gameServer.prototype.client_die = function(client) {
+  if (client.dead) {
+    return;
+  }
+  var that = this;
+  client.dead = true;
+  this.physicsEngine.world.DestroyBody(client.car.body);
+  this.removeCar(client.car);
+  client.emit('dead', null);
+  setTimeout(function() {
+    client.dead = false;
+    client.car = new Car(that.physicsEngine, client);
+    that.addCar(client.car);
+  }, 2000);
+}
 
 module.exports = gameServer;

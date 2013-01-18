@@ -15,11 +15,11 @@ var gameServerSocket = function(gameServer) {
 
       client.on('init_done', function() {
         console.log('client init done');
-        client.car = new Car(physicsEngine);
+        client.car = new Car(physicsEngine, client);
         that.gameServer.addCar(client.car);
         client.interval = setInterval(function() {
           var share = {
-            myCar: client.car.getShared(),
+            myCar: client.dead ? null : client.car.getShared(),
             cars: that.gameServer.cars.getShared(),
             bullets: that.gameServer.bulletManager.getGraphicBullets()
           };
