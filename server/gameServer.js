@@ -9,9 +9,8 @@ var gameServer = function(app) {
     var BotManager = require('./BotManager');
 
     // LOAD THE MAP
-    var map1_path = __dirname + '/public/maps/map1.json';
-    var map1String = fs.readFileSync(map1_path);
-    var map = JSON.parse(map1String);
+    // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
+    var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/testarena.json'));
 
     this.app = app;
     this.physicsEngine = new PhysicsEngine(map, this);

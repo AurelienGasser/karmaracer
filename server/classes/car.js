@@ -10,8 +10,8 @@ var Car = require("./physicsItem").extend({
     var a = {
       physicsEngine: _physicsEngine,
       position: {
-        x: 50.0,
-        y: 50.0
+        x: 10.0,
+        y: 11.5
       },
       size: {
         w: 1,
