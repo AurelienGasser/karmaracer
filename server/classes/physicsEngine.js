@@ -130,7 +130,7 @@ var PhysicsEngine = backbone.Model.extend({
 
     var that = this;
 
-    var borderSize = 2.0;
+    var borderSize = 0.45;
 
     function getBorderOptions(x, y, w, h) {
 
@@ -154,13 +154,13 @@ var PhysicsEngine = backbone.Model.extend({
       };
       return border;
     }
-    var wallTop = getBorderOptions(mapSize.w / 2, borderSize / 2, mapSize.w, borderSize);
-    var wallBottom = getBorderOptions(mapSize.w / 2, mapSize.h - borderSize / 2, mapSize.w, borderSize);
+    var wallTop = getBorderOptions(mapSize.w / 2, mapSize.h + borderSize / 2, mapSize.w + 2 * borderSize, borderSize);
+    var wallBottom = getBorderOptions(mapSize.w / 2, - borderSize / 2, mapSize.w + 2 * borderSize, borderSize);
 
     var worldYminusBorder = mapSize.h - 2 * borderSize;
 
-    var wallLeft = getBorderOptions(borderSize / 2, borderSize + worldYminusBorder / 2, borderSize, worldYminusBorder);
-    var wallRight = getBorderOptions(mapSize.w - borderSize / 2, borderSize + worldYminusBorder / 2, borderSize, worldYminusBorder);
+    var wallLeft = getBorderOptions(-borderSize / 2, mapSize.h / 2, borderSize, mapSize.h);
+    var wallRight = getBorderOptions(mapSize.w + borderSize / 2, mapSize.h / 2, borderSize, mapSize.h);
 
     this.staticItems.push(new PhysicsItem(wallTop));
     this.staticItems.push(new PhysicsItem(wallBottom));
