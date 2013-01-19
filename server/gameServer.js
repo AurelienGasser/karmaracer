@@ -37,7 +37,7 @@ var gameServer = function(app) {
         that.bulletManager.updateBullets(that.physicsEngine);
         that.scoreManager.broadcastScores(that);
       } catch(e) {
-        console.log("error main interval", e);
+        console.log("error main interval", e, e.stack);
       }
 
     }
