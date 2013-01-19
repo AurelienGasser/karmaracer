@@ -11,7 +11,7 @@ var Car = require("./physicsItem").extend({
   },
   urlRoot: '/cars',
   client: null,
-  initialize: function(_physicsEngine, client) {
+  initialize: function(_physicsEngine, client, playerName) {
     var a = {
       physicsEngine: _physicsEngine,
       position: this.startPosition,
@@ -28,7 +28,7 @@ var Car = require("./physicsItem").extend({
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
     this.score = 0;
-    this.playerName = 'car' + Math.floor(Math.random() * 1e5);
+    this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
     this.life = 100;
   },
   accelerationMax: 50,

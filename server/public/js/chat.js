@@ -1,7 +1,6 @@
 var default_player_name = 'unknown player';
 
 $(function() {
-  $('#player_name').val(localStorage.username);
   $('#player_name').on('keyup', function() {
     localStorage.username = $('#player_name').val();
   })
