@@ -35,8 +35,8 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     onInitCallback(null, worldInfo);
     if (!localStorage.username || localStorage.username.length == 0) {
       localStorage.username = prompt('Welcome to Karmaracer !\nWhat\'s your name ?')
-      $('#player_name').val(localStorage.username);
     }
+    $('#player_name').val(localStorage.username);
     connection.emit('init_done', { playerName: localStorage.username });
     this.init_done = true;
   });
