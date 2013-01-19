@@ -88,8 +88,10 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
       var c = this.gameInstance.explosions[i];
       ctx.save();
       ctx.translate(c.x, c.y);
+      ctx.rotate(c.r);
       var h = explosionHeight;
       var w = explosionWidth;
+      ctx.globalAlpha = c.alpha;
       ctx.drawImage(this.explosionImage, 0, 0, w, h, -h / 2, -h / 2, w, h);
       ctx.restore();
     };

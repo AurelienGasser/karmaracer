@@ -6,6 +6,14 @@ function GameInstance() {
   this.drawEngine;
   this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived.bind(this));
   this.setUIEvents();
+  setInterval(function() {
+    for (var explosionId in this.explosions) {
+      this.explosions[explosionId].alpha -= 0.1;
+      if (this.explosions[explosionId].alpha < 0) {
+        delete this.explosions[explosionId];
+      }
+    }
+  }.bind(this), 60)
 }
 
 
@@ -84,9 +92,8 @@ GameInstance.prototype.addExplosion = function(explosion) {
   var explosionId = Math.random();
   this.explosions[explosionId] = {
     x: explosion.x,
-    y: explosion.y
+    y: explosion.y,
+    r: 3.14 / 6 * Math.random() - 3.14,
+    alpha: 0.4 * Math.random() - 0.2 + 0.25
   };
-  setTimeout(function() {
-    delete that.explosions[explosionId];
-  }, 200)
-}
+  }
