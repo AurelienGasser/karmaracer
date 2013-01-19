@@ -64,10 +64,10 @@ var gameServer = function(app) {
               client.car.accelerate(-1.0)
               break;
             case 'left':
-              client.car.turn(3.0)
+              client.car.turn(-3.0)
               break;
             case 'right':
-              client.car.turn(-3.0)
+              client.car.turn(3.0)
               break;
             }
           }

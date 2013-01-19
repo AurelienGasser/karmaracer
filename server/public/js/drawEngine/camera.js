@@ -5,7 +5,7 @@ function Camera(ctx, _canvasSelector){
   this.scale = 1;
   this.realWorldSize = {"w" : 0, "h" : 0};
   this.canvasSelector = _canvasSelector;
-  
+
 }
 
 Camera.prototype.setWorldSize = function(realWorldSize) {
@@ -49,7 +49,7 @@ Camera.prototype.drawDebug = function() {
   cameraDebug.push('<li>', 'Translate Y : ', this.translate.y, '</li>');
   cameraDebug.push('<li>', 'Scale : ', this.scale, '</li>');
   cameraDebug.push('<li>', 'Scaled Size : ', this.scaledSized.w, ', ', this.scaledSized.h, '</li>');
-  cameraDebug.push('<li>', 'myCar Pos : ', this.center.x, ', ', this.center.y, ', r°:', this.center.r,'</li>');      
+  cameraDebug.push('<li>', 'myCar Pos : ', this.center.x, ', ', this.center.y, ', r°:', this.center.r,'</li>');
   cameraDebug.push('<li>', 'Orientation : ',  window.orientation ,'</li>');
   if (window.orientation != null){
   }
@@ -67,11 +67,9 @@ Camera.prototype.update = function(center) {
   this.scaledSized = {w : canvasSize.w / (this.scale), h : canvasSize.h / (this.scale)};
   this.translate.x = this.scaledSized.w / 2 - this.center.x;
   this.translate.y = this.scaledSized.h / 2 - this.center.y;
-  
-  // do the translate for the oriented view
-  this.ctx.translate(0, canvasSize.h);
+
   // scale the canvas & make the horizontal mirror
-  this.ctx.scale(this.scale, -this.scale);
+  this.ctx.scale(this.scale, this.scale);
   // translate to center the car
   this.ctx.translate(this.translate.x, this.translate.y);
   //this.drawDebug();
