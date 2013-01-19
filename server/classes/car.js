@@ -56,6 +56,11 @@ var Car = require("./physicsItem").extend({
         // bot: do nothing, bots are invlunerable (for now ;)
       }
     }
+  },
+  getShared: function() {
+   var res =  this.constructor.__super__.getShared.bind(this)();
+   res.playerName = this.playerName;
+   return res;
   }
 });
 

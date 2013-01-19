@@ -67,6 +67,13 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.rotate(c.r);
       ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
       ctx.restore();
+
+      var textSize = ctx.measureText(c.playerName);
+      var textPad = 25;
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+      ctx.restore();
     };
   }
 }
