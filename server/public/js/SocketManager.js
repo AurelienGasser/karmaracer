@@ -54,7 +54,11 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
   });
 
   connection.on('dead', function () {
-    alert ("you're dead !");
+    var div = $('<div id="urdead" style="font-size: 72px; color: red; text-align: center; width: 100%; height: 200px; z-index: 9999; position: absolute; left: 100px; top: 100px">You\'re dead !</div>')
+    div.appendTo($('body'));
+    setTimeout(function() {
+      $('#urdead').fadeOut();
+    }, 4000)
   });
 
 

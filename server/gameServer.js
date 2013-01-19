@@ -120,7 +120,7 @@ gameServer.prototype.client_die = function(client) {
     client.dead = false;
     client.car = new Car(that.physicsEngine, client);
     that.addCar(client.car);
-  }, 2000);
+  }, 5000);
 }
 
 module.exports = gameServer;
