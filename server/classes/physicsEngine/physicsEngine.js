@@ -82,7 +82,7 @@ var PhysicsEngine = backbone.Model.extend({
     // LOAD STATIC ITEMS ONCE FOR CLIENT
     this.itemsInMap = {};
     _.each(this.map.staticItems, function(i) {
-      var itemJSONPath = __dirname + '/../public/items/' + i.name + '.json';
+      var itemJSONPath = __dirname + '/../../public/items/' + i.name + '.json';
       var itemJSONString = fs.readFileSync(itemJSONPath);
       var itemJSON = JSON.parse(itemJSONString);
       if(this.itemsInMap[itemJSON.name] == undefined) {

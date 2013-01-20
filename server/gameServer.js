@@ -1,11 +1,11 @@
-var Car = require('./classes/car');
+var Car = require('./classes/physicsEngine/car');
 
 var gameServer = function(app) {
     var backbone = require('backbone');
     var _ = require('underscore');
     var fs = require('fs');
-    var PhysicsItem = require('./classes/physicsItem');
-    var PhysicsEngine = require('./classes/physicsEngine');
+    var PhysicsItem = require('./classes/physicsEngine/physicsItem');
+    var PhysicsEngine = require('./classes/physicsEngine/physicsEngine');
     // var Car = require('./classes/car');
     // var CarsCollection = require('./classes/cars');
     var BotManager = require('./BotManager');

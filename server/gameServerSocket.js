@@ -1,5 +1,5 @@
 var gameServerSocket = function(gameServer) {
-    var Car = require('./classes/car');
+    var Car = require('./classes/physicsEngine/car');
     this.gameServer = gameServer;
 
     var that = this;
