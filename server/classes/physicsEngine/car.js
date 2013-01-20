@@ -4,7 +4,7 @@ var sys = require("sys");
 var b2d = require("box2d");
 
 
-var Car = require("./physicsItem").extend({
+var Car = require("./PhysicsItem").extend({
   startPosition: {
     x: 10.0,
     y: 11.5,

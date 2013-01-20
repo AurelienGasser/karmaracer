@@ -1,10 +1,7 @@
 var CarManager = function() {
-
     this.cars = {};
 
-
     var that = this;
-
 
     function getShared() {
       var cars = [];
@@ -39,4 +36,4 @@ var CarManager = function() {
     };
   }()
 
-  module.exports = CarManager;
+module.exports = CarManager;

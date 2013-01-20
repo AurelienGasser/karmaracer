@@ -1,4 +1,4 @@
-var Car = require('./physicsEngine/car');
+var Car = require('./physicsEngine/Car');
 
 var Player = function(client, playerName) {
   this.client = client;

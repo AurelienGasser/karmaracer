@@ -1,4 +1,4 @@
-var Car = require('./physicsEngine/car');
+var Car = require('./physicsEngine/Car');
 
 var Bot = function(gameServer) {
   this.gameServer = gameServer;

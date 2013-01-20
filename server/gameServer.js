@@ -1,13 +1,11 @@
-var Car = require('./classes/physicsEngine/car');
+var Car = require('./classes/physicsEngine/Car');
 
-var gameServer = function(app) {
+var GameServer = function(app) {
     var backbone = require('backbone');
     var _ = require('underscore');
     var fs = require('fs');
-    var PhysicsItem = require('./classes/physicsEngine/physicsItem');
-    var PhysicsEngine = require('./classes/physicsEngine/physicsEngine');
-    // var Car = require('./classes/car');
-    // var CarsCollection = require('./classes/cars');
+    var PhysicsItem = require('./classes/physicsEngine/PhysicsItem');
+    var PhysicsEngine = require('./classes/physicsEngine/PhysicsEngine');
     var BotManager = require('./BotManager');
 
     // LOAD THE MAP
@@ -16,19 +14,13 @@ var gameServer = function(app) {
 
     this.app = app;
     this.physicsEngine = new PhysicsEngine(map, this);
-
-
-
-    this.cars = require('./carManager');
-
+    this.cars = require('./CarManager');
     this.clients = [];
     this.botManager = new BotManager(this);
-
-    this.bulletManager = require('./classes/bulletManager');
-    this.scoreManager = require('./classes/scoreManager');
+    this.bulletManager = require('./classes/BulletManager');
+    this.scoreManager = require('./classes/ScoreManager');
 
     var that = this;
-
 
     function play() {
       try {
@@ -39,13 +31,10 @@ var gameServer = function(app) {
       } catch(e) {
         console.log("error main interval", e, e.stack);
       }
-
     }
-
 
     // update world
     setInterval(play, 20);
-
 
     function handleClientKeyboard() {
       for(var i in that.clients) {
@@ -74,40 +63,36 @@ var gameServer = function(app) {
         }
       }
     }
-
     setInterval(handleClientKeyboard, 10);
     return this;
   }
 
-
-gameServer.prototype.broadcast = function(key, data) {
+GameServer.prototype.broadcast = function(key, data) {
   var that = this;
   for(var i in that.clients) {
     that.clients[i].emit(key, data);
   }
 }
 
-gameServer.prototype.broadcastExplosion = function(point) {
+GameServer.prototype.broadcastExplosion = function(point) {
   // console.log(position);
   this.broadcast('explosion', {
     x: point.position.x * this.physicsEngine.gScale,
     y: point.position.y * this.physicsEngine.gScale
   });
-
 };
 
-
-gameServer.prototype.addCar = function(car) {
+GameServer.prototype.addCar = function(car) {
   this.cars.add(car);
   this.scoreManager.register(car);
 }
 
-gameServer.prototype.removeCar = function(car) {
+GameServer.prototype.removeCar = function(car) {
   this.cars.remove(car);
   this.scoreManager.unregister(car);
 }
 
-gameServer.prototype.client_die = function(client) {
+GameServer.prototype.client_die = function(client) {
   if (client.dead) {
     return;
   }
@@ -123,4 +108,4 @@ gameServer.prototype.client_die = function(client) {
   }, 5000);
 }
 
-module.exports = gameServer;
+module.exports = GameServer;

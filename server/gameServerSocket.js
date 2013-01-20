@@ -1,6 +1,6 @@
-var gameServerSocket = function(gameServer) {
-    var Car = require('./classes/physicsEngine/car');
-    var Player = require('./classes/player');
+var GameServerSocket = function(gameServer) {
+    var Car = require('./classes/PhysicsEngine/Car');
+    var Player = require('./classes/Player');
     this.gameServer = gameServer;
 
     var that = this;
@@ -10,7 +10,6 @@ var gameServerSocket = function(gameServer) {
       console.log('client connected');
       client.keyboard = {};
       var worldInfo = physicsEngine.getWorldInfo();
-      //  console.log(worldInfo);
       client.emit('init', worldInfo);
       that.gameServer.clients[client.id] = client;
 
@@ -82,4 +81,4 @@ var gameServerSocket = function(gameServer) {
     });
   }
 
-module.exports = gameServerSocket;
+module.exports = GameServerSocket;

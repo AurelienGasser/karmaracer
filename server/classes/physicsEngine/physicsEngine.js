@@ -3,7 +3,7 @@ var _ = require('underscore');
 var b2d = require("box2d");
 var fs = require('fs');
 
-var PhysicsItem = require("./physicsItem");
+var PhysicsItem = require("./PhysicsItem");
 
 var PhysicsEngine = backbone.Model.extend({
   urlRoot: '/physicsEngine',
