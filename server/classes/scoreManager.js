@@ -4,22 +4,22 @@ var ScoreManager = function() {
 
     var that = this;
 
-    function register(car) {
-      that.players[car.id] = car;
+    function register(playerCar) {
+      that.players[playerCar.id] = playerCar;
     }
 
-    function unregister(car) {
-      delete that.players[car.id];
+    function unregister(playerCar) {
+      delete that.players[playerCar.id];
     }
 
     function getScores(){
       var scores = [];
       for (id in that.players){
 
-        var car = that.players[id];
+        var playerCar = that.players[id];
         var score = {
-          'name' : car.playerName,
-          'score' : car.score
+          'name' : playerCar.playerName,
+          'score' : playerCar.score
         };
         scores.push(score);
       }

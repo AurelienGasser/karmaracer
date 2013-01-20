@@ -1,13 +1,10 @@
 (function() {
 
   function registerMaps() {
-    $('ul#maps li a').on('click', function(e){
-      var p = $('#submit');//[0].submit();
-      var karma = {};
-      karma.playerName = $('#playerName').val();
-      karma.map = $(this).text();
-
-      localStorage.karma = JSON.stringify(karma);
+    $('ul#maps li a').on('click', function(e) {
+      var p = $('#submit'); //[0].submit();
+      Karma.set('playerName', $('#playerName').val());
+      Karma.set('map', $(this).text());
       p.click();
       e.preventDefault();
       return false;
@@ -20,16 +17,20 @@
 
     for(var i = 0; i < maps.length; i++) {
       var m = maps[i];
-      o.push('<li><a href="/game" >', m, '</a></li>');
+      o.push('<li><a href="game/',m,'" >', m, '</a></li>');
     };
     $('ul#maps').html(o.join(''));
   }
 
 
-  function createHelp(k, text){
-    return {'key' : k, 'text' : text};
+  function createHelp(k, text) {
+    return {
+      'key': k,
+      'text': text
+    };
   }
-  function addHelps(){
+
+  function addHelps() {
     var helps = [];
     helps.push(createHelp('arrow top', 'accelerate'));
     helps.push(createHelp('arrow bottom', 'break'));
@@ -38,9 +39,9 @@
     helps.push(createHelp('space', 'shoot'));
 
     var o = [];
-    for (var i = 0; i < helps.length; i++) {
+    for(var i = 0; i < helps.length; i++) {
       var h = helps[i];
-      o.push('<li>', h.key ,' = <b>', h.text, '</b></li>');
+      o.push('<li>', h.key, ' = <b>', h.text, '</b></li>');
     };
     $('ul#keys').html(o.join(''));
 
