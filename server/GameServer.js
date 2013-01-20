@@ -117,6 +117,7 @@ GameServer.prototype.client_die = function(client) {
   setTimeout(function() {
     client.dead = false;
     client.player.playerCar.car = new Car(client.player.playerCar);
+    client.player.playerCar.life = 100;
     that.addCar(client.player.playerCar);
   }, 5000);
 }
