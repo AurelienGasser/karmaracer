@@ -55,19 +55,19 @@ var gameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              that.bulletManager.add(client.car);
+              that.bulletManager.add(client.player.car);
               break;
             case 'forward':
-              client.car.accelerate(1.0)
+              client.player.car.accelerate(1.0)
               break;
             case 'backward':
-              client.car.accelerate(-1.0)
+              client.player.car.accelerate(-1.0)
               break;
             case 'left':
-              client.car.turn(-3.0)
+              client.player.car.turn(-3.0)
               break;
             case 'right':
-              client.car.turn(3.0)
+              client.player.car.turn(3.0)
               break;
             }
           }
@@ -113,13 +113,13 @@ gameServer.prototype.client_die = function(client) {
   }
   var that = this;
   client.dead = true;
-  this.physicsEngine.world.DestroyBody(client.car.body);
-  this.removeCar(client.car);
+  this.physicsEngine.world.DestroyBody(client.player.car.body);
+  this.removeCar(client.player.car);
   client.emit('dead', null);
   setTimeout(function() {
     client.dead = false;
-    client.car = new Car(that.physicsEngine, client);
-    that.addCar(client.car);
+    client.player.car = new Car(that.physicsEngine, client);
+    that.addCar(client.player.car);
   }, 5000);
 }
 
