@@ -1,11 +1,11 @@
-var Car = require('./classes/physicsEngine/Car');
+var Car = require('./classes/PhysicsEngine/Car');
 
 var GameServer = function(app) {
     var backbone = require('backbone');
     var _ = require('underscore');
     var fs = require('fs');
-    var PhysicsItem = require('./classes/physicsEngine/PhysicsItem');
-    var PhysicsEngine = require('./classes/physicsEngine/PhysicsEngine');
+    var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
+    var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
     var BotManager = require('./BotManager');
 
     // LOAD THE MAP
