@@ -14,7 +14,6 @@ var app = express();
 
 
 var sys = require("util");
-var b2d = require("box2d");
 var fs = require('fs');
 
 
@@ -54,6 +53,9 @@ var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
 io.set('log level', 0);
+// io.set('transports', ['websocket']);
+
+app.io = io;
 
 server.listen(port);
 
@@ -77,8 +79,6 @@ app.configure(function(callback) {
 });
 
 
-// io.set('log level', 0);
-// io.set('transports', ['websocket']);
 app.get('/mm', function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
@@ -86,6 +86,11 @@ app.get('/mm', function(req, res) {
 app.get('/', function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
+
+app.get('/t', function(req, res) {
+  index(req, res, "t.jade", "CANVAS");
+});
+
 
 app.get('/canvas', function(req, res) {
   index(req, res, "index.jade", "CANVAS");
@@ -100,6 +105,6 @@ function index(req, res, view, draw_engine) {
   });
 }
 
-app.io = io;
+
 module.exports = app;
 

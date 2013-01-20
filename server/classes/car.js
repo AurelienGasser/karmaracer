@@ -1,16 +1,16 @@
 var backbone = require('backbone');
 var _ = require('underscore');
 var sys = require("sys");
-var b2d = require("box2d");
-
 
 var Car = require("./physicsItem").extend({
   urlRoot : '/cars',
   initialize : function(_physicsEngine){
-    var a = {physicsEngine : _physicsEngine, position : {x : 50.0, y : 50.0}, size:{w : 1, h : 0.5}, density:1, friction:0.2};
+    console.log('create car');
+    var a = {physicsEngine : _physicsEngine, position : {x : 50.0, y : 25.0}, size:{w : 1, h : 0.5}, density:1, friction:1, restitution:0.2};
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
     this.life = 100;
+    this.name = 'car';
   },
   accelerationMax : 50,
   accelerate : function (ac){

@@ -1,7 +1,9 @@
 var backbone = require('backbone');
 var _ = require('underscore');
-var b2d = require("box2d");
+// var b2d = require("box2d");
 var fs = require('fs');
+
+var box2d = require('box2dweb-commonjs');
 
 var PhysicsItem = require("./physicsItem");
 
@@ -9,19 +11,19 @@ var PhysicsEngine = backbone.Model.extend({
   urlRoot: '/physicsEngine',
   initialize: function(_map) {
 
-    this.gScale = 32;
+
+    this.gScale = 24;
     this.map = _map;
     this.timeStep = 1.0 / 60.0;
     this.iterations = 10;
 
     // Define world
-    var worldAABB = new b2d.b2AABB();
-    worldAABB.lowerBound.Set(-10.0, -10.0);
-    worldAABB.upperBound.Set(_map.size.w + 10.0, _map.size.h + 10.0);
-
-    var gravity = new b2d.b2Vec2(0.0, 0.0);
-    var doSleep = true;
-    this.world = new b2d.b2World(worldAABB, gravity, doSleep);
+    // var worldAABB = new b2dweb.b2AABB();
+    // worldAABB.lowerBound.Set(-10.0, -10.0);
+    // worldAABB.upperBound.Set(_map.size.w + 10.0, _map.size.h + 10.0);
+    var gravity = new box2d.b2Vec2(0.0, 0.0);
+    // var doSleep = true;
+    this.world = new box2d.b2World(gravity, false);
     this.staticItems = [];
 
     // LOAD STATIC ITEMS ONCE FOR CLIENT
@@ -35,27 +37,53 @@ var PhysicsEngine = backbone.Model.extend({
       }
     }.bind(this));
 
+var b2ContactListener = box2d.Box2D.Dynamics.b2ContactListener;
 
-    var listener = new b2d.b2ContactListener;
+    var listener = new b2ContactListener;
     listener.BeginContact = function(contact) {
-      console.log(contact.GetFixtureA().GetBody().GetUserData());
+      var a = contact.GetFixtureA().GetBody().GetUserData();
+      var b = contact.GetFixtureB().GetBody().GetUserData();
+      if (a.name === 'bullet' && b.name !== 'bullet'){
+        if (b.name === 'wall'){
+          //a.life = -1;  
+        }        
+        //console.log('start contact', a.name, b.name);
+      }
+
+      //console.log(contact.GetFixtureA().GetBody().GetUserData().name);
     }
     listener.EndContact = function(contact) {
-      console.log(contact.GetFixtureA().GetBody().GetUserData());
+
     }
     listener.PostSolve = function(contact, impulse) {
-      console.log('post solve');
+
+      var a = contact.GetFixtureA().GetBody().GetUserData();
+      var b = contact.GetFixtureB().GetBody().GetUserData();
+      if (a.name === 'bullet' && b.name !== 'bullet'){
+        if (b.name === 'wall'){
+          a.life = -1;  
+        }   
+        if (b.name === 'car'){
+          console.log('post solve', a.name, b.name, impulse);
+            a.life = -1;  
+        }     
+        
+      }
+
+
+      //console.log('post solve', contact.GetFixtureA().GetBody().userData.name);
     }
     listener.PreSolve = function(contact, oldManifold) {
-      console.log('pre solve');
+      //console.log('pre solve');
     }
     this.world.SetContactListener(listener);
 
     this.createBorders(this.map.size);
     this.loadStaticItems(this.map.staticItems);
+
   },
   getWorldInfo: function() {
-    return {
+    var info = {
       "size": {
         w: this.map.size.w * this.gScale,
         h: this.map.size.h * this.gScale,
@@ -65,6 +93,7 @@ var PhysicsEngine = backbone.Model.extend({
       "itemsInMap": this.itemsInMap,
       "backgroundImage": this.map.backgroundImage
     };
+    return info;
   },
   getShareStaticItems: function() {
     var shareStaticItems = [];
@@ -76,23 +105,34 @@ var PhysicsEngine = backbone.Model.extend({
   step: function() {
     // Run Simulation!
     //console.log(this.world.GetBodyCount());
-    this.world.Step(this.timeStep, this.iterations);
+    this.world.Step(this.timeStep, 8, // velocity iterations
+    3); // position iterations
+    // this.world.ClearForces();
+    //this.world.Step(this.timeStep, this.iterations);
   },
-  createSquareBody: function(_position, _size, _density, _friction) {
+  createSquareBody: function(_position, _size, _density, _friction, type, restitution) {
     try {
-      var bodyDef = new b2d.b2BodyDef();
-      bodyDef.position.Set(_position.x, _position.y);
-      var body = this.world.CreateBody(bodyDef);
-      var shapeDef = new b2d.b2PolygonDef();
-      shapeDef.SetAsBox(_size.w / 2, _size.h / 2);
-      shapeDef.density = _density;
-      shapeDef.friction = _friction;
-      shapeDef.restitution = 0;
-      body.CreateShape(shapeDef);
-      body.SetMassFromShapes();
+      var def = new box2d.b2BodyDef();
+      def.position.Set(_position.x, _position.y);
+      def.type = box2d.b2Body.b2_dynamicBody;
+      if (!_.isUndefined(type)){
+        def.type = box2d.b2Body.b2_staticBody;
+      }
+      def.angle = 0;
+      def.linearVelocity = new box2d.b2Vec2(0.0, 0.0);
+
+      var fixtureDef = new box2d.b2FixtureDef();
+      fixtureDef.density = _density;
+      fixtureDef.friction = _friction;
+      fixtureDef.restitution = restitution || 0;
+      fixtureDef.shape = new box2d.b2PolygonShape();
+      fixtureDef.shape.SetAsBox(_size.w / 2, _size.h / 2);
+
+      var body = this.world.CreateBody(def);
+      body.CreateFixture(fixtureDef);
       return body;
     } catch(e) {
-      //console.log(e);
+      console.log("error create", e);
       return null;
     }
   },
@@ -120,7 +160,8 @@ var PhysicsEngine = backbone.Model.extend({
           h: h
         },
         density: density,
-        friction: friction
+        friction: friction,
+        type : 'static'
       };
       return border;
     }
@@ -136,7 +177,7 @@ var PhysicsEngine = backbone.Model.extend({
     this.staticItems.push(new PhysicsItem(wallBottom));
     this.staticItems.push(new PhysicsItem(wallLeft));
     this.staticItems.push(new PhysicsItem(wallRight));
- 
+
   },
   loadStaticItems: function(_staticItems) {
     _.each(_staticItems, function(w) {

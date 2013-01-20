@@ -4,24 +4,34 @@ var gameServerSocket = function(gameServer) {
 
     var that = this;
 
+
+
+    var c  = new Car(that.gameServer.physicsEngine);
+    that.gameServer.cars.add(c);
+
     this.gameServer.app.io.sockets.on('connection', function(client) {
       console.log('client connected ');
       client.keyboard = {};
-      var worldInfo = that.physicsEngine.getWorldInfo();
+      var worldInfo = that.gameServer.physicsEngine.getWorldInfo();
       //  console.log(worldInfo);
       client.emit('init', worldInfo);
-      clients.push(client);
+      that.gameServer.clients.push(client);
 
       client.on('init_done', function() {
         console.log('client init done');
-        client.car = new Car(physicsEngine);
+
+        client.car = new Car(that.gameServer.physicsEngine);
         that.gameServer.cars.add(client.car);
 
 
         client.interval = setInterval(function() {
+
+          var a = that.gameServer.cars.shareCars;
+          a = a.concat(that.gameServer.physicsEngine.getShareStaticItems());
           var share = {
             myCar: client.car.getShared(),
-            cars: that.gameServer.cars.shareCars,
+            //cars: that.gameServer.cars.shareCars,
+            cars : a,
             bullets: that.gameServer.getGraphicBullets()
           };
           //console.log('share', share);
@@ -31,7 +41,7 @@ var gameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          that.physicsEngine.world.DestroyBody(client.car.body);
+          that.gameServer.physicsEngine.world.DestroyBody(client.car.body);
           that.gameServer.cars.remove(client.car);
           clearInterval(client.interval);
           console.log('client left');
@@ -41,6 +51,7 @@ var gameServerSocket = function(gameServer) {
       });
 
       client.on('drive', function(events) {
+        //console.log(events);
         try {
           for(var event in events) {
             var state = events[event];
@@ -51,13 +62,13 @@ var gameServerSocket = function(gameServer) {
             }
           }
         } catch(e) {
-          console.log(e);
+          console.log('event error :', e);
         }
       });
 
       client.on('chat', function(msg) {
-        for(var i in clients) {
-          clients[i].emit('chat_msg', msg);
+        for(var i in that.clients) {
+          that.clients[i].emit('chat_msg', msg);
         }
       });
     });

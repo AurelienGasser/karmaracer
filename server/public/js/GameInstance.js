@@ -67,8 +67,7 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   that.drawEngine = DrawEngineFactory(that, "game-canvas", G_defaultDrawEngineType);
 
   that.loadImages(function() {
-//    that.drawEngine.initBackgroundCanvas();
-
+    //    that.drawEngine.initBackgroundCanvas();
     //console.log('ready');
     that.keyboardHandler = new KeyboardHandler(that);
     document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);

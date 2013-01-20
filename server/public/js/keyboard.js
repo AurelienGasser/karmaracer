@@ -60,7 +60,7 @@ KeyboardHandler.prototype.handleKeyDown = function(event) {
       hideChat();
     }
   }
-  this.handleKey(event.keyCode, 'start')
+  this.handleKey(event.keyCode, 'start');
 }
 
 KeyboardHandler.prototype.handleKeyUp = function(event) {
