@@ -17,7 +17,7 @@ var GameServerSocket = function(gameServer) {
         console.log('client initialized:', userData.playerName);
         client.player = new Player(client, userData.playerName);
         client.player.initCar(physicsEngine);
-        that.gameServer.addCar(client.player.car);
+        that.gameServer.addCar(client.player.playerCar);
         client.interval = setInterval(function() {
           var share = {
             myCar: client.dead ? null : client.player.car.getShared(),
@@ -31,7 +31,7 @@ var GameServerSocket = function(gameServer) {
       client.on('disconnect', function(socket) {
         try {
           physicsEngine.world.DestroyBody(client.player.car.body);
-          that.gameServer.removeCar(client.player.car);
+          that.gameServer.removeCar(client.player.playerCar);
           clearInterval(client.interval);
           console.log('client left:', client.playerName);
         } catch(e) {

@@ -83,14 +83,14 @@ GameServer.prototype.broadcastExplosion = function(point) {
   });
 };
 
-GameServer.prototype.addCar = function(car) {
-  this.carManager.add(car);
-  this.scoreManager.register(car);
+GameServer.prototype.addCar = function(playerCar) {
+  this.carManager.add(playerCar);
+  this.scoreManager.register(playerCar.car);
 }
 
-GameServer.prototype.removeCar = function(car) {
-  this.carManager.remove(car);
-  this.scoreManager.unregister(car);
+GameServer.prototype.removeCar = function(playerCar) {
+  this.carManager.remove(playerCar);
+  this.scoreManager.unregister(playerCar.car);
 }
 
 GameServer.prototype.client_die = function(client) {
@@ -100,12 +100,12 @@ GameServer.prototype.client_die = function(client) {
   var that = this;
   client.dead = true;
   this.physicsEngine.world.DestroyBody(client.player.car.body);
-  this.removeCar(client.player.car);
+  this.removeCar(client.player.playerCar);
   client.emit('dead', null);
   setTimeout(function() {
     client.dead = false;
     client.player.car = new Car(that.physicsEngine, client);
-    that.addCar(client.player.car);
+    that.addCar(client.player.playerCar);
   }, 5000);
 }
 
