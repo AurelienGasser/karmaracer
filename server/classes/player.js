@@ -1,3 +1,4 @@
+var PlayerCar = require('./PlayerCar');
 var Car = require('./PhysicsEngine/Car');
 
 var Player = function(client, playerName) {
@@ -6,7 +7,8 @@ var Player = function(client, playerName) {
 }
 
 Player.prototype.initCar = function(physicsEngine) {
-  this.car = new Car(physicsEngine, this.client, this.playerName);
+  var playerCar = new PlayerCar(physicsEngine, this.client, this.playerName);
+  this.car = playerCar.car;
 }
 
 module.exports = Player;
