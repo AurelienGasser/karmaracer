@@ -17,8 +17,9 @@ var PhysicsEngine = backbone.Model.extend({
 
     // Define world
     var worldAABB = new b2d.b2AABB();
-    worldAABB.lowerBound.Set(-10.0, -10.0);
-    worldAABB.upperBound.Set(_map.size.w + 10.0, _map.size.h + 10.0);
+    var zoneAround = 200.0;
+    worldAABB.lowerBound.Set(-zoneAround, -zoneAround);
+    worldAABB.upperBound.Set(_map.size.w + zoneAround, _map.size.h + zoneAround);
 
     var gravity = new b2d.b2Vec2(0.0, 0.0);
     var doSleep = true;
@@ -105,6 +106,9 @@ var PhysicsEngine = backbone.Model.extend({
       var bodyDef = new b2d.b2BodyDef();
       bodyDef.position.Set(_position.x, _position.y);
       var body = this.world.CreateBody(bodyDef);
+      if (body === null){
+        return null;
+      }
       var shapeDef = new b2d.b2PolygonDef();
       shapeDef.SetAsBox(_size.w / 2, _size.h / 2);
       shapeDef.density = _density;
@@ -115,7 +119,7 @@ var PhysicsEngine = backbone.Model.extend({
       body.SetMassFromShapes();
       return body;
     } catch(e) {
-      console.log(e, e.stack);
+      console.log('error on body creation', e, e.stack);
       return null;
     }
   },

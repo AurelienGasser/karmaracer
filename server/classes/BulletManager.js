@@ -10,16 +10,25 @@ var BulletManager = function() {
       for(var id in that.bullets) {
         if(that.bullets.hasOwnProperty(id)) {
           var bullet = that.bullets[id];
-          bullet.accelerate(500);
-          bullet.life -= 1;
-          if(bullet.life < 0) {
+          if(bullet.body === null) {
+//            console.log(bullet.body);
             deads.push(id);
+          } else {
+            bullet.accelerate(500);
+            bullet.life -= 1;
+            if(bullet.life < 0) {
+              deads.push(id);
+            }
           }
         }
       }
       for(var i = 0; i < deads.length; i++) {
         var id = deads[i];
-        engine.world.DestroyBody(that.bullets[id].body);
+        var b = that.bullets[id];
+        if (b.body !== null){
+          // console.log(b.body);
+          engine.world.DestroyBody(b.body);
+        }
         delete that.bullets[id];
       };
     }
@@ -46,7 +55,7 @@ var BulletManager = function() {
     return {
       'getGraphicBullets': getGraphicBullets,
       'updateBullets': updateBullets,
-      'add' : add
+      'add': add
     };
 
   }();

@@ -1,3 +1,9 @@
+body{
+  font-family: 'Armata';
+  /*font-size: 12px;*/
+}
+
+
 #loadingtext {
   position:absolute;
   top:250px;
@@ -26,7 +32,7 @@ ul#scores li{
 
 #debug{
   position: absolute;
-  top: 200px;
+  top: 0px;
   color: white;
 }
 /*

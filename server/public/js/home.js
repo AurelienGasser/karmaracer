@@ -37,6 +37,8 @@
     helps.push(createHelp('arrow right', 'turn right'));
     helps.push(createHelp('arrow left', 'turn left'));
     helps.push(createHelp('space', 'shoot'));
+    helps.push(createHelp('L', 'zoom'));
+    helps.push(createHelp('P', 'unzoom'));
 
     var o = [];
     for(var i = 0; i < helps.length; i++) {
