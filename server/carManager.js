@@ -1,39 +1,39 @@
 var CarManager = function() {
-    this.cars = {};
+    this.playerCars = {};
 
     var that = this;
 
     function getShared() {
       var cars = [];
-      for(var id in that.cars) {
-        var car = that.cars[id];
-        cars.push(car.getShared());
+      for(var id in that.playerCars) {
+        var playerCar = that.playerCars[id];
+        cars.push(playerCar.getShared());
       }
       return cars;
     };
 
     function updatePos() {
-      for(var id in that.cars) {
-        var car = that.cars[id];
-        car.updatePos();
+      for(var id in that.playerCars) {
+        var playerCar = that.playerCars[id];
+        playerCar.updatePos();
       }
     };
 
     function add(car) {
-      that.cars[car.id] = car;
+      that.playerCars[car.id] = car;
     }
 
     function remove(car) {
-      delete that.cars[car.id];
+      delete that.playerCars[car.id];
     }
 
     return {
-      'updatePos': updatePos,
-      'getShared': getShared,
-      'add': add,
-      'shareCars': that.shareCars,
-      'remove': remove
+      'updatePos' : updatePos,
+      'getShared' : getShared,
+      'add'       : add,
+      'shareCars' : that.shareCars,
+      'remove'    : remove
     };
-  }()
+}
 
 module.exports = CarManager;

@@ -21,7 +21,7 @@ var GameServerSocket = function(gameServer) {
         client.interval = setInterval(function() {
           var share = {
             myCar: client.dead ? null : client.player.car.getShared(),
-            cars: that.gameServer.cars.getShared(),
+            cars: that.gameServer.carManager.getShared(),
             bullets: that.gameServer.bulletManager.getGraphicBullets()
           };
           client.emit('objects', share);

@@ -7,6 +7,7 @@ var GameServer = function(app) {
     var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
     var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
     var BotManager = require('./BotManager');
+    var CarManager = require('./CarManager');
 
     // LOAD THE MAP
     // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
@@ -14,7 +15,7 @@ var GameServer = function(app) {
 
     this.app = app;
     this.physicsEngine = new PhysicsEngine(map, this);
-    this.cars = require('./CarManager');
+    this.carManager = new CarManager();
     this.clients = [];
     this.botManager = new BotManager(this);
     this.bulletManager = require('./classes/BulletManager');
@@ -25,7 +26,7 @@ var GameServer = function(app) {
     function play() {
       try {
         that.physicsEngine.step();
-        that.cars.updatePos();
+        that.carManager.updatePos();
         that.bulletManager.updateBullets(that.physicsEngine);
         that.scoreManager.broadcastScores(that);
       } catch(e) {
@@ -83,12 +84,12 @@ GameServer.prototype.broadcastExplosion = function(point) {
 };
 
 GameServer.prototype.addCar = function(car) {
-  this.cars.add(car);
+  this.carManager.add(car);
   this.scoreManager.register(car);
 }
 
 GameServer.prototype.removeCar = function(car) {
-  this.cars.remove(car);
+  this.carManager.remove(car);
   this.scoreManager.unregister(car);
 }
 
