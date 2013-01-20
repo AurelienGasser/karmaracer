@@ -1,0 +1,22 @@
+html
+  head
+    title Karma Racer, baby!
+    link(href='http://fonts.googleapis.com/css?family=Englebert', rel='stylesheet')      
+    script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
+    script(type='text/javascript', src='/js/home.js')
+    link(rel='stylesheet', href='/css/home.css')    
+  body
+    div#left
+      h1  Karma Racer
+      h2  Your name
+      form#player(action='/game', method='get')
+        input#playerName(type='text', placeholder='your name', required='required', name='playerName')
+        input#submit(type='submit', value='Start')
+        h2  Maps
+          div#maps 
+            small Click on a map to play
+            ul#maps
+    div#right
+      div#help
+        h3 Help
+        ul#keys

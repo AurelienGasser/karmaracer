@@ -83,9 +83,14 @@ app.get('/mm', function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
 
-app.get('/', function(req, res) {
+app.get('/game', function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
+
+app.get('/', function(req, res) {
+  index(req, res, "home.jade", "CANVAS");
+});
+
 
 app.get('/canvas', function(req, res) {
   index(req, res, "index.jade", "CANVAS");

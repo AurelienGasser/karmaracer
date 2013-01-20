@@ -1,0 +1,39 @@
+#right{
+  right: 0px;
+  top:0px;
+  position: fixed;
+  margin-right: 10px;
+  text-align: right;
+}
+
+
+ul#keys li{
+  list-style: none;
+}
+
+body{
+  font-family: 'Englebert';
+  /*font-size: 12px;*/
+}
+
+input{
+    font-family: 'Englebert';
+
+}
+
+#submit{
+  display: none;
+}
+
+#playerName{
+  width: 200px;
+  height: 32px;
+  line-height: 32px;
+  font-size: larger;
+  vertical-align: middle;
+
+}
+
+ul#maps{
+  font-size: smaller;
+}
