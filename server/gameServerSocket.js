@@ -1,12 +1,13 @@
 var gameServerSocket = function(gameServer) {
     var Car = require('./classes/physicsEngine/car');
+    var Player = require('./classes/player');
     this.gameServer = gameServer;
 
     var that = this;
 
     this.gameServer.app.io.sockets.on('connection', function(client) {
       var physicsEngine = that.gameServer.physicsEngine;
-      console.log('client connected ');
+      console.log('client connected');
       client.keyboard = {};
       var worldInfo = physicsEngine.getWorldInfo();
       //  console.log(worldInfo);
@@ -14,8 +15,10 @@ var gameServerSocket = function(gameServer) {
       that.gameServer.clients[client.id] = client;
 
       client.on('init_done', function(userData) {
-        console.log('client init done');
-        client.car = new Car(physicsEngine, client, userData.playerName);
+        console.log('client initialized:', userData.playerName);
+        client.player = new Player(client, userData.playerName);
+        client.player.initCar(physicsEngine);
+        client.car = client.player.car;
         that.gameServer.addCar(client.car);
         client.interval = setInterval(function() {
           var share = {
@@ -32,7 +35,7 @@ var gameServerSocket = function(gameServer) {
           physicsEngine.world.DestroyBody(client.car.body);
           that.gameServer.removeCar(client.car);
           clearInterval(client.interval);
-          console.log('client left');
+          console.log('client left:', client.playerName);
         } catch(e) {
           console.log(e);
         }
