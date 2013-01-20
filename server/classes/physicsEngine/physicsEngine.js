@@ -33,46 +33,29 @@ var PhysicsEngine = backbone.Model.extend({
     listener.Remove = function(point) {
       // console.log('remove');
     }
+
+
+    function contact(o1, o2, callback) {
+      callback(o1, o2);
+      callback(o2, o1);
+    }
+
     listener.Result = function(point) {
-      //      console.log("c", point, impact);
-      // console.log('collision between', point.shape1.m_userData, 'and', point.shape2.m_userData);
       var o1 = point.shape1.m_userData;
       var o2 = point.shape2.m_userData;
-      //console.log(o1);
-      if(o1.name === 'bullet' && o2.name !== 'bullet') {
-        o1.explode(point);
-        if (o2.name === 'car'){
-          o1.car.score += 1;
+      contact(o1, o2, function(o1, o2) {
+        if(o1.name === 'bullet' && o2.name !== 'bullet') {
+          o1.explode(point);
+          if(o2.name === 'car') {
+            o1.car.score += 1;
+          }
         }
-      } else if(o2.name === 'bullet' && o1.name !== 'bullet') {
-        o2.explode(point);
-        if (o1.name === 'car'){
-          o2.car.score += 1;
+      });
+      contact(o1, o2, function(o1, o2){
+        if(o2.name === 'car' && o1.name === 'bullet') {
+          o2.receiveHit();
         }
-      if (o1.name == 'car' && o2.name == 'bullet') {
-        var o3 = o1;
-        o1 = o2;
-        o2 = o3;
-      }
-      if (o2.name == 'car' && o1.name == 'bullet') {
-        o2.receiveHit();
-      }
-
-
-
-      } else {
-        return;
-      }
-      //console.log(o1.name, o2.name);
-
-
-      //   if(point.shape1.m_userData.type == 'wall' && point.shape2.m_userData.type == 'bullet' || point.shape2.m_userData.type == 'wall' && point.shape1.m_userData.type == 'bullet') {
-      //     if(point.shape1.m_userData.type == 'bullet') {
-      //       that.gameServer.bullets[point.shape1.m_userData.id].life = -1
-      //     } else if(point.shape2.m_userData.type == 'bullet') {
-      //       that.gameServer.bullets[point.shape2.m_userData.id].life = -1
-      //     }
-      //   }
+      });
     }
 
 
@@ -165,7 +148,7 @@ var PhysicsEngine = backbone.Model.extend({
       return border;
     }
     var wallTop = getBorderOptions(mapSize.w / 2, mapSize.h + borderSize / 2, mapSize.w + 2 * borderSize, borderSize);
-    var wallBottom = getBorderOptions(mapSize.w / 2, - borderSize / 2, mapSize.w + 2 * borderSize, borderSize);
+    var wallBottom = getBorderOptions(mapSize.w / 2, -borderSize / 2, mapSize.w + 2 * borderSize, borderSize);
 
     var worldYminusBorder = mapSize.h - 2 * borderSize;
 
