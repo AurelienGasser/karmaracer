@@ -1,5 +1,10 @@
 var Karma = function() {
-    this.karma = JSON.parse(localStorage.karma);
+
+    if(_.isUndefined(localStorage.karma)) {
+      this.karma = {};
+    } else {
+      this.karma = JSON.parse(localStorage.karma);
+    }
     // console.log(localStorage.karma, this.karma);
     var that = this;
 
