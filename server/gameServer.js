@@ -107,7 +107,7 @@ GameServer.prototype.client_die = function(client) {
   client.emit('dead', null);
   setTimeout(function() {
     client.dead = false;
-    client.player.playerCar.car = new Car(that.physicsEngine, client);
+    client.player.playerCar.car = new Car(that.physicsEngine);
     that.addCar(client.player.playerCar);
   }, 5000);
 }

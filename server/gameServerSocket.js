@@ -16,7 +16,7 @@ var GameServerSocket = function(gameServer) {
       client.on('init_done', function(userData) {
         console.log('client initialized:', userData.playerName);
         client.player = new Player(client, userData.playerName);
-        client.player.initCar(physicsEngine);
+        client.player.initCar(that.gameServer);
         that.gameServer.addCar(client.player.playerCar);
         client.interval = setInterval(function() {
           var share = {

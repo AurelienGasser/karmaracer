@@ -10,10 +10,9 @@ var Car = require("./PhysicsItem").extend({
     y: 11.5,
   },
   urlRoot: '/cars',
-  client: null,
-  initialize: function(_physicsEngine, client, playerName, playerCar) {
+  initialize: function(playerCar) {
     var a = {
-      physicsEngine: _physicsEngine,
+      physicsEngine: playerCar.gameServer.physicsEngine,
       position: this.startPosition,
       size: {
         w: 1,
@@ -24,13 +23,9 @@ var Car = require("./PhysicsItem").extend({
     };
     this.playerCar = playerCar;
     this.name = 'car';
-    this.client = client;
-    this.physicsEngine = _physicsEngine;
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
     this.score = 0;
-    this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
-    this.life = 100;
   },
   accelerationMax: 50,
   accelerate: function(ac) {
@@ -45,22 +40,12 @@ var Car = require("./PhysicsItem").extend({
   updatePos: function() {
     this.reduceVelocityOfBody(this.tireResistance);
   },
-  updatePlayerName: function(name) {
-    this.playerName = name;
-  },
   receiveHit: function() {
-    this.life -= 10;
-    if (this.life <= 0) {
-      if (this.client) {
-        this.physicsEngine.gameServer.client_die(this.client);
-      } else {
-        // bot: do nothing, bots are invlunerable (for now ;)
-      }
-    }
+    this.playerCar.receiveHit();
   },
   getShared: function() {
    var res =  this.constructor.__super__.getShared.bind(this)();
-   res.playerName = this.playerName;
+   res.playerName = this.playerCar.playerName;
    return res;
   }
 });
