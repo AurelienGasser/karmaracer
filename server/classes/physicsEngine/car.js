@@ -11,7 +11,7 @@ var Car = require("./PhysicsItem").extend({
   },
   urlRoot: '/cars',
   client: null,
-  initialize: function(_physicsEngine, client, playerName) {
+  initialize: function(_physicsEngine, client, playerName, playerCar) {
     var a = {
       physicsEngine: _physicsEngine,
       position: this.startPosition,
@@ -22,6 +22,7 @@ var Car = require("./PhysicsItem").extend({
       density: 1,
       friction: 0.2
     };
+    this.playerCar = playerCar;
     this.name = 'car';
     this.client = client;
     this.physicsEngine = _physicsEngine;

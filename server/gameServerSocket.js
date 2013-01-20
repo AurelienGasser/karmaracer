@@ -20,9 +20,9 @@ var GameServerSocket = function(gameServer) {
         that.gameServer.addCar(client.player.playerCar);
         client.interval = setInterval(function() {
           var share = {
-            myCar: client.dead ? null : client.player.car.getShared(),
-            cars: that.gameServer.carManager.getShared(),
-            bullets: that.gameServer.bulletManager.getGraphicBullets()
+            myCar   : client.dead ? null : client.player.playerCar.car.getShared(),
+            cars    : that.gameServer.carManager.getShared(),
+            bullets : that.gameServer.bulletManager.getGraphicBullets()
           };
           client.emit('objects', share);
         }, 1000 / 16);
@@ -30,12 +30,12 @@ var GameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          physicsEngine.world.DestroyBody(client.player.car.body);
+          physicsEngine.world.DestroyBody(client.player.playerCar.car.body);
           that.gameServer.removeCar(client.player.playerCar);
           clearInterval(client.interval);
           console.log('client left:', client.playerName);
         } catch(e) {
-          console.log(e);
+          console.log(e, e.stack);
         }
         delete that.gameServer.clients[client.id];
       });
@@ -51,17 +51,16 @@ var GameServerSocket = function(gameServer) {
             }
           }
         } catch(e) {
-          console.log(e);
+          console.log(e.stack);
         }
       });
-
 
       client.on('updatePlayerName', function(name) {
         try {
           console.log('ipda name', name);
-          client.player.car.updatePlayerName(name);
+          client.player.playerCar.car.updatePlayerName(name);
         } catch(e) {
-          console.log(e);
+          console.log(e, e.stack);
         }
       });
 
@@ -69,7 +68,7 @@ var GameServerSocket = function(gameServer) {
         try {
           that.gameServer.botManager.addBot();
         } catch(e) {
-          console.log(e);
+          console.log(e, e.stack);
         }
       });
 

@@ -45,19 +45,19 @@ var GameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              that.bulletManager.add(client.player.car);
+              that.bulletManager.add(client.player.playerCar.car);
               break;
             case 'forward':
-              client.player.car.accelerate(1.0)
+              client.player.playerCar.car.accelerate(1.0)
               break;
             case 'backward':
-              client.player.car.accelerate(-1.0)
+              client.player.playerCar.car.accelerate(-1.0)
               break;
             case 'left':
-              client.player.car.turn(-3.0)
+              client.player.playerCar.car.turn(-3.0)
               break;
             case 'right':
-              client.player.car.turn(3.0)
+              client.player.playerCar.car.turn(3.0)
               break;
             }
           }
@@ -76,7 +76,6 @@ GameServer.prototype.broadcast = function(key, data) {
 }
 
 GameServer.prototype.broadcastExplosion = function(point) {
-  // console.log(position);
   this.broadcast('explosion', {
     x: point.position.x * this.physicsEngine.gScale,
     y: point.position.y * this.physicsEngine.gScale
@@ -86,6 +85,10 @@ GameServer.prototype.broadcastExplosion = function(point) {
 GameServer.prototype.addCar = function(playerCar) {
   this.carManager.add(playerCar);
   this.scoreManager.register(playerCar.car);
+}
+
+GameServer.prototype.addBot = function(bot) {
+  this.carManager.addBot(bot);
 }
 
 GameServer.prototype.removeCar = function(playerCar) {
@@ -99,12 +102,12 @@ GameServer.prototype.client_die = function(client) {
   }
   var that = this;
   client.dead = true;
-  this.physicsEngine.world.DestroyBody(client.player.car.body);
+  this.physicsEngine.world.DestroyBody(client.player.playerCar.car.body);
   this.removeCar(client.player.playerCar);
   client.emit('dead', null);
   setTimeout(function() {
     client.dead = false;
-    client.player.car = new Car(that.physicsEngine, client);
+    client.player.playerCar.car = new Car(that.physicsEngine, client);
     that.addCar(client.player.playerCar);
   }, 5000);
 }

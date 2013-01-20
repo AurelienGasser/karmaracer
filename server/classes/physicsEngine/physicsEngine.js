@@ -115,7 +115,7 @@ var PhysicsEngine = backbone.Model.extend({
       body.SetMassFromShapes();
       return body;
     } catch(e) {
-      console.log(e);
+      console.log(e, e.stack);
       return null;
     }
   },

@@ -8,7 +8,7 @@ var Player = function(client, playerName) {
 
 Player.prototype.initCar = function(physicsEngine) {
   this.playerCar = new PlayerCar(physicsEngine, this.client, this.playerName);
-  this.car = this.playerCar.car;
+  // this.car = this.playerCar.car;
 }
 
 module.exports = Player;

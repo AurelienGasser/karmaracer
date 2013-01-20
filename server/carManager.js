@@ -1,39 +1,38 @@
 var CarManager = function() {
     this.playerCars = {};
+    this.botCars = {};
+}
 
-    var that = this;
+CarManager.prototype.getShared = function() {
+  var cars = [];
+  for(var id in this.playerCars) {
+    var playerCar = this.playerCars[id];
+    cars.push(playerCar.getShared());
+  }
+  for(var id in this.botCars) {
+    var botCar = this.botCars[id];
+    cars.push(botCar.getShared());
+  }
+  return cars;
+}
 
-    function getShared() {
-      var cars = [];
-      for(var id in that.playerCars) {
-        var playerCar = that.playerCars[id];
-        cars.push(playerCar.getShared());
-      }
-      return cars;
-    };
+CarManager.prototype.updatePos = function() {
+  for(var id in this.playerCars) {
+    var playerCar = this.playerCars[id];
+    playerCar.updatePos();
+  }
+}
 
-    function updatePos() {
-      for(var id in that.playerCars) {
-        var playerCar = that.playerCars[id];
-        playerCar.updatePos();
-      }
-    };
+CarManager.prototype.add = function(playerCar) {
+  this.playerCars[playerCar.car.id] = playerCar;
+}
 
-    function add(car) {
-      that.playerCars[car.id] = car;
-    }
+CarManager.prototype.remove = function(playerCar) {
+  delete this.playerCars[playerCar.car.id];
+}
 
-    function remove(car) {
-      delete that.playerCars[car.id];
-    }
-
-    return {
-      'updatePos' : updatePos,
-      'getShared' : getShared,
-      'add'       : add,
-      'shareCars' : that.shareCars,
-      'remove'    : remove
-    };
+CarManager.prototype.addBot = function(bot) {
+  this.botCars[bot.car.id] = bot.car;
 }
 
 module.exports = CarManager;

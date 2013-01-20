@@ -72,7 +72,6 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
     gameInstance.bullets = objects.bullets;
-    //console.log(ga.bullets);
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list){
       return list ? list.length : 0;
     })));
