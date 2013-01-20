@@ -54,10 +54,18 @@ var GameServer = function(app) {
               client.player.playerCar.car.accelerate(-1.0)
               break;
             case 'left':
-              client.player.playerCar.car.turn(-3.0)
+              var a = -3.0;
+              if (client.keyboard['backward'] === true){
+                a = -a;
+              }
+              client.player.playerCar.car.turn(a);
               break;
             case 'right':
-              client.player.playerCar.car.turn(3.0)
+              var a = 3.0;
+              if (client.keyboard['backward'] === true){
+                a = -a;
+              }
+              client.player.playerCar.car.turn(a)
               break;
             }
           }

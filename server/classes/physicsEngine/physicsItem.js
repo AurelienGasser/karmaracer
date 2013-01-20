@@ -10,7 +10,7 @@ var PhysicsItem = backbone.Model.extend({
       w: _arguments['size'].w,
       h: _arguments['size'].h
     };
-    if (!_.isUndefined(_arguments['name'])){
+    if(!_.isUndefined(_arguments['name'])) {
       this.name = _arguments['name'];
       //console.log('name', this.name);
     }
@@ -51,9 +51,9 @@ var PhysicsItem = backbone.Model.extend({
   },
   turn: function(side) {
     var angleToAdd = side * Math.PI / 8;
-//    console.log('b', this.getAngle(), side, this.body !== null, angleToAdd);
+    //    console.log('b', this.getAngle(), side, this.body !== null, angleToAdd);
     this.addAngle(angleToAdd);
-//    console.log('a', this.getAngle());
+    //    console.log('a', this.getAngle());
   },
   getShared: function() {
     var pos = this.getPosition();
@@ -66,7 +66,7 @@ var PhysicsItem = backbone.Model.extend({
       w: this.size.w * this.engine.gScale,
       h: this.size.h * this.engine.gScale
     };
-    if (!_.isUndefined(this.name)){
+    if(!_.isUndefined(this.name)) {
       share.name = this.name;
       //console.log('name s', this.name);
     }
