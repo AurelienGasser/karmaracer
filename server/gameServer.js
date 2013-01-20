@@ -1,14 +1,13 @@
-var Car = require('./classes/car');
+var Car = require('./classes/PhysicsEngine/Car');
 
-var gameServer = function(app) {
+var GameServer = function(app) {
     var backbone = require('backbone');
     var _ = require('underscore');
     var fs = require('fs');
-    var PhysicsItem = require('./classes/physicsItem');
-    var PhysicsEngine = require('./classes/physicsEngine');
-    // var Car = require('./classes/car');
-    // var CarsCollection = require('./classes/cars');
+    var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
+    var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
     var BotManager = require('./BotManager');
+    var CarManager = require('./CarManager');
 
     // LOAD THE MAP
     // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
@@ -16,36 +15,27 @@ var gameServer = function(app) {
 
     this.app = app;
     this.physicsEngine = new PhysicsEngine(map, this);
-
-
-
-    this.cars = require('./carManager');
-
+    this.carManager = new CarManager();
     this.clients = [];
     this.botManager = new BotManager(this);
-
-    this.bulletManager = require('./classes/bulletManager');
-    this.scoreManager = require('./classes/scoreManager');
+    this.bulletManager = require('./classes/BulletManager');
+    this.scoreManager = require('./classes/ScoreManager');
 
     var that = this;
-
 
     function play() {
       try {
         that.physicsEngine.step();
-        that.cars.updatePos();
+        that.carManager.updatePos();
         that.bulletManager.updateBullets(that.physicsEngine);
         that.scoreManager.broadcastScores(that);
       } catch(e) {
         console.log("error main interval", e, e.stack);
       }
-
     }
-
 
     // update world
     setInterval(play, 20);
-
 
     function handleClientKeyboard() {
       for(var i in that.clients) {
@@ -55,72 +45,68 @@ var gameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              that.bulletManager.add(client.car);
+              that.bulletManager.add(client.player.car);
               break;
             case 'forward':
-              client.car.accelerate(1.0)
+              client.player.car.accelerate(1.0)
               break;
             case 'backward':
-              client.car.accelerate(-1.0)
+              client.player.car.accelerate(-1.0)
               break;
             case 'left':
-              client.car.turn(-3.0)
+              client.player.car.turn(-3.0)
               break;
             case 'right':
-              client.car.turn(3.0)
+              client.player.car.turn(3.0)
               break;
             }
           }
         }
       }
     }
-
     setInterval(handleClientKeyboard, 10);
     return this;
   }
 
-
-gameServer.prototype.broadcast = function(key, data) {
+GameServer.prototype.broadcast = function(key, data) {
   var that = this;
   for(var i in that.clients) {
     that.clients[i].emit(key, data);
   }
 }
 
-gameServer.prototype.broadcastExplosion = function(point) {
+GameServer.prototype.broadcastExplosion = function(point) {
   // console.log(position);
   this.broadcast('explosion', {
     x: point.position.x * this.physicsEngine.gScale,
     y: point.position.y * this.physicsEngine.gScale
   });
-
 };
 
-
-gameServer.prototype.addCar = function(car) {
-  this.cars.add(car);
-  this.scoreManager.register(car);
+GameServer.prototype.addCar = function(playerCar) {
+  this.carManager.add(playerCar);
+  this.scoreManager.register(playerCar.car);
 }
 
-gameServer.prototype.removeCar = function(car) {
-  this.cars.remove(car);
-  this.scoreManager.unregister(car);
+GameServer.prototype.removeCar = function(playerCar) {
+  this.carManager.remove(playerCar);
+  this.scoreManager.unregister(playerCar.car);
 }
 
-gameServer.prototype.client_die = function(client) {
+GameServer.prototype.client_die = function(client) {
   if (client.dead) {
     return;
   }
   var that = this;
   client.dead = true;
-  this.physicsEngine.world.DestroyBody(client.car.body);
-  this.removeCar(client.car);
+  this.physicsEngine.world.DestroyBody(client.player.car.body);
+  this.removeCar(client.player.playerCar);
   client.emit('dead', null);
   setTimeout(function() {
     client.dead = false;
-    client.car = new Car(that.physicsEngine, client);
-    that.addCar(client.car);
+    client.player.car = new Car(that.physicsEngine, client);
+    that.addCar(client.player.playerCar);
   }, 5000);
 }
 
-module.exports = gameServer;
+module.exports = GameServer;

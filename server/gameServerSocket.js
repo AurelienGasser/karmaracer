@@ -1,26 +1,27 @@
-var gameServerSocket = function(gameServer) {
-    var Car = require('./classes/car');
+var GameServerSocket = function(gameServer) {
+    var Car = require('./classes/PhysicsEngine/Car');
+    var Player = require('./classes/Player');
     this.gameServer = gameServer;
 
     var that = this;
 
     this.gameServer.app.io.sockets.on('connection', function(client) {
       var physicsEngine = that.gameServer.physicsEngine;
-      console.log('client connected ');
+      console.log('client connected');
       client.keyboard = {};
       var worldInfo = physicsEngine.getWorldInfo();
-      //  console.log(worldInfo);
       client.emit('init', worldInfo);
       that.gameServer.clients[client.id] = client;
 
       client.on('init_done', function(userData) {
-        console.log('client init done');
-        client.car = new Car(physicsEngine, client, userData.playerName);
-        that.gameServer.addCar(client.car);
+        console.log('client initialized:', userData.playerName);
+        client.player = new Player(client, userData.playerName);
+        client.player.initCar(physicsEngine);
+        that.gameServer.addCar(client.player.playerCar);
         client.interval = setInterval(function() {
           var share = {
-            myCar: client.dead ? null : client.car.getShared(),
-            cars: that.gameServer.cars.getShared(),
+            myCar: client.dead ? null : client.player.car.getShared(),
+            cars: that.gameServer.carManager.getShared(),
             bullets: that.gameServer.bulletManager.getGraphicBullets()
           };
           client.emit('objects', share);
@@ -29,10 +30,10 @@ var gameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          physicsEngine.world.DestroyBody(client.car.body);
-          that.gameServer.removeCar(client.car);
+          physicsEngine.world.DestroyBody(client.player.car.body);
+          that.gameServer.removeCar(client.player.playerCar);
           clearInterval(client.interval);
-          console.log('client left');
+          console.log('client left:', client.playerName);
         } catch(e) {
           console.log(e);
         }
@@ -58,7 +59,7 @@ var gameServerSocket = function(gameServer) {
       client.on('updatePlayerName', function(name) {
         try {
           console.log('ipda name', name);
-          client.car.updatePlayerName(name);
+          client.player.car.updatePlayerName(name);
         } catch(e) {
           console.log(e);
         }
@@ -80,4 +81,4 @@ var gameServerSocket = function(gameServer) {
     });
   }
 
-module.exports = gameServerSocket;
+module.exports = GameServerSocket;

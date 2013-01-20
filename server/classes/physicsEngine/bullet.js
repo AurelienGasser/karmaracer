@@ -5,7 +5,7 @@ var b2d = require("box2d");
 
 
 
-var Bullet = require("./physicsItem").extend({
+var Bullet = require("./PhysicsItem").extend({
   urlRoot: '/cars',
   initialize: function(car) {
     var distanceFromCar = 1.2;

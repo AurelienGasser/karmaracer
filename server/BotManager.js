@@ -1,4 +1,4 @@
-var Bot = require('./classes/bot');
+var Bot = require('./classes/Bot');
 
 var BotManager = function(gameServer) {
   this.gameServer = gameServer;

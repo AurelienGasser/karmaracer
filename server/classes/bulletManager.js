@@ -1,5 +1,5 @@
-var bulletManager = function() {
-    var Bullet = require('./bullet');
+var BulletManager = function() {
+    var Bullet = require('./PhysicsEngine/Bullet');
 
     this.bullets = [];
     var that = this;
@@ -51,4 +51,4 @@ var bulletManager = function() {
 
   }();
 
-module.exports = bulletManager;
+module.exports = BulletManager;
