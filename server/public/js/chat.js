@@ -2,8 +2,8 @@ var default_player_name = 'unknown player';
 
 $(function() {
   $('#player_name').on('keyup', function() {
-    localStorage.username = $('#player_name').val();
-  })
+    Karma.playerName = $('#player_name').val();
+  });
 })
 
 function sendMsg() {
@@ -25,7 +25,7 @@ function onChatMsgReceived(msg, key) {
 }
 
 function showChat() {
-  $('#chat_input_label').html((localStorage.username || default_player_name) + ' :');
+  $('#chat_input_label').html((Karma.playerName || default_player_name) + ' :');
   $('#chat_input').show();
   $('#chat_input').focus();
   $('#chat_input_label_wrapper').css('display', 'inline-block');

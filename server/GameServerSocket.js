@@ -57,7 +57,8 @@ var GameServerSocket = function(gameServer) {
 
       client.on('updatePlayerName', function(name) {
         try {
-          client.player.playerCar.car.updatePlayerName(name);
+          console.log('u', name);
+          client.player.playerCar.updatePlayerName(name);
         } catch(e) {
           console.log(e, e.stack);
         }

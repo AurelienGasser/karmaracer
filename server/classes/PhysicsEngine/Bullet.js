@@ -32,7 +32,7 @@ var Bullet = require("./PhysicsItem").extend({
     this.name = 'bullet';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();
-    this.life = 200;
+    this.life = 25;
     this.dead = false;
   },
   die : function(){

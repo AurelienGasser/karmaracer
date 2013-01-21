@@ -1,18 +1,18 @@
 var CarManager = function() {
     this.playerCars = {};
     this.botCars = {};
-}
+  }
 
 CarManager.prototype.getShared = function() {
   var cars = [];
-  for(var id in this.playerCars) {
-    var playerCar = this.playerCars[id];
-    cars.push(playerCar.getShared());
+  function addCars(list) {
+    for(var id in list) {
+      var c = list[id];
+      cars.push(c.getShared());
+    }
   }
-  for(var id in this.botCars) {
-    var botCar = this.botCars[id];
-    cars.push(botCar.getShared());
-  }
+  addCars(this.playerCars);
+  addCars(this.botCars);
   return cars;
 }
 

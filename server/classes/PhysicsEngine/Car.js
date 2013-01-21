@@ -25,7 +25,6 @@ var Car = require("./PhysicsItem").extend({
     this.name = 'car';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
-    this.score = 0;
   },
   accelerationMax: 50,
   accelerate: function(ac) {

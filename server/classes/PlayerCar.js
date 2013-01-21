@@ -6,6 +6,8 @@ var PlayerCar = function(gameServer, client, playerName) {
   this.life = 100;
   this.car = new Car(this);
   this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
+  this.id = Math.floor(Math.random() * 1e32);
+  this.score = 0;
 }
 
 PlayerCar.prototype.getShared = function() {

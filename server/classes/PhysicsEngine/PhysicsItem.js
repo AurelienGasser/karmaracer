@@ -68,7 +68,7 @@ var PhysicsItem = backbone.Model.extend({
     };
     if(!_.isUndefined(this.name)) {
       share.name = this.name;
-      //console.log('name s', this.name);
+      // console.log('name s', this.name);
     }
     return share;
   },
