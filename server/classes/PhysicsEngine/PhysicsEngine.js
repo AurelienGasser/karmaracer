@@ -35,7 +35,6 @@ var PhysicsEngine = backbone.Model.extend({
       // console.log('remove');
     }
 
-
     function contact(o1, o2, callback) {
       callback(o1, o2);
       callback(o2, o1);
@@ -50,11 +49,10 @@ var PhysicsEngine = backbone.Model.extend({
         }
         if(o2.name === 'car' && o1.name === 'bullet') {
           o2.receiveHit();
-          o1.car.playerCar.score += 1;
+          o1.playerCar.score += 1;
         }
       });
     }
-
 
     this.world.SetContactListener(listener);
     this.staticItems = [];

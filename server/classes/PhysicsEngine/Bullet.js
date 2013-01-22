@@ -7,7 +7,8 @@ var b2d = require("box2d");
 
 var Bullet = require("./PhysicsItem").extend({
   urlRoot: '/cars',
-  initialize: function(car) {
+  initialize: function(playerCar) {
+    var car = playerCar.car;
     var distanceFromCar = 1.2;
     var initPos = car.getVector({
       x: distanceFromCar * car.size.w,
@@ -28,7 +29,7 @@ var Bullet = require("./PhysicsItem").extend({
       density: 1,
       friction: 5
     };
-    this.car = car;
+    this.playerCar = playerCar;
     this.name = 'bullet';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();

@@ -45,7 +45,7 @@ var GameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              that.bulletManager.add(client.player.playerCar.car);
+              that.bulletManager.add(client.player.playerCar);
               break;
             case 'forward':
               client.player.playerCar.car.accelerate(1.0)

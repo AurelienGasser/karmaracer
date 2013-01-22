@@ -33,9 +33,9 @@ var BulletManager = function() {
       };
     }
 
-    var add = function(car) {
+    var add = function(playerCar) {
 
-        var b = new Bullet(car);
+        var b = new Bullet(playerCar);
         b.accelerate(1);
         that.bullets[b.id] = b;
 
