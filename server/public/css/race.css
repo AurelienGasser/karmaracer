@@ -20,15 +20,16 @@ body{
   padding: 5px;
 }
 
-ul#scores{
-  color: white;
+table.scores{
   margin: 0px;
-  padding: 0px;
-}
-ul#scores li{
- list-style: none;
+  padding: 0.5em;
+  background-color: rgba(255,255,255,0.3);
+  color: white;
 }
 
+table.scores thead tr th, tbody#scores tr td {
+  padding: 0.5em 0.3em;
+}
 
 #debug{
   position: absolute;

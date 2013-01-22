@@ -4,7 +4,7 @@ html
     meta(http-equiv='content-type', content='text/html; charset=utf-8')
     meta(name="viewport", content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
-    link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet')          
+    link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet')
     script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
     script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type='text/javascript', src='/js/libs/underscore.js')
@@ -43,7 +43,13 @@ html
     #loadingtext Loading world...
     #player_name_div: input#player_name(placeholder="Your name")
     div#left_panel
-      ul#scores
+      table.scores
+        thead
+          tr
+            th Name
+            th Score
+            th Level
+        tbody#scores
     #chat
       table
         tr#chat_msgs_wrapper

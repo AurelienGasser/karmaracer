@@ -52,13 +52,12 @@ var connection;
     });
 
     connection.on('scores', function(scores) {
-      // console.log(scores);
-      var o = [];
-      for(var i = 0; i < scores.length; i++) {
+      var o = '';
+      for (var i = 0; i < scores.length; i++) {
         var s = scores[i];
-        o.push('<tr><td>', s.name, '</td><td>', s.score, '</td><td>', s.level, '</td><tr>');
+        o += '<tr><td>' + s.name + '</td><td>' + s.score + '</td><td>' + s.level + '</td></tr>';
       };
-      $('#scores').html('<table><thead><th><tr><td>Name</td><td>Score</td><td>Level</td></th></thead>' + o.join('') + '</table>');
+      $('tbody#scores').html(o);
     });
 
     connection.on('dead', function() {
