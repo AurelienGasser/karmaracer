@@ -30,7 +30,7 @@ var GameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          client.player.player.car.scheduleForDestroy();
+          client.player.car.scheduleForDestroy();
           that.gameServer.removeCar(client.player.playerCar);
           clearInterval(client.interval);
           console.log('client left:', client.playerName);
