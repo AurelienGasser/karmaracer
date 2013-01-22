@@ -14,6 +14,7 @@ var PhysicsEngine = backbone.Model.extend({
     this.timeStep = 1.0 / 60.0;
     this.iterations = 10;
     this.gameServer = gameServer;
+    this.itemsToDestroy = [];
 
     // Define world
     var worldAABB = new b2d.b2AABB();
@@ -76,7 +77,6 @@ var PhysicsEngine = backbone.Model.extend({
         w: this.map.size.w * this.gScale,
         h: this.map.size.h * this.gScale,
       },
-      //"staticItems": this.map.staticItems,
       "staticItems": this.getShareStaticItems(),
       "itemsInMap": this.itemsInMap,
       "backgroundImage": this.map.backgroundImage
@@ -90,9 +90,12 @@ var PhysicsEngine = backbone.Model.extend({
     return shareStaticItems;
   },
   step: function() {
-    // Run Simulation!
-    //console.log(this.world.GetBodyCount());
     this.world.Step(this.timeStep, this.iterations);
+    for (var i in this.itemsToDestroy) {
+      var item = this.itemsToDestroy[i];
+      item.destroy();
+    }
+    this.itemsToDestroy = [];
   },
   createSquareBody: function(userData, _position, _size, _density, _friction) {
     try {

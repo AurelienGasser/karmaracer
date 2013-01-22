@@ -49,7 +49,7 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       attacker.getExperience();
       var that = this;
       victim.dead = true;
-      victim.car.destroy();
+      victim.car.scheduleForDestroy();
       this.remove(victim);
       victim.player.client.emit('dead', null);
       setTimeout(function() {

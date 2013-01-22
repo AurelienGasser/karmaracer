@@ -12,13 +12,18 @@ var PhysicsItem = backbone.Model.extend({
     };
     if(!_.isUndefined(_arguments['name'])) {
       this.name = _arguments['name'];
-      //console.log('name', this.name);
     }
     this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments['position'], this.size, _arguments['density'], _arguments['friction']);
     this.engine = _arguments['physicsEngine'];
   },
   destroy: function() {
-    this.engine.world.DestroyBody(this.body);
+    if (this.body) {
+      this.engine.world.DestroyBody(this.body);
+      this.body = null;
+    }
+  },
+  scheduleForDestroy: function() {
+    this.engine.itemsToDestroy.push(this);
   },
   getPosition: function() {
     if(this.body != null) {
@@ -31,7 +36,6 @@ var PhysicsItem = backbone.Model.extend({
   },
   getVector: function(power) {
     var angle = this.getAngle();
-    //console.log(power, this.getAngle());
     var v = {
       x: power.x * Math.cos(angle),
       y: power.y * Math.sin(angle)

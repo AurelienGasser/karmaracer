@@ -1,34 +1,29 @@
 var BulletManager = function() {
     var Bullet = require('./PhysicsEngine/Bullet');
 
-    this.bullets = [];
+    this.bullets = {};
     var that = this;
 
 
     function updateBullets(engine) {
       var deads = [];
-      for(var id in that.bullets) {
-        if(that.bullets.hasOwnProperty(id)) {
+      for (var id in that.bullets) {
+        if (that.bullets.hasOwnProperty(id)) {
           var bullet = that.bullets[id];
-          if(bullet.body === null) {
-//            console.log(bullet.body);
+          if (bullet.body === null) {
             deads.push(id);
           } else {
             bullet.accelerate(500);
-            bullet.life -= 1;
-            if(bullet.life < 0) {
+            --bullet.life;
+            if (bullet.life <= 0) {
+              bullet.scheduleForDestroy();
               deads.push(id);
             }
           }
         }
       }
-      for(var i = 0; i < deads.length; i++) {
+      for (var i = 0; i < deads.length; i++) {
         var id = deads[i];
-        var b = that.bullets[id];
-        if (b.body !== null){
-          // console.log(b.body);
-          engine.world.DestroyBody(b.body);
-        }
         delete that.bullets[id];
       };
     }

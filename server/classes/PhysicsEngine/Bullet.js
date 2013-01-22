@@ -34,10 +34,10 @@ var Bullet = require("./PhysicsItem").extend({
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();
     this.life = 25;
-    this.dead = false;
   },
   die : function(){
     this.life = -1;
+    this.scheduleForDestroy();
   },
   explode: function(point) {
     this.die();
