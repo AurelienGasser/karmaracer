@@ -56,9 +56,9 @@ var connection;
       var o = [];
       for(var i = 0; i < scores.length; i++) {
         var s = scores[i];
-        o.push('<li>', s.name, ':', s.score, '</li>');
+        o.push('<tr><td>', s.name, '</td><td>', s.score, '</td><tr>');
       };
-      $('#scores').html(o.join(''));
+      $('#scores').html('<table><thead><th><tr><td>Name</td><td>Score</td></th></thead>' + o.join('') + '</table>');
     });
 
     connection.on('dead', function() {
