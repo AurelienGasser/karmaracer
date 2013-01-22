@@ -17,6 +17,9 @@ var PhysicsItem = backbone.Model.extend({
     this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments['position'], this.size, _arguments['density'], _arguments['friction']);
     this.engine = _arguments['physicsEngine'];
   },
+  destroy: function() {
+    this.engine.world.DestroyBody(this.body);
+  },
   getPosition: function() {
     if(this.body != null) {
       return this.body.GetPosition();

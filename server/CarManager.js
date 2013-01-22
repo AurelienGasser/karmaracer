@@ -48,7 +48,7 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       }
       var that = this;
       victim.dead = true;
-      this.gameServer.physicsEngine.world.DestroyBody(victim.car.body);
+      victim.car.destroy();
       this.remove(victim);
       victim.player.client.emit('dead', null);
       setTimeout(function() {
