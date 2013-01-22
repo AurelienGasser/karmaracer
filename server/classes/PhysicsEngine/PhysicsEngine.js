@@ -44,17 +44,13 @@ var PhysicsEngine = backbone.Model.extend({
     listener.Result = function(point) {
       var o1 = point.shape1.m_userData;
       var o2 = point.shape2.m_userData;
-      contact(o1, o2, function(o1, o2) {
+      contact(o1, o2, function(o1, o2){
         if(o1.name === 'bullet' && o2.name !== 'bullet') {
           o1.explode(point);
-          if(o2.name === 'car') {
-            o1.car.playerCar.score += 1;
-          }
         }
-      });
-      contact(o1, o2, function(o1, o2){
         if(o2.name === 'car' && o1.name === 'bullet') {
           o2.receiveHit();
+          o1.car.playerCar.score += 1;
         }
       });
     }
