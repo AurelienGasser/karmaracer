@@ -50,6 +50,9 @@
   }
 
   $(function() {
+    if (Karma.get('playerName')) {
+      $('#playerName').val(Karma.get('playerName'));
+    }
     addMaps();
     registerMaps();
     addHelps();
