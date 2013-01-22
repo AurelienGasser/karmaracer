@@ -31,7 +31,7 @@ PlayerCar.prototype.updatePlayerName = function(name) {
 
 PlayerCar.prototype.getExperience = function() {
   this.experience += 100;
-  if (this.experience >= 200) {
+  if (this.experience >= 100) {
     this.levelUp();
   }
 }
