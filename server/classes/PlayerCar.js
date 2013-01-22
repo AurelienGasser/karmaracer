@@ -9,6 +9,8 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
   this.id = Math.floor(Math.random() * 1e32);
   this.score = 0;
+  this.experience = 100;
+  this.level = 1;
 }
 
 PlayerCar.prototype.getShared = function() {
@@ -25,6 +27,17 @@ PlayerCar.prototype.receiveHit = function() {
 
 PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;
+}
+
+PlayerCar.prototype.getExperience = function() {
+  this.experience += 100;
+  if (this.experience >= 200) {
+    this.levelUp();
+  }
+}
+
+PlayerCar.prototype.levelUp = function() {
+  this.level += 1;
 }
 
 module.exports = PlayerCar;

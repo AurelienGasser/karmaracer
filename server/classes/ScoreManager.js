@@ -19,7 +19,8 @@ var ScoreManager = function() {
         var playerCar = that.players[id];
         var score = {
           'name' : playerCar.playerName,
-          'score' : playerCar.score
+          'score' : playerCar.score,
+          'level': playerCar.level
         };
         scores.push(score);
       }

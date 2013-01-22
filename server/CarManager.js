@@ -46,6 +46,7 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       if (victim.dead) {
         return;
       }
+      attacker.getExperience();
       var that = this;
       victim.dead = true;
       victim.car.destroy();
