@@ -1,6 +1,7 @@
 var Car = require('./PhysicsEngine/Car');
 
-var PlayerCar = function(gameServer, client, playerName) {
+var PlayerCar = function(gameServer, client, playerName, player) {
+  this.player = player;
   this.client = client;
   this.gameServer = gameServer;
   this.life = 100;
@@ -20,15 +21,7 @@ PlayerCar.prototype.updatePos = function() {
 
 PlayerCar.prototype.receiveHit = function() {
   this.life -= 10;
-  if (this.life <= 0) {
-    if (this.client) {
-      this.gameServer.client_die(this.client);
-    } else {
-      // bot: do nothing, bots are invlunerable (for now ;)
-    }
-  }
 }
-
 
 PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;

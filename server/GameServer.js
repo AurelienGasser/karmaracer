@@ -1,5 +1,3 @@
-var Car = require('./classes/PhysicsEngine/Car');
-
 var GameServer = function(app) {
     var backbone = require('backbone');
     var _ = require('underscore');
@@ -15,7 +13,7 @@ var GameServer = function(app) {
 
     this.app = app;
     this.physicsEngine = new PhysicsEngine(map, this);
-    this.carManager = new CarManager();
+    this.carManager = new CarManager(this);
     this.clients = [];
     this.botManager = new BotManager(this);
     this.bulletManager = require('./classes/BulletManager');
@@ -102,24 +100,6 @@ GameServer.prototype.addBot = function(bot) {
 GameServer.prototype.removeCar = function(playerCar) {
   this.carManager.remove(playerCar);
   this.scoreManager.unregister(playerCar);
-}
-
-GameServer.prototype.client_die = function(client) {
-  if (client.dead) {
-    return;
-  }
-  var that = this;
-  client.dead = true;
-
-  this.physicsEngine.world.DestroyBody(client.player.playerCar.car.body);
-  this.removeCar(client.player.playerCar);
-  client.emit('dead', null);
-  setTimeout(function() {
-    client.dead = false;
-    client.player.playerCar.car = new Car(client.player.playerCar);
-    client.player.playerCar.life = 100;
-    that.addCar(client.player.playerCar);
-  }, 5000);
 }
 
 module.exports = GameServer;

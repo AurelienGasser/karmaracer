@@ -48,8 +48,7 @@ var PhysicsEngine = backbone.Model.extend({
           o1.explode(point);
         }
         if(o2.name === 'car' && o1.name === 'bullet') {
-          o2.receiveHit();
-          o1.playerCar.score += 1;
+          gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
         }
       });
     }
