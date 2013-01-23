@@ -4,17 +4,23 @@ var WeaponsManager = function(gameServer) {
 
 WeaponsManager.prototype.step = function() {
   for (var i in this.gameServer.clients) {
-    var playerCar = this.gameServer.clients[i].player.playerCar;
-    playerCar.weapon.step();
+    var client = this.gameServer.clients[i];
+    if (client.player) {
+      var playerCar = client.player.playerCar;
+      playerCar.weapon.step();
+    }
   }
 }
 
 WeaponsManager.prototype.getGraphicBullets = function() {
   var bullets = [];
   for (var i in this.gameServer.clients) {
-    var playerCar = this.gameServer.clients[i].player.playerCar;
-    var newBullets = playerCar.weapon.getGraphicBullets();
-    bullets = bullets.concat(newBullets);
+    var client = this.gameServer.clients[i];
+    if (client.player) {
+      var playerCar = client.player.playerCar;
+      var newBullets = playerCar.weapon.getGraphicBullets();
+      bullets = bullets.concat(newBullets);
+    }
   }
   return bullets;
 }

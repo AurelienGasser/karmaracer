@@ -44,28 +44,38 @@ var GameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              client.player.playerCar.shoot();
+              if (client.player && !client.player.playerCar.dead) {
+                client.player.playerCar.shoot();
+              }
               break;
             case 'forward':
-              client.player.playerCar.car.accelerate(1.0)
+              if (client.player && !client.player.playerCar.dead) {
+                client.player.playerCar.car.accelerate(1.0)
+              }
               break;
             case 'backward':
-              client.player.playerCar.car.accelerate(-1.0)
+              if (client.player && !client.player.playerCar.dead) {
+                client.player.playerCar.car.accelerate(-1.0)
+              }
               break;
             case 'left':
-              var a = -3.0;
-              if (client.keyboard['backward'] === true){
-                a = -a;
+              if (client.player && !client.player.playerCar.dead) {
+                var a = -3.0;
+                if (client.keyboard['backward'] === true){
+                  a = -a;
+                }
+                client.player.playerCar.car.turn(a);
               }
-              client.player.playerCar.car.turn(a);
               break;
             case 'right':
-              var a = 3.0;
-              if (client.keyboard['backward'] === true){
-                a = -a;
+              if (client.player && !client.player.playerCar.dead) {
+                var a = 3.0;
+                if (client.keyboard['backward'] === true){
+                  a = -a;
+                }
+                client.player.playerCar.car.turn(a)
+                break;
               }
-              client.player.playerCar.car.turn(a)
-              break;
             }
           }
         }

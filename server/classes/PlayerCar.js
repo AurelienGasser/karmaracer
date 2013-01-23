@@ -1,5 +1,6 @@
 var Car = require('./PhysicsEngine/Car');
 var MachineGun = require('./weapons/MachineGun');
+var SuperMachineGun = require('./weapons/SuperMachineGun');
 
 var PlayerCar = function(gameServer, client, playerName, player) {
   this.player = player;
@@ -12,7 +13,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.score = 0;
   this.experience = 100;
   this.level = 1;
-  this.weapon = new MachineGun();
+  this.weapon = new SuperMachineGun();
   this.dead = false;
 }
 
@@ -39,8 +40,16 @@ PlayerCar.prototype.getExperience = function() {
   }
 }
 
+PlayerCar.prototype.updateWeapon = function() {
+  // if (this.level > 5 && this.weapon.name != 'super machine gun') {
+  //   this.
+  // }
+
+}
+
 PlayerCar.prototype.levelUp = function() {
   this.level += 1;
+  this.updateWeapon();
 }
 
 PlayerCar.prototype.levelDown = function() {

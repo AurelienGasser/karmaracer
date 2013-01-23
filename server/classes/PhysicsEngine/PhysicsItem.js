@@ -34,8 +34,11 @@ var PhysicsItem = backbone.Model.extend({
       y: 200
     };
   },
-  getVector: function(power) {
-    var angle = this.getAngle();
+  getVector: function(power, angle) {
+    if (!angle) {
+      angle = 0;
+    }
+    angle += this.getAngle();
     var v = {
       x: power.x * Math.cos(angle),
       y: power.y * Math.sin(angle)

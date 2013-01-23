@@ -7,13 +7,9 @@ var b2d = require("box2d");
 
 var Bullet = require("./PhysicsItem").extend({
   urlRoot: '/cars',
-  initialize: function(playerCar) {
+  initialize: function(playerCar, pos, angle) {
     var car = playerCar.car;
-    var distanceFromCar = 1.2;
-    var initPos = car.getVector({
-      x: distanceFromCar * car.size.w,
-      y: distanceFromCar * car.size.w
-    });
+    var initPos = pos;
     this.acc_helper = 100;
     //console.log(initPos);
     var a = {
@@ -32,7 +28,7 @@ var Bullet = require("./PhysicsItem").extend({
     this.playerCar = playerCar;
     this.name = 'bullet';
     this.constructor.__super__.initialize.apply(this, [a]);
-    this.angle = car.getAngle();
+    this.angle = angle;
     this.life = 25;
   },
   die : function(){
