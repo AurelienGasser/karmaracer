@@ -31,7 +31,9 @@ CarManager.prototype.add = function(playerCar) {
 }
 
 CarManager.prototype.remove = function(playerCar) {
-  delete this.playerCars[playerCar.car.id];
+  if (playerCar.car) {
+    delete this.playerCars[playerCar.car.id];
+  }
 }
 
 CarManager.prototype.addBot = function(bot) {
@@ -51,12 +53,15 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       victim.dead = true;
       victim.car.scheduleForDestroy();
       this.remove(victim);
+      victim.car = null;
       victim.player.client.emit('dead', null);
       setTimeout(function() {
-        victim.dead = false;
-        victim.car = new Car(victim);
-        victim.life = 100;
-        that.add(victim);
+        if (victim.player.connected) {
+          victim.dead = false;
+          victim.car = new Car(victim);
+          victim.life = 100;
+          that.add(victim);
+        }
       }, 5000);
 
     } else {

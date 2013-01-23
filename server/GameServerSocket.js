@@ -20,7 +20,7 @@ var GameServerSocket = function(gameServer) {
         that.gameServer.addCar(client.player.playerCar);
         client.interval = setInterval(function() {
           var share = {
-            myCar: client.dead ? null : client.player.playerCar.car.getShared(),
+            myCar: client.player.playerCar.dead ? null : client.player.playerCar.car.getShared(),
             cars: that.gameServer.carManager.getShared(),
             bullets: that.gameServer.bulletManager.getGraphicBullets()
           };
@@ -30,8 +30,11 @@ var GameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          client.player.car.scheduleForDestroy();
+          if (client.player.playerCar.car) {
+            client.player.playerCar.car.scheduleForDestroy();
+          }
           that.gameServer.removeCar(client.player.playerCar);
+          client.player.connected = false;
           clearInterval(client.interval);
           console.log('client left:', client.playerName);
         } catch(e) {

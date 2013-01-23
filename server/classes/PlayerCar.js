@@ -11,6 +11,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.score = 0;
   this.experience = 100;
   this.level = 1;
+  this.dead = false;
 }
 
 PlayerCar.prototype.getShared = function() {

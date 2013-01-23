@@ -4,6 +4,7 @@ var Car = require('./PhysicsEngine/Car');
 var Player = function(client, playerName) {
   this.client = client;
   this.playerName = playerName;
+  this.connected = true;
 }
 
 Player.prototype.initCar = function(gameServer) {
