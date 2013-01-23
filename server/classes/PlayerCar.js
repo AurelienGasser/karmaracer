@@ -43,6 +43,13 @@ PlayerCar.prototype.levelUp = function() {
   this.level += 1;
 }
 
+PlayerCar.prototype.levelDown = function() {
+  this.level -= 1;
+  if (this.level == 0) {
+    this.level = 1;
+  }
+}
+
 PlayerCar.prototype.shoot = function() {
   this.weapon.shoot(this);
 }

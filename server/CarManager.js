@@ -50,6 +50,7 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       }
       attacker.getExperience();
       var that = this;
+      victim.levelDown();
       victim.dead = true;
       victim.car.scheduleForDestroy();
       this.remove(victim);
