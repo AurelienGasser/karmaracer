@@ -1,4 +1,5 @@
 var Car = require('./PhysicsEngine/Car');
+var MachineGun = require('./weapons/MachineGun');
 
 var PlayerCar = function(gameServer, client, playerName, player) {
   this.player = player;
@@ -11,6 +12,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.score = 0;
   this.experience = 100;
   this.level = 1;
+  this.weapon = new MachineGun();
   this.dead = false;
 }
 
@@ -39,6 +41,10 @@ PlayerCar.prototype.getExperience = function() {
 
 PlayerCar.prototype.levelUp = function() {
   this.level += 1;
+}
+
+PlayerCar.prototype.shoot = function() {
+  this.weapon.shoot(this);
 }
 
 module.exports = PlayerCar;

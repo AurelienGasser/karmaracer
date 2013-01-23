@@ -6,6 +6,7 @@ var GameServer = function(app) {
     var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
     var BotManager = require('./BotManager');
     var CarManager = require('./CarManager');
+    var WeaponsManager = require('./WeaponsManager');
 
     // LOAD THE MAP
     // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
@@ -16,7 +17,7 @@ var GameServer = function(app) {
     this.carManager = new CarManager(this);
     this.clients = [];
     this.botManager = new BotManager(this);
-    this.bulletManager = require('./classes/BulletManager');
+    this.weaponsManager = new WeaponsManager(this);
     this.scoreManager = require('./classes/ScoreManager');
 
     var that = this;
@@ -25,7 +26,7 @@ var GameServer = function(app) {
       try {
         that.physicsEngine.step();
         that.carManager.updatePos();
-        that.bulletManager.updateBullets(that.physicsEngine);
+        that.weaponsManager.step();
         that.scoreManager.broadcastScores(that);
       } catch(e) {
         console.log("error main interval", e, e.stack);
@@ -43,7 +44,7 @@ var GameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              that.bulletManager.add(client.player.playerCar);
+              client.player.playerCar.shoot();
               break;
             case 'forward':
               client.player.playerCar.car.accelerate(1.0)

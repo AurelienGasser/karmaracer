@@ -22,7 +22,7 @@ var GameServerSocket = function(gameServer) {
           var share = {
             myCar: client.player.playerCar.dead ? null : client.player.playerCar.car.getShared(),
             cars: that.gameServer.carManager.getShared(),
-            bullets: that.gameServer.bulletManager.getGraphicBullets()
+            bullets: that.gameServer.weaponsManager.getGraphicBullets()
           };
           client.emit('objects', share);
         }, 1000 / 16);
