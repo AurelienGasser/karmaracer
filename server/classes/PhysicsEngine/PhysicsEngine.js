@@ -45,11 +45,16 @@ var PhysicsEngine = backbone.Model.extend({
       var o1 = point.shape1.m_userData;
       var o2 = point.shape2.m_userData;
       contact(o1, o2, function(o1, o2){
-        if(o1.name === 'bullet' && o2.name !== 'bullet') {
-          o1.explode(point);
+        if (o1.name === 'bullet' && o2.name !== 'bullet'
+         || o1.name === 'rocket' && o2.name !== 'rocket') {
+           if (o1.playerCar != o2.playerCar) {
+             o1.explode(point);
+           }
         }
-        if(o2.name === 'car' && o1.name === 'bullet') {
-          gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
+        if(o2.name === 'car' && (o1.name === 'bullet' || o1.name == 'rocket')) {
+          if (o1.playerCar != o2.playerCar) {
+            gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
+          }
         }
       });
     }
@@ -97,10 +102,13 @@ var PhysicsEngine = backbone.Model.extend({
     }
     this.itemsToDestroy = [];
   },
-  createSquareBody: function(userData, _position, _size, _density, _friction) {
+  createSquareBody: function(userData, _position, _size, _density, _friction, _angle) {
     try {
       var bodyDef = new b2d.b2BodyDef();
       bodyDef.position.Set(_position.x, _position.y);
+      if (_angle) {
+        bodyDef.angle = _angle
+      }
       var body = this.world.CreateBody(bodyDef);
       if (body === null){
         return null;

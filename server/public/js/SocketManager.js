@@ -74,7 +74,8 @@ var connection;
     connection.on('objects', function(objects) {
       gameInstance.cars = objects.cars;
       gameInstance.mycar = objects.myCar;
-      gameInstance.bullets = objects.bullets;
+      gameInstance.bullets = objects.projectiles.bullets;
+      gameInstance.rockets = objects.projectiles.rockets;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
       })));

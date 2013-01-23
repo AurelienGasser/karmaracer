@@ -82,6 +82,7 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   this.walls = worldInfo.staticItems;
   this.itemsInMap = worldInfo.itemsInMap;
   this.bullets = []
+  this.rockets = []
 
   that.drawEngine = DrawEngineFactory(that, "game-canvas", G_defaultDrawEngineType);
 

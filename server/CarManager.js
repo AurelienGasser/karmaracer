@@ -42,7 +42,7 @@ CarManager.prototype.addBot = function(bot) {
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
-  victim.receiveHit();
+  victim.receiveHit(projectile.damage);
   if (victim.life <= 0) {
     if (victim.player.client) {
       if (victim.dead) {

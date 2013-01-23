@@ -12,17 +12,28 @@ WeaponsManager.prototype.step = function() {
   }
 }
 
-WeaponsManager.prototype.getGraphicBullets = function() {
-  var bullets = [];
+WeaponsManager.prototype.getGraphicProjectiles = function() {
+  var projectiles = {
+    bullets: [],
+    rockets: []
+  };
   for (var i in this.gameServer.clients) {
     var client = this.gameServer.clients[i];
     if (client.player) {
       var playerCar = client.player.playerCar;
-      var newBullets = playerCar.weapon.getGraphicBullets();
-      bullets = bullets.concat(newBullets);
+      var weapon = playerCar.weapon;
+      switch (weapon.name) {
+        case 'machine gun':
+        case 'super machine gun':
+          projectiles.bullets = projectiles.bullets.concat(weapon.getGraphicBullets());
+          break;
+        case 'rocket launcher':
+          projectiles.rockets = projectiles.rockets.concat(weapon.getGraphicRockets());
+          break;
+      }
     }
   }
-  return bullets;
+  return projectiles;
 }
 
 module.exports = WeaponsManager;

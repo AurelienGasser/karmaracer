@@ -3,14 +3,12 @@ var _ = require('underscore');
 var sys = require("sys");
 var b2d = require("box2d");
 
-
-
-var Bullet = require("./PhysicsItem").extend({
+var Rocket = require("./PhysicsItem").extend({
   urlRoot: '/cars',
   initialize: function(playerCar, pos, angle) {
     var car = playerCar.car;
     var initPos = pos;
-    this.acc_helper = 100;
+    this.acc_helper = 1;
     //console.log(initPos);
     var a = {
       physicsEngine: car.engine,
@@ -19,18 +17,19 @@ var Bullet = require("./PhysicsItem").extend({
         y: car.getPosition().y + initPos.y
       },
       size: {
-        w: 0.1,
-        h: 0.1
+        w: 0.5,
+        h: 0.3
       },
       density: 1,
-      friction: 5
+      friction: 5,
+      angle: angle
     };
     this.playerCar = playerCar;
-    this.name = 'bullet';
+    this.name = 'rocket';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = angle;
     this.life = 25;
-    this.damage = 10;
+    this.damage = 100;
   },
   die : function(){
     this.life = -1;
@@ -41,7 +40,6 @@ var Bullet = require("./PhysicsItem").extend({
     this.engine.gameServer.broadcastExplosion(point);
   },
   accelerate: function(ac) {
-    this.acc_helper += 2;
     var v = {
       x: this.acc_helper * ac * Math.cos(this.angle),
       y: this.acc_helper * ac * Math.sin(this.angle)
@@ -51,4 +49,4 @@ var Bullet = require("./PhysicsItem").extend({
   }
 });
 
-module.exports = Bullet;
+module.exports = Rocket;

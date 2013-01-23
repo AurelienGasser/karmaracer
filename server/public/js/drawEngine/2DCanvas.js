@@ -38,6 +38,8 @@ Engine2DCanvas.prototype.init = function() {
   this.carImage.src = '/sprites/car.png';
   this.explosionImage = new Image();
   this.explosionImage.src = '/sprites/explosion.png';
+  this.rocketImage = new Image();
+  this.rocketImage.src = '/images/rocket.png';
 };
 
 Engine2DCanvas.prototype.loaded = function() {
@@ -85,6 +87,7 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
   if(this.gameInstance.explosions != null) {
     ctx.fillStyle = '#FFFFFF';
     for (var i in this.gameInstance.explosions) {
+      console.log('explosion')
       var c = this.gameInstance.explosions[i];
       ctx.save();
       ctx.translate(c.x, c.y);
@@ -106,10 +109,21 @@ Engine2DCanvas.prototype.drawBullets = function(ctx) {
       var c = this.gameInstance.bullets[i];
       ctx.fillRect(c.x, c.y, c.w, c.h);
     };
-    // ctx.save();
-    // ctx.translate(c.x, c.y);
-    // ctx.rotate(c.r);
-    //ctx.restore();
+  }
+}
+
+Engine2DCanvas.prototype.drawRockets = function(ctx) {
+  if(this.gameInstance.rockets !== null) {
+    ctx.fillStyle = '#FFFFFF';
+    for(var i = 0; i < this.gameInstance.rockets.length; i++) {
+      var c = this.gameInstance.rockets[i];
+      ctx.save();
+      ctx.translate(c.x, c.y);
+      ctx.rotate(c.r);
+      ctx.drawImage(this.rocketImage, -c.w / 2, -c.h / 2, 40, 16);
+      // ctx.drawImage(this.rocketImage, 0, 0, c.w, c.h);
+      ctx.restore();
+    };
   }
 }
 
@@ -158,6 +172,7 @@ Engine2DCanvas.prototype.drawItems = function() {
   this.drawCars(this.ctx);
   this.drawExplosions(this.ctx);
   this.drawBullets(this.ctx);
+  this.drawRockets(this.ctx);
 };
 
 Engine2DCanvas.prototype.tick = function() {

@@ -1,4 +1,5 @@
 var Car = require('./PhysicsEngine/Car');
+var RocketLauncher = require('./weapons/RocketLauncher');
 var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 
@@ -13,7 +14,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.score = 0;
   this.experience = 100;
   this.level = 1;
-  this.weapon = new SuperMachineGun();
+  this.weapon = new RocketLauncher();
   this.dead = false;
 }
 
@@ -25,8 +26,8 @@ PlayerCar.prototype.updatePos = function() {
   return this.car.updatePos();
 }
 
-PlayerCar.prototype.receiveHit = function() {
-  this.life -= 10;
+PlayerCar.prototype.receiveHit = function(damage) {
+  this.life -= damage;
 }
 
 PlayerCar.prototype.updatePlayerName = function(name) {
