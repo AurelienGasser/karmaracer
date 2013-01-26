@@ -128,7 +128,6 @@ Engine2DCanvas.prototype.drawWalls = function(ctx) {
   var that = this;
   if(that.gameInstance.walls != null) {
     _.each(that.gameInstance.walls, function(c) {
-      //console.log(c);
       var staticItem = that.gameInstance.itemsInMap[c.name];
       if(!_.isUndefined(staticItem) && !_.isUndefined(staticItem.pattern)) {
         if(staticItem.pattern === null) {
@@ -146,7 +145,6 @@ Engine2DCanvas.prototype.drawBackground = function(ctx) {
   if(_.isUndefined(this.gameInstance.backgroundPattern)) {
     return;
   }
-  //console.log(this.camera.getCanvasSize(), this.camera.center);
   var cs = this.camera.getCanvasSize();
   ctx.fillStyle = this.gameInstance.backgroundPattern;
   //this.camera.realWorldSize.w, this.camera.realWorldSize.h
@@ -173,7 +171,6 @@ Engine2DCanvas.prototype.drawItems = function() {
 };
 
 Engine2DCanvas.prototype.tick = function() {
-  // console.log(Math.random());
   requestAnimFrame(this.tick.bind(this));
   this.gameInstance.drawEngine.draw();
 
