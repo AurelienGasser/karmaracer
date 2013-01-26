@@ -62,18 +62,23 @@ var connection;
       $('tbody#scores').html(o);
     });
 
-    connection.on('dead', function() {
-      var div = $('<div id="urdead" style="font-size: 72px; color: red; text-align: center; width: 100%; height: 200px; z-index: 9999; position: absolute; left: 100px; top: 100px">You\'re dead !</div>')
+    function announce(text, color) {
+      $('#announce').remove();
+      var div = $('<div id="announce" style="font-size: 72px; color: ' + color + '; text-align: center; width: 100%; height: 200px; z-index: 9999; position: absolute; left: 100px; top: 100px">' + text + '</div>')
       div.appendTo($('body'));
       setTimeout(function() {
-        $('#urdead').fadeOut(function() {
-          $('#urdead').remove();
+        $('#announce').fadeOut(function() {
+          $('#announce').remove();
         });
       }, 4000)
+    }
+
+    connection.on('dead', function() {
+      announce('You\' re dead !', 'red');
     });
 
     connection.on('game end', function(d) {
-      alert(d.winnerName + ' a gagné la partie !!!!');
+      announce(d.winnerName + ' a gagné la partie !!!!', 'blue');
     })
 
     connection.on('objects', function(objects) {
