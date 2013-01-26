@@ -1,10 +1,12 @@
+$(window).on('beforeunload', function() {
+    connection.emit('disconnect');
+});
+
 var connection;
-
-
 
   function SocketManager(serverHost, gameInstance, onInitCallback) {
     connection = io.connect(serverHost);
-    //console.log(connection);
+
     this.gameInstance = gameInstance;
     this.init_done = false;
     this.socketCounter = 0;
