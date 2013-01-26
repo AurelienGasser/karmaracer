@@ -5,6 +5,8 @@ KEY_RIGHT = 39;
 KEY_UP = 38;
 KEY_DOWN = 40;
 KEY_ESCAPE = 27;
+KEY_L = 76;
+KEY_P = 80;
 
 function KeyboardHandler(gameInstance) {
   this.gameInstance = gameInstance;
@@ -31,36 +33,31 @@ KeyboardHandler.prototype.sendKeyboardEvents = function() {
 };
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
-
-  //console.log(key);
   switch(key) {
   case KEY_SPACE:
-    // space
     this.event('shoot', state);
     break;
   case KEY_LEFT:
-    // left arrow
     this.event('left', state);
     break;
   case KEY_RIGHT:
-    // right arrow
     this.event('right', state);
     break;
   case KEY_UP:
-    // up arrow
     this.event('forward', state);
     break;
   case KEY_DOWN:
-    // down arrow
     this.event('backward', state);
     break;
-  case 76:
-    // L
-    this.gameInstance.drawEngine.camera.scale *= 1.05;
+  case KEY_L:
+    if (state == 'start') {
+      this.gameInstance.drawEngine.camera.scale *= 1.05;
+    }
     break;
-  case 80:
-    // P
-    this.gameInstance.drawEngine.camera.scale *= 0.95;
+  case KEY_P:
+    if (state == 'start') {
+      this.gameInstance.drawEngine.camera.scale *= 0.95;
+    }
     break;
   default:
     //console.log(key);
@@ -68,30 +65,37 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
 }
 
 KeyboardHandler.prototype.handleKeyDown = function(event) {
-  if($('#chat_input').is(':focus')) {
-    if([KEY_ESCAPE, KEY_UP, KEY_DOWN].indexOf(event.keyCode) !== -1) {
-      if(event.keyCode === KEY_ESCAPE) {
-        clearChatInputField();
-      }
+  switch(event.keyCode) {
+  case KEY_ESCAPE:
+    clearChatInputField();
+    hideChat();
+    break;
+  case KEY_UP:
+  case KEY_DOWN:
+    if ($('#chat_input').is(':focus')) {
       hideChat();
     }
-  }
-  this.handleKey(event.keyCode, 'start')
-}
-
-KeyboardHandler.prototype.handleKeyUp = function(event) {
-  switch(event.keyCode) {
+    this.handleKey(event.keyCode, 'start')
+    break;
   case KEY_ENTER:
-    if(!($('#chat_input').is(':focus'))) {
-      showChat();
-    } else {
+    if ($('#chat_input').is(':focus')) {
       sendMsg();
+    } else {
+      showChat();
+    }
+    break;
+  case KEY_L:
+  case KEY_P:
+  case KEY_SPACE:
+    if (!$('#chat_input').is(':focus')) {
+      this.handleKey(event.keyCode, 'start');
     }
     break;
   default:
-    if(!($('#chat_input').is(':focus'))) {
-      this.handleKey(event.keyCode, 'end');
-    }
-    break;
+    this.handleKey(event.keyCode, 'start')
   }
+}
+
+KeyboardHandler.prototype.handleKeyUp = function(event) {
+  this.handleKey(event.keyCode, 'end');
 }
