@@ -7,6 +7,7 @@ var GameServer = function(app) {
     var BotManager = require('./BotManager');
     var CarManager = require('./CarManager');
     var WeaponsManager = require('./WeaponsManager');
+    var ScoreManager = require('./classes/ScoreManager');
 
     // LOAD THE MAP
     // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
@@ -18,7 +19,8 @@ var GameServer = function(app) {
     this.clients = [];
     this.botManager = new BotManager(this);
     this.weaponsManager = new WeaponsManager(this);
-    this.scoreManager = require('./classes/ScoreManager');
+    this.scoreManager = new ScoreManager(this);
+    this.players = {};
 
     var that = this;
 
@@ -37,43 +39,44 @@ var GameServer = function(app) {
     setInterval(play, 20);
 
     function handleClientKeyboard() {
-      for(var i in that.clients) {
-        var client = that.clients[i];
+      for (var i in that.players) {
+        var player = that.players[i];
+        var client = player.client;
         for(var event in client.keyboard) {
           var state = client.keyboard[event];
           if(state) {
             switch(event) {
             case 'shoot':
-              if (client.player && !client.player.playerCar.dead) {
-                client.player.playerCar.shoot();
+              if (!player.playerCar.dead) {
+                player.playerCar.shoot();
               }
               break;
             case 'forward':
-              if (client.player && !client.player.playerCar.dead) {
-                client.player.playerCar.car.accelerate(1.0)
+              if (!player.playerCar.dead) {
+                player.playerCar.car.accelerate(1.0)
               }
               break;
             case 'backward':
-              if (client.player && !client.player.playerCar.dead) {
-                client.player.playerCar.car.accelerate(-1.0)
+              if (!player.playerCar.dead) {
+                player.playerCar.car.accelerate(-1.0)
               }
               break;
             case 'left':
-              if (client.player && !client.player.playerCar.dead) {
+              if (!player.playerCar.dead) {
                 var a = -3.0;
                 if (client.keyboard['backward'] === true){
                   a = -a;
                 }
-                client.player.playerCar.car.turn(a);
+                player.playerCar.car.turn(a);
               }
               break;
             case 'right':
-              if (client.player && !client.player.playerCar.dead) {
+              if (!player.playerCar.dead) {
                 var a = 3.0;
                 if (client.keyboard['backward'] === true){
                   a = -a;
                 }
-                client.player.playerCar.car.turn(a)
+                player.playerCar.car.turn(a)
                 break;
               }
             }
@@ -86,9 +89,8 @@ var GameServer = function(app) {
   }
 
 GameServer.prototype.broadcast = function(key, data) {
-  var that = this;
-  for(var i in that.clients) {
-    that.clients[i].emit(key, data);
+  for (var i in this.players) {
+    this.players[i].client.emit(key, data);
   }
 }
 
@@ -99,18 +101,38 @@ GameServer.prototype.broadcastExplosion = function(point) {
   });
 };
 
-GameServer.prototype.addCar = function(playerCar) {
-  this.carManager.add(playerCar);
-  this.scoreManager.register(playerCar);
-}
-
 GameServer.prototype.addBot = function(bot) {
   this.carManager.addBot(bot);
 }
 
-GameServer.prototype.removeCar = function(playerCar) {
-  this.carManager.remove(playerCar);
-  this.scoreManager.unregister(playerCar);
+GameServer.prototype.gameEnd = function(winnerCar) {
+  this.broadcast('game end', { winnerName: winnerCar.player.playerName });
+  var that = this;
+  var players = this.players;
+  this.players = [];
+  for (var i in players) {
+    players[i].client.keyboard = {};
+  }
+  setTimeout(function() {
+    for (var i in players) {
+      players[i].initCar(this);
+    }
+    this.players = players;
+  }.bind(this), 5000);
+}
+
+GameServer.prototype.addPlayer = function(player) {
+  player.initCar(this);
+  player.id = Math.random();
+  this.players[player.id] = player;
+}
+
+GameServer.prototype.removePlayer = function(player) {
+  if (player.playerCar.car) {
+    player.playerCar.car.scheduleForDestroy();
+  }
+  player.connected = false;
+  delete this.players[player.id];
 }
 
 module.exports = GameServer;

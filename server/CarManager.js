@@ -2,7 +2,6 @@ var Car = require('./classes/PhysicsEngine/Car');
 
 var CarManager = function(gameServer) {
   this.gameServer = gameServer;
-  this.playerCars = {};
   this.botCars = {};
 }
 
@@ -14,25 +13,28 @@ CarManager.prototype.getShared = function() {
       cars.push(c.getShared());
     }
   }
-  addCars(this.playerCars);
+  addCars(this.getAlivePlayerCars());
   addCars(this.botCars);
   return cars;
 }
 
-CarManager.prototype.updatePos = function() {
-  for(var id in this.playerCars) {
-    var playerCar = this.playerCars[id];
-    playerCar.updatePos();
+CarManager.prototype.getAlivePlayerCars = function() {
+  var aliveCars = [];
+  for (var i in this.gameServer.players) {
+    var player = this.gameServer.players[i];
+    var playerCar = player.playerCar;
+    if (!playerCar.dead) {
+      aliveCars.push(playerCar)
+    }
   }
+  return aliveCars;
 }
 
-CarManager.prototype.add = function(playerCar) {
-  this.playerCars[playerCar.car.id] = playerCar;
-}
-
-CarManager.prototype.remove = function(playerCar) {
-  if (playerCar.car) {
-    delete this.playerCars[playerCar.car.id];
+CarManager.prototype.updatePos = function() {
+  var playerCars = this.getAlivePlayerCars();
+  for(var id in playerCars) {
+    var playerCar = playerCars[id];
+    playerCar.updatePos();
   }
 }
 
@@ -48,23 +50,8 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       if (victim.dead) {
         return;
       }
-      attacker.getExperience();
-      var that = this;
-      victim.levelDown();
-      victim.dead = true;
-      victim.car.scheduleForDestroy();
-      this.remove(victim);
-      victim.car = null;
-      victim.player.client.emit('dead', null);
-      setTimeout(function() {
-        if (victim.player.connected) {
-          victim.dead = false;
-          victim.car = new Car(victim);
-          victim.life = 100;
-          that.add(victim);
-        }
-      }, 5000);
-
+      victim.die();
+      attacker.getExperience(100);
     } else {
       // bot: do nothing, bots are invlunerable (for now ;)
     }

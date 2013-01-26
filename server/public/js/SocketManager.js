@@ -70,6 +70,9 @@ var connection;
       }, 4000)
     });
 
+    connection.on('game end', function(d) {
+      alert(d.winnerName + ' a gagné la partie !!!!');
+    })
 
     connection.on('objects', function(objects) {
       gameInstance.cars = objects.cars;

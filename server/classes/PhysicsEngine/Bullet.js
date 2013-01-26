@@ -3,15 +3,12 @@ var _ = require('underscore');
 var sys = require("sys");
 var b2d = require("box2d");
 
-
-
 var Bullet = require("./PhysicsItem").extend({
   urlRoot: '/cars',
   initialize: function(playerCar, pos, angle) {
     var car = playerCar.car;
     var initPos = pos;
     this.acc_helper = 100;
-    //console.log(initPos);
     var a = {
       physicsEngine: car.engine,
       position: {
@@ -46,7 +43,6 @@ var Bullet = require("./PhysicsItem").extend({
       x: this.acc_helper * ac * Math.cos(this.angle),
       y: this.acc_helper * ac * Math.sin(this.angle)
     };
-    //console.log(v);
     this.applyForceToBody(v);
   }
 });

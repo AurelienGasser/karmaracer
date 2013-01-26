@@ -16,8 +16,7 @@ var GameServerSocket = function(gameServer) {
       client.on('init_done', function(userData) {
         console.log('client initialized:', userData.playerName);
         client.player = new Player(client, userData.playerName);
-        client.player.initCar(that.gameServer);
-        that.gameServer.addCar(client.player.playerCar);
+        that.gameServer.addPlayer(client.player);
         client.interval = setInterval(function() {
           var share = {
             myCar: client.player.playerCar.dead ? null : client.player.playerCar.car.getShared(),
@@ -30,11 +29,7 @@ var GameServerSocket = function(gameServer) {
 
       client.on('disconnect', function(socket) {
         try {
-          if (client.player.playerCar.car) {
-            client.player.playerCar.car.scheduleForDestroy();
-          }
-          that.gameServer.removeCar(client.player.playerCar);
-          client.player.connected = false;
+          that.gameServer.removePlayer(client.player);
           clearInterval(client.interval);
           console.log('client left:', client.playerName);
         } catch(e) {

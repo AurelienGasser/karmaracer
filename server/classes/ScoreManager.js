@@ -1,44 +1,26 @@
-var ScoreManager = function() {
+var ScoreManager = function(gameServer) {
+  this.gameServer = gameServer;
 
-    this.players = {};
+  return this;
+}
 
-    var that = this;
+ScoreManager.prototype.broadcastScores = function() {
+  var scores = this.getScores();
+  this.gameServer.broadcast('scores', scores);
+}
 
-    function register(playerCar) {
-      that.players[playerCar.id] = playerCar;
-    }
-
-    function unregister(playerCar) {
-      delete that.players[playerCar.id];
-    }
-
-    function getScores(){
-      var scores = [];
-      for (id in that.players){
-
-        var playerCar = that.players[id];
-        var score = {
-          'name' : playerCar.playerName,
-          'score' : playerCar.score,
-          'level': playerCar.level
-        };
-        scores.push(score);
-      }
-      return scores;
-    }
-
-    function broadcastScores(gameServer){
-      var scores = getScores();
-      gameServer.broadcast('scores', scores);
-    }
-
-    return {
-      'register': register,
-      'unregister': unregister,
-      'broadcastScores' : broadcastScores
+ScoreManager.prototype.getScores = function() {
+  var scores = [];
+  for (id in this.gameServer.players){
+    var playerCar = this.gameServer.players[id].playerCar;
+    var score = {
+      'name' : playerCar.playerName,
+      'score' : playerCar.score,
+      'level': playerCar.level
     };
+    scores.push(score);
+  }
+  return scores;
+}
 
-
-  }()
-
-  module.exports = ScoreManager;
+module.exports = ScoreManager;
