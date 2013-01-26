@@ -4,15 +4,15 @@ var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 
 var WeaponsByClass = {
-  1: SuperMachineGun,
-  2: SuperMachineGun,
-  // 3: SuperMachineGun,
-  // 4: SuperMachineGun,
-  // 5: SuperMachineGun,
-  // 6: SuperMachineGun,
-  // 7: SuperMachineGun,
-  // 8: SuperMachineGun,
-  // 9: RocketLauncher,
+  1: MachineGun,
+  2: MachineGun,
+  3: MachineGun,
+  4: SuperMachineGun,
+  5: SuperMachineGun,
+  6: SuperMachineGun,
+  7: SuperMachineGun,
+  8: SuperMachineGun,
+  9: RocketLauncher,
 };
 
 var PlayerCar = function(gameServer, client, playerName, player) {
