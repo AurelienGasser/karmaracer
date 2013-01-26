@@ -27,7 +27,7 @@ var Bullet = require("./PhysicsItem").extend({
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = angle;
     this.life = 25;
-    this.damage = 10;
+    this.damage = 5;
   },
   die : function(){
     this.life = -1;
