@@ -1,14 +1,6 @@
-var default_player_name = 'unknown player';
-
-$(function() {
-  $('#player_name').on('keyup', function() {
-    Karma.playerName = $('#player_name').val();
-  });
-})
-
 function sendMsg() {
   if ($('#chat_input').val().trim() != '') {
-    var msg = ($('#player_name').val() || default_player_name) + ': ' + $('#chat_input').val();
+    var msg = (Karma.get('playerName')) + ': ' + $('#chat_input').val();
     gameInstance.socketManager.emit('chat', msg);
   }
   $('#chat_input').val('');
@@ -25,7 +17,7 @@ function onChatMsgReceived(msg, key) {
 }
 
 function showChat() {
-  $('#chat_input_label').html((Karma.playerName || default_player_name) + ' :');
+  $('#chat_input_label').html((Karma.get('playerName')) + ' :');
   $('#chat_input').show();
   $('#chat_input').focus();
   $('#chat_input_label_wrapper').css('display', 'inline-block');
