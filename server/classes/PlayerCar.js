@@ -4,7 +4,7 @@ var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 
 var WeaponsByClass = {
-  1: MachineGun,
+  1: SuperMachineGun,
   2: SuperMachineGun,
   // 3: SuperMachineGun,
   // 4: SuperMachineGun,

@@ -13,8 +13,6 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
 Engine2DCanvas.prototype.initBackgroundCanvas = function() {
   this.backgroundCanvas = document.createElement('canvas');
 
-  //var cs = this.camera.getCanvasSize();
-  //console.log(cs);
   var wSize = this.camera.realWorldSize;
 
   var scale = 1;
@@ -87,7 +85,6 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
   if(this.gameInstance.explosions != null) {
     ctx.fillStyle = '#FFFFFF';
     for (var i in this.gameInstance.explosions) {
-      console.log('explosion')
       var c = this.gameInstance.explosions[i];
       ctx.save();
       ctx.translate(c.x, c.y);

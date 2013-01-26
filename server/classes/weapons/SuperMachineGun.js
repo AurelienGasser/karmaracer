@@ -29,7 +29,7 @@ SuperMachineGun.prototype.step = function() {
 }
 
 SuperMachineGun.prototype.shoot = function(playerCar) {
-  var distanceFromCar = 1.2;
+  var distanceFromCar = playerCar.car.size.w / 2;
   var PI = 3.14;
   var angle1 =  -PI / 4;
   var angle2 =   PI / 4;

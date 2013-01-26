@@ -29,10 +29,10 @@ MachineGun.prototype.step = function() {
 }
 
 MachineGun.prototype.shoot = function(playerCar) {
-  var distanceFromCar = 1.2;
+  var distanceFromCar = playerCar.car.size.w / 2;
   var pos = playerCar.car.getVector({
-    x: distanceFromCar * playerCar.car.size.w,
-    y: distanceFromCar * playerCar.car.size.w
+    x: distanceFromCar,
+    y: distanceFromCar
   });
   var b = new Bullet(playerCar, pos, playerCar.car.getAngle());
   b.accelerate(1);
