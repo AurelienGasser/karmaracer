@@ -20,7 +20,8 @@ var Bullet = require("./PhysicsItem").extend({
         h: 0.1
       },
       density: 1,
-      friction: 5
+      friction: 5,
+      bullet: true
     };
     this.playerCar = playerCar;
     this.name = 'bullet';

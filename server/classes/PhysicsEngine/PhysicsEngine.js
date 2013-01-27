@@ -102,9 +102,10 @@ var PhysicsEngine = backbone.Model.extend({
     }
     this.itemsToDestroy = [];
   },
-  createSquareBody: function(userData, _position, _size, _density, _friction, _angle) {
+  createSquareBody: function(userData, _position, _size, _density, _friction, _angle, isBullet) {
     try {
       var bodyDef = new b2d.b2BodyDef();
+      bodyDef.isBullet = isBullet;
       bodyDef.position.Set(_position.x, _position.y);
       if (_angle) {
         bodyDef.angle = _angle
