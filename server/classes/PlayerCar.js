@@ -35,7 +35,9 @@ PlayerCar.prototype.getShared = function() {
 }
 
 PlayerCar.prototype.updatePos = function() {
-  return this.car.updatePos();
+  if (!this.dead) {
+    return this.car.updatePos();
+  }
 }
 
 PlayerCar.prototype.receiveHit = function(damage) {
@@ -87,12 +89,14 @@ PlayerCar.prototype.shoot = function() {
 PlayerCar.prototype.die = function() {
   this.getExperience(-50);
   this.dead = true;
-  this.player.client.keyboard = {};
   this.car.scheduleForDestroy();
   this.car = null;
-  this.player.client.emit('dead', null);
+  if (this.player.client) {
+    this.player.client.keyboard = {};
+    this.player.client.emit('dead', null);
+  }
   setTimeout(function() {
-    if (this.player.connected) {
+    if (this.player.isBot || this.player.connected) {
       this.dead = false;
       this.car = new Car(this);
       this.life = 100;

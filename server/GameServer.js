@@ -101,10 +101,6 @@ GameServer.prototype.broadcastExplosion = function(point) {
   });
 };
 
-GameServer.prototype.addBot = function(bot) {
-  this.carManager.addBot(bot);
-}
-
 GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', { winnerName: winnerCar.player.playerName });
   var that = this;

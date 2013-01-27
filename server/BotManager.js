@@ -1,6 +1,7 @@
 var Bot = require('./classes/Bot');
 
 var BotManager = function(gameServer) {
+  this.idCounter = 1;
   this.gameServer = gameServer;
   this.bots = {};
   setInterval(this.tick.bind(this), 20);
@@ -9,13 +10,15 @@ var BotManager = function(gameServer) {
 BotManager.prototype.tick = function() {
   for (var i in this.bots) {
     var bot = this.bots[i];
-    bot.car.accelerate(1);
+    if (bot.playerCar.car) {
+      bot.playerCar.car.accelerate(0.1);
+    }
   }
 }
 
 BotManager.prototype.addBot = function(gameServer) {
-  var botId = Math.random();
-  this.bots[botId] = new Bot(this.gameServer);
+  var id = this.idCounter++;
+  this.bots[id] = new Bot(this.gameServer, id);
   console.log('added a bot !')
 }
 

@@ -1,9 +1,12 @@
-var Car = require('./PhysicsEngine/Car');
+var PlayerCar = require('./PlayerCar');
 
-var Bot = function(gameServer) {
+var Bot = function(gameServer, id) {
+  this.id = id;
+  this.isBot = true;
   this.gameServer = gameServer;
-  this.car = new Car(this.gameServer.physicsEngine);
-  this.gameServer.addBot(this);
+  this.name = 'bot_' + this.id;
+  this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
+  return this;
 }
 
 module.exports = Bot;

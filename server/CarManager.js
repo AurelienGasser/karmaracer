@@ -2,7 +2,6 @@ var Car = require('./classes/PhysicsEngine/Car');
 
 var CarManager = function(gameServer) {
   this.gameServer = gameServer;
-  this.botCars = {};
 }
 
 CarManager.prototype.getShared = function() {
@@ -10,18 +9,20 @@ CarManager.prototype.getShared = function() {
   function addCars(list) {
     for(var id in list) {
       var c = list[id];
-      cars.push(c.getShared());
+      if (!c.playerCar.dead) {
+        cars.push(c.playerCar.getShared());
+      }
     }
   }
-  addCars(this.getAlivePlayerCars());
-  addCars(this.botCars);
+  addCars(this.gameServer.players);
+  addCars(this.gameServer.botManager.bots);
   return cars;
 }
 
-CarManager.prototype.getAlivePlayerCars = function() {
+CarManager.prototype.getAliveCars = function(source) {
   var aliveCars = [];
-  for (var i in this.gameServer.players) {
-    var player = this.gameServer.players[i];
+  for (var i in source) {
+    var player = source[i];
     var playerCar = player.playerCar;
     if (!playerCar.dead) {
       aliveCars.push(playerCar)
@@ -31,30 +32,21 @@ CarManager.prototype.getAlivePlayerCars = function() {
 }
 
 CarManager.prototype.updatePos = function() {
-  var playerCars = this.getAlivePlayerCars();
-  for(var id in playerCars) {
-    var playerCar = playerCars[id];
+  for (var id in this.gameServer.players) {
+    var playerCar = this.gameServer.players[id].playerCar;
     playerCar.updatePos();
   }
-}
-
-CarManager.prototype.addBot = function(bot) {
-  this.botCars[bot.car.id] = bot.car;
 }
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
   victim.receiveHit(projectile.damage);
   if (victim.life <= 0) {
-    if (victim.player.client) {
-      if (victim.dead) {
-        return;
-      }
-      victim.die();
-      attacker.getExperience(100);
-    } else {
-      // bot: do nothing, bots are invlunerable (for now ;)
+    if (victim.dead) {
+      return;
     }
+    victim.die();
+    attacker.getExperience(100);
   }
 }
 
