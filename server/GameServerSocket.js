@@ -38,15 +38,12 @@ var GameServerSocket = function(gameServer) {
         delete that.gameServer.clients[client.id];
       });
 
-      client.on('drive', function(events) {
+      client.on('drive', function(event, state) {
         try {
-          for(var event in events) {
-            var state = events[event];
-            if(state === 'start') {
-              client.keyboard[event] = true;
-            } else {
-              client.keyboard[event] = false;
-            }
+          if(state === 'start') {
+            client.keyboard[event] = true;
+          } else {
+            client.keyboard[event] = false;
           }
         } catch(e) {
           console.log(e.stack);

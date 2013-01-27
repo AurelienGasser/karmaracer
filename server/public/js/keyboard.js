@@ -10,44 +10,31 @@ KEY_P = 80;
 
 function KeyboardHandler(gameInstance) {
   this.gameInstance = gameInstance;
-  this.events = {};
-  setInterval(this.sendKeyboardEvents.bind(this), 1000 / 16);
   return this;
 };
 
-KeyboardHandler.prototype.event = function(event, state) {
-
-  this.events[event] = state;
-}
-
-KeyboardHandler.prototype.sendKeyboardEvents = function() {
-  if (Object.keys(this.events).length === 0){
-    // dont send;
-    return false;
-  }
-  var connection = this.gameInstance.socketManager.getConnection();
+KeyboardHandler.prototype.sendKeyboardEvent = function(event, state) {
   if(connection) {
-    connection.emit('drive', this.events);
+    connection.emit('drive', event, state);
   }
-  this.events = {};
 };
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
   switch(key) {
   case KEY_SPACE:
-    this.event('shoot', state);
+    this.sendKeyboardEvent('shoot', state);
     break;
   case KEY_LEFT:
-    this.event('left', state);
+    this.sendKeyboardEvent('left', state);
     break;
   case KEY_RIGHT:
-    this.event('right', state);
+    this.sendKeyboardEvent('right', state);
     break;
   case KEY_UP:
-    this.event('forward', state);
+    this.sendKeyboardEvent('forward', state);
     break;
   case KEY_DOWN:
-    this.event('backward', state);
+    this.sendKeyboardEvent('backward', state);
     break;
   case KEY_L:
     if (state == 'start') {
