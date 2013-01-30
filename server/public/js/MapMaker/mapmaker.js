@@ -1,9 +1,19 @@
 var G_map;
 
-$(function(){
+
+function updateName(map) {
+  var inputName = $('<input id="map-name" placeholder="map name"/>');
+  $('body').append(inputName);
+  inputName.keyup(function() {
+    map.mapName = inputName.val();
+  });
+  inputName.val(map.mapName);
+}
+
+$(function() {
 
   G_map = new Map("#map-canvas");
- 
+
   //console.log('map loaded');
   G_map.addItem('wall');
   G_map.addItem('stone');
@@ -14,18 +24,14 @@ $(function(){
   G_map.addItem('stone_b');
   G_map.addItem('tree1');
 
-  $("#save-canvas").click(function(){
+  $("#save-canvas").click(function() {
     // G_map.realWorldSize.w, G_map.realWorldSize.h
     var img = Canvas2Image.saveAsPNG(G_map.canvas, true);
     $("body").append(img);
   });
+  updateName(G_map);
 
-  var o = [];
-  o.push('<input id="map-name" placeholder="map name"/>');
-
-  $('body').append(o.join(''));
-
-  $("#save-map-node").click(function(){
+  $("#save-map-node").click(function() {
     G_map.saveMap();
     console.log(G_map.MapItems);
     //var img = Canvas2Image.saveAsPNG(G_map.canvas, true, G_map.realWorldSize.w, G_map.realWorldSize.h);

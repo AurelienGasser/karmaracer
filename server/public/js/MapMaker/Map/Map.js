@@ -1,13 +1,24 @@
-function Map(selector){
+function Map(selector) {
   this.canvas = $(selector)[0];
+
+  this.connection = io.connect(serverHost);
 
   this.ctx = this.canvas.getContext("2d");
   this.MapItems = {};
   this.selectedItems = [];
 
-  this.canvasMousePosition = {"x" : 0, "y" : 0};
-  this.mouseDownPosition = {"x" : 0, "y" : 0};
-  this.translateMousePosition = {"x" : 0, "y" : 0};
+  this.canvasMousePosition = {
+    "x": 0,
+    "y": 0
+  };
+  this.mouseDownPosition = {
+    "x": 0,
+    "y": 0
+  };
+  this.translateMousePosition = {
+    "x": 0,
+    "y": 0
+  };
   this.canvas.onmousemove = this.mouseMove.bind(this);
   this.canvas.onmousedown = this.mouseDown.bind(this);
   this.canvas.onmouseup = this.mouseUp.bind(this);
@@ -16,12 +27,23 @@ function Map(selector){
     shift: false
   };
 
-  this.selectedZone = {"x" : 0, "y" : 0, "w" : 0, "h" : 0};
+  this.selectedZone = {
+    "x": 0,
+    "y": 0,
+    "w": 0,
+    "h": 0
+  };
   this.keyboardHandler = new KeyboardHandlerMap(this);
 
   this.scale = 1;
-  this.translate = {"x" : 0, "y" : 0};
-  this.realWorldSize = {"w" : 800, "h" : 500};
+  this.translate = {
+    "x": 0,
+    "y": 0
+  };
+  this.realWorldSize = {
+    "w": 800,
+    "h": 500
+  };
   this.mapName = "map69";
 
   this.zoomBox = null;
@@ -45,17 +67,17 @@ Map.prototype.canvasDraw = function() {
   this.ctx.fillStyle = '00f';
   this.ctx.strokeRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
 
-  for (var i in this.MapItems){
+  for(var i in this.MapItems) {
     var item = this.MapItems[i];
     this.drawItem(item);
   }
 
   // draw selected Zone
-  if (this.action == 'selectZone') {
+  if(this.action == 'selectZone') {
     this.drawSelectedZone();
   }
 
-  if (this.zoomBox != null) {
+  if(this.zoomBox != null) {
     this.scale = this.realWorldSize.w * this.scale / this.zoomBox.w;
     this.translate.x = -this.zoomBox.x * this.scale;
     this.translate.y = -this.zoomBox.y * this.scale;
@@ -66,24 +88,24 @@ Map.prototype.canvasDraw = function() {
 Map.prototype.tick = function() {
   this.tickCount++;
   var debugoutput = [];
-  var now = new Date();  
+  var now = new Date();
   var tickDiff = now.getTime() - this.tickStart;
   //console.log(tickDiff);
-  if (tickDiff > 1000){
+  if(tickDiff > 1000) {
     $('#fps').html('fps:' + this.tickCount);
     this.tickCount = 0;
     this.tickStart = now.getTime();
   }
   requestAnimFrame(this.tick.bind(this));
   this.canvasDraw();
- 
-  debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y ,'</li>');
-  debugoutput.push('<li>Canvas Down Pos : ', this.mouseDownPosition.x, ', ', this.mouseDownPosition.y ,'</li>');
-  debugoutput.push('<li>Translate Down Pos : ', this.translateMousePosition.x, ', ', this.translateMousePosition.y ,'</li>');
 
-  debugoutput.push('<li>Action : ', this.action ,'</li>');
-  debugoutput.push('<li>ScaleCanvas : ', this.scale ,'</li>');
-  debugoutput.push('<li>TranslateCanvas : ', this.translate.x, ', ', this.translate.y ,'</li>');
+  debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y, '</li>');
+  debugoutput.push('<li>Canvas Down Pos : ', this.mouseDownPosition.x, ', ', this.mouseDownPosition.y, '</li>');
+  debugoutput.push('<li>Translate Down Pos : ', this.translateMousePosition.x, ', ', this.translateMousePosition.y, '</li>');
+
+  debugoutput.push('<li>Action : ', this.action, '</li>');
+  debugoutput.push('<li>ScaleCanvas : ', this.scale, '</li>');
+  debugoutput.push('<li>TranslateCanvas : ', this.translate.x, ', ', this.translate.y, '</li>');
 
   debugoutput.push('<li>--------</li>');
   debugoutput.push('<li>Help</li>');
@@ -94,26 +116,38 @@ Map.prototype.tick = function() {
   debugoutput.push('<li>Z (zoom to selected items)</li>');
 
   $("#canvas-debug").html(debugoutput.join(''));
-//   if (this.action == 'translate'){
-//    this.translateSelectedItemsUsingMousePosition();
-//   }
- 
+  //   if (this.action == 'translate'){
+  //    this.translateSelectedItemsUsingMousePosition();
+  //   }
 };
 
 Map.prototype.addItem = function(itemName) {
   var items = $('#items');
-  $.getJSON('/items/' + itemName + '.json', function(item){
+  $.getJSON('/items/' + itemName + '.json', function(item) {
     //console.log(item);
     var itemID = 'item-' + item.name;
-    items.append('<li class="item" id="' + itemID + '">' + item.name+  '</li>');
-    $('#' + itemID).click(function(){
-        var now = new Date();
-        var timestamp = now.getTime();                
-        this.MapItems[timestamp] = new MapItem(item, this.ctx, timestamp);
+    var itemLi = $('<li class="item" id="' + itemID + '"></li>');
+    var UL = $('<ul class="item-properties"/>');
+    itemLi.append(UL);
+    var demoDiv = $('<li class="kr-mm-demo"/>');
+    switch(item.patternType) {
+    case 'horizontal':
+    case 'vertical':
+    case 'both':
+      demoDiv.css('background-image', 'url("' + item.image.path + '")');
+      break;
+    default:
+      demoDiv.append('<img class="kr-item-demo" src="' + item.image.path + '"/>');
+    }
+    demoDiv.addClass('kr-mm-demo-' + item.patternType);
+    UL.append('<li class="kr-pp-item-name">' + item.name + '</li>');
+
+    UL.append(demoDiv);
+    items.append(itemLi);
+    $('#' + itemID).click(function() {
+      var now = new Date();
+      var timestamp = now.getTime();
+      this.MapItems[timestamp] = new MapItem(item, this.ctx, timestamp);
     }.bind(this));
   }.bind(this))
 };
-
-
-
-

@@ -70,7 +70,7 @@ var connection;
         $('#announce').fadeOut(function() {
           $('#announce').remove();
         });
-      }, 4000)
+      }, 4000);
     }
 
     connection.on('dead', function() {

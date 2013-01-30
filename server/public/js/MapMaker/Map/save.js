@@ -1,5 +1,8 @@
 Map.prototype.saveMap = function() {
 
+
+
+
   var iWidth = this.realWorldSize.w;
   var iHeight = this.realWorldSize.h;
 
@@ -28,6 +31,8 @@ Map.prototype.saveMap = function() {
     map.staticItems.push(jsonItem);
   });
   var mapString = JSON.stringify(map);
+
+  this.connection.emit('saveMap', map);
 
   console.log(map, mapString);
 }

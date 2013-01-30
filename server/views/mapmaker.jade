@@ -1,11 +1,14 @@
 html
   head
     title Karma Racer, Map Maker
+    link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet')
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+
     script(type='text/javascript', src='/js/libs/underscore.js')
     script(type='text/javascript', src='/js/libs/jquery-1.6.4.min.js')
     script(type='text/javascript', src='/js/libs/jquery-ui-1.8.16.custom.min.js')
     script(type='text/javascript')
-      var SERVER_HOST = '#{server}';
+      var serverHost = '#{server}';
     script(type='text/javascript', src='/js/libs/mobile_compatibility.js')
     script(type='text/javascript', src='/js/libs/canvas2image.js')
     script(type='text/javascript', src='/js/drawEngine/drawEngineFactory.js')

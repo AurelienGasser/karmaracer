@@ -27,6 +27,26 @@ var GameServerSocket = function(gameServer) {
         }, 1000 / 16);
       });
 
+
+      client.on('saveMap', function(map) {
+        try {
+          //console.log('saveMap', map);
+          var fs = require('fs');
+          var path = "./public/maps/" + map.name + '.json';
+          fs.writeFile(path, JSON.stringify(map), function(err) {
+            if(err) {
+              console.log(err);
+            } else {
+              console.log('The map was saved : ', map.name, ' on ', path);
+            }
+          });
+
+        } catch(e) {
+          console.log(e, e.stack);
+        }
+      });
+
+
       client.on('disconnect', function(socket) {
         try {
           that.gameServer.removePlayer(client.player);
