@@ -1,19 +1,28 @@
+var Car = require('./classes/car');
+
 var gameServer = function(app) {
-    this.app = app;
     var backbone = require('backbone');
     var _ = require('underscore');
     var fs = require('fs');
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
     var PhysicsItem = require('./classes/physicsItem');
     var PhysicsEngine = require('./classes/physicsEngine');
+    // var Car = require('./classes/car');
+    // var CarsCollection = require('./classes/cars');
+    var BotManager = require('./BotManager');
 
     // LOAD THE MAP
-    var map1_path = __dirname + '/public/maps/map1.json';
-    var map1String = fs.readFileSync(map1_path);
-    var map = JSON.parse(map1String);
-    this.physicsEngine = new PhysicsEngine(map);
+    // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
+    var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/testarena.json'));
 
+    this.app = app;
+    this.physicsEngine = new PhysicsEngine(map, this);
+
+<<<<<<< HEAD
     //console.log('engine', this.physicsEngine);
 
     var Bullet = require('./classes/bullet');
@@ -32,13 +41,31 @@ var gameServer = function(app) {
 
     // update all cars positions
     setInterval(function() {
+=======
+
+
+    this.cars = require('./carManager');
+
+    this.clients = [];
+    this.botManager = new BotManager(this);
+
+    this.bulletManager = require('./classes/bulletManager');
+    this.scoreManager = require('./classes/scoreManager');
+
+    var that = this;
+
+
+    function play() {
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
       try {
         that.physicsEngine.step();
         that.cars.updatePos();
-        updateBullets();
+        that.bulletManager.updateBullets(that.physicsEngine);
+        that.scoreManager.broadcastScores(that);
       } catch(e) {
-        console.log("error", e);
+        console.log("error main interval", e, e.stack);
       }
+<<<<<<< HEAD
     }, 20);
 
     function updateBullets() {
@@ -63,21 +90,14 @@ var gameServer = function(app) {
         var id = deads[i];
         that.physicsEngine.world.DestroyBody(that.bullets[id].body);
         delete that.bullets[id];
+=======
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
 
-      };
     }
 
-    this.getGraphicBullets = function() {
-      var graphics = [];
-      for(var id in that.bullets) {
-        if(that.bullets.hasOwnProperty(id)) {
-          var bullet = that.bullets[id];
-          graphics.push(bullet.getShared());
-        }
-      }
-      return graphics;
-    }
 
+    // update world
+    setInterval(play, 20);
 
 
     function handleClientKeyboard() {
@@ -88,6 +108,7 @@ var gameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
+<<<<<<< HEAD
               var b = new Bullet(client.car);
               b.applyForceToBody(0.1);
               that.bullets[b.id] = b;
@@ -103,6 +124,21 @@ var gameServer = function(app) {
               break;
             case 'right':
               client.car.turn(-3.0);
+=======
+              that.bulletManager.add(client.car);
+              break;
+            case 'forward':
+              client.car.accelerate(1.0)
+              break;
+            case 'backward':
+              client.car.accelerate(-1.0)
+              break;
+            case 'left':
+              client.car.turn(-3.0)
+              break;
+            case 'right':
+              client.car.turn(3.0)
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
               break;
             }
           }
@@ -111,6 +147,51 @@ var gameServer = function(app) {
     }
 
     setInterval(handleClientKeyboard, 10);
+    return this;
   }
+
+
+gameServer.prototype.broadcast = function(key, data) {
+  var that = this;
+  for(var i in that.clients) {
+    that.clients[i].emit(key, data);
+  }
+}
+
+gameServer.prototype.broadcastExplosion = function(point) {
+  // console.log(position);
+  this.broadcast('explosion', {
+    x: point.position.x * this.physicsEngine.gScale,
+    y: point.position.y * this.physicsEngine.gScale
+  });
+
+};
+
+
+gameServer.prototype.addCar = function(car) {
+  this.cars.add(car);
+  this.scoreManager.register(car);
+}
+
+gameServer.prototype.removeCar = function(car) {
+  this.cars.remove(car);
+  this.scoreManager.unregister(car);
+}
+
+gameServer.prototype.client_die = function(client) {
+  if (client.dead) {
+    return;
+  }
+  var that = this;
+  client.dead = true;
+  this.physicsEngine.world.DestroyBody(client.car.body);
+  this.removeCar(client.car);
+  client.emit('dead', null);
+  setTimeout(function() {
+    client.dead = false;
+    client.car = new Car(that.physicsEngine, client);
+    that.addCar(client.car);
+  }, 5000);
+}
 
 module.exports = gameServer;

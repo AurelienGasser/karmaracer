@@ -6,19 +6,25 @@ var box2d = require('box2dweb-commonjs');
 var PhysicsItem = backbone.Model.extend({
   urlRoot: '/physicsItem',
   initialize: function(_arguments) {
-    this.id = Math.floor(Math.random() * 1e10);
+    this.id = Math.floor(Math.random() * 1e100);
     this.size = {
       w: _arguments['size'].w,
       h: _arguments['size'].h
     };
+<<<<<<< HEAD
     this.engine = _arguments['physicsEngine'];
     this.body = this.engine.createSquareBody(_arguments['position'], this.size, _arguments['density'], _arguments['friction'], _arguments['type'], _arguments['restitution']);
     this.body.SetUserData(this);
 
     if(!_.isUndefined(_arguments['name'])) {
+=======
+    if (!_.isUndefined(_arguments['name'])){
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
       this.name = _arguments['name'];
       //console.log('name', this.name);
     }
+    this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments['position'], this.size, _arguments['density'], _arguments['friction']);
+    this.engine = _arguments['physicsEngine'];
   },
   getPosition: function() {
     if(this.body !== null) {

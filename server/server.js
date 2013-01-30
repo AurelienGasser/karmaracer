@@ -17,7 +17,7 @@ var sys = require("util");
 var fs = require('fs');
 
 
-var port = 8085;
+var port = 8080;
 
 
 // app.set('views', __dirname + '/views');
@@ -35,7 +35,7 @@ app.configure('dev', function() {
 });
 
 app.configure('aurel', function() {
-  serverHost = '192.168.0.31';
+  serverHost = '192.168.1.101';
   port = 80;
 });
 
@@ -52,10 +52,14 @@ app.configure('tib', function() {
 var http = require('http');
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);
+<<<<<<< HEAD
 io.set('log level', 0);
 // io.set('transports', ['websocket']);
 
 app.io = io;
+=======
+io.set('log level', 1);
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
 
 server.listen(port);
 

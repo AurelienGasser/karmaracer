@@ -12,8 +12,12 @@ var Bullet = require("./physicsItem").extend({
       x: distanceFromCar * car.size.w,
       y: distanceFromCar * car.size.w
     });
+<<<<<<< HEAD
     this.acc_helper = 5;
     this.name = 'bullet';
+=======
+    this.acc_helper = 100;
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
     //console.log(initPos);
     var a = {
       physicsEngine: car.engine,
@@ -29,10 +33,19 @@ var Bullet = require("./physicsItem").extend({
       friction: 0,
       restitution:0
     };
+    this.car = car;
+    this.name = 'bullet';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.angle = car.getAngle();
     this.life = 200;
     this.dead = false;
+  },
+  die : function(){
+    this.life = -1;
+  },
+  explode: function(point) {
+    this.die();
+    this.engine.gameServer.broadcastExplosion(point);
   },
   accelerate: function(ac) {
     this.acc_helper += this.acc_helper;

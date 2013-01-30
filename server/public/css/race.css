@@ -6,6 +6,23 @@
   color: white;
 }
 
+#left_panel{
+  /*background-color: #eee;*/
+  position: fixed;
+  bottom: 0px;
+  right: 0px;
+  padding: 5px;
+}
+
+ul#scores{
+  color: white;
+  margin: 0px;
+  padding: 0px;
+}
+ul#scores li{
+ list-style: none;
+}
+
 
 #debug{
   position: absolute;

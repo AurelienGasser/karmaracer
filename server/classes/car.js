@@ -3,26 +3,71 @@ var _ = require('underscore');
 var sys = require("sys");
 
 var Car = require("./physicsItem").extend({
+<<<<<<< HEAD
   urlRoot : '/cars',
   initialize : function(_physicsEngine){
     console.log('create car');
     var a = {physicsEngine : _physicsEngine, position : {x : 50.0, y : 25.0}, size:{w : 1, h : 0.5}, density:1, friction:1, restitution:0.2};
+=======
+  startPosition: {
+    x: 10.0,
+    y: 11.5,
+  },
+  urlRoot: '/cars',
+  client: null,
+  initialize: function(_physicsEngine, client, playerName) {
+    var a = {
+      physicsEngine: _physicsEngine,
+      position: this.startPosition,
+      size: {
+        w: 1,
+        h: 0.5
+      },
+      density: 1,
+      friction: 0.2
+    };
+    this.name = 'car';
+    this.client = client;
+    this.physicsEngine = _physicsEngine;
+>>>>>>> fee60abcf7796e18fad765f87c45a6254dc160ad
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
+    this.score = 0;
+    this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
     this.life = 100;
     this.name = 'car';
   },
-  accelerationMax : 50,
-  accelerate : function (ac){
-    var acc_helper = 1;
-    var v = {x : acc_helper * ac * Math.cos(this.getAngle()), y : acc_helper * ac * Math.sin(this.getAngle())};
+  accelerationMax: 50,
+  accelerate: function(ac) {
+    var acc_helper = 4;
+    var v = {
+      x: acc_helper * ac * Math.cos(this.getAngle()),
+      y: acc_helper * ac * Math.sin(this.getAngle())
+    };
     //console.log(v);
     this.applyForceToBody(v);
   },
-  updatePos : function(){
+  updatePos: function() {
     this.reduceVelocityOfBody(this.tireResistance);
+  },
+  updatePlayerName: function(name) {
+    this.playerName = name;
+  },
+  receiveHit: function() {
+    this.life -= 10;
+    if (this.life <= 0) {
+      if (this.client) {
+        this.physicsEngine.gameServer.client_die(this.client);
+      } else {
+        // bot: do nothing, bots are invlunerable (for now ;)
+      }
+    }
+  },
+  getShared: function() {
+   var res =  this.constructor.__super__.getShared.bind(this)();
+   res.playerName = this.playerName;
+   return res;
   }
 });
 
 module.exports = Car;
-

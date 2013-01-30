@@ -1,0 +1,75 @@
+{
+  "name" : "map1",
+  "backgroundImage" : "/sprites/grass3.jpg",
+  "size" : {
+    "w" : 60,
+    "h" : 23
+  },
+  "staticItems" : [
+    {
+      "name" : "stone",
+      "position" : {
+        "x" : 400,
+        "y" : 400
+      },
+      "size" : {
+        "w" : 100,
+        "h" : 100
+      }
+    },
+   {
+      "name" : "stone",
+      "position" : {
+        "x" : 20,
+        "y" : 5
+      },
+      "size" : {
+        "w" : 7,
+        "h" : 10
+      }
+    },
+    {
+      "name" : "stone",
+      "position" : {
+        "x" : 20,
+        "y" : 18
+      },
+      "size" : {
+        "w" : 7,
+        "h" : 10
+      }
+    },
+    {
+      "name" : "wall",
+      "position" : {
+        "x" : 600,
+        "y" : 500
+      },
+      "size" : {
+        "w" : 20,
+        "h" : 20
+      }
+    },
+    {
+      "name" : "wall",
+      "position" : {
+        "x" : 250,
+        "y" : 250
+      },
+      "size" : {
+        "w" : 50,
+        "h" : 50
+      }
+    },
+    {
+      "name" : "wall",
+      "position" : {
+        "x" : 768,
+        "y" : 768
+      },
+      "size" : {
+        "w" : 200,
+        "h" : 200
+      }
+    }]
+}

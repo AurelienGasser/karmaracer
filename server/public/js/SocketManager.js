@@ -1,5 +1,7 @@
+var connection;
+
 function SocketManager(serverHost, gameInstance, onInitCallback){
-  var connection = io.connect(serverHost);
+  connection = io.connect(serverHost);
   //console.log(connection);
   this.gameInstance = gameInstance;
   this.init_done = false;
@@ -31,7 +33,11 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
 
   connection.on('init', function (worldInfo) {
     onInitCallback(null, worldInfo);
-    connection.emit('init_done');
+    if (!localStorage.username || localStorage.username.length == 0) {
+      localStorage.username = prompt('Welcome to Karmaracer !\nWhat\'s your name ?')
+    }
+    $('#player_name').val(localStorage.username);
+    connection.emit('init_done', { playerName: localStorage.username });
     this.init_done = true;
   });
 
@@ -41,15 +47,40 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
     ++that.msg_id;
   });
 
+  connection.on('scores', function (scores) {
+    // console.log(scores);
+    var o = [];
+    for (var i = 0; i < scores.length; i++) {
+      var s = scores[i];
+      o.push('<li>', s.name, ':', s.score, '</li>');
+    };
+    $('#scores').html(o.join(''));
+  });
+
+  connection.on('dead', function () {
+    var div = $('<div id="urdead" style="font-size: 72px; color: red; text-align: center; width: 100%; height: 200px; z-index: 9999; position: absolute; left: 100px; top: 100px">You\'re dead !</div>')
+    div.appendTo($('body'));
+    setTimeout(function() {
+      $('#urdead').fadeOut(function() {
+        $('#urdead').remove();
+      });
+    }, 4000)
+  });
+
+
   connection.on('objects', function (objects) {
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
     gameInstance.bullets = objects.bullets;
     //console.log(ga.bullets);
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list){
-      return list.length;
+      return list ? list.length : 0;
     })));
     socketReceived();
+  });
+
+  connection.on('explosion', function (explosion) {
+    gameInstance.addExplosion(explosion);
   });
 
   this.connection = connection;
@@ -58,3 +89,13 @@ function SocketManager(serverHost, gameInstance, onInitCallback){
 SocketManager.prototype.getConnection = function() {
   return this.connection;
 };
+
+SocketManager.prototype.emit = function(key, data){
+  this.connection.emit(key, data);
+}
+
+$(function() {
+  $('#addBot').click(function() {
+    connection.emit('add bot');
+  })
+})
