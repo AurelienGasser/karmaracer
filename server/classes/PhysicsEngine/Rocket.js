@@ -1,7 +1,6 @@
 var backbone = require('backbone');
 var _ = require('underscore');
 var sys = require("sys");
-var b2d = require("box2d");
 
 var Rocket = require("./PhysicsItem").extend({
   urlRoot: '/cars',

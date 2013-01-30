@@ -9,7 +9,7 @@
     "jade": ">= 0.16.2",
     "socket.io": ">= 0.8.5",
     "backbone": ">= 0.5.3",
-    "box2d": ">=1.0.0",
+    "box2dweb-commonjs": ">=2.1.0",
     "underscore": ">= 1.2.0"
   },
   "private": true

@@ -63,7 +63,7 @@ var GameServer = function(app) {
               break;
             case 'left':
               if (!player.playerCar.dead) {
-                var a = -3.0;
+                var a = -2.0;
                 if (client.keyboard['backward'] === true){
                   a = -a;
                 }
@@ -72,7 +72,7 @@ var GameServer = function(app) {
               break;
             case 'right':
               if (!player.playerCar.dead) {
-                var a = 3.0;
+                var a = 2.0;
                 if (client.keyboard['backward'] === true){
                   a = -a;
                 }
@@ -96,8 +96,8 @@ GameServer.prototype.broadcast = function(key, data) {
 
 GameServer.prototype.broadcastExplosion = function(point) {
   this.broadcast('explosion', {
-    x: point.position.x * this.physicsEngine.gScale,
-    y: point.position.y * this.physicsEngine.gScale
+    x: point.x * this.physicsEngine.gScale,
+    y: point.y * this.physicsEngine.gScale
   });
 };
 

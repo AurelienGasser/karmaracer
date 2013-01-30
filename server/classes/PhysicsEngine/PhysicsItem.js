@@ -1,6 +1,5 @@
 var backbone = require('backbone');
 var _ = require('underscore');
-var b2d = require("box2d");
 
 var PhysicsItem = backbone.Model.extend({
   urlRoot: '/physicsItem',
@@ -13,7 +12,7 @@ var PhysicsItem = backbone.Model.extend({
     if(!_.isUndefined(_arguments['name'])) {
       this.name = _arguments['name'];
     }
-    this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments['position'], this.size, _arguments['density'], _arguments['friction'], _arguments['angle'], _arguments['bullet']);
+    this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments['position'], this.size, _arguments['density'], _arguments['friction'], _arguments['angle'], _arguments['bullet'], _arguments['type'], _arguments['restitution']);
     this.engine = _arguments['physicsEngine'];
   },
   destroy: function() {
@@ -50,7 +49,8 @@ var PhysicsItem = backbone.Model.extend({
   },
   addAngle: function(a) {
     if(this.body !== null) {
-      this.body.ApplyTorque(a)
+      this.body.SetAngularVelocity(this.body.GetAngularVelocity() + a)
+      // this.body.ApplyTorque(a)
     }
   },
   getAngle: function() {
@@ -93,7 +93,7 @@ var PhysicsItem = backbone.Model.extend({
       this.body.m_angularVelocity /= 1 * reduceBy;
       if(Math.abs(this.body.m_linearVelocity.x) < 0.005) this.body.m_linearVelocity.x = 0;
       if(Math.abs(this.body.m_linearVelocity.y) < 0.005) this.body.m_linearVelocity.y = 0;
-      if(Math.abs(this.body.m_angularVelocity) < 0.005) this.body.m_linearVelocity.y = 0;
+      if(Math.abs(this.body.m_angularVelocity) < 0.005) this.body.m_angularVelocity = 0;
     }
   }
 });

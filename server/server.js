@@ -2,7 +2,7 @@ var express = require('express');
 var backbone = require('backbone');
 var _ = require('underscore');
 var fs = require('fs');
-
+var sys = require("util");
 
 // FOR SSL IF REQUIRED
 var ssl_options = {
@@ -11,15 +11,7 @@ var ssl_options = {
 };
 
 var app = express();
-
-
-var sys = require("util");
-var b2d = require("box2d");
-var fs = require('fs');
-
-
 var port = 8080;
-
 
 // app.set('views', __dirname + '/views');
 // app.set('view engine', 'jade');

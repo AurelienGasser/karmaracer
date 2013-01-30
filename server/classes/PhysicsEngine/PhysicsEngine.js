@@ -1,8 +1,7 @@
 var backbone = require('backbone');
 var _ = require('underscore');
-var b2d = require("box2d");
 var fs = require('fs');
-
+var box2d = require('box2dweb-commonjs');
 var PhysicsItem = require("./PhysicsItem");
 
 var PhysicsEngine = backbone.Model.extend({
@@ -17,49 +16,12 @@ var PhysicsEngine = backbone.Model.extend({
     this.itemsToDestroy = [];
 
     // Define world
-    var worldAABB = new b2d.b2AABB();
-    var zoneAround = 200.0;
-    worldAABB.lowerBound.Set(-zoneAround, -zoneAround);
-    worldAABB.upperBound.Set(_map.size.w + zoneAround, _map.size.h + zoneAround);
-
-    var gravity = new b2d.b2Vec2(0.0, 0.0);
-    var doSleep = true;
-    this.world = new b2d.b2World(worldAABB, gravity, doSleep);
-    var listener = new b2d.b2ContactListener;
-    listener.Add(function(point) {
-      // console.log('add');
-    })
-    listener.Persist = function(point) {
-      // console.log('persist');
-    }
-    listener.Remove = function(point) {
-      // console.log('remove');
-    }
-
-    function contact(o1, o2, callback) {
-      callback(o1, o2);
-      callback(o2, o1);
-    }
-
-    listener.Result = function(point) {
-      var o1 = point.shape1.m_userData;
-      var o2 = point.shape2.m_userData;
-      contact(o1, o2, function(o1, o2){
-        if (o1.name === 'bullet' && o2.name !== 'bullet'
-         || o1.name === 'rocket' && o2.name !== 'rocket') {
-           if (o1.playerCar != o2.playerCar) {
-             o1.explode(point);
-           }
-        }
-        if(o2.name === 'car' && (o1.name === 'bullet' || o1.name == 'rocket')) {
-          if (o1.playerCar != o2.playerCar) {
-            gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
-          }
-        }
-      });
-    }
-
-    this.world.SetContactListener(listener);
+    // var worldAABB = new b2dweb.b2AABB();
+    // worldAABB.lowerBound.Set(-10.0, -10.0);
+    // worldAABB.upperBound.Set(_map.size.w + 10.0, _map.size.h + 10.0);
+    var gravity = new box2d.b2Vec2(0.0, 0.0);
+    // var doSleep = true;
+    this.world = new box2d.b2World(gravity, false);
     this.staticItems = [];
 
     // LOAD STATIC ITEMS ONCE FOR CLIENT
@@ -72,6 +34,43 @@ var PhysicsEngine = backbone.Model.extend({
         this.itemsInMap[itemJSON.name] = itemJSON;
       }
     }.bind(this));
+
+    var b2ContactListener = box2d.Box2D.Dynamics.b2ContactListener;
+    var listener = new b2ContactListener;
+
+    function swap(o1, o2, callback) {
+      callback(o1, o2);
+      callback(o2, o1);
+    }
+
+    listener.BeginContact = function(contact) {
+      var o1 = contact.GetFixtureA().GetBody().GetUserData();
+      var o2 = contact.GetFixtureB().GetBody().GetUserData();
+      swap(o1, o2, function(o1, o2){
+        if (o1.name === 'bullet' && o2.name !== 'bullet'
+         || o1.name === 'rocket' && o2.name !== 'rocket') {
+           if (o1.playerCar != o2.playerCar) {
+             o1.explode(contact.GetFixtureA().GetBody().GetPosition());
+           }
+        }
+        if(o2.name === 'car' && (o1.name === 'bullet' || o1.name == 'rocket')) {
+          if (o1.playerCar != o2.playerCar) {
+            gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
+          }
+        }
+      });
+    }
+
+    listener.EndContact = function(contact) {
+    }
+
+    listener.PostSolve = function(contact, impulse) {
+    }
+
+    listener.PreSolve = function(contact, oldManifold) {
+    }
+
+    this.world.SetContactListener(listener);
 
     this.createBorders(this.map.size);
     this.loadStaticItems(this.map.staticItems);
@@ -95,33 +94,40 @@ var PhysicsEngine = backbone.Model.extend({
     return shareStaticItems;
   },
   step: function() {
-    this.world.Step(this.timeStep, this.iterations);
+    // Run Simulation!
+    //console.log(this.world.GetBodyCount());
+    this.world.Step(this.timeStep, 8, // velocity iterations
+    3); // position iterations
+    // this.world.ClearForces();
+    //this.world.Step(this.timeStep, this.iterations);
     for (var i in this.itemsToDestroy) {
       var item = this.itemsToDestroy[i];
       item.destroy();
     }
     this.itemsToDestroy = [];
   },
-  createSquareBody: function(userData, _position, _size, _density, _friction, _angle, isBullet) {
+  createSquareBody: function(userData, _position, _size, _density, _friction, _angle, isBullet, type, restitution) {
     try {
-      var bodyDef = new b2d.b2BodyDef();
-      bodyDef.isBullet = isBullet;
-      bodyDef.position.Set(_position.x, _position.y);
-      if (_angle) {
-        bodyDef.angle = _angle
+      var def = new box2d.b2BodyDef();
+      def.bullet = isBullet;
+      def.userData = userData;
+      def.position.Set(_position.x, _position.y);
+      def.type = box2d.b2Body.b2_dynamicBody;
+      if (!_.isUndefined(type)){
+        def.type = box2d.b2Body.b2_staticBody;
       }
-      var body = this.world.CreateBody(bodyDef);
-      if (body === null){
-        return null;
-      }
-      var shapeDef = new b2d.b2PolygonDef();
-      shapeDef.SetAsBox(_size.w / 2, _size.h / 2);
-      shapeDef.density = _density;
-      shapeDef.friction = _friction;
-      shapeDef.restitution = 0;
-      shapeDef.userData = userData;
-      body.CreateShape(shapeDef);
-      body.SetMassFromShapes();
+      def.angle = 0;
+      def.linearVelocity = new box2d.b2Vec2(0.0, 0.0);
+
+      var fixtureDef = new box2d.b2FixtureDef();
+      fixtureDef.density = _density;
+      fixtureDef.friction = _friction;
+      fixtureDef.restitution = restitution || 0;
+      fixtureDef.shape = new box2d.b2PolygonShape();
+      fixtureDef.shape.SetAsBox(_size.w / 2, _size.h / 2);
+
+      var body = this.world.CreateBody(def);
+      body.CreateFixture(fixtureDef);
       return body;
     } catch(e) {
       console.log('error on body creation', e, e.stack);
@@ -152,7 +158,8 @@ var PhysicsEngine = backbone.Model.extend({
           h: h
         },
         density: density,
-        friction: friction
+        friction: friction,
+        type : 'static'
       };
       return border;
     }
@@ -179,7 +186,8 @@ var PhysicsEngine = backbone.Model.extend({
         "size": w.size,
         "density": 0.0,
         "friction": 0.0,
-        "name": w.name
+        "name": w.name,
+        "type": "static"
       };
       var staticItem = new PhysicsItem(_staticItemOptions);
       this.staticItems.push(staticItem);

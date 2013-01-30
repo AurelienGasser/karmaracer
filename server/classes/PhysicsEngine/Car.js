@@ -1,8 +1,6 @@
 var backbone = require('backbone');
 var _ = require('underscore');
 var sys = require("sys");
-var b2d = require("box2d");
-
 
 var Car = require("./PhysicsItem").extend({
   startPosition: {
@@ -19,7 +17,8 @@ var Car = require("./PhysicsItem").extend({
         h: 0.5
       },
       density: 1,
-      friction: 0.2
+      friction: 1,
+      restitution: 0.2
     };
     this.playerCar = playerCar;
     this.name = 'car';
@@ -38,6 +37,7 @@ var Car = require("./PhysicsItem").extend({
   },
   updatePos: function() {
     this.reduceVelocityOfBody(this.tireResistance);
+    this.body.ApplyTorque(-this.body.m_torque / 15)
   },
   receiveHit: function() {
     this.playerCar.receiveHit();
