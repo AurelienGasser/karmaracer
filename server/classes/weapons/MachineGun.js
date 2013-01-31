@@ -3,6 +3,7 @@ var Bullet = require('../PhysicsEngine/Bullet');
 var MachineGun = function() {
   this.name = 'machine gun';
   this.bullets = [];
+  this.lastShot = null;
 }
 
 MachineGun.prototype.step = function() {
@@ -29,14 +30,18 @@ MachineGun.prototype.step = function() {
 }
 
 MachineGun.prototype.shoot = function(playerCar) {
-  var distanceFromCar = playerCar.car.size.w / 2;
-  var pos = playerCar.car.getVector({
-    x: distanceFromCar,
-    y: distanceFromCar
-  });
-  var b = new Bullet(playerCar, pos, playerCar.car.getAngle());
-  b.accelerate(1);
-  this.bullets[b.id] = b;
+  var now = (new Date()).getTime();
+  if (now - this.lastShot > 32) {
+    this.lastShot = now;
+    var distanceFromCar = playerCar.car.size.w / 2;
+    var pos = playerCar.car.getVector({
+      x: distanceFromCar,
+      y: distanceFromCar
+    });
+    var b = new Bullet(playerCar, pos, playerCar.car.getAngle());
+    b.accelerate(1);
+    this.bullets[b.id] = b;
+  }
 }
 
 MachineGun.prototype.getGraphicBullets = function() {
