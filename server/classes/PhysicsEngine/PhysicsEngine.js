@@ -116,7 +116,7 @@ var PhysicsEngine = backbone.Model.extend({
       if (!_.isUndefined(type)){
         def.type = box2d.b2Body.b2_staticBody;
       }
-      def.angle = 0;
+      def.angle = _angle || 0;
       def.linearVelocity = new box2d.b2Vec2(0.0, 0.0);
 
       var fixtureDef = new box2d.b2FixtureDef();
