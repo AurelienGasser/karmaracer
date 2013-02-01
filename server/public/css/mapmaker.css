@@ -1,10 +1,43 @@
 #map-canvas{
-  position:absolute;
+  margin: auto;
+  /*position:absolute;*/
   width:1000px;
   height:800px;
-  right:50px;
-  top:0px;
+  border:1px solid blue;
+/*  right:50px;
+  top:0px;*/
   /*border:1px solid blue;*/
+}
+
+body{
+  text-align: center;
+}
+
+#fps{
+  position: fixed;
+  top:100px;
+  left: 0px;
+}
+
+
+#actions{
+  margin: 0px;
+  padding: 0px;
+}
+#actions li{
+  list-style: none;
+}
+
+#properties{
+  margin: 0px;
+  padding: 0px;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+}
+
+#properties li{
+  list-style: none;
 }
 
 body{

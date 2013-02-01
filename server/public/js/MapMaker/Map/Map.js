@@ -1,6 +1,5 @@
 function Map(selector) {
   this.canvas = $(selector)[0];
-
   this.connection = io.connect(serverHost);
 
   this.ctx = this.canvas.getContext("2d");
@@ -36,36 +35,66 @@ function Map(selector) {
   this.keyboardHandler = new KeyboardHandlerMap(this);
 
   this.scale = 1;
+  this.gScale = 16;
+
   this.translate = {
     "x": 0,
     "y": 0
   };
   this.realWorldSize = {
-    "w": 800,
-    "h": 500
+    "w": 64 * this.gScale,
+    "h": 32 * this.gScale
   };
   this.mapName = "map69";
-
+  this.mapBackgroundName = '';
+  this.itemsByName = {};
   this.zoomBox = null;
+  this.backgroundItems = [];
 
+  var w = this.realWorldSize.w;
+  var h = this.realWorldSize.h;
+
+  console.log(w, h);
+  $(this.canvas).css('width', w).css('height', h);
+}
+
+
+Map.prototype.startTick = function() {
   var now = new Date();
   this.tickStart = now.getTime();
   this.tickCount = 0;
   this.tick();
+};
 
-}
-
-
+Map.prototype.drawBackground = function() {
+  if(this.mapBackgroundName !== '') {
+    var bg = this.itemsByName[this.mapBackgroundName];
+    //    console.log(this.mapBackgroundName, 'bg', bg);
+    if(!_.isUndefined(bg)) {
+      this.ctx.fillStyle = bg.pattern;
+      this.ctx.fillRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
+    }
+  }
+};
 
 Map.prototype.canvasDraw = function() {
   this.ctx.canvas.width = $(this.canvas).width();
   this.ctx.canvas.height = $(this.canvas).height();
 
+  this.ctx.save();
+
+  this.ctx.scale(this.scale, this.scale);
+
+  this.drawBackground();
+
+  //draw world border
+  this.ctx.fillStyle = '00f';
+  this.ctx.strokeRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
+
+
   this.ctx.translate(this.translate.x, this.translate.y);
   this.ctx.scale(this.scale, this.scale);
 
-  this.ctx.fillStyle = '00f';
-  this.ctx.strokeRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
 
   for(var i in this.MapItems) {
     var item = this.MapItems[i];
@@ -76,6 +105,10 @@ Map.prototype.canvasDraw = function() {
   if(this.action == 'selectZone') {
     this.drawSelectedZone();
   }
+
+
+  this.ctx.restore();
+
 
   if(this.zoomBox != null) {
     this.scale = this.realWorldSize.w * this.scale / this.zoomBox.w;
@@ -121,7 +154,37 @@ Map.prototype.tick = function() {
   //   }
 };
 
-Map.prototype.addItem = function(itemName) {
+
+function Step(items, action, callback) {
+  var itemsLength = items.length;
+  var itemCount = 0;
+
+  function end() {
+    if(itemCount === itemsLength - 1) {
+      if(_.isFunction(callback)) {
+        return callback(null);
+      }
+    }
+    itemCount += 1;
+  }
+  for(var i = 0; i < items.length; i++) {
+    var item = items[i];
+    action(item, end);
+  };
+}
+
+Map.prototype.loadItems = function(items, callback) {
+  var that = this;
+  Step(items, function(item, end) {
+    that.addItem(item, function(err, jsonItem) {
+      that.itemsByName[jsonItem.name] = jsonItem;
+      return end();
+    });
+  }, callback);
+};
+
+Map.prototype.addItem = function(itemName, callback) {
+  var that = this;
   var items = $('#items');
   $.getJSON('/items/' + itemName + '.json', function(item) {
     //console.log(item);
@@ -131,9 +194,15 @@ Map.prototype.addItem = function(itemName) {
     itemLi.append(UL);
     var demoDiv = $('<li class="kr-mm-demo"/>');
     switch(item.patternType) {
+    case 'both':
+      var bgItem = {
+        'name': item.name,
+        'path': item.image.path
+      };
+      that.backgroundItems.push(bgItem);
+      //console.log(that.backgroundItems);
     case 'horizontal':
     case 'vertical':
-    case 'both':
       demoDiv.css('background-image', 'url("' + item.image.path + '")');
       break;
     default:
@@ -147,7 +216,13 @@ Map.prototype.addItem = function(itemName) {
     $('#' + itemID).click(function() {
       var now = new Date();
       var timestamp = now.getTime();
-      this.MapItems[timestamp] = new MapItem(item, this.ctx, timestamp);
-    }.bind(this));
-  }.bind(this))
+      that.MapItems[timestamp] = new MapItem(item, that.ctx, timestamp);
+    });
+
+
+    if(_.isFunction(callback)) {
+      var mapItem = new MapItem(item, that.ctx, item.name);
+      callback(null, mapItem);
+    }
+  });
 };

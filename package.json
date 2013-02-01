@@ -10,7 +10,8 @@
     "socket.io": ">= 0.8.5",
     "backbone": ">= 0.5.3",
     "box2dweb-commonjs": ">=2.1.0",
-    "underscore": ">= 1.2.0"
+    "underscore": ">= 1.2.0",
+    "walk" : ">=0.0.1"
   },
   "private": true
 }

@@ -1,8 +1,8 @@
 {
-  "name" : "map1",
+  "name" : "testarena",
   "backgroundImage" : "/sprites/grass3.jpg",
   "size" : {
-    "w" : 60,
+    "w" : 100,
     "h" : 23
   },
   "staticItems" : [

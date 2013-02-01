@@ -1,28 +1,25 @@
-var GameServer = function(app) {
-    var backbone = require('backbone');
-    var _ = require('underscore');
-    var fs = require('fs');
-    var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
-    var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
-    var BotManager = require('./BotManager');
-    var CarManager = require('./CarManager');
-    var WeaponsManager = require('./WeaponsManager');
-    var ScoreManager = require('./classes/ScoreManager');
+var _ = require('underscore');
+var fs = require('fs');
+var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
+var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
+var BotManager = require('./BotManager');
+var CarManager = require('./CarManager');
+var WeaponsManager = require('./WeaponsManager');
+var ScoreManager = require('./classes/ScoreManager');
 
+
+var GameServer = function(app, map) {
+    // var backbone = require('backbone');
     // LOAD THE MAP
     // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
-    var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/testarena.json'));
-
+    //var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/testarena.json'));
     this.app = app;
-    this.physicsEngine = new PhysicsEngine(map, this);
-    this.carManager = new CarManager(this);
-    this.clients = [];
-    this.botManager = new BotManager(this);
-    this.weaponsManager = new WeaponsManager(this);
-    this.scoreManager = new ScoreManager(this);
-    this.players = {};
+
+    this.initGameServer(map);
+
 
     var that = this;
+
 
     function play() {
       try {
@@ -35,11 +32,9 @@ var GameServer = function(app) {
       }
     }
 
-    // update world
-    setInterval(play, 20);
 
     function handleClientKeyboard() {
-      for (var i in that.players) {
+      for(var i in that.players) {
         var player = that.players[i];
         var client = player.client;
         for(var event in client.keyboard) {
@@ -47,33 +42,33 @@ var GameServer = function(app) {
           if(state) {
             switch(event) {
             case 'shoot':
-              if (!player.playerCar.dead) {
+              if(!player.playerCar.dead) {
                 player.playerCar.shoot();
               }
               break;
             case 'forward':
-              if (!player.playerCar.dead) {
+              if(!player.playerCar.dead) {
                 player.playerCar.car.accelerate(1.0)
               }
               break;
             case 'backward':
-              if (!player.playerCar.dead) {
+              if(!player.playerCar.dead) {
                 player.playerCar.car.accelerate(-1.0)
               }
               break;
             case 'left':
-              if (!player.playerCar.dead) {
+              if(!player.playerCar.dead) {
                 var a = -2.0;
-                if (client.keyboard['backward'] === true){
+                if(client.keyboard['backward'] === true) {
                   a = -a;
                 }
                 player.playerCar.car.turn(a);
               }
               break;
             case 'right':
-              if (!player.playerCar.dead) {
+              if(!player.playerCar.dead) {
                 var a = 2.0;
-                if (client.keyboard['backward'] === true){
+                if(client.keyboard['backward'] === true) {
                   a = -a;
                 }
                 player.playerCar.car.turn(a)
@@ -84,12 +79,27 @@ var GameServer = function(app) {
         }
       }
     }
+
+    // update world
+    setInterval(play, 20);
     setInterval(handleClientKeyboard, 10);
     return this;
   }
 
+GameServer.prototype.initGameServer = function(map) {
+  this.map = map;
+  this.physicsEngine = new PhysicsEngine(map, this);
+  this.carManager = new CarManager(this);
+  this.clients = [];
+  this.botManager = new BotManager(this);
+  this.weaponsManager = new WeaponsManager(this);
+  this.scoreManager = new ScoreManager(this);
+  this.players = {};
+
+};
+
 GameServer.prototype.broadcast = function(key, data) {
-  for (var i in this.players) {
+  for(var i in this.players) {
     this.players[i].client.emit(key, data);
   }
 }
@@ -102,15 +112,17 @@ GameServer.prototype.broadcastExplosion = function(point) {
 };
 
 GameServer.prototype.gameEnd = function(winnerCar) {
-  this.broadcast('game end', { winnerName: winnerCar.player.playerName });
+  this.broadcast('game end', {
+    winnerName: winnerCar.player.playerName
+  });
   var that = this;
   var players = this.players;
   this.players = [];
-  for (var i in players) {
+  for(var i in players) {
     players[i].client.keyboard = {};
   }
   setTimeout(function() {
-    for (var i in players) {
+    for(var i in players) {
       players[i].initCar(this);
     }
     this.players = players;
@@ -124,7 +136,7 @@ GameServer.prototype.addPlayer = function(player) {
 }
 
 GameServer.prototype.removePlayer = function(player) {
-  if (player.playerCar.car) {
+  if(player.playerCar.car) {
     player.playerCar.car.scheduleForDestroy();
   }
   player.connected = false;

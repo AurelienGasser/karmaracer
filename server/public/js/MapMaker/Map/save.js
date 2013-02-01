@@ -2,7 +2,7 @@ Map.prototype.saveMap = function() {
 
 
 
-
+  var that = this;
   var iWidth = this.realWorldSize.w;
   var iHeight = this.realWorldSize.h;
 
@@ -10,24 +10,26 @@ Map.prototype.saveMap = function() {
 
   var map = {
     "name": $('#map-name').val(),
-    //"backgroundImage": "/sprites/bg_grass1.png",
+    "backgroundImage": "/sprites/bg_grass1.png",
     "size": {
-      "w": 1024,
-      "h": 1024
+      "w": parseInt(iWidth / this.gScale, 10),
+      "h": iHeight / this.gScale
     }
   };
   map.staticItems = [];
   // map.backgroundImage = "/sprites/bg_grass1.png";
-
   $.each(this.MapItems, function(id, item) {
     var jsonItem = {};
     jsonItem.name = item.name;
-    jsonItem.position = item.position;
-    // {
-    //   x: item.position.y,
-    //   y: item.position.x
-    // }
-    jsonItem.size = item.size;
+    jsonItem.position = {
+      x: parseInt((item.position.x + item.size.w / 2) / that.gScale),
+      y: parseInt((item.position.y + item.size.h / 2) / that.gScale)
+    };
+    jsonItem.size = {
+      w: parseInt(item.size.w / that.gScale),
+      h: parseInt(item.size.h / that.gScale)
+    };
+    console.log(jsonItem);
     map.staticItems.push(jsonItem);
   });
   var mapString = JSON.stringify(map);

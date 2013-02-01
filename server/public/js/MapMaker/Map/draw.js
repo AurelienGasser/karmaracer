@@ -13,7 +13,7 @@ Map.prototype.drawItem = function(item) {
     this.ctx.shadowOffsetX = 0;
     this.ctx.shadowOffsetY = 0;
   }
-  if (item.patternType != "none") {
+  if (item.patternType !== "none") {
     this.ctx.fillStyle = item.pattern;
     this.ctx.save();
     this.ctx.translate(item.position.x, item.position.y);

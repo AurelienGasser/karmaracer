@@ -1,12 +1,15 @@
 html
   head
     title Karma Racer, baby!
-    link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet')          
+    link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet') 
+    script(type='text/javascript', src='/socket.io/socket.io.js')         
     script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
     script(type='text/javascript', src='/js/libs/underscore.js')
     script(type='text/javascript', src='/js/Karma.js')      
     script(type='text/javascript', src='/js/home.js')
     link(rel='stylesheet', href='/css/home.css')    
+    script(type='text/javascript')
+      var G_serverHost = '#{server}';    
   body
     div#left
       h1  Karma Racer

@@ -12,7 +12,7 @@ function MapItem(_jsonItem, _ctx, _id){
   this.image = new Image();
   this.image.src = this.jsonItem.image.path;
   this.image.crop = this.jsonItem.image.crop;
-  if (this.patternType != "none"){
+  if (this.patternType !== "none"){
     this.image.onload = function(){
       this.pattern = _ctx.createPattern(this.image, 'repeat');
     }.bind(this);

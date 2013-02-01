@@ -1,5 +1,16 @@
 (function() {
 
+
+  var host = window.location.hostname;// + ':' + window.location.port;
+  var connection = io.connect(host);
+
+
+  connection.emit('get_maps', function(err, maps) {
+    //console.log(maps);
+    addMaps(maps);
+  });
+
+
   function registerMaps() {
     $('ul#maps li a').on('click', function(e) {
       var p = $('#submit'); //[0].submit();
@@ -11,13 +22,14 @@
     });
   }
 
-  function addMaps() {
-    var o = [];
-    maps = ['map1'];
+  function addMaps(maps) {
 
+
+    var o = [];
+    //maps = ['map1'];
     for(var i = 0; i < maps.length; i++) {
       var m = maps[i];
-      o.push('<li><a href="game/',m,'" >', m, '</a></li>');
+      o.push('<li><a href="game.', m, '" >', m, '</a></li>');
     };
     $('ul#maps').html(o.join(''));
   }
@@ -50,10 +62,10 @@
   }
 
   $(function() {
-    if (Karma.get('playerName')) {
+    if(Karma.get('playerName')) {
       $('#playerName').val(Karma.get('playerName'));
     }
-    addMaps();
+
     registerMaps();
     addHelps();
   });

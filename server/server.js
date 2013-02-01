@@ -75,7 +75,8 @@ app.get('/mm', function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
 
-app.get('/game', function(req, res) {
+app.get('/game\.:map', function(req, res) {
+
   index(req, res, "index.jade", "CANVAS");
 });
 
@@ -89,12 +90,17 @@ app.get('/canvas', function(req, res) {
 });
 
 function index(req, res, view, draw_engine) {
-  res.render(view, {
+  var options = {
     layout: false,
     'title': 'Karma Racer',
     default_draw_engine: draw_engine,
-    server: 'http://' + serverHost + '/'
-  });
+    server: 'http://' + serverHost + '/',
+  };
+  var map = req.params.map;
+  if (!_.isUndefined(map)){
+    options['map'] = map;
+  }
+  res.render(view, options);
 }
 
 app.io = io;

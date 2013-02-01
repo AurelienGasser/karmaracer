@@ -130,7 +130,9 @@ Engine2DCanvas.prototype.drawWalls = function(ctx) {
     _.each(that.gameInstance.walls, function(c) {
       var staticItem = that.gameInstance.itemsInMap[c.name];
       if(!_.isUndefined(staticItem) && !_.isUndefined(staticItem.pattern)) {
+        // console.log(c.x, c.)
         if(staticItem.pattern === null) {
+
           ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
         } else {
           ctx.fillStyle = staticItem.pattern;
