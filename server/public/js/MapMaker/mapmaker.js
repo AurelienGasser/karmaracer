@@ -1,21 +1,39 @@
 function addProperties(map) {
-  var properties = $('#properties');
-  addName(map, properties);
-  addBackgroundItems(map, properties);
+
+  setNameEvents(map);
+  setBackgroundItemsEvents(map);
+  setSizeEvents(map);
 }
 
-function addName(map, container) {
-  var inputName = $('<input id="map-name" placeholder="map name"/>');
-  container.children().first().before(inputName);
-  inputName.wrap('<li/>');
+function setNameEvents(map) {
+  var inputName = $('#map-name');
   inputName.keyup(function() {
     map.mapName = inputName.val();
+    map.loadMap(map.mapName);
   });
   inputName.val(map.mapName);
 }
 
-function addBackgroundItems(map, container) {
-  var inputName = $('<input id="map-bg" placeholder="background" list="bg-list"/>');
+
+function setSizeEvents(map) {
+  var widthDOM = $('#map-width');
+  var heightDOM = $('#map-height');
+
+  function updateSizeFromDOM() {
+    var w = parseInt(widthDOM.val(), 10) * map.gScale;
+    var h = parseInt(heightDOM.val(), 10) * map.gScale;
+    map.realWorldSize.w = w;
+    map.realWorldSize.h = h;
+    console.log('update size', w, h);
+  }
+
+  widthDOM.change(updateSizeFromDOM);
+  heightDOM.change(updateSizeFromDOM);
+}
+
+
+function setBackgroundItemsEvents(map) {
+  var inputName = $('#map-bg');
 
   var o = [];
   o.push('<datalist id="bg-list">');
@@ -27,8 +45,6 @@ function addBackgroundItems(map, container) {
   };
   o.push('</datalist>');
 
-  container.children().first().before(inputName);
-  inputName.wrap('<li/>');
   inputName.after(o.join(''));
   inputName.keyup(function() {
     map.mapBackgroundName = inputName.val();
@@ -39,13 +55,32 @@ function addBackgroundItems(map, container) {
 
 function start() {
 
-  var map = new Map("#map-canvas");
+  var mapID = "map-canvas";
+  var map = new Map('#' + mapID);
 
-  var items = ['wall', 'stone', 'grass', 'stone_l', 'stone_r', 'stone_t', 'stone_b', 'tree1'];
-  map.loadItems(items, function(err) {
-    addProperties(map);
-    map.startTick();
-  });
+  //var items = ['wall', 'stone', 'grass', 'grass3', 'stone_l', 'stone_r', 'stone_t', 'stone_b', 'tree1'];
+  map.connection.emit('get_items', function(err, itemsByName) {
+
+    console.log(itemsByName);
+
+    var items = [];
+    for(var itemName in itemsByName) {
+      items.push(itemsByName[itemName]);
+    }
+    map.loadItems(items, function(err) {
+      console.log('items loaded');
+      map.loadMap(map.mapName, function(err) {
+        console.log('MAP loaded', map.MapItems);
+        addProperties(map);
+        //map.startTick();
+        map.svgInit(mapID);
+      });
+
+    });
+
+
+  })
+
 
   $("#save-canvas").click(function() {
     var img = Canvas2Image.saveAsPNG(map.canvas, true);

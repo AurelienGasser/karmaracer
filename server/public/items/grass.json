@@ -2,7 +2,7 @@
   "name" : "grass",
   "image" : {
     "path" : "/sprites/bg_grass1.png",
-    "size" : 256,
+    "size" : 8,
     "crop" : {
       "x" : 64,
       "y" : 64,

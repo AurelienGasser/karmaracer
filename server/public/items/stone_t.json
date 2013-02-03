@@ -2,12 +2,12 @@
   "name" : "stone_t",
   "image" : {
     "path" : "/sprites/stone_to_grass_top.png",
-    "size" : 40,
+    "size" : 8,
     "crop" : {
       "x" : 0,
       "y" : 0,
-      "w" : 40,
-      "h" : 40
+      "w" : 8,
+      "h" : 4
     }
   },
   "patternType" : "horizontal"

@@ -16,6 +16,22 @@ var GameServerSocket = function(mapManager) {
       });
 
 
+      client.on('get_items', function(callback) {
+        //console.log(that.mapManager.itemsByName);
+        return callback(null, that.mapManager.itemsByName);
+      });
+
+
+      client.on('get_map', function(mapName, callback) {
+        console.log('get map', mapName)
+
+        var map = that.mapManager.maps[mapName];
+        if (_.isUndefined(map)){
+          return callback({'msg' : 'map do not exists : ' +  mapName});
+        }
+        return callback(null, map);
+      });
+
       client.on('enter_map', function(mapName) {
         console.log('enter in', mapName)
         var gameServer = that.mapManager.gameServers[mapName];

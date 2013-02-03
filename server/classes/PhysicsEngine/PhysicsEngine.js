@@ -83,7 +83,7 @@ var PhysicsEngine = backbone.Model.extend({
       },
       "staticItems": this.getShareStaticItems(),
       "itemsInMap": this.itemsInMap,
-      "backgroundImage": this.map.backgroundImage
+      "background": this.map.background
     };
   },
   getShareStaticItems: function() {

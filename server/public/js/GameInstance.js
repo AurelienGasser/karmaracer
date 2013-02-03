@@ -47,7 +47,7 @@ GameInstance.prototype.loadImages = function(callback) {
 
   // create background pattern
   var bgImage = new Image();
-  bgImage.src = that.worldInfo.backgroundImage;
+  bgImage.src = that.worldInfo.background.path;
   var game = this;
   bgImage.onload = function() {
     var bgPattern = game.drawEngine.ctx.createPattern(this, 'repeat');

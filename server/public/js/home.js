@@ -1,7 +1,7 @@
 (function() {
 
 
-  var host = window.location.hostname;// + ':' + window.location.port;
+  var host = window.location.hostname;
   var connection = io.connect(host);
 
 

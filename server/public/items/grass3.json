@@ -1,0 +1,14 @@
+{
+  "name" : "grass3",
+  "image" : {
+    "path" : "/sprites/grass3.png",
+    "size" : 204,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 204,
+      "h" : 204
+    }
+  },
+  "patternType" : "both"
+}

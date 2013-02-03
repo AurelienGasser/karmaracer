@@ -6,7 +6,7 @@ var MapManger = function(app, callback) {
     this.app = app;
     this.gameServers = {};
     this.maps = {};
-
+    this.itemsByName = {};
 
     var that = this;
 
@@ -19,6 +19,29 @@ var MapManger = function(app, callback) {
       gameServer.initGameServer(map);
       console.log('update game ', map.name);
     };
+
+    function loadItems(callback) {
+      //that.itemsByName = {};
+      getJSONSForDirectory('./public/items/', function(item) {
+        //console.log(item);
+        that.itemsByName[item.name] = item;
+      }, callback);
+    }
+
+
+    function getJSONSForDirectory(path, action, callback) {
+      brosweFilesRec(path, function(err, files) {
+        for(var i = 0; i < files.length; i++) {
+          var fName = files[i];
+          var content = fs.readFileSync(__dirname + '/' + fName);
+          var item = JSON.parse(content);
+          action(item);
+        };
+        if(_.isFunction(callback)) {
+          return callback(null);
+        }
+      });
+    }
 
 
     function brosweFilesRec(path, callback) {
@@ -72,15 +95,28 @@ var MapManger = function(app, callback) {
 
     var res = {
       'createOrUpdateMap': createOrUpdateMap,
-      'app' : that.app,
-      'gameServers' : that.gameServers,
-      'maps' : maps
+      'app': that.app,
+      'gameServers': that.gameServers,
+      'maps': that.maps,
+      'itemsByName': that.itemsByName
     };
 
 
-    loadMaps(function(err) {
-      that.gameServerSocket = new(require('./GameServerSocket'))(res);
-    });
+    function load(callback) {
+      loadMaps(function(err) {
+        console.log('maps loaded')
+        that.gameServerSocket = new(require('./GameServerSocket'))(res);
+        loadItems(function(err) {
+          console.log('items loaded', that.itemsByName);
+          if(_.isFunction(callback)) {
+            return callback(null, that);
+          }
+        })
+      });
+    }
+
+    load(callback);
+
 
     return res;
   };

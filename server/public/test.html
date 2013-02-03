@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+<!-- http://pouyaair:8080/sprites/bg_stone1.png -->
+  
+
+<svg width="1024" height="512" version="1.1" baseProfile="full" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events" id="svg-map"><defs><pattern id="pgrass" width="8" height="8" patternUnits="userSpaceOnUse"><image x="0" y="0" width="8" height="8" xlink:href="http://pouyaair:8080/sprites/bg_grass1.png"/></pattern><pattern id="pstone_r" width="40" height="40" patternUnits="userSpaceOnUse"><image x="0" y="0" width="40" height="40" xlink:href="http://pouyaair:8080/sprites/stone_to_grass_right.png"/></pattern><pattern id="pstone_l" width="40" height="40" patternUnits="userSpaceOnUse"><image x="0" y="0" width="40" height="40" xlink:href="http://pouyaair:8080/sprites/stone_to_grass_left.png"/></pattern><pattern id="pstone_b" width="40" height="40" patternUnits="userSpaceOnUse"><image x="0" y="0" width="40" height="40" xlink:href="http://pouyaair:8080/sprites/stone_to_grass_bottom.png"/></pattern><pattern id="pstone" width="8" height="8" patternUnits="userSpaceOnUse"><image x="0" y="0" width="8" height="8" xlink:href="http://pouyaair:8080/sprites/bg_stone1.png"/></pattern><pattern id="pgrass3" width="8" height="8" patternUnits="userSpaceOnUse"><image x="0" y="0" width="8" height="8" xlink:href="http://pouyaair:8080/sprites/grass3.jpg"/></pattern><pattern id="pstone_t" width="8" height="8" patternUnits="userSpaceOnUse"><image x="0" y="0" width="8" height="8" xlink:href="http://pouyaair:8080/sprites/stone_to_grass_top.png"/></pattern><pattern id="ptree1" width="256" height="256" patternUnits="userSpaceOnUse"><image x="0" y="0" width="256" height="256" xlink:href="http://pouyaair:8080/sprites/tree1.png"/></pattern><pattern id="pwall" width="8" height="8" patternUnits="userSpaceOnUse"><image x="0" y="0" width="8" height="8" xlink:href="http://pouyaair:8080/sprites/wall.png"/></pattern></defs><g><rect width="176" height="176" x="0" y="0" fill="url(#pstone)" stroke="#000"/><rect width="128" height="112" x="0" y="0" fill="url(#pgrass3)" stroke="#000"/><rect width="304" height="288" x="0" y="0" fill="url(#pstone)" stroke="#000"/></g></svg>
+
+<!-- http://www.boogdesign.com/examples/svg/daisy-grass-repeating-background.jpg -->
+<svg version="1.1"
+     baseProfile="full"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:ev="http://www.w3.org/2001/xml-events">
+    <title>Text Pattern Fill Example</title>
+    <defs>
+        <pattern id="img1" patternUnits="userSpaceOnUse" width="8" height="8">
+            <image xlink:href="http://pouyaair:8080/sprites/bg_stone1.png" x="0" y="0" width="8" height="8" />
+            <!-- <image xlink:href="http://www.boogdesign.com/examples/svg/daisy-grass-repeating-background.jpg " x="0" y="0" width="600" height="450" /> -->
+            <!-- Image from http://silviahartmann.com/background-tile/6-grass-meadow-tile.php-->
+        </pattern>
+
+        <pattern id="pstone" patternUnits="userSpaceOnUse" width="8" height="8">
+            <image xlink:href="http://pouyaair:8080/sprites/bg_stone1.png" x="0" y="0" width="8" height="8" />
+            <!-- <image xlink:href="http://www.boogdesign.com/examples/svg/daisy-grass-repeating-background.jpg " x="0" y="0" width="600" height="450" /> -->
+            <!-- Image from http://silviahartmann.com/background-tile/6-grass-meadow-tile.php-->
+        </pattern>
+
+
+
+    </defs>
+<!-- <rect width="200" height="300" x="0" y="0" stroke='#000' fill='url(#img1)'/> -->
+<g>
+<rect width="300" height="300" x="0" y="0" fill="url(#pstone)" stroke="#000" transform="translate(0, 0)"/>
+</g>
+<!--     <path d="M5,50
+             l0,100 l100,0 l0,-100 l-100,0
+             M215,100
+             a50,50 0 1 1 -100,0 50,50 0 1 1 100,0
+             M265,50
+             l50,100 l-100,0 l50,-100
+             z"
+          fill="url(#img1)" />
+ -->        
+</svg>
+
+
+<!-- 
+<svg id="svg-map" height='600px' width="100%" 
+
+
+version="1.1"
+     baseProfile="full"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink"
+     xmlns:ev="http://www.w3.org/2001/xml-events"
+
+><defs>
+
+<pattern id="pstone" width="40" height="40" patternUnits="userSpaceOnUse"><image x="0" y="0" width="40" height="40" xlink:href="http://pouyaair:8080/sprites/bg_stone1.png"/></pattern>
+
+</defs>
+
+
+  <image width="304" height="288" x="288" y="240" xlink:href="http://pouyaair:8080/sprites/bg_stone1.png"/>
+  <image width="304" height="288" x="0" y="0" fill='url(#pstone)'/>
+<path d="M5,50
+             l0,100 l100,0 l0,-100 l-100,0
+             M215,100
+             a50,50 0 1 1 -100,0 50,50 0 1 1 100,0
+             M265,50
+             l50,100 l-100,0 l50,-100
+             z"
+          fill="url(#pstone)" />
+
+</svg> -->
+</body>
+</html>

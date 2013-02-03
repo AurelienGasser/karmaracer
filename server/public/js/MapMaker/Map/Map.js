@@ -1,11 +1,11 @@
 function Map(selector) {
-  this.canvas = $(selector)[0];
-  this.connection = io.connect(serverHost);
 
-  this.ctx = this.canvas.getContext("2d");
+  var host = window.location.hostname;
+  this.connection = io.connect(host);
+
+
   this.MapItems = {};
   this.selectedItems = [];
-
   this.canvasMousePosition = {
     "x": 0,
     "y": 0
@@ -18,9 +18,9 @@ function Map(selector) {
     "x": 0,
     "y": 0
   };
-  this.canvas.onmousemove = this.mouseMove.bind(this);
-  this.canvas.onmousedown = this.mouseDown.bind(this);
-  this.canvas.onmouseup = this.mouseUp.bind(this);
+
+  this.idCount = 0;
+
 
   this.keyPress = {
     shift: false
@@ -45,18 +45,59 @@ function Map(selector) {
     "w": 64 * this.gScale,
     "h": 32 * this.gScale
   };
-  this.mapName = "map69";
+  this.mapName = G_mapName;
   this.mapBackgroundName = '';
   this.itemsByName = {};
   this.zoomBox = null;
   this.backgroundItems = [];
 
-  var w = this.realWorldSize.w;
-  var h = this.realWorldSize.h;
+  $(selector).css('width', this.realWorldSize.w).css('height', this.realWorldSize.h);
+  
 
-  console.log(w, h);
-  $(this.canvas).css('width', w).css('height', h);
+  this.itemsGlow = {};
+  var that = this;
+
+
+
 }
+
+Map.prototype.loadMap = function(mapName, callback) {
+  var that = this;
+  //console.log('loading map', mapName)
+  that.connection.emit('get_map', mapName, function(err, map) {
+    //console.log('get map', that.mapName);
+    if(err !== null) {
+      console.log('no map with name', mapName);
+      return callback({
+        'msg': 'no map with name',
+        'type': 'warn'
+      });
+    }
+    //console.log('map ok', map);
+    that.mapBackgroundName = map.background.name;
+
+    for(var i = 0; i < map.staticItems.length; i++) {
+      var sItem = map.staticItems[i];
+      var sItemFull = that.itemsByName[sItem.name];
+
+      var mapItem = that.createMapItem(sItemFull);
+      mapItem.position.x = sItem.position.x * that.gScale;
+      mapItem.position.y = sItem.position.y * that.gScale;
+      mapItem.size.w = sItem.size.w * that.gScale;
+      mapItem.size.h = sItem.size.h * that.gScale;
+      //console.log('create', mapItem);      
+    };
+
+    // if (!_.isUndefined(that.svgTag)){
+    //   that.svgLoad();
+    // }
+
+    if(_.isFunction(callback)) {
+      return callback(null);
+    }
+
+  });
+};
 
 
 Map.prototype.startTick = function() {
@@ -66,72 +107,11 @@ Map.prototype.startTick = function() {
   this.tick();
 };
 
-Map.prototype.drawBackground = function() {
-  if(this.mapBackgroundName !== '') {
-    var bg = this.itemsByName[this.mapBackgroundName];
-    //    console.log(this.mapBackgroundName, 'bg', bg);
-    if(!_.isUndefined(bg)) {
-      this.ctx.fillStyle = bg.pattern;
-      this.ctx.fillRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
-    }
-  }
-};
-
-Map.prototype.canvasDraw = function() {
-  this.ctx.canvas.width = $(this.canvas).width();
-  this.ctx.canvas.height = $(this.canvas).height();
-
-  this.ctx.save();
-
-  this.ctx.scale(this.scale, this.scale);
-
-  this.drawBackground();
-
-  //draw world border
-  this.ctx.fillStyle = '00f';
-  this.ctx.strokeRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
 
 
-  this.ctx.translate(this.translate.x, this.translate.y);
-  this.ctx.scale(this.scale, this.scale);
-
-
-  for(var i in this.MapItems) {
-    var item = this.MapItems[i];
-    this.drawItem(item);
-  }
-
-  // draw selected Zone
-  if(this.action == 'selectZone') {
-    this.drawSelectedZone();
-  }
-
-
-  this.ctx.restore();
-
-
-  if(this.zoomBox != null) {
-    this.scale = this.realWorldSize.w * this.scale / this.zoomBox.w;
-    this.translate.x = -this.zoomBox.x * this.scale;
-    this.translate.y = -this.zoomBox.y * this.scale;
-    this.zoomBox = null;
-  }
-};
-
-Map.prototype.tick = function() {
-  this.tickCount++;
+Map.prototype.outputDebug  = function() {
+  
   var debugoutput = [];
-  var now = new Date();
-  var tickDiff = now.getTime() - this.tickStart;
-  //console.log(tickDiff);
-  if(tickDiff > 1000) {
-    $('#fps').html('fps:' + this.tickCount);
-    this.tickCount = 0;
-    this.tickStart = now.getTime();
-  }
-  requestAnimFrame(this.tick.bind(this));
-  this.canvasDraw();
-
   debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y, '</li>');
   debugoutput.push('<li>Canvas Down Pos : ', this.mouseDownPosition.x, ', ', this.mouseDownPosition.y, '</li>');
   debugoutput.push('<li>Translate Down Pos : ', this.translateMousePosition.x, ', ', this.translateMousePosition.y, '</li>');
@@ -149,7 +129,28 @@ Map.prototype.tick = function() {
   debugoutput.push('<li>Z (zoom to selected items)</li>');
 
   $("#canvas-debug").html(debugoutput.join(''));
-  //   if (this.action == 'translate'){
+};
+
+Map.prototype.tick = function() {
+  this.tickCount++;
+  
+  var now = new Date();
+  var tickDiff = now.getTime() - this.tickStart;
+  //console.log(tickDiff);
+  if(tickDiff > 1000) {
+    $('#fps').html('fps:' + this.tickCount);
+    this.tickCount = 0;
+    this.tickStart = now.getTime();
+  }
+  requestAnimFrame(this.tick.bind(this));
+  //this.canvasDraw();
+  //this.svgDraw();
+
+
+  this.outputDebug();
+  //   if (this.action =
+  //   
+  //   = 'translate'){
   //    this.translateSelectedItemsUsingMousePosition();
   //   }
 };
@@ -160,8 +161,10 @@ function Step(items, action, callback) {
   var itemCount = 0;
 
   function end() {
+    //console.log(itemCount, itemsLength - 1);
     if(itemCount === itemsLength - 1) {
       if(_.isFunction(callback)) {
+        console.log('step end');
         return callback(null);
       }
     }
@@ -175,54 +178,83 @@ function Step(items, action, callback) {
 
 Map.prototype.loadItems = function(items, callback) {
   var that = this;
-  Step(items, function(item, end) {
-    that.addItem(item, function(err, jsonItem) {
-      that.itemsByName[jsonItem.name] = jsonItem;
+  Step(items, function(itemName, end) {
+    that.loadItemFromServer(itemName, function(err, mapItem) {
+
       return end();
     });
   }, callback);
 };
 
-Map.prototype.addItem = function(itemName, callback) {
+
+
+Map.prototype.addMapItemInDoForSelection = function(items, item) {
+
+
   var that = this;
-  var items = $('#items');
-  $.getJSON('/items/' + itemName + '.json', function(item) {
-    //console.log(item);
-    var itemID = 'item-' + item.name;
-    var itemLi = $('<li class="item" id="' + itemID + '"></li>');
-    var UL = $('<ul class="item-properties"/>');
-    itemLi.append(UL);
-    var demoDiv = $('<li class="kr-mm-demo"/>');
-    switch(item.patternType) {
-    case 'both':
-      var bgItem = {
-        'name': item.name,
-        'path': item.image.path
-      };
-      that.backgroundItems.push(bgItem);
-      //console.log(that.backgroundItems);
-    case 'horizontal':
-    case 'vertical':
-      demoDiv.css('background-image', 'url("' + item.image.path + '")');
-      break;
-    default:
-      demoDiv.append('<img class="kr-item-demo" src="' + item.image.path + '"/>');
-    }
-    demoDiv.addClass('kr-mm-demo-' + item.patternType);
-    UL.append('<li class="kr-pp-item-name">' + item.name + '</li>');
+  var itemID = 'item-' + item.name;
+  var itemLi = $('<li class="item" id="' + itemID + '"></li>');
+  var UL = $('<ul class="item-properties"/>');
+  itemLi.append(UL);
+  var demoDiv = $('<li class="kr-mm-demo"/>');
+  switch(item.patternType) {
+  case 'both':
+    var bgItem = {
+      'name': item.name,
+      'path': item.image.src
+    };
+    that.backgroundItems.push(bgItem);
+    //console.log(that.backgroundItems);
+  case 'horizontal':
+  case 'vertical':
+    demoDiv.css('background-image', 'url("' + item.image.src + '")');
+    break;
+  default:
+    demoDiv.append('<img class="kr-item-demo" src="' + item.image.src + '"/>');
+  }
+  demoDiv.addClass('kr-mm-demo-' + item.patternType);
+  UL.append('<li class="kr-pp-item-name">' + item.name + '</li>');
 
-    UL.append(demoDiv);
-    items.append(itemLi);
-    $('#' + itemID).click(function() {
-      var now = new Date();
-      var timestamp = now.getTime();
-      that.MapItems[timestamp] = new MapItem(item, that.ctx, timestamp);
-    });
+  UL.append(demoDiv);
+  items.append(itemLi);
 
-
-    if(_.isFunction(callback)) {
-      var mapItem = new MapItem(item, that.ctx, item.name);
-      callback(null, mapItem);
-    }
+  $('#' + itemID).click(function() {
+    var sourceMapItem = that.itemsByName[item.name];
+    console.log('add map item', sourceMapItem);
+    var mapItem = that.createMapItem(sourceMapItem);
+    mapItem.size.w = sourceMapItem.size.w * that.gScale;
+    mapItem.size.h = sourceMapItem.size.h * that.gScale;
+    that.svgDrawItem(mapItem);
   });
+
+};
+
+Map.prototype.createMapItem = function(sourceMapItem) {
+  var that = this;
+  // var now = new Date();
+  var timestamp = that.idCount++;
+  var mapItem = new MapItem(sourceMapItem, that.ctx, timestamp);
+  mapItem.image = sourceMapItem.image;
+  mapItem.pattern = sourceMapItem.pattern;
+  that.MapItems[timestamp] = mapItem;
+  // console.log('add item', timestamp);
+  return mapItem;
+};
+
+Map.prototype.loadItemFromServer = function(item, callback) {
+  var that = this;
+  var itemsDOMContainer = $('#items');
+  //$.getJSON('/items/' + itemName + '.json', function(item) {
+  if(_.isFunction(callback)) {
+    var mapItem = new MapItem(item, that.ctx, item.name);
+
+    mapItem.initImage(function(err, mapItemWithImage) {
+      that.addMapItemInDoForSelection(itemsDOMContainer, mapItemWithImage);
+      that.itemsByName[mapItem.name] = mapItemWithImage;
+//      console.log('item loaded', mapItemWithImage.name);
+      return callback(null, mapItemWithImage);
+    });
+  }
+
+  // });
 };

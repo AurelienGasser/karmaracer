@@ -71,7 +71,7 @@ app.configure(function(callback) {
 
 // io.set('log level', 0);
 // io.set('transports', ['websocket']);
-app.get('/mm', function(req, res) {
+app.get('/mm\.:map', function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
 

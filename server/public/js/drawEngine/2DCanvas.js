@@ -6,7 +6,7 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.loaded();
   this.timer = new Date().getTime();
   this.frames = 0;
-  $('#debug').append('<div id="fps" class="info"/>');
+  //$('#debug').append('<div id="fps" class="info"/>');
   return this;
 }
 
@@ -132,7 +132,6 @@ Engine2DCanvas.prototype.drawWalls = function(ctx) {
       if(!_.isUndefined(staticItem) && !_.isUndefined(staticItem.pattern)) {
         // console.log(c.x, c.)
         if(staticItem.pattern === null) {
-
           ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
         } else {
           ctx.fillStyle = staticItem.pattern;

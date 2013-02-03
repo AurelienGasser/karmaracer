@@ -25,5 +25,8 @@
       "h": 256
     }
   }],
-  "backgroundImage": "/sprites/bg_grass1.png"
+  "background": {
+    "image" :"/sprites/bg_grass1.png",
+    "name" : "grass"
+  }
 }

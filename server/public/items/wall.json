@@ -2,7 +2,7 @@
   "name" : "wall",
   "image" : {
     "path" : "/sprites/wall.png",
-    "size" : 128,
+    "size" : 8,
     "crop" : {
       "x" : 0,
       "y" : 0,

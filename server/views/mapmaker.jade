@@ -1,14 +1,17 @@
+!!! strict
 html
   head
     title Karma Racer, Map Maker
     link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet')
     script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type='text/javascript', src='/js/libs/raphaeljs.js')
 
     script(type='text/javascript', src='/js/libs/underscore.js')
     script(type='text/javascript', src='/js/libs/jquery-1.6.4.min.js')
     script(type='text/javascript', src='/js/libs/jquery-ui-1.8.16.custom.min.js')
+
     script(type='text/javascript')
-      var serverHost = '#{server}';
+      var G_mapName = '#{map}'
     //- script(type='text/javascript', src='/js/libs/mobile_compatibility.js')
     script(type='text/javascript', src='/js/libs/canvas2image.js')
     script(type='text/javascript', src='/js/drawEngine/drawEngineFactory.js')
@@ -17,19 +20,28 @@ html
     script(type='text/javascript', src='/js/MapMaker/MapItem.js')
     script(type='text/javascript', src='/js/MapMaker/Map/Map.js')
     script(type='text/javascript', src='/js/MapMaker/Map/mouse.js')
-    script(type='text/javascript', src='/js/MapMaker/Map/draw.js')
+    script(type='text/javascript', src='/js/MapMaker/Map/drawCanvas.js')
+    script(type='text/javascript', src='/js/MapMaker/Map/drawSvg.js')
     script(type='text/javascript', src='/js/MapMaker/Map/keyboard.js')
     script(type='text/javascript', src='/js/MapMaker/Map/select.js')
     script(type='text/javascript', src='/js/MapMaker/Map/save.js')
     script(type='text/javascript', src='/js/MapMaker/Map/actions.js')
     link(rel='stylesheet', href='/css/mapmaker.css')
   body
-    canvas#map-canvas
+    div#map-canvas
     div#fps
     ul#items
     ul#properties
         li
+            input#map-name(type='text', name='map-name', placeholder='map name')
+        li
+            input#map-bg(type='text',name='map-bg', placeholder='background',list='bg-list')
+        li
+            input#map-width(type='number',name='map-width', min='0', max='128', placeholder='width',value='64')
+        li
+            input#map-height(type='number', name='map-height', min='0', max='128', placeholder='height',value='32')
+        li
             ul#actions
                 li
-                    button#save-map-node Save Map
+                button#save-map-node Save Map
     ul#canvas-debug    

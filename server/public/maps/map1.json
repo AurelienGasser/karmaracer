@@ -1,6 +1,9 @@
 {
   "name" : "map1",
-  "backgroundImage" : "/sprites/grass3.jpg",
+  "background" : {
+    "path" : "/sprites/grass3.jpg",
+    "name" : "grass3"
+    },
   "size" : {
     "w" : 1024,
     "h" : 1024

@@ -5,7 +5,8 @@ $(window).on('beforeunload', function() {
 var connection;
 
 function SocketManager(serverHost, gameInstance, onInitCallback) {
-  connection = io.connect(serverHost);
+  var host = window.location.hostname;
+  connection = io.connect(host);
 
   this.gameInstance = gameInstance;
   this.init_done = false;
@@ -32,7 +33,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback) {
   $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
 
   connection.on('connect', function(data) {
-    //console.log('client connected', G_mapName);
+    console.log('client connected', G_mapName);
     if(!_.isUndefined(G_mapName)) {
       connection.emit('enter_map', G_mapName);
     }
@@ -41,11 +42,12 @@ function SocketManager(serverHost, gameInstance, onInitCallback) {
 
   connection.on('init', function(worldInfo) {
     onInitCallback(null, worldInfo);
+    console.log('worldInfo', worldInfo);
     if(!Karma.get('playerName') || Karma.get('playerName').length === 0) {
       Karma.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
     }
     $('#player_name').val(Karma.get('playerName'));
-    connection.emit('init_done', {
+    connection.emit('init_done', {      
       playerName: Karma.get('playerName')
     });
     this.init_done = true;
@@ -86,6 +88,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback) {
   })
 
   connection.on('objects', function(objects) {
+    //console.log(objects);
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
     gameInstance.bullets = objects.projectiles.bullets;

@@ -6,18 +6,24 @@ Map.prototype.saveMap = function() {
   var iWidth = this.realWorldSize.w;
   var iHeight = this.realWorldSize.h;
 
-  this.canvas.toDataURL("image/png");
+  // this.canvas.toDataURL("image/png");
 
   var map = {
     "name": $('#map-name').val(),
-    "backgroundImage": "/sprites/bg_grass1.png",
     "size": {
       "w": parseInt(iWidth / this.gScale, 10),
       "h": iHeight / this.gScale
     }
   };
+  var path = this.itemsByName[this.mapBackgroundName].path;
+  console.log(this.itemsByName[this.mapBackgroundName]);
+  if(!_.isUndefined(path)) {
+    map['background'] = {
+      'path': path,
+      'name': this.mapBackgroundName
+    };
+  }
   map.staticItems = [];
-  // map.backgroundImage = "/sprites/bg_grass1.png";
   $.each(this.MapItems, function(id, item) {
     var jsonItem = {};
     jsonItem.name = item.name;
