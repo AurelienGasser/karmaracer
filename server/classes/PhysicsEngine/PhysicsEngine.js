@@ -44,16 +44,19 @@ var PhysicsEngine = backbone.Model.extend({
     }
 
     listener.BeginContact = function(contact) {
-      var o1 = contact.GetFixtureA().GetBody().GetUserData();
-      var o2 = contact.GetFixtureB().GetBody().GetUserData();
+      var fa = contact.GetFixtureA();
+      var fb = contact.GetFixtureB();
+      var o1 = fa.GetBody().GetUserData();
+      var o2 = fb.GetBody().GetUserData();
       swap(o1, o2, function(o1, o2){
-        if (o1.name === 'bullet' && o2.name !== 'bullet'
+        if(fa.IsSensor() && o2.name =='wall') {
+          console.log('sensor !')
+        } else if (o1.name === 'bullet' && o2.name !== 'bullet'
          || o1.name === 'rocket' && o2.name !== 'rocket') {
            if (o1.playerCar != o2.playerCar) {
              o1.explode(contact.GetFixtureA().GetBody().GetPosition());
            }
-        }
-        if(o2.name === 'car' && (o1.name === 'bullet' || o1.name == 'rocket')) {
+        } else if(o2.name === 'car' && (o1.name === 'bullet' || o1.name == 'rocket')) {
           if (o1.playerCar != o2.playerCar) {
             gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
           }

@@ -1,6 +1,7 @@
 var backbone = require('backbone');
 var _ = require('underscore');
 var sys = require("sys");
+var box2d = require('box2dweb-commonjs');
 
 var Car = require("./PhysicsItem").extend({
   startPosition: {
@@ -24,6 +25,7 @@ var Car = require("./PhysicsItem").extend({
     this.name = 'car';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.tireResistance = 1.8;
+    this.createSensor();
   },
   accelerationMax: 50,
   accelerate: function(ac) {
@@ -46,6 +48,23 @@ var Car = require("./PhysicsItem").extend({
    var res =  this.constructor.__super__.getShared.bind(this)();
    res.playerName = this.playerCar.playerName;
    return res;
+  },
+  createSensor: function() {
+    var fixtureDef = new box2d.b2FixtureDef();
+    fixtureDef.density = 0;
+    fixtureDef.friction = 0;
+    fixtureDef.restitution = 0;
+    fixtureDef.shape = new box2d.b2PolygonShape();
+    var size = 0.2;
+    var vertices = [
+        new box2d.b2Vec2(2 - size, 0 - size)
+      , new box2d.b2Vec2(2 + size, 0 - size)
+      , new box2d.b2Vec2(2 + size, 0 + size)
+      , new box2d.b2Vec2(2 - size, 0 + size)
+    ];
+    fixtureDef.shape.SetAsVector(vertices, vertices.length);
+    fixtureDef.isSensor = true;
+    this.body.CreateFixture(fixtureDef);
   }
 });
 
