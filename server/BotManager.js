@@ -10,9 +10,7 @@ var BotManager = function(gameServer) {
 BotManager.prototype.tick = function() {
   for (var i in this.bots) {
     var bot = this.bots[i];
-    if (bot.playerCar.car) {
-      bot.playerCar.car.accelerate(0.1);
-    }
+    bot.tick();
   }
 }
 

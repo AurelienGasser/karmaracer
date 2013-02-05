@@ -55,16 +55,21 @@ var Car = require("./PhysicsItem").extend({
     fixtureDef.friction = 0;
     fixtureDef.restitution = 0;
     fixtureDef.shape = new box2d.b2PolygonShape();
-    var size = 0.2;
+    var h = 0.2;
+    var w = 2;
     var vertices = [
-        new box2d.b2Vec2(2 - size, 0 - size)
-      , new box2d.b2Vec2(2 + size, 0 - size)
-      , new box2d.b2Vec2(2 + size, 0 + size)
-      , new box2d.b2Vec2(2 - size, 0 + size)
+        new box2d.b2Vec2(0, -h / 2)
+      , new box2d.b2Vec2(w, -h / 2)
+      , new box2d.b2Vec2(w,  h / 2)
+      , new box2d.b2Vec2(0,  h / 2)
     ];
     fixtureDef.shape.SetAsVector(vertices, vertices.length);
     fixtureDef.isSensor = true;
     this.body.CreateFixture(fixtureDef);
+  },
+  stop: function() {
+    this.playerCar.car.body.SetLinearVelocity(new box2d.b2Vec2(0, 0));
+    this.playerCar.car.body.SetAngularVelocity(0);
   }
 });
 

@@ -18,6 +18,7 @@ var WeaponsByClass = {
 var PlayerCar = function(gameServer, client, playerName, player) {
   this.player = player;
   this.client = client;
+  this.isBot = !this.client;
   this.gameServer = gameServer;
   this.life = 100;
   this.car = new Car(this);
@@ -96,7 +97,7 @@ PlayerCar.prototype.die = function() {
     this.player.client.emit('dead', null);
   }
   setTimeout(function() {
-    if (this.player.isBot || this.player.connected) {
+    if (this.isBot || this.player.connected) {
       this.dead = false;
       this.car = new Car(this);
       this.life = 100;
