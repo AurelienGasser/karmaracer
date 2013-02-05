@@ -22,7 +22,7 @@ var MapManger = function(app, callback) {
 
     function loadItems(callback) {
       //that.itemsByName = {};
-      getJSONSForDirectory('./public/items/', function(item) {
+      getJSONSForDirectory(__dirname + './public/items', function(item) {
         //console.log(item);
         that.itemsByName[item.name] = item;
       }, callback);
@@ -33,7 +33,7 @@ var MapManger = function(app, callback) {
       brosweFilesRec(path, function(err, files) {
         for(var i = 0; i < files.length; i++) {
           var fName = files[i];
-          var content = fs.readFileSync(__dirname + '/' + fName);
+          var content = fs.readFileSync(path + '/' + fName);
           var item = JSON.parse(content);
           action(item);
         };
@@ -78,12 +78,11 @@ var MapManger = function(app, callback) {
     }
 
     function loadMaps(callback) {
-      brosweFilesRec('./public/maps/', function(err, maps) {
-
+      var mapsPath = __dirname + '/public/maps';
+      brosweFilesRec(mapsPath, function(err, maps) {
         for(var i = 0; i < maps.length; i++) {
-
           var mName = maps[i];
-          var content = fs.readFileSync(__dirname + '/' + mName);
+          var content = fs.readFileSync(mName);
           var map = JSON.parse(content);
           createOrUpdateMap(map);
         };
