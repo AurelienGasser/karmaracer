@@ -6,18 +6,81 @@ function GameInstance() {
   this.drawEngine;
   this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived.bind(this));
   this.setUIEvents();
-  setInterval(function() {
-    for(var explosionId in this.explosions) {
-      this.explosions[explosionId].alpha -= 0.1;
-      if(this.explosions[explosionId].alpha < 0) {
-        delete this.explosions[explosionId];
+
+  this.isMobile = false;
+
+  
+  // function html5_audio() {
+  //   var a = document.createElement('audio');
+  //   return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
+  // }
+  // this.play_html5_audio = false;
+  // if(html5_audio()) this.play_html5_audio = true;
+  // this.sounds = {};
+  // this.setSound('ta', '/sounds/ta.mp3');
+  
+  var that = this;
+
+  function reduceExplosionsAlpha() {
+    // console.log(that.explosions);
+    for(var explosionId in that.explosions) {
+      that.explosions[explosionId].alpha -= 0.1;
+      if(that.explosions[explosionId].alpha < 0) {
+        delete that.explosions[explosionId];
       }
     }
-  }.bind(this), 60)
+  }
+
+  setInterval(reduceExplosionsAlpha, 60);
 }
 
 
 
+GameInstance.prototype.setSound = function(name, url) {
+  var sound;
+  if(this.play_html5_audio) {
+    sound = new Audio(url);
+    sound.load();
+  } else {
+    sound = $("<embed id='" + name + "' type='audio/mpeg' />");
+    sound.attr('src', url);
+    sound.attr('loop', false);
+    sound.attr('hidden', true);
+    sound.attr('autostart', false);
+    sound.attr('enablejavascript', true);
+    $('body').append(sound);
+  }
+  this.sounds[name] = sound;
+};
+
+GameInstance.prototype.play_sound = function(url) {
+
+  if(this.play_html5_audio) {
+    var snd = new Audio(url);
+    snd.load();
+    snd.play();
+  } else {
+    // $("#sound").remove();
+    var sound = $("<embed type='audio/mpeg' />");
+    sound.attr('src', url);
+    sound.attr('loop', false);
+    sound.attr('hidden', true);
+    sound.attr('autostart', true);
+    $('body').append(sound);
+  }
+
+  // console.log('play', name, this.sounds);
+  // // body...
+  // var s = this.sounds[name];
+  // if(!_.isUndefined(s)) {
+  //   if(this.play_html5_audio) {
+  //     console.log(s.url);
+  //     s.play();
+  //   } else {
+  //     s[0].play();
+  //   }
+  // }
+};
 GameInstance.prototype.updatePlayerName = function(name) {
   this.socketManager.emit('updatePlayerName', name);
   Karma.set('playerName', name);
@@ -95,6 +158,7 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
 };
 
 GameInstance.prototype.addExplosion = function(explosion) {
+  // this.play_sound("/sounds/prou.mp3");
   var that = this;
   var explosionId = Math.random();
   this.explosions[explosionId] = {

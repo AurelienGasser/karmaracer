@@ -59,6 +59,12 @@ var PhysicsItem = backbone.Model.extend({
     }
     return 0;
   },
+  setAngle:function(angleRad){
+    if(this.body !== null) {
+      angleRad = angleRad % Math.PI;
+      return this.body.SetAngle(angleRad);
+    }
+  },
   turn: function(side) {
     var angleToAdd = side * Math.PI / 4;
     this.addAngle(angleToAdd);
@@ -80,10 +86,12 @@ var PhysicsItem = backbone.Model.extend({
   applyForceToBody: function(v) {
     if(!_.isUndefined(this.body) && this.body !== null) {
       var pos = this.body.GetPosition();
+      //pos.x += 1;
       this.body.ApplyImpulse(v, {
         x: pos.x,
         y: pos.y
       });
+      
     }
   },
   reduceVelocityOfBody: function(reduceBy) {

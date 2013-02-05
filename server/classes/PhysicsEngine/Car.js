@@ -32,12 +32,12 @@ var Car = require("./PhysicsItem").extend({
       x: acc_helper * ac * Math.cos(this.getAngle()),
       y: acc_helper * ac * Math.sin(this.getAngle())
     };
-    //console.log(v);
+    console.log(v, this.getAngle());
     this.applyForceToBody(v);
   },
   updatePos: function() {
     this.reduceVelocityOfBody(this.tireResistance);
-    this.body.ApplyTorque(-this.body.m_torque / 15)
+    this.body.ApplyTorque(-this.body.m_torque / 15);    
   },
   receiveHit: function() {
     this.playerCar.receiveHit();

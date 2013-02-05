@@ -34,6 +34,8 @@ var GameServer = function(app, map) {
 
 
     function handleClientKeyboard() {
+      var turnAcc = 1.0;
+
       for(var i in that.players) {
         var player = that.players[i];
         var client = player.client;
@@ -58,7 +60,7 @@ var GameServer = function(app, map) {
               break;
             case 'left':
               if(!player.playerCar.dead) {
-                var a = -2.0;
+                var a = -turnAcc;
                 if(client.keyboard['backward'] === true) {
                   a = -a;
                 }
@@ -67,7 +69,7 @@ var GameServer = function(app, map) {
               break;
             case 'right':
               if(!player.playerCar.dead) {
-                var a = 2.0;
+                var a = turnAcc;
                 if(client.keyboard['backward'] === true) {
                   a = -a;
                 }

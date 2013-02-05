@@ -21,13 +21,25 @@ var GameServerSocket = function(mapManager) {
         return callback(null, that.mapManager.itemsByName);
       });
 
+      client.on('move_car', function(info) {
+
+        if(!_.isUndefined(client.player) && !client.player.playerCar.dead) {
+          // console.log(info);
+          client.player.playerCar.car.applyForceToBody(info.force);
+          client.player.playerCar.car.setAngle(info.angle);
+        }
+      });
+
+
 
       client.on('get_map', function(mapName, callback) {
         console.log('get map', mapName)
 
         var map = that.mapManager.maps[mapName];
-        if (_.isUndefined(map)){
-          return callback({'msg' : 'map do not exists : ' +  mapName});
+        if(_.isUndefined(map)) {
+          return callback({
+            'msg': 'map do not exists : ' + mapName
+          });
         }
         return callback(null, map);
       });
@@ -63,10 +75,9 @@ var GameServerSocket = function(mapManager) {
           var fs = require('fs');
           var path = "./public/maps/" + map.name + '.json';
           //reload map
-          
 
           that.mapManager.createOrUpdateMap(map);
-          
+
 
           fs.writeFile(path, JSON.stringify(map), function(err) {
             if(err) {

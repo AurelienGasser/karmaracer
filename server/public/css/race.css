@@ -3,6 +3,40 @@ body{
   /*font-size: 12px;*/
 }
 
+/*body,html{
+  width: 500px;
+  height: 400px;
+}
+*/
+.hide{
+  display: none;
+}
+
+#addBot{
+  width: 100px; height: 100px; background: blue; position: absolute; left: 0px; top: 300px; z-index: 9999;
+}
+
+#mController{
+  width: 400px;
+  height: 400px;
+  /*background-color: green;*/
+  border:1px dotted white;
+  position: fixed;
+  top:200px;
+  left:200px;
+  margin: auto;
+  border-radius: 200px;
+  opacity: 0.5;
+}
+
+#mControllerAcc{
+  opacity: 0.5;
+    width: 16px;
+  height: 16px;
+  background-color: white;
+  border-radius: 8px;
+  position: absolute;
+}
 
 html,body{
   height: 100%;
