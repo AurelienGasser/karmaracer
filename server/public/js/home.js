@@ -48,7 +48,7 @@
     helps.push(createHelp('&#8595;', 'break'));
     helps.push(createHelp('&#8594;', 'turn right'));
     helps.push(createHelp('&#8592;', 'turn left'));
-    helps.push(createHelp('<space>', 'shoot'));
+    helps.push(createHelp('&#60;space&#62;', 'shoot'));
     helps.push(createHelp('L', 'zoom'));
     helps.push(createHelp('P', 'unzoom'));
 
