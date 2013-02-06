@@ -13,9 +13,9 @@ Bot.prototype.tick = function() {
   var numAdditionalTicksToTurn = 20;
   if (this.playerCar.car) {
     if (this.sensor || this.sensorTicksSinceEnd < numAdditionalTicksToTurn) {
+      // turn
       this.sensorTicksSinceEnd++;
       if (this.sensorTicksSinceEnd != numAdditionalTicksToTurn) {
-        // console.log('turn', this.sensorTicksSinceEnd)
         this.playerCar.car.stop();
         this.playerCar.car.turn(2);
       } else {
@@ -23,6 +23,7 @@ Bot.prototype.tick = function() {
         this.playerCar.car.stop();
       }
     } else {
+      // go forward
       if (this.playerCar.car.body.GetLinearVelocity().Length() < 20) {
         this.playerCar.car.accelerate(0.03);
       }
@@ -32,6 +33,19 @@ Bot.prototype.tick = function() {
       } else if (this.playerCar.car.body.GetAngularVelocity() < -1) {
         // console.log('turning too fast: reduce velocity')
         this.playerCar.car.turn(1);
+      }
+    }
+    // shoot for 30 ticks once every 50 ticks
+    if (this.isShooting) {
+      if (!--this.shootCpt)  {
+        this.isShooting = false;
+      } else {
+        this.playerCar.shoot();
+      }
+    } else {
+      if (!this.sensor && Math.random() * 50 < 1) {
+        this.isShooting = true;
+        this.shootCpt = 50;
       }
     }
   }
