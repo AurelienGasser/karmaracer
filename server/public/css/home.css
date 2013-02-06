@@ -43,3 +43,7 @@ input{
 h1 {
   text-align: center;
 }
+
+.editLink {
+  font-size: 11px;
+}

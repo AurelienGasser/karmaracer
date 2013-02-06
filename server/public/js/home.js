@@ -29,7 +29,7 @@
     //maps = ['map1'];
     for(var i = 0; i < maps.length; i++) {
       var m = maps[i];
-      o.push('<li><a href="game.', m, '" >', m, '</a></li>');
+      o.push('<li><a href="game.'+ m + '" >' + m + '</a>&nbsp;<a class="editLink" href="mm.'+ m + '" >edit</a></li>');
     };
     $('ul#maps').html(o.join(''));
   }
