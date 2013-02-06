@@ -44,18 +44,15 @@
 
   function addHelps() {
     var helps = [];
-    helps.push(createHelp('&#8593;', 'accelerate'));
-    helps.push(createHelp('&#8595;', 'break'));
-    helps.push(createHelp('&#8594;', 'turn right'));
-    helps.push(createHelp('&#8592;', 'turn left'));
+    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / break'));
+    helps.push(createHelp('&#8592;&nbsp;&#8594;', 'turn left / right'));
     helps.push(createHelp('&#60;space&#62;', 'shoot'));
-    helps.push(createHelp('L', 'zoom'));
-    helps.push(createHelp('P', 'unzoom'));
+    helps.push(createHelp('L/P', 'zoom / unzoom'));
 
     var o = [];
     for(var i = 0; i < helps.length; i++) {
       var h = helps[i];
-      o.push('<td>' + h.key + '</td><td><b>' + h.text + '</b></td>');
+      o.push('<td class="help_keys">' + h.key + '</td><td class="help_keys_text">' + h.text + '</td>');
     };
     var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
     $('#keys').html(html);

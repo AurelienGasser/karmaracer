@@ -41,3 +41,10 @@ ul#keys li{
   list-style: none;
 }
 
+.help_keys {
+  text-align: right;
+}
+
+.help_keys_text {
+  padding-left: 1em;
+}
