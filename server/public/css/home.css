@@ -34,6 +34,12 @@ input{
 
 }
 
-ul#maps{
-  font-size: smaller;
+#mainContent {
+  width: 900px;
+  display: block;
+  margin: 0 auto;
+}
+
+h1 {
+  text-align: center;
 }
