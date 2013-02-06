@@ -47,11 +47,13 @@ var GameServerSocket = function(mapManager) {
       client.on('enter_map', function(mapName) {
         console.log('enter in', mapName)
         var gameServer = that.mapManager.gameServers[mapName];
-        var physicsEngine = gameServer.physicsEngine;
-        var worldInfo = physicsEngine.getWorldInfo();
-        client.emit('init', worldInfo);
-        gameServer.clients[client.id] = client;
-        client.gameServer = gameServer;
+        if (gameServer) {
+          var physicsEngine = gameServer.physicsEngine;
+          var worldInfo = physicsEngine.getWorldInfo();
+          client.emit('init', worldInfo);
+          gameServer.clients[client.id] = client;
+          client.gameServer = gameServer;
+        }
       });
 
       client.on('init_done', function(userData) {
