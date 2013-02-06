@@ -1,5 +1,12 @@
-(function() {
-
+$(function() {
+  if(Karma.get('playerName')) {
+    $('#playerName').val(Karma.get('playerName'));
+    $('#mainContent').show();
+  } else {
+    $('#playerName').keyup(function() {
+      $('#mainContent').css('display', 'block');
+    })
+  }
 
   var host = window.location.hostname;
   var connection = io.connect(host);
@@ -12,13 +19,11 @@
 
 
   function registerMaps() {
-    $('ul#maps li a').on('click', function(e) {
-      var p = $('#submit'); //[0].submit();
+    $('.mapLink').click(function(e) {
+      console.log('saving ' +  $('#playerName').val())
       Karma.set('playerName', $('#playerName').val());
       Karma.set('map', $(this).text());
-      p.click();
-      e.preventDefault();
-      return false;
+      return true;
     });
   }
 
@@ -29,9 +34,10 @@
     //maps = ['map1'];
     for(var i = 0; i < maps.length; i++) {
       var m = maps[i];
-      o.push('<li><a href="game.'+ m + '" >' + m + '</a>&nbsp;<a class="editLink" href="mm.'+ m + '" >edit</a></li>');
+      o.push('<li><a class="mapLink" href="game.'+ m + '" >' + m + '</a>&nbsp;<a class="editLink" href="mm.'+ m + '" >edit</a></li>');
     };
     $('ul#maps').html(o.join(''));
+    registerMaps();
   }
 
 
@@ -59,14 +65,6 @@
 
   }
 
-  $(function() {
-    if(Karma.get('playerName')) {
-      $('#playerName').val(Karma.get('playerName'));
-    }
+  addHelps();
 
-    registerMaps();
-    addHelps();
-  });
-
-
-}());
+});

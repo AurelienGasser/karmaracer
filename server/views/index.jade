@@ -11,12 +11,12 @@ html
     script(type='text/javascript')
       var G_serverHost = '#{server}';
   body
+    .header
+      h1  Welcome to Karma Racer !
+      input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
+    br
+    br
     div#mainContent
-      .header
-        h1  Welcome to Karma Racer !
-        input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
-      br
-      br
       div#maps
         h2 Click on a map to play
         ul#maps
