@@ -1,28 +1,9 @@
-#right{
-  right: 0px;
-  top:0px;
-  position: fixed;
-  margin-right: 10px;
-  text-align: right;
-}
-
-
-ul#keys li{
-  list-style: none;
-}
-
 body{
   font-family: 'Armata';
-  /*font-size: 12px;*/
 }
 
-input{
-    /*font-family: 'Englebert';*/
-
-}
-
-#submit{
-  display: none;
+.header {
+  text-align: center;
 }
 
 #playerName{
@@ -35,7 +16,7 @@ input{
 }
 
 #mainContent {
-  width: 900px;
+  width: 700px;
   display: block;
   margin: 0 auto;
 }
@@ -44,6 +25,19 @@ h1 {
   text-align: center;
 }
 
+#maps {
+  float: left;
+}
+
 .editLink {
   font-size: 11px;
 }
+
+#help {
+  float: right;
+}
+
+ul#keys li{
+  list-style: none;
+}
+

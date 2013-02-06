@@ -12,14 +12,14 @@ html
       var G_serverHost = '#{server}';
   body
     div#mainContent
-      h1  Welcome to Karma Racer !
-      input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
+      .header
+        h1  Welcome to Karma Racer !
+        input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
       br
       br
       div#maps
         h2 Click on a map to play
         ul#maps
-    div#right
-      div#help
+      #help
         h3 How to play
         #keys
