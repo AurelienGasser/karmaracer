@@ -12,16 +12,14 @@ html
       var G_serverHost = '#{server}';
   body
     div#left
-      h1  Karma Racer
-      h2  Your name
-      form#player(action='/game', method='get')
-        input#playerName(type='text', placeholder='your name', required='required', name='playerName')
-        input#submit(type='submit', value='Start')
-        h2  Maps
-          div#maps
-            small Click on a map to play
-            ul#maps
+      h1  Welcome to Karma Racer !
+      input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
+      br
+      br
+      div#maps
+        h2 Click on a map to play
+        ul#maps
     div#right
       div#help
-        h3 Help
-        ul#keys
+        h3 How to play
+        #keys

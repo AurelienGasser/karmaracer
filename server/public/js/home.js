@@ -44,20 +44,21 @@
 
   function addHelps() {
     var helps = [];
-    helps.push(createHelp('arrow top', 'accelerate'));
-    helps.push(createHelp('arrow bottom', 'break'));
-    helps.push(createHelp('arrow right', 'turn right'));
-    helps.push(createHelp('arrow left', 'turn left'));
-    helps.push(createHelp('space', 'shoot'));
+    helps.push(createHelp('&#8593;', 'accelerate'));
+    helps.push(createHelp('&#8595;', 'break'));
+    helps.push(createHelp('&#8594;', 'turn right'));
+    helps.push(createHelp('&#8592;', 'turn left'));
+    helps.push(createHelp('<space>', 'shoot'));
     helps.push(createHelp('L', 'zoom'));
     helps.push(createHelp('P', 'unzoom'));
 
     var o = [];
     for(var i = 0; i < helps.length; i++) {
       var h = helps[i];
-      o.push('<li>', h.key, ' = <b>', h.text, '</b></li>');
+      o.push('<td>' + h.key + '</td><td><b>' + h.text + '</b></td>');
     };
-    $('ul#keys').html(o.join(''));
+    var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
+    $('#keys').html(html);
 
   }
 
