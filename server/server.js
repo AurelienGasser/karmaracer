@@ -77,11 +77,11 @@ app.get('/mm\.:map', function(req, res) {
 
 app.get('/game\.:map', function(req, res) {
 
-  index(req, res, "index.jade", "CANVAS");
+  index(req, res, "game.jade", "CANVAS");
 });
 
 app.get('/', function(req, res) {
-  index(req, res, "home.jade", "CANVAS");
+  index(req, res, "index.jade", "CANVAS");
 });
 
 
@@ -104,5 +104,8 @@ function index(req, res, view, draw_engine) {
 }
 
 app.io = io;
+
+var mapManager = require('./MapManager')(app);
+
 module.exports = app;
 

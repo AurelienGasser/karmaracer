@@ -1,66 +1,27 @@
-!!! strict
 html
   head
     title Karma Racer, baby!
-    meta(http-equiv='content-type', content='text/html; charset=utf-8')
-    meta(name="viewport", content="initial-scale=0.8, maximum-scale=0.8, user-scalable=0.0")
-    meta(name="apple-mobile-web-app-capable", content="yes")
     link(href='http://fonts.googleapis.com/css?family=Armata', rel='stylesheet')
-    script(type='text/javascript', src='//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js')
     script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js')
     script(type='text/javascript', src='/js/libs/underscore.js')
-    script(type='text/javascript', src='/js/libs/modernizr.min.js')
-    script(type='text/javascript', src='/js/drawEngine/2DCanvas.js')
     script(type='text/javascript', src='/js/Karma.js')
-
+    script(type='text/javascript', src='/js/home.js')
+    link(rel='stylesheet', href='/css/home.css')
     script(type='text/javascript')
       var G_serverHost = '#{server}';
-      var G_mapName = '#{map}';
-      var G_defaultDrawEngineType = '#{default_draw_engine}';
-      var G_MOBILE_DEVICE = false;
-      // Google Analytics
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-27170619-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-    script(type='text/javascript', src='/js/SocketManager.js')
-    script(type='text/javascript', src='/js/chat.js')
-    script(type='text/javascript', src='/js/drawEngine/camera.js')
-    script(type='text/javascript', src='/js/drawEngine/drawEngineFactory.js')
-    script(type='text/javascript', src='/js/keyboard.js')
-    script(type='text/javascript', src='/js/GameInstance.js')
-    script(type='text/javascript', src='/js/startup.js')
-    script(type='text/javascript', src='/js/mController.js')
-    link(rel='stylesheet', href='/css/race.css')
-    link(rel='stylesheet', href='/css/chat.css')
   body
-    div#addBot ADD BOT
-    div(id='camera-debug')
-    div(id='debug')
-    canvas#game-canvas
-    #loadingtext Loading world...
-    #player_name_div: input#player_name(placeholder="Your name")
-    div#left_panel
-      table.scores
-        thead
-          tr
-            th Name
-            th Score
-            th Level
-        tbody#scores
-    #chat
-      table
-        tr#chat_msgs_wrapper
-          td
-            table: tr: td: #chat_msgs: ul
-        tr#chat_input_wrapper
-          td
-            #chat_input_label_wrapper
-              #chat_input_label_pad
-              #chat_input_label
-            input#chat_input(type="text", autocapitalize="off", autocorrect="off", autocomplete="off")
+    div#left
+      h1  Karma Racer
+      h2  Your name
+      form#player(action='/game', method='get')
+        input#playerName(type='text', placeholder='your name', required='required', name='playerName')
+        input#submit(type='submit', value='Start')
+        h2  Maps
+          div#maps
+            small Click on a map to play
+            ul#maps
+    div#right
+      div#help
+        h3 Help
+        ul#keys
