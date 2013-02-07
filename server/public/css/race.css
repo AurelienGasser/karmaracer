@@ -29,8 +29,8 @@ body{
   /*background-color: green;*/
   border:1px solid white;
   position: fixed;
-  top:200px;
-  left:200px;
+  top:0px;
+  left:0px;
   margin: auto;
   /*border-radius: 400px;*/
   /*opacity: 0.5;*/

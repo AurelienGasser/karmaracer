@@ -29,23 +29,32 @@ var SteeringWheelController = function(gameInstance) {
       y: 0
     };
 
-
+    this.updateCenter();
 
     var that = this;
 
 
-    that.m.click(function(e) {
-      var jWheel = $(this);
-      jWheel.toggleClass('enable');
-      that.enable = jWheel.hasClass('enable');
-      console.log(that.enable);
-    });
+    var toogleEnable = function(e) {
+        var jWheel = $(this);
+        jWheel.toggleClass('enable');
+        that.enable = jWheel.hasClass('enable');
+        // console.log(that.enable);
+      }
+
+    that.m.click(toogleEnable);
 
     $(window).resize(function() {
-      that.m.css({'width' : '100%', 'height' : '100%'});
+      that.resize();
     });
 
+    window.onorientationchange = function(){
+      // alert('update');
+      that.resize();
+    };
 
+    window.webkitfullscreenchange = function(){
+      // alert('o??');
+    }
 
     var interval = null;
 
@@ -55,7 +64,8 @@ var SteeringWheelController = function(gameInstance) {
         if(!that.enable) {
           return;
         }
-        console.log('send', that.force.x);
+        // $('body').append('ss');
+        // console.log('send', that.force.x);
         that.gameInstance.socketManager.emit('move_car', {
           'force': that.force,
           'angle': angle(that.force)
@@ -63,6 +73,7 @@ var SteeringWheelController = function(gameInstance) {
       }
 
     var startAcceleration = function(e) {
+        // alert('start');
         if(interval === null) {
           interval = setInterval(send, 1000 / 16);
         }
@@ -130,10 +141,12 @@ var SteeringWheelController = function(gameInstance) {
     console.log('is mobile', that.gameInstance.isMobile);
 
 
+    // alert(that.gameInstance.isMobile);
     if(that.gameInstance.isMobile) {
       that.m.bind('touchstart', startAcceleration);
       that.m.bind('touchend', stopAcceleration);
       that.m.bind('touchmove', hover);
+      that.enable = true;
     } else {
       that.m.mousemove(hover);
       that.m.hover(startAcceleration, stopAcceleration);
@@ -163,7 +176,13 @@ SteeringWheelController.prototype.setMSize = function(w, h) {
 
 
 SteeringWheelController.prototype.updateCenter = function() {
+
   var that = this;
+
+  that.mSize = {
+    w: that.m.width(),
+    h: that.m.height()
+  };
   that.mCenter = {
     x: that.mSize.w / 2 + that.m.position().left,
     y: that.mSize.h / 2 + that.m.position().top
@@ -183,8 +202,11 @@ SteeringWheelController.prototype.setMPosition = function(x, y) {
 
 
 SteeringWheelController.prototype.resize = function() {
-  console.log('resize', window.innerWidth, window.innerHeight);
-  this.setMSize(this.m.width(), this.m.height());
-  this.setMPosition(window.innerWidth / 2, window.innerHeight / 2);
-
+  this.m.css({
+    'width': '100%',
+    'height': '100%'
+  });
+  // console.log('resize', window.innerWidth, window.innerHeight);
+  // this.setMSize(this.m.width(), this.m.height());
+  // this.setMPosition(window.innerWidth / 2, window.innerHeight / 2);
 };

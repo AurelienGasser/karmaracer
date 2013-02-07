@@ -24,7 +24,7 @@ var PhysicsEngine = backbone.Model.extend({
     this.world = new box2d.b2World(gravity, false);
     this.staticItems = [];
 
-    // LOAD STATIC ITEMS ONCE FOR CLIENT
+    // load static items once for clients
     this.itemsInMap = {};
     _.each(this.map.staticItems, function(i) {
       var itemJSONPath = __dirname + '/../../public/items/' + i.name + '.json';
