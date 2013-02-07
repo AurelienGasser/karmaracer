@@ -34,7 +34,6 @@ var Car = require("./PhysicsItem").extend({
       x: acc_helper * ac * Math.cos(this.getAngle()),
       y: acc_helper * ac * Math.sin(this.getAngle())
     };
-    console.log(v, this.getAngle());
     this.applyForceToBody(v);
   },
   updatePos: function() {

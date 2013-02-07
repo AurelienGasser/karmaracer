@@ -116,7 +116,6 @@
 
       };
     // rstart and rmove are the resize functions;
-    console.log(c);
     $(c.node).click(function(e) {
       $('#canvas-debug').children().hide();
       c.li.show();
@@ -149,10 +148,6 @@
   };
 
   Map.prototype.svgDraw = function() {
-
-    // $(this.svgG).children().remove();
-    console.log('DRAW SVG', this.MapItems, $(this.svgG));
-
     this.svgDrawBackground();
     for(var i in this.MapItems) {
       var item = this.MapItems[i];
@@ -167,13 +162,11 @@
     if(this.mapBackgroundName !== '') {
       var bg = this.itemsByName[this.mapBackgroundName];
       if(!_.isUndefined(bg)) {
-        console.log('BG', bg);
+        
         this.bgImg = this.R.rect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
         this.bgImg.attr({
           "fill": "url('" + bg.path + "')"
         });
-
-
       }
     }
   };

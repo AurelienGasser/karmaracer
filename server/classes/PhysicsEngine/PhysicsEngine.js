@@ -60,11 +60,9 @@ var PhysicsEngine = backbone.Model.extend({
   },
   step: function() {
     // Run Simulation!
-    //console.log(this.world.GetBodyCount());
     this.world.Step(this.timeStep, 8, // velocity iterations
     3); // position iterations
     // this.world.ClearForces();
-    //this.world.Step(this.timeStep, this.iterations);
     for (var i in this.itemsToDestroy) {
       var item = this.itemsToDestroy[i];
       item.destroy();

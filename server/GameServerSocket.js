@@ -17,7 +17,6 @@ var GameServerSocket = function(mapManager) {
 
 
       client.on('get_items', function(callback) {
-        //console.log(that.mapManager.itemsByName);
         return callback(null, that.mapManager.itemsByName);
       });
 
