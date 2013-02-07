@@ -1,23 +1,16 @@
 var SteeringWheelController = function(gameInstance) {
 
     console.log('gameInstance', gameInstance);
-    var m = $('<div id="mController"/>');
-    var acc = $('<div id="mControllerAcc"/>');
+    this.m = $('<div id="SteeringWheelController"/>');
+    this.acc = $('<div id="SteeringWheelControllerAcc"/>');
 
-    m.append(acc);
+    this.m.append(this.acc);
 
-    this.m = m;
-    $('body').append(m);
-
+    this.enable = false;
+    $('body').append(this.m);
     this.gameInstance = gameInstance;
     this.gameInstance.steeringWheel = this;
-
-    var that = this;
-
-
-
     this.resize();
-
     // var s = 10;
     // setMSize(s, s);
     // if(!that.gameInstance.isMobile) {
@@ -27,24 +20,42 @@ var SteeringWheelController = function(gameInstance) {
     //   this.resize();
     // }
     this.accSize = {
-      w: acc.width(),
-      h: acc.height()
+      w: this.acc.width(),
+      h: this.acc.height()
     };
-
-
 
     this.force = {
       x: 0,
       y: 0
     };
 
+
+
     var that = this;
+
+
+    that.m.click(function(e) {
+      var jWheel = $(this);
+      jWheel.toggleClass('enable');
+      that.enable = jWheel.hasClass('enable');
+      console.log(that.enable);
+    });
+
+    $(window).resize(function() {
+      that.m.css({'width' : '100%', 'height' : '100%'});
+    });
+
+
 
     var interval = null;
 
 
+
     var send = function() {
-        //console.log('send', that.force.x);
+        if(!that.enable) {
+          return;
+        }
+        console.log('send', that.force.x);
         that.gameInstance.socketManager.emit('move_car', {
           'force': that.force,
           'angle': angle(that.force)
@@ -52,8 +63,6 @@ var SteeringWheelController = function(gameInstance) {
       }
 
     var startAcceleration = function(e) {
-        // alert(interval);
-        // 
         if(interval === null) {
           interval = setInterval(send, 1000 / 16);
         }
@@ -98,8 +107,8 @@ var SteeringWheelController = function(gameInstance) {
         var x = mousePosition.x - that.mCenter.x;
         var y = mousePosition.y - that.mCenter.y;
 
-        acc.css('left', mousePosition.x - m.position().left - (that.accSize.w / 2));
-        acc.css('top', mousePosition.y - m.position().top - (that.accSize.h / 2))
+        that.acc.css('left', mousePosition.x - that.m.position().left - (that.accSize.w / 2));
+        that.acc.css('top', mousePosition.y - that.m.position().top - (that.accSize.h / 2))
 
         var force = {
           'x': (x / (that.mSize.w / 2)),
@@ -122,15 +131,14 @@ var SteeringWheelController = function(gameInstance) {
 
 
     if(that.gameInstance.isMobile) {
-      m.bind('touchstart', startAcceleration);
-      m.bind('touchend', stopAcceleration);
-      m.bind('touchmove', hover);
-
+      that.m.bind('touchstart', startAcceleration);
+      that.m.bind('touchend', stopAcceleration);
+      that.m.bind('touchmove', hover);
     } else {
-      m.mousemove(hover);
-      m.hover(startAcceleration, stopAcceleration);
+      that.m.mousemove(hover);
+      that.m.hover(startAcceleration, stopAcceleration);
     }
-    acc.mousemove(function(e) {
+    that.acc.mousemove(function(e) {
       e.preventDefault();
       return false;
     })

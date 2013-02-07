@@ -34,48 +34,56 @@ var GameServer = function(app, map) {
 
 
     function handleClientKeyboard() {
-      var turnAcc = 1.0;
+
+      function reverseA(client, a) {
+        if(client.keyboard['backward'] === true) {
+          console.log('back');
+          a = -a;
+        }
+        return a;
+      }
+
+      var turnAcc = 2.0;
 
       for(var i in that.players) {
         var player = that.players[i];
         var client = player.client;
+        if(player.playerCar.dead) {
+          continue;
+        }
+        var car = player.playerCar.car;
         for(var event in client.keyboard) {
           var state = client.keyboard[event];
           if(state) {
             switch(event) {
+            case 'break':
+              car.reduceVelocityOnlyOfBody(2);
+              break;
             case 'shoot':
-              if(!player.playerCar.dead) {
-                player.playerCar.shoot();
-              }
+              player.playerCar.shoot();
               break;
             case 'forward':
-              if(!player.playerCar.dead) {
-                player.playerCar.car.accelerate(1.0)
-              }
+
+              car.accelerate(1.0);
+
               break;
             case 'backward':
-              if(!player.playerCar.dead) {
-                player.playerCar.car.accelerate(-1.0)
-              }
+              car.accelerate(-1.0);
               break;
             case 'left':
-              if(!player.playerCar.dead) {
-                var a = -turnAcc;
-                if(client.keyboard['backward'] === true) {
-                  a = -a;
-                }
-                player.playerCar.car.turn(a);
-              }
+              // console.log('left');
+              // car.applyForceToBody({
+              //   x: -1.0,
+              //   y: 1.0
+              // });
+              // car.addAngle(-Math.PI / 4);
+              var a = -turnAcc;
+              car.turn(reverseA(client, a));
               break;
             case 'right':
-              if(!player.playerCar.dead) {
-                var a = turnAcc;
-                if(client.keyboard['backward'] === true) {
-                  a = -a;
-                }
-                player.playerCar.car.turn(a)
-                break;
-              }
+              var a = turnAcc;
+              car.turn(reverseA(client, a));
+              break;
             }
           }
         }
