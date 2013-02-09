@@ -70,7 +70,7 @@ function SocketManager(gameInstance, onInitCallback) {
 
   function announce(text, color) {
     $('#announce').remove();
-    var div = $('<div id="announce" style="font-size: 72px; color: ' + color + '; text-align: center; width: 100%; height: 200px; z-index: 9999; position: absolute; left: 100px; top: 100px">' + text + '</div>')
+    var div = $('<div id="announce" class="announce-' + color + '">' + text + '</div>')
     div.appendTo($('body'));
     setTimeout(function() {
       $('#announce').fadeOut(function() {

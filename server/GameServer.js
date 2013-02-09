@@ -37,7 +37,6 @@ var GameServer = function(app, map) {
 
       function reverseA(client, a) {
         if(client.keyboard['backward'] === true) {
-          console.log('back');
           a = -a;
         }
         return a;

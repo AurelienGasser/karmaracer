@@ -1,157 +1,157 @@
-body{
-  font-family: 'Armata';
-  /*font-size: 12px;*/
+body {
+    font-family: 'Armata';
+ /*font-size  12px*/
 }
 
-/*body,html{
-  width: 500px;
-  height: 400px;
+/*body,html {
+width: 500px;
+height: 400px;
 }
 */
-.hide{
-  display: none;
+.hide {
+    display: none;
+}
+
+.announce-red{
+  color:red;
+}
+
+.announce-blue{
+  color:blue;
+}
+
+#announce {
+    font-size: 72px;
+    height: 200px;
+    left: 0px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    z-index: 9999;
 }
 
 #botMenu {
-  z-index: 9999;
-  position: absolute;
-  left: 0px;
-  top: 100px;
+    left: 0px;
+    position: absolute;
+    top: 100px;
+    z-index: 9999;
 }
 
 #botMenu input {
-  text-align: center;
-  width: 100px;
+    text-align: center;
+    width: 100px;
 }
 
-#SteeringWheelController.enable{
-  border-color: blue;
-}
-#SteeringWheelController.enable div{
-  background-color: blue;
+#SteeringWheelController.enable {
+    border-color: blue;
 }
 
-#SteeringWheelController{
-  width: 100%;
-  height: 100%;
-  /*background-color: green;*/
-  border:1px solid white;
-  position: fixed;
-  top:0px;
-  left:0px;
-  margin: auto;
-  /*border-radius: 400px;*/
-  /*opacity: 0.5;*/
+#SteeringWheelController.enable div {
+    background-color: blue;
 }
 
-#SteeringWheelControllerAcc{
-  opacity: 0.5;
+#SteeringWheelController {
+    border: 1px solid white;
+    height: 100%;
+    left: 0px;
+    margin: auto;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+
+#SteeringWheelControllerAcc {
+    background-color: white;
+    border-radius: 8px;
+    height: 16px;
+    opacity: 0.5;
+    position: absolute;
     width: 16px;
-  height: 16px;
-  background-color: white;
-  border-radius: 8px;
-  position: absolute;
 }
 
-html,body{
-  height: 100%;
+html,body {
+    height: 100%;
 }
 
 #loadingtext {
-  position:absolute;
-  top:250px;
-  left:150px;
-  font-size:2em;
-  color: white;
+    color: white;
+    font-size: 2em;
+    left: 150px;
+    position: absolute;
+    top: 250px;
 }
 
-#left_panel{
-  /*background-color: #eee;*/
-  position: fixed;
-  bottom: 0px;
-  right: 0px;
-  padding: 5px;
+#left_panel {
+    bottom: 0px;
+    padding: 5px;
+    position: fixed;
+    right: 0px;
+  /*background-color  #eee*/
 }
 
-table.scores{
-  margin: 0px;
-  padding: 0.5em;
-  background-color: rgba(255,255,255,0.3);
-  color: white;
+table.scores {
+    background-color: rgba(255,255,255,0.3);
+    color: white;
+    margin: 0px;
+    padding: 0.5em;
 }
 
 table.scores thead tr th, tbody#scores tr td {
-  padding: 0.5em 0.3em;
+    padding: 0.5em 0.3em;
 }
 
-#debug{
-  position: absolute;
-  top: 0px;
-  color: white;
+#debug {
+    color: white;
+    position: absolute;
+    top: 0px;
 }
-/*
-.info{
-  position: absolute;
-  min-height: 24px;
-}
-*/
-/*#fps{
-  position: fixed;
-  top:300px;
-}
-*/
-/*#socketps{
-  position: fixed;
-  top:200px;
-}
-*/
-#game-canvas{
-  width:100%;
-  height:100%;
-  background-color:#333;
-  float: left;
-  margin-right: 20px;
+
+#game-canvas {
+    background-color: #333;
+    float: left;
+    height: 100%;
+    margin-right: 20px;
+    width: 100%;
 }
 
 #right_panel {
-  /*display: none;*/
-  width: 20%;
-  position:absolute;
-  right:0px;
-  top:0px;
-  height: 100%;
-  margin:0;
-  padding:0;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 20%;
+  /*display  none*/
 }
 
 #info {
-  height: 10%;
-  position: absolute;
-  left: 0;
-  top: 150px;
+    height: 10%;
+    left: 0;
+    position: absolute;
+    top: 150px;
 }
 
-
-body{
-	margin:0px;
-	padding:0px;
+body {
+    margin: 0px;
+    padding: 0px;
 }
 
-#camera-debug{
-  position: absolute;
-  top:0px;
-  left:0px;
-  z-index:20;
-  /*background-color: black;*/
-  color:white;
-  font-size:0.8em;
+#camera-debug {
+    color: white;
+    font-size: 0.8em;
+    left: 0px;
+    position: absolute;
+    top: 0px;
+    z-index: 20;
+  /*background-color  black*/
 }
 
-#camera-debug ul{
-  margin:0px;
-  padding: 0px;
+#camera-debug ul {
+    margin: 0px;
+    padding: 0px;
 }
 
-#camera-debug li{
-  list-style:none;
+#camera-debug li {
+    list-style: none;
 }
