@@ -1,3 +1,4 @@
+var botNames = require('./botNames');
 var Bot = require('./classes/Bot');
 
 var BotManager = function(gameServer) {
@@ -27,8 +28,18 @@ BotManager.prototype.tick = function() {
   }
 }
 
+BotManager.prototype.getBotName = function() {
+  var botName;
+  var usedBotNames = Object.keys(this.bots);
+  while (!botName || usedBotNames.indexOf(botName) != -1) {
+    var index = Math.floor(Math.random() * botNames.length);
+    botName = botNames[index];
+  }
+  return botName;
+}
+
 BotManager.prototype.addBot = function() {
-  var id = Math.random();
+  var id = this.getBotName();
   this.bots[id] = new Bot(this.gameServer, id);
 }
 

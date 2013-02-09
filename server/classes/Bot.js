@@ -4,7 +4,7 @@ var Bot = function(gameServer, id) {
   this.id = id;
   this.isBot = true;
   this.gameServer = gameServer;
-  this.name = 'bot_' + this.id;
+  this.name = this.id + ' (bot)';
   this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
   return this;
 }
