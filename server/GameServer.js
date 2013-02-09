@@ -7,19 +7,10 @@ var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
 var ScoreManager = require('./classes/ScoreManager');
 
-
 var GameServer = function(app, map) {
-    // var backbone = require('backbone');
-    // LOAD THE MAP
-    // var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/map1.json'));
-    //var map = JSON.parse(fs.readFileSync(__dirname + '/public/maps/testarena.json'));
     this.app = app;
-
     this.initGameServer(map);
-
-
     var that = this;
-
 
     function play() {
       try {
@@ -32,7 +23,6 @@ var GameServer = function(app, map) {
       }
     }
 
-
     function handleClientKeyboard() {
 
       function reverseA(client, a) {
@@ -41,9 +31,7 @@ var GameServer = function(app, map) {
         }
         return a;
       }
-
       var turnAcc = 2.0;
-
       for(var i in that.players) {
         var player = that.players[i];
         var client = player.client;
@@ -62,20 +50,12 @@ var GameServer = function(app, map) {
               player.playerCar.shoot();
               break;
             case 'forward':
-
               car.accelerate(1.0);
-
               break;
             case 'backward':
               car.accelerate(-1.0);
               break;
             case 'left':
-              // console.log('left');
-              // car.applyForceToBody({
-              //   x: -1.0,
-              //   y: 1.0
-              // });
-              // car.addAngle(-Math.PI / 4);
               var a = -turnAcc;
               car.turn(reverseA(client, a));
               break;
@@ -90,8 +70,9 @@ var GameServer = function(app, map) {
     }
 
     // update world
-    setInterval(play, 20);
-    setInterval(handleClientKeyboard, 10);
+    setInterval(play, 1000 / 50);
+    setInterval(handleClientKeyboard, 1000 / 100);
+
     return this;
   }
 
@@ -104,6 +85,22 @@ GameServer.prototype.initGameServer = function(map) {
   this.weaponsManager = new WeaponsManager(this);
   this.scoreManager = new ScoreManager(this);
   this.players = {};
+  setInterval(this.sendPositionsToPlayers.bind(this), 1000 / 16);
+};
+
+GameServer.prototype.sendPositionsToPlayers = function() {
+  var cars = this.carManager.getShared();
+  var projectiles = this.weaponsManager.getGraphicProjectiles();
+  for(var i in this.players) {
+    var p = this.players[i];
+    var myCar = p.playerCar.dead ? null : p.playerCar.car.getShared();
+    var share = {
+      myCar: myCar,
+      cars: cars,
+      projectiles: projectiles
+    };
+    p.client.emit('objects', share);
+  }
 };
 
 GameServer.prototype.broadcast = function(key, data) {

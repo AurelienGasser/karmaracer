@@ -17,6 +17,10 @@ $(function() {
     addMaps(maps);
   });
 
+  connection.on('maps_state', function(err, mapStates){
+    console.log(mapStates);
+  });
+
 
   function registerMaps() {
     $('.mapLink').click(function(e) {

@@ -3,8 +3,16 @@ var GameServerSocket = function(mapManager) {
     var Car = require('./classes/PhysicsEngine/Car');
     var Player = require('./classes/Player');
 
+
+
     this.mapManager = mapManager;
     var that = this;
+
+
+    function bradcastMapsState(){
+
+    }
+
 
     this.mapManager.app.io.sockets.on('connection', function(client) {
       console.log('client connected');
@@ -14,6 +22,7 @@ var GameServerSocket = function(mapManager) {
       client.on('get_maps', function(callback) {
         return callback(null, Object.keys(that.mapManager.maps));
       });
+
 
 
       client.on('get_items', function(callback) {
@@ -59,27 +68,23 @@ var GameServerSocket = function(mapManager) {
         console.log('client initialized:', userData.playerName, ' on ', client.gameServer.map.name);
         client.player = new Player(client, userData.playerName);
         client.gameServer.addPlayer(client.player);
-        client.interval = setInterval(function() {
-          var share = {
-            myCar: client.player.playerCar.dead ? null : client.player.playerCar.car.getShared(),
-            cars: client.gameServer.carManager.getShared(),
-            projectiles: client.gameServer.weaponsManager.getGraphicProjectiles()
-          };
-          client.emit('objects', share);
-        }, 1000 / 16);
+        // client.interval = setInterval(function() {
+        //   var share = {
+        //     myCar: client.player.playerCar.dead ? null : client.player.playerCar.car.getShared(),
+        //     cars: client.gameServer.carManager.getShared(),
+        //     projectiles: client.gameServer.weaponsManager.getGraphicProjectiles()
+        //   };
+        //   client.emit('objects', share);
+        // }, 1000 / 16);
       });
 
 
       client.on('saveMap', function(map) {
         try {
-          //console.log('saveMap', map);
           var fs = require('fs');
           var path = "./public/maps/" + map.name + '.json';
           //reload map
-
           that.mapManager.createOrUpdateMap(map);
-
-
           fs.writeFile(path, JSON.stringify(map), function(err) {
             if(err) {
               console.log(err);
@@ -87,7 +92,6 @@ var GameServerSocket = function(mapManager) {
               console.log('The map was saved : ', map.name, ' on ', path);
             }
           });
-
         } catch(e) {
           console.log(e, e.stack);
         }
@@ -100,7 +104,7 @@ var GameServerSocket = function(mapManager) {
           if(!_.isUndefined(client.gameServer)) {
             client.gameServer.removePlayer(client.player);
           }
-          clearInterval(client.interval);
+          // clearInterval(client.interval);
           console.log('client left:', client.playerName);
         } catch(e) {
           console.log(e, e.stack);
