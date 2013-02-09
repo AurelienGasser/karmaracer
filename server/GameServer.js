@@ -105,7 +105,6 @@ GameServer.prototype.initGameServer = function(map) {
   this.weaponsManager = new WeaponsManager(this);
   this.scoreManager = new ScoreManager(this);
   this.players = {};
-
 };
 
 GameServer.prototype.broadcast = function(key, data) {
