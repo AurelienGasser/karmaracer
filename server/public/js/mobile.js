@@ -1,13 +1,14 @@
 function MobileTerminalHandler(gameInstance) {
   this.gameInstance = gameInstance;
   this.gameInstance.isMobile = true;
-  // alert('mobile');  
+  // alert('mobile');
   // return this;
 }
 
 MobileTerminalHandler.prototype.init = function() {
   // this.gameInstance.isMobile = true;
   $('#addBot').remove();
+  $('#removeBot').remove();
   $('#left_panel').remove();
   $('#player_name_div').remove();
 

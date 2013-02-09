@@ -39,7 +39,10 @@ html
     link(rel='stylesheet', href='/css/race.css')
     link(rel='stylesheet', href='/css/chat.css')
   body
-    div#addBot ADD BOT
+    #botMenu
+      input#addBot(type="button", value="Add bot")
+      br
+      input#removeBot(type="button", value="Remove bot")
     div(id='camera-debug')
     div(id='debug')
     canvas#game-canvas

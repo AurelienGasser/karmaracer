@@ -138,6 +138,14 @@ var GameServerSocket = function(mapManager) {
         }
       });
 
+      client.on('remove bot', function() {
+        try {
+          client.gameServer.botManager.removeBot();
+        } catch(e) {
+          console.log(e, e.stack);
+        }
+      });
+
       client.on('chat', function(msg) {
         for(var i in client.gameServer.clients) {
           client.gameServer.clients[i].emit('chat_msg', msg);

@@ -47,7 +47,7 @@ function SocketManager(serverHost, gameInstance, onInitCallback) {
       Karma.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
     }
     $('#player_name').val(Karma.get('playerName'));
-    connection.emit('init_done', {      
+    connection.emit('init_done', {
       playerName: Karma.get('playerName')
     });
     this.init_done = true;
@@ -117,5 +117,8 @@ SocketManager.prototype.emit = function(key, data) {
 $(function() {
   $('#addBot').click(function() {
     connection.emit('add bot');
+  })
+  $('#removeBot').click(function() {
+    connection.emit('remove bot');
   })
 })

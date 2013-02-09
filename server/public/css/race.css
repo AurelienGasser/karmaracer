@@ -12,8 +12,16 @@ body{
   display: none;
 }
 
-#addBot{
-  width: 100px; height: 100px; background: blue; position: absolute; left: 0px; top: 300px; z-index: 9999;
+#botMenu {
+  z-index: 9999;
+  position: absolute;
+  left: 0px;
+  top: 100px;
+}
+
+#botMenu input {
+  text-align: center;
+  width: 100px;
 }
 
 #SteeringWheelController.enable{
