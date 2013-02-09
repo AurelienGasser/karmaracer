@@ -18,7 +18,6 @@ function GameInstance() {
   // if(html5_audio()) this.play_html5_audio = true;
   // this.sounds = {};
   // this.setSound('ta', '/sounds/ta.mp3');
-
   var that = this;
 
   function reduceExplosionsAlpha() {
@@ -81,6 +80,21 @@ GameInstance.prototype.play_sound = function(url) {
   //   }
   // }
 };
+
+GameInstance.prototype.updateScoresHTML = function() {
+  var o = [];
+  // console.log(this.cars);
+  var playerName = Karma.get('playerName');
+  for(var i = 0; i < this.cars.length; i++) {
+    var car = this.cars[i];
+    var userCarClass = (car.playerName === playerName) ? 'userCar' : '';
+    o.push('<tr class="', userCarClass, '"><td>', car.playerName, '</td><td>', car.s, '</td><td>', car.l, '</td></tr>');
+  };
+  $('tbody#scores').html(o.join(''));
+
+};
+
+
 GameInstance.prototype.updatePlayerName = function(name) {
   this.socketManager.emit('updatePlayerName', name);
   Karma.set('playerName', name);

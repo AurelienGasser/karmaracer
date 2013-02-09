@@ -17,7 +17,7 @@ var GameServer = function(app, map) {
         that.physicsEngine.step();
         that.carManager.updatePos();
         that.weaponsManager.step();
-        that.scoreManager.broadcastScores(that);
+        // that.scoreManager.broadcastScores(that);
       } catch(e) {
         console.log("error main interval", e, e.stack);
       }
@@ -105,6 +105,7 @@ GameServer.prototype.getPlayersForShare = function() {
   // }
   return players;
 };
+
 
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();
