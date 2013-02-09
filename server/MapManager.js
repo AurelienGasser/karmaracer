@@ -93,7 +93,6 @@ var MapManger = function(app, callback) {
       });
     }
 
-
     function getMapsWithPlayers() {
       var maps = {};
       for(var i in that.gameServers) {

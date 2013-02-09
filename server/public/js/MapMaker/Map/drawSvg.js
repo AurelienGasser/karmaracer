@@ -159,6 +159,10 @@
 
 
   Map.prototype.svgDrawBackground = function() {
+    console.log(this.bgImg);
+    if (!_.isUndefined(this.bgImg)){
+      $(this.bgImg.node).remove();
+    }
     if(this.mapBackgroundName !== '') {
       var bg = this.itemsByName[this.mapBackgroundName];
       if(!_.isUndefined(bg)) {

@@ -97,6 +97,13 @@ GameServer.prototype.getPlayersForShare = function() {
     };
     players.push(pShare);
   }
+  for(var i in this.botManager.bots) {
+    var b = this.botManager.bots[i];
+    var pShare = {
+      'name': b.name
+    };
+    players.push(pShare);
+  }
   return players;
 };
 

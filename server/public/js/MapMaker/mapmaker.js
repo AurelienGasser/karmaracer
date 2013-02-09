@@ -48,6 +48,7 @@ function setBackgroundItemsEvents(map) {
   inputName.after(o.join(''));
   inputName.keyup(function() {
     map.mapBackgroundName = inputName.val();
+    map.svgDrawBackground();
   });
   inputName.val(map.mapBackgroundName);
 }
