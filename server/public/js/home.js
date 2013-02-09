@@ -17,7 +17,7 @@ $(function() {
   });
 
   connection.on('maps_state', function(mapStates){
-    
+
     for (var i in mapStates){
       var m = mapStates[i];
       console.log(m);
@@ -35,18 +35,22 @@ $(function() {
 
   function registerMaps() {
     $('.mapLink').click(function(e) {
-      var playerName = $('#playerName').val();
-
-      if (playerName.length === 0){
+      if (!$('#playerNameForm')[0].checkValidity()) {
+        // If the form is invalid, submit it. The form won't actually submit;
+        // this will just cause the browser to display the native HTML5 error messages.
+        $('#playerNameForm').find(':submit').click()
         e.preventDefault();
         return false;
       }
-      // console.log('saving ' +  playerName);
-      Karma.set('playerName', playerName);
+      Karma.set('playerName', $('#playerName').val());
       Karma.set('map', $(this).text());
       return true;
     });
   }
+
+  $('#playerNameForm').submit(function() {
+    return false;
+  })
 
   function addMaps(maps) {
 

@@ -21,16 +21,7 @@ var hostname = os.hostname();
 
 app.configure('local', function() {
   console.log('start on host', hostname);
-  switch(hostname) {
-  case 'pouyaair.home':
-    port = 8080;
-    break;
-  default:
-    port = 80;
-    break;
-  }
 });
-
 
 var http = require('http');
 var server = http.createServer(app);
