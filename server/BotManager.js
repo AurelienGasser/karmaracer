@@ -13,6 +13,9 @@ BotManager.prototype.initBots = function() {
   var botDensity = 1 / 2300;
   var numBots = Math.ceil(mapSize * botDensity);
   var interval = 0;
+  if (numBots > 10){
+    numBots = 10;
+  }
   for (var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();

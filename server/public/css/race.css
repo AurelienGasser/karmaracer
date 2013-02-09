@@ -98,6 +98,8 @@ table.scores {
 
 table.scores thead tr th, tbody#scores tr td {
     padding: 0.5em 0.3em;
+    font-size: 10px;
+    color:black;
 }
 
 #debug {

@@ -70,9 +70,8 @@ var GameServer = function(app, map) {
     }
 
     // update world
-    setInterval(play, 1000 / 50);
+    setInterval(play, 1000 / 16);
     setInterval(handleClientKeyboard, 1000 / 100);
-
     return this;
   }
 
@@ -97,13 +96,13 @@ GameServer.prototype.getPlayersForShare = function() {
     };
     players.push(pShare);
   }
-  for(var i in this.botManager.bots) {
-    var b = this.botManager.bots[i];
-    var pShare = {
-      'name': b.name
-    };
-    players.push(pShare);
-  }
+  // for(var i in this.botManager.bots) {
+  //   var b = this.botManager.bots[i];
+  //   var pShare = {
+  //     'name': b.name
+  //   };
+  //   players.push(pShare);
+  // }
   return players;
 };
 
