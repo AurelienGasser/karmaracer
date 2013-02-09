@@ -93,12 +93,26 @@ var MapManger = function(app, callback) {
       });
     }
 
+
+    function getMapsWithPlayers() {
+      var maps = {};
+      for(var i in that.gameServers) {
+        var gServer = that.gameServers[i];
+        maps[gServer.map.name] = {
+          'map': gServer.map.name,
+          'players': gServer.getPlayersForShare()
+        };
+      }
+      return maps;
+    }
+
     var res = {
       'createOrUpdateMap': createOrUpdateMap,
       'app': that.app,
       'gameServers': that.gameServers,
       'maps': that.maps,
-      'itemsByName': that.itemsByName
+      'itemsByName': that.itemsByName,
+      'getMapsWithPlayers': getMapsWithPlayers
     };
 
 

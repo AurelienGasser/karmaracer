@@ -88,6 +88,18 @@ GameServer.prototype.initGameServer = function(map) {
   setInterval(this.sendPositionsToPlayers.bind(this), 1000 / 16);
 };
 
+GameServer.prototype.getPlayersForShare = function() {
+  var players = [];
+  for(var i in this.players) {
+    var p = this.players[i];
+    var pShare = {
+      'name': p.playerName
+    };
+    players.push(pShare);
+  }
+  return players;
+};
+
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();
   var projectiles = this.weaponsManager.getGraphicProjectiles();

@@ -16,9 +16,11 @@ body{
 }
 
 #mainContent {
-  width: 700px;
+  width: 100%;
   display: block;
   margin: 0px auto;
+  text-align: center;
+  vertical-align: top;
   /*display: none;*/
 }
 
@@ -26,16 +28,55 @@ h1 {
   text-align: center;
 }
 
-#maps {
-  float: left;
+
+#maps{
+  margin: 0px;
+  padding:0px;
+}
+
+#maps .players{
+  font-size: 0.8em;
+}
+
+.mapLink{
+  font-size: 2.0em;
+  text-decoration: none;
+    color:blue;
+}
+
+.mapLink:hover{
+  text-decoration: underline;
+}
+
+#maps li{
+  width: 240px;
+  height: 120px;
+  list-style: none;
+  display: inline-block;
+  vertical-align: top;
+  border: 1px solid #eee;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+  box-shadow: #eee 2px 2px 2px;
 }
 
 .editLink {
   font-size: 11px;
 }
 
+#mapsContainer {
+  /*float: left;*/
+  width: 700px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+
 #help {
-  float: right;
+  /*float: right;*/
+  display: inline-block;
+  vertical-align: top;
 }
 
 ul#keys li{

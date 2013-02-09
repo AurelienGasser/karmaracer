@@ -18,9 +18,6 @@ function MapItem(_jsonItem, _ctx, _id) {
   this.ctx = _ctx;
 
   this.image = null;
-
-
-
   //  console.log('jsonItem', this.jsonItem);
 }
 

@@ -13,19 +13,36 @@ $(function() {
 
 
   connection.emit('get_maps', function(err, maps) {
-    // console.log(maps);
     addMaps(maps);
   });
 
-  connection.on('maps_state', function(err, mapStates){
-    console.log(mapStates);
+  connection.on('maps_state', function(mapStates){
+    
+    for (var i in mapStates){
+      var m = mapStates[i];
+      console.log(m);
+      var players = _.map(m.players, function(p){
+        return p.name;
+      }).join(', ');
+      if (players.length > 0){
+        players = 'Players : ' + players;
+      }
+      $('#map-' + m.map + ' .players').html(players);
+    }
+
   });
 
 
   function registerMaps() {
     $('.mapLink').click(function(e) {
-      console.log('saving ' +  $('#playerName').val())
-      Karma.set('playerName', $('#playerName').val());
+      var playerName = $('#playerName').val();
+
+      if (playerName.length === 0){
+        e.preventDefault();
+        return false;
+      }
+      // console.log('saving ' +  playerName);
+      Karma.set('playerName', playerName);
       Karma.set('map', $(this).text());
       return true;
     });
@@ -38,7 +55,7 @@ $(function() {
     //maps = ['map1'];
     for(var i = 0; i < maps.length; i++) {
       var m = maps[i];
-      o.push('<li><a class="mapLink" href="game.'+ m + '" >' + m + '</a>&nbsp;<a class="editLink" href="mm.'+ m + '" >edit</a></li>');
+      o.push('<li id="map-',m,'"><a class="mapLink" href="game.'+ m + '" >' + m + '</a></br><a class="editLink" href="mm.'+ m + '" >edit</a></br><span class="players"/></li>');
     };
     $('ul#maps').html(o.join(''));
     registerMaps();
