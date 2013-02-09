@@ -2,7 +2,7 @@
   "name": "karmaracer",
   "version": "0.0.1",
   "scripts" : {
-    "start" : "sudo NODE_ENV=local nodemon server/server.js"
+    "start" : "NODE_ENV=local nodemon server/server.js"
   },
   "dependencies": {
     "express": ">=3.0.6",
