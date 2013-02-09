@@ -12,7 +12,9 @@ html
   body
     .header
       h1  Welcome to Karma Racer !
-      input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
+      form#playerNameForm(href="#")
+        input#playerName(type='text', placeholder='Your name', required='required', name='playerName')
+        input(type="submit", style="display: none")
     br
     br
     div#mainContent
