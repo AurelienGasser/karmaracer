@@ -3,6 +3,7 @@ var _ = require('underscore');
 var fs = require('fs');
 var box2d = require('box2dweb-commonjs');
 var PhysicsItem = require("./PhysicsItem");
+var ContactListener = require('./ContactListener');
 
 var PhysicsEngine = backbone.Model.extend({
   urlRoot: '/physicsEngine',
@@ -35,7 +36,8 @@ var PhysicsEngine = backbone.Model.extend({
       }
     }.bind(this));
 
-    this.world.SetContactListener(require('./ContactListener'));
+    var contactListener = new ContactListener(this.gameServer);
+    this.world.SetContactListener(contactListener.listener);
 
     this.createBorders(this.map.size);
     this.loadStaticItems(this.map.staticItems);
