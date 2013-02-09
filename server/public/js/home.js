@@ -13,7 +13,7 @@ $(function() {
 
 
   connection.emit('get_maps', function(err, maps) {
-    //console.log(maps);
+    // console.log(maps);
     addMaps(maps);
   });
 

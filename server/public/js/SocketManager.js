@@ -4,7 +4,7 @@ $(window).on('beforeunload', function() {
 
 var connection;
 
-function SocketManager(serverHost, gameInstance, onInitCallback) {
+function SocketManager(gameInstance, onInitCallback) {
   var host = window.location.hostname;
   connection = io.connect(host);
 

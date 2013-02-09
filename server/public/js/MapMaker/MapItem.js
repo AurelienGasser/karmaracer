@@ -40,11 +40,6 @@ MapItem.prototype.initImage = function(callback) {
     if(that.patternType !== "none" && !_.isUndefined(that.ctx)) {
       that.pattern = that.ctx.createPattern(that.image, 'repeat');
     } else {
-<<<<<<< HEAD
-      console.log('image loaded', this.src, that.patternType);
-=======
-      // console.log('image loaded', this.src, that.patternType);  
->>>>>>> 4b62fc636a86d7e3da55185ad73f5968fa6f2d89
     }
     return callback(null, that);
   };

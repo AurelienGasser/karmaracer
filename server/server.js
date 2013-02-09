@@ -15,31 +15,22 @@ var port = 8080;
 
 // app.set('views', __dirname + '/views');
 // app.set('view engine', 'jade');
-var serverHost = 'karma.origamix.fr';
+// var serverHost = 'karma.origamix.fr';
+var os = require("os");
+var hostname = os.hostname();
 
 app.configure('local', function() {
-  serverHost = 'localhost';
-  port = 80;
-});
+  console.log('start on host', hostname);
+  switch(hostname) {
+  case 'pouyaair.home':
+    port = 8080;
+    break;
+  default:
+    port = 80;
+    break;
+  }
 
-app.configure('dev', function() {
-  serverHost = '192.168.1.103';
-  port = 80;
 });
-
-app.configure('aurel', function() {
-  serverHost = '192.168.1.101';
-  port = 80;
-});
-
-app.configure('pouya', function() {
-  serverHost = 'pouyaair';
-});
-
-app.configure('tib', function() {
-  serverHost = 'localhost';
-});
-
 
 
 var http = require('http');
@@ -99,11 +90,11 @@ function index(req, res, view, draw_engine) {
   var options = {
     layout: false,
     'title': 'Karma Racer',
-    default_draw_engine: draw_engine,
-    server: 'http://' + serverHost + '/',
+    default_draw_engine: draw_engine
+    // server: 'http://' + serverHost + '/',
   };
   var map = req.params.map;
-  if (!_.isUndefined(map)){
+  if(!_.isUndefined(map)) {
     options['map'] = map;
   }
   res.render(view, options);
@@ -114,4 +105,3 @@ app.io = io;
 var mapManager = require('./MapManager')(app);
 
 module.exports = app;
-

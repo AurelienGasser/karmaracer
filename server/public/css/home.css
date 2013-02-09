@@ -18,8 +18,8 @@ body{
 #mainContent {
   width: 700px;
   display: block;
-  margin: 0 auto;
-  display: none;
+  margin: 0px auto;
+  /*display: none;*/
 }
 
 h1 {

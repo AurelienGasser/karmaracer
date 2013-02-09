@@ -4,7 +4,7 @@ function GameInstance() {
   this.mycar;
   this.walls = [];
   this.drawEngine;
-  this.socketManager = new SocketManager(G_serverHost, this, this.onInitReceived.bind(this));
+  this.socketManager = new SocketManager(this, this.onInitReceived.bind(this));
   this.setUIEvents();
 
   this.isMobile = false;
