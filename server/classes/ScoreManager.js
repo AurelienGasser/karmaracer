@@ -1,3 +1,5 @@
+var _ = require('underscore');
+
 var ScoreManager = function(gameServer) {
   this.gameServer = gameServer;
 
@@ -20,6 +22,7 @@ function getScores(source) {
     };
     scores.push(score);
   }
+  
   return scores;
 }
 
@@ -27,6 +30,7 @@ ScoreManager.prototype.getScores = function() {
   var scores = [];
   scores = scores.concat(getScores(this.gameServer.players));
   scores = scores.concat(getScores(this.gameServer.botManager.bots));
+  scores = _.sortBy(scores, function (s) {return s.score}).reverse();
   return scores;
 }
 

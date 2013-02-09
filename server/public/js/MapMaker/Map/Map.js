@@ -216,7 +216,7 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
     var mapItem = that.createMapItem(sourceMapItem);
     mapItem.size.w = sourceMapItem.size.w * that.gScale;
     mapItem.size.h = sourceMapItem.size.h * that.gScale;
-    that.svgDrawItem(mapItem);
+    that.svgRaphaelAddItem(mapItem);
   });
 
 };
@@ -229,6 +229,10 @@ Map.prototype.createMapItem = function(sourceMapItem) {
   mapItem.pattern = sourceMapItem.pattern;
   that.MapItems[timestamp] = mapItem;
   return mapItem;
+};
+
+Map.prototype.removeMapItem = function(id) {
+  delete this.MapItems[id];
 };
 
 Map.prototype.loadItemFromServer = function(item, callback) {

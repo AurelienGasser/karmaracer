@@ -28,17 +28,20 @@
     var li = $('<li></li>');
 
 
-    function addOption(optName) {
+    function getJOption(optName){
       var opt = $('<div><a href="#">' + optName + '</a></div>');
+      return opt;
+    }
+
+    function addOption(optName) {
+      var opt = getJOption(optName);
       opt.click(function(e) {
 
         if(optName === 'toFront') {
           c[optName]();
           s[optName]();
-
         } else {
           s[optName]();
-
           c[optName]();
           that.bgImg.toBack();
         }
@@ -51,6 +54,13 @@
 
     addOption('toFront');
     addOption('toBack');
+    var remove = getJOption('removeItem');
+    li.append(remove);
+    remove.click(function(e){
+      that.removeMapItem(item.id);
+      $(c.node).remove();
+      $(s.node).remove();
+    });
 
     c.li = li;
     $('#canvas-debug').append(li);
@@ -159,7 +169,7 @@
 
 
   Map.prototype.svgDrawBackground = function() {
-    console.log(this.bgImg);
+    // console.log(this.bgImg);
     if (!_.isUndefined(this.bgImg)){
       $(this.bgImg.node).remove();
     }

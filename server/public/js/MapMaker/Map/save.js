@@ -7,7 +7,6 @@ Map.prototype.saveMap = function() {
   var iHeight = this.realWorldSize.h;
 
   // this.canvas.toDataURL("image/png");
-
   var map = {
     "name": $('#map-name').val(),
     "size": {
@@ -15,8 +14,14 @@ Map.prototype.saveMap = function() {
       "h": iHeight / this.gScale
     }
   };
-  var path = this.itemsByName[this.mapBackgroundName].path;
-  console.log(this.itemsByName[this.mapBackgroundName]);
+
+  var path = '/sprites/bg_grass1.png';
+  var itemBG = this.itemsByName[this.mapBackgroundName];
+  if(!_.isUndefined(itemBG)) {
+    path = itemBG.path;
+  }
+
+  // console.log(this.itemsByName[this.mapBackgroundName]);
   if(!_.isUndefined(path)) {
     map['background'] = {
       'path': path,

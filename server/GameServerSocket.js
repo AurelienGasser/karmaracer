@@ -93,7 +93,7 @@ var GameServerSocket = function(mapManager) {
       client.on('saveMap', function(map) {
         try {
           var fs = require('fs');
-          var path = "./public/maps/" + map.name + '.json';
+          var path = __dirname + "/public/maps/" + map.name + '.json';
           //reload map
           that.mapManager.createOrUpdateMap(map);
           fs.writeFile(path, JSON.stringify(map), function(err) {
@@ -104,7 +104,7 @@ var GameServerSocket = function(mapManager) {
             }
           });
         } catch(e) {
-          console.log(e, e.stack);
+          console.error(e, e.stack);
         }
       });
 
