@@ -19,7 +19,7 @@ function MapItem(_jsonItem, _ctx, _id) {
 
   this.image = null;
 
-  
+
 
   //  console.log('jsonItem', this.jsonItem);
 }
@@ -36,11 +36,11 @@ MapItem.prototype.initImage = function(callback) {
   }
 
   that.image.onload = function() {
-    
+
     if(that.patternType !== "none" && !_.isUndefined(that.ctx)) {
       that.pattern = that.ctx.createPattern(that.image, 'repeat');
     } else {
-      console.log('image loaded', this.src, that.patternType);  
+      console.log('image loaded', this.src, that.patternType);
     }
     return callback(null, that);
   };

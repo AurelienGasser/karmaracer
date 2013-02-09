@@ -22,7 +22,8 @@ Engine2DCanvas.prototype.initBackgroundCanvas = function() {
   this.backgroundContext = this.backgroundCanvas.getContext("2d");
   this.backgroundContext.save();
   this.drawBackground(this.backgroundContext);
-  this.drawWalls(this.backgroundContext);
+  this.drawOutsideWalls(this.backgroundContext);
+  this.drawStaticItems(this.backgroundContext);
   this.backgroundContext.restore();
 };
 
@@ -124,7 +125,21 @@ Engine2DCanvas.prototype.drawRockets = function(ctx) {
   }
 }
 
-Engine2DCanvas.prototype.drawWalls = function(ctx) {
+Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
+  var wThickness  = 50;
+  var s           = this.camera.realWorldSize;
+  ctx.fillStyle   = this.gameInstance.itemsInMap.outsideWall.pattern;
+  // bot
+  ctx.fillRect(-wThickness, s.h, s.w + 2 * wThickness, wThickness);
+  // top
+  ctx.fillRect(-wThickness, -wThickness, s.w + 2 * wThickness, wThickness);
+  // left
+  ctx.fillRect(-wThickness, 0, wThickness, s.h);
+  // right
+  ctx.fillRect(s.w, 0, wThickness, s.h);
+}
+
+Engine2DCanvas.prototype.drawStaticItems = function(ctx) {
   var that = this;
   if(that.gameInstance.walls != null) {
     _.each(that.gameInstance.walls, function(c) {
@@ -161,7 +176,8 @@ Engine2DCanvas.prototype.drawItems = function() {
   // this.ctx.save();
   // this.ctx.restore();
   this.drawBackground(this.ctx);
-  this.drawWalls(this.ctx);
+  this.drawOutsideWalls(this.ctx);
+  this.drawStaticItems(this.ctx);
 
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, cs.w, cs.h, this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);

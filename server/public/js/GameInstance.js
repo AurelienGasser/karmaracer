@@ -9,7 +9,7 @@ function GameInstance() {
 
   this.isMobile = false;
 
-  
+
   // function html5_audio() {
   //   var a = document.createElement('audio');
   //   return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
@@ -18,7 +18,7 @@ function GameInstance() {
   // if(html5_audio()) this.play_html5_audio = true;
   // this.sounds = {};
   // this.setSound('ta', '/sounds/ta.mp3');
-  
+
   var that = this;
 
   function reduceExplosionsAlpha() {

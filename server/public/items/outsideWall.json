@@ -1,0 +1,14 @@
+{
+  "name" : "outsideWall",
+  "image" : {
+    "path" : "/sprites/wall.png",
+    "size" : 8,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 128,
+      "h" : 128
+    }
+  },
+  "patternType" : "both"
+}
