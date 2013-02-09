@@ -10,7 +10,7 @@ var BotManager = function(gameServer) {
 
 BotManager.prototype.initBots = function() {
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
-  var botDensity = 3 / 2300;
+  var botDensity = 1 / 2300;
   var numBots = Math.ceil(mapSize * botDensity);
   var interval = 0;
   for (var i = 0; i < numBots; ++i) {
