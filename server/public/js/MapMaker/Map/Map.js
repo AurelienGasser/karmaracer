@@ -145,14 +145,8 @@ Map.prototype.tick = function() {
   requestAnimFrame(this.tick.bind(this));
   //this.canvasDraw();
   //this.svgDraw();
-
-
   this.outputDebug();
-  //   if (this.action =
-  //   
-  //   = 'translate'){
-  //    this.translateSelectedItemsUsingMousePosition();
-  //   }
+
 };
 
 
@@ -161,10 +155,8 @@ function Step(items, action, callback) {
   var itemCount = 0;
 
   function end() {
-    //console.log(itemCount, itemsLength - 1);
     if(itemCount === itemsLength - 1) {
       if(_.isFunction(callback)) {
-        console.log('step end');
         return callback(null);
       }
     }
@@ -231,30 +223,24 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
 
 Map.prototype.createMapItem = function(sourceMapItem) {
   var that = this;
-  // var now = new Date();
   var timestamp = that.idCount++;
   var mapItem = new MapItem(sourceMapItem, that.ctx, timestamp);
   mapItem.image = sourceMapItem.image;
   mapItem.pattern = sourceMapItem.pattern;
   that.MapItems[timestamp] = mapItem;
-  // console.log('add item', timestamp);
   return mapItem;
 };
 
 Map.prototype.loadItemFromServer = function(item, callback) {
   var that = this;
   var itemsDOMContainer = $('#items');
-  //$.getJSON('/items/' + itemName + '.json', function(item) {
   if(_.isFunction(callback)) {
     var mapItem = new MapItem(item, that.ctx, item.name);
 
     mapItem.initImage(function(err, mapItemWithImage) {
       that.addMapItemInDoForSelection(itemsDOMContainer, mapItemWithImage);
       that.itemsByName[mapItem.name] = mapItemWithImage;
-//      console.log('item loaded', mapItemWithImage.name);
       return callback(null, mapItemWithImage);
     });
   }
-
-  // });
 };

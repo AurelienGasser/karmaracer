@@ -8,7 +8,6 @@ var Rocket = require("./PhysicsItem").extend({
     var car = playerCar.car;
     var initPos = pos;
     this.acc_helper = 1;
-    //console.log(initPos);
     var a = {
       physicsEngine: car.engine,
       position: {
@@ -43,7 +42,6 @@ var Rocket = require("./PhysicsItem").extend({
       x: this.acc_helper * ac * Math.cos(this.angle),
       y: this.acc_helper * ac * Math.sin(this.angle)
     };
-    //console.log(v);
     this.applyForceToBody(v);
   }
 });

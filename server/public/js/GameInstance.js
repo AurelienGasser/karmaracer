@@ -60,7 +60,7 @@ GameInstance.prototype.play_sound = function(url) {
     snd.load();
     snd.play();
   } else {
-    // $("#sound").remove();
+    $("#sound").remove();
     var sound = $("<embed type='audio/mpeg' />");
     sound.attr('src', url);
     sound.attr('loop', false);

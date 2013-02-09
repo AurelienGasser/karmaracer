@@ -60,17 +60,12 @@ function start() {
 
   //var items = ['wall', 'stone', 'grass', 'grass3', 'stone_l', 'stone_r', 'stone_t', 'stone_b', 'tree1'];
   map.connection.emit('get_items', function(err, itemsByName) {
-
-    console.log(itemsByName);
-
     var items = [];
     for(var itemName in itemsByName) {
       items.push(itemsByName[itemName]);
     }
     map.loadItems(items, function(err) {
-      console.log('items loaded');
       map.loadMap(map.mapName, function(err) {
-        console.log('MAP loaded', map.MapItems);
         addProperties(map);
         //map.startTick();
         map.svgInit(mapID);

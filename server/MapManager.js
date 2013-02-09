@@ -22,8 +22,8 @@ var MapManger = function(app, callback) {
 
     function loadItems(callback) {
       //that.itemsByName = {};
-      getJSONSForDirectory(__dirname + './public/items', function(item) {
-        //console.log(item);
+      var path = __dirname + '/public/items';
+      getJSONSForDirectory(path, function(item) {
         that.itemsByName[item.name] = item;
       }, callback);
     }
@@ -33,7 +33,8 @@ var MapManger = function(app, callback) {
       brosweFilesRec(path, function(err, files) {
         for(var i = 0; i < files.length; i++) {
           var fName = files[i];
-          var content = fs.readFileSync(path + '/' + fName);
+          var filePath = fName;
+          var content = fs.readFileSync(filePath);
           var item = JSON.parse(content);
           action(item);
         };
@@ -106,7 +107,6 @@ var MapManger = function(app, callback) {
         console.log('maps loaded')
         that.gameServerSocket = new(require('./GameServerSocket'))(res);
         loadItems(function(err) {
-          console.log('items loaded', that.itemsByName);
           if(_.isFunction(callback)) {
             return callback(null, that);
           }

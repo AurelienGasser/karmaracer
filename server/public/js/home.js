@@ -50,10 +50,12 @@ $(function() {
 
   function addHelps() {
     var helps = [];
-    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / break'));
+    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / go backward'));
     helps.push(createHelp('&#8592;&nbsp;&#8594;', 'turn left / right'));
     helps.push(createHelp('&#60;space&#62;', 'shoot'));
     helps.push(createHelp('L/P', 'zoom / unzoom'));
+    helps.push(createHelp('B', 'break'));
+    helps.push(createHelp('Mouse Click', 'drive'));
 
     var o = [];
     for(var i = 0; i < helps.length; i++) {

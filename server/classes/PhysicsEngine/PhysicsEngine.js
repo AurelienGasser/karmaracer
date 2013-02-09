@@ -24,7 +24,6 @@ var PhysicsEngine = backbone.Model.extend({
     this.world = new box2d.b2World(gravity, false);
     this.staticItems = [];
 
-    // LOAD STATIC ITEMS ONCE FOR CLIENT
     this.itemsDir = __dirname + '/../../public/items/';
     this.itemsInMap = {};
     _.each(this.map.staticItems.concat([{ name: 'outsideWall' }]), function(i) {
@@ -61,11 +60,9 @@ var PhysicsEngine = backbone.Model.extend({
   },
   step: function() {
     // Run Simulation!
-    //console.log(this.world.GetBodyCount());
     this.world.Step(this.timeStep, 8, // velocity iterations
     3); // position iterations
     // this.world.ClearForces();
-    //this.world.Step(this.timeStep, this.iterations);
     for (var i in this.itemsToDestroy) {
       var item = this.itemsToDestroy[i];
       item.destroy();

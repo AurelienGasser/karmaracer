@@ -49,8 +49,10 @@ var PhysicsItem = backbone.Model.extend({
   },
   addAngle: function(a) {
     if(this.body !== null) {
-      this.body.SetAngularVelocity(this.body.GetAngularVelocity() + a)
-      // this.body.ApplyTorque(a)
+      // var angle = this.getAngle();
+      // angle += a;
+      // this.setAngle(angle);
+      this.body.SetAngularVelocity(this.body.GetAngularVelocity() + a);
     }
   },
   getAngle: function() {
@@ -94,13 +96,19 @@ var PhysicsItem = backbone.Model.extend({
       
     }
   },
-  reduceVelocityOfBody: function(reduceBy) {
+  reduceVelocityOnlyOfBody : function(reduceBy){
     if(this.body != null) {
       this.body.m_linearVelocity.x /= 1 * reduceBy;
       this.body.m_linearVelocity.y /= 1 * reduceBy;
-      this.body.m_angularVelocity /= 1 * reduceBy;
       if(Math.abs(this.body.m_linearVelocity.x) < 0.005) this.body.m_linearVelocity.x = 0;
       if(Math.abs(this.body.m_linearVelocity.y) < 0.005) this.body.m_linearVelocity.y = 0;
+    }
+
+  },
+  reduceVelocityOfBody: function(reduceBy) {
+    if(this.body != null) {
+      this.reduceVelocityOnlyOfBody(reduceBy);
+      this.body.m_angularVelocity /= 1 * reduceBy;
       if(Math.abs(this.body.m_angularVelocity) < 0.005) this.body.m_angularVelocity = 0;
     }
   }

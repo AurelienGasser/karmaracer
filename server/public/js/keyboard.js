@@ -7,6 +7,7 @@ KEY_DOWN = 40;
 KEY_ESCAPE = 27;
 KEY_L = 76;
 KEY_P = 80;
+KEY_B = 66;
 
 function KeyboardHandler(gameInstance) {
   this.gameInstance = gameInstance;
@@ -21,6 +22,9 @@ KeyboardHandler.prototype.sendKeyboardEvent = function(event, state) {
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
   switch(key) {
+  case KEY_B:
+    this.sendKeyboardEvent('break', state);
+    break;
   case KEY_SPACE:
     this.sendKeyboardEvent('shoot', state);
     break;
