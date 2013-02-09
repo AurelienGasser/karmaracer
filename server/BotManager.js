@@ -5,7 +5,7 @@ var BotManager = function(gameServer) {
   this.gameServer = gameServer;
   this.bots = {};
   this.initBots();
-  setInterval(this.tick.bind(this), 20);
+  // setInterval(this.tick.bind(this), 20);
 }
 
 BotManager.prototype.initBots = function() {
