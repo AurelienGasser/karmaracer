@@ -60,12 +60,14 @@ function SocketManager(gameInstance, onInitCallback) {
   });
 
   connection.on('scores', function(scores) {
-    var o = '';
+    var o = [];
+    var playerName = Karma.get('playerName');
     for(var i = 0; i < scores.length; i++) {
       var s = scores[i];
-      o += '<tr><td>' + s.name + '</td><td>' + s.score + '</td><td>' + s.level + '</td></tr>';
+      var userCarClass = (s.name === playerName) ? 'userCar' : '';
+      o.push('<tr class="', userCarClass, '"><td>', s.name, '</td><td>', s.score, '</td><td>', s.level, '</td></tr>');
     };
-    $('tbody#scores').html(o);
+    $('tbody#scores').html(o.join(''));
   });
 
   function announce(text, color) {

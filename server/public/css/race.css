@@ -96,6 +96,10 @@ table.scores {
     padding: 0.5em;
 }
 
+table.scores tr.userCar{
+    font-weight: bold;
+}
+
 table.scores thead tr th, tbody#scores tr td {
     padding: 0.5em 0.3em;
     font-size: 10px;
