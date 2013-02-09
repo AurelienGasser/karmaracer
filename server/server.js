@@ -44,6 +44,12 @@ app.configure('tib', function() {
 
 var http = require('http');
 var server = http.createServer(app);
+server.on('error', function(e) {
+  console.log('Critical Server Error:', e);
+  console.log(e.stack);
+  process.exit(1)
+})
+
 var io = require('socket.io').listen(server);
 io.set('log level', 1);
 
