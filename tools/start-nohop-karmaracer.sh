@@ -1,2 +1,4 @@
 #!/bin/sh
-nohup node ../server/karmaracer-server.js &
+git pull origin master
+killall node
+nohup node ../server/server.js &
