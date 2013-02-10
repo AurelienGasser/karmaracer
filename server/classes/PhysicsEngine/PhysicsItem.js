@@ -12,7 +12,7 @@ var PhysicsItem = backbone.Model.extend({
     if(!_.isUndefined(_arguments['name'])) {
       this.name = _arguments['name'];
     }
-    this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments['position'], this.size, _arguments['density'], _arguments['friction'], _arguments['angle'], _arguments['bullet'], _arguments['type'], _arguments['restitution']);
+    this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments);
     this.engine = _arguments['physicsEngine'];
   },
   destroy: function() {
@@ -93,7 +93,7 @@ var PhysicsItem = backbone.Model.extend({
         x: pos.x,
         y: pos.y
       });
-      
+
     }
   },
   reduceVelocityOnlyOfBody : function(reduceBy){

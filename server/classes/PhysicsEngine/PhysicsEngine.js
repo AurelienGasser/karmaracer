@@ -71,25 +71,25 @@ var PhysicsEngine = backbone.Model.extend({
     }
     this.itemsToDestroy = [];
   },
-  createSquareBody: function(userData, _position, _size, _density, _friction, _angle, isBullet, type, restitution) {
+  createSquareBody: function(userData, bodyParams) {
     try {
       var def = new box2d.b2BodyDef();
-      def.bullet = isBullet;
+      def.bullet = bodyParams.bullet;
       def.userData = userData;
-      def.position.Set(_position.x, _position.y);
+      def.position.Set(bodyParams.position.x, bodyParams.position.y);
       def.type = box2d.b2Body.b2_dynamicBody;
-      if (!_.isUndefined(type)){
+      if (!_.isUndefined(bodyParams.type)){
         def.type = box2d.b2Body.b2_staticBody;
       }
-      def.angle = _angle || 0;
+      def.angle = bodyParams.angle || 0;
       def.linearVelocity = new box2d.b2Vec2(0.0, 0.0);
 
       var fixtureDef = new box2d.b2FixtureDef();
-      fixtureDef.density = _density;
-      fixtureDef.friction = _friction;
-      fixtureDef.restitution = restitution || 0;
+      fixtureDef.density = bodyParams.density;
+      fixtureDef.friction = bodyParams.friction;
+      fixtureDef.restitution = bodyParams.restitution || 0;
       fixtureDef.shape = new box2d.b2PolygonShape();
-      fixtureDef.shape.SetAsBox(_size.w / 2, _size.h / 2);
+      fixtureDef.shape.SetAsBox(userData.size.w / 2, userData.size.h / 2);
 
       var body = this.world.CreateBody(def);
       body.CreateFixture(fixtureDef);
