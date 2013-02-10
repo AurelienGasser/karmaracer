@@ -75,14 +75,11 @@ GameServer.prototype.step = function() {
     if(this.tickCounter % 4 === 0) {
       that.carManager.updatePos();
       that.weaponsManager.step();
+      that.sendPositionsToPlayers();
     }
     if(this.tickCounter % 30 === 0) {
       that.botManager.tick();
-    }
-    if (this.tickCounter % 10 === 0){
-      that.sendPositionsToPlayers();
-    }
-    
+    }    
   } catch(e) {
     console.log("error main interval", e, e.stack);
   }

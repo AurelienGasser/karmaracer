@@ -15,9 +15,9 @@ SuperMachineGun.prototype.shoot = function(playerCar) {
   var angle1 = -Math.PI / 4;
   var angle2 = Math.PI / 4;
   var carAngle = playerCar.car.getAngle();
-  this.addProjectile(playerCar, carAngle + angle1);
-  this.addProjectile(playerCar, carAngle + angle2);
-  this.addProjectile(playerCar, carAngle);
+  this.addProjectile(playerCar, angle1);
+  this.addProjectile(playerCar, angle2);
+  this.addProjectile(playerCar);
 }
 
 module.exports = SuperMachineGun;

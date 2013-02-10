@@ -7,7 +7,7 @@ var MachineGun = function() {
     this.name = 'machine gun';
     this.lastShotInterval = 32;
     this.ProjectileClass = Bullet;
-    this.startAcceleration = 1;
+    this.startAcceleration = 2;
   }
 
 module.exports = MachineGun;

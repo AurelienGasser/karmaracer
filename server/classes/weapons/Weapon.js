@@ -1,4 +1,5 @@
 var Bullet = require('../PhysicsEngine/Bullet');
+var _ = require('underscore');
 
 var Weapon = function() {
     this.projectiles = {};
@@ -19,10 +20,10 @@ Weapon.prototype.deleteDeads = function(deads) {
 
 Weapon.prototype.getProjectileVector = function(playerCar, angle) {
   var car = playerCar.car;
-  var distanceFromCar = car.size.w / 2;
+  var distanceFromCar = car.size.w;
   var pos = car.getVector({
-    x: distanceFromCar * car.size.w,
-    y: distanceFromCar * car.size.h
+    x: distanceFromCar,// * car.size.w,
+    y: distanceFromCar// * car.size.h
   }, angle);
   return pos;
 };
@@ -31,13 +32,17 @@ Weapon.prototype.shoot = function(playerCar) {
   var now = (new Date()).getTime();
   if(now - this.lastShot > this.lastShotInterval) {
     this.lastShot = now;
-    this.addProjectile(playerCar, playerCar.car.getAngle());
+    this.addProjectile(playerCar);
+    //, playerCar.car.getAngle()
   }
 }
 
 Weapon.prototype.addProjectile = function(playerCar, angle) {
+  if(_.isUndefined(angle)){
+    angle = 0;
+  }
   var pos = this.getProjectileVector(playerCar, angle);
-  var b = new this.ProjectileClass(playerCar, pos, angle);
+  var b = new this.ProjectileClass(playerCar, pos, playerCar.car.getAngle() +  angle);
   b.accelerate(this.startAcceleration);
   this.projectiles[b.id] = b;
 };
