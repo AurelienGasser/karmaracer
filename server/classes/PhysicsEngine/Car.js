@@ -19,12 +19,18 @@ var Car = require("./PhysicsItem").extend({
       },
       density: 1,
       friction: 1,
-      restitution: 0.2
+      restitution: 0
     };
     this.playerCar = playerCar;
     this.name = 'car';
     this.constructor.__super__.initialize.apply(this, [a]);
-    this.tireResistance = 1.8;
+    this.linearTireResistance = 0.4;
+
+    this.angularTireResistance        = 0.8;
+    this.angularAcceleration          = 0;
+    this.maxAngularAcceleration       = 1.7;
+    this.angularAccelerationIncrement = 0.05;
+
     this.createSensor();
   },
   accelerationMax: 50,
@@ -36,9 +42,25 @@ var Car = require("./PhysicsItem").extend({
     };
     this.applyForceToBody(v);
   },
+  updateAngularAcceleration: function(turningRight) {
+    if (this.turningRight != turningRight) {
+      this.angularAcceleration = 0;
+      this.turningRight = turningRight;
+    }
+    if (this.turningRight) {
+      this.angularAcceleration = Math.min(this.angularAcceleration + this.angularAccelerationIncrement, this.maxAngularAcceleration);
+    } else {
+      this.angularAcceleration = Math.max(this.angularAcceleration - this.angularAccelerationIncrement, -this.maxAngularAcceleration);
+    }
+  },
+  turn: function(turningRight) {
+    this.updateAngularAcceleration(turningRight);
+    this.constructor.__super__.turn.bind(this)(this.angularAcceleration);
+  },
   updatePos: function() {
-    this.reduceVelocityOfBody(this.tireResistance);
-    this.body.ApplyTorque(-this.body.m_torque / 15);    
+    this.reduceLinearVelocity(this.linearTireResistance);
+    this.reduceAngularVelocity(this.angularTireResistance);
+    this.body.ApplyTorque(-this.body.m_torque / 15);
   },
   receiveHit: function() {
     this.playerCar.receiveHit();

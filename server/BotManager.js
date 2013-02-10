@@ -4,7 +4,9 @@ var Bot = require('./classes/Bot');
 var BotManager = function(gameServer) {
   this.gameServer = gameServer;
   this.bots = {};
-  this.initBots();
+  if (!process.env.NO_BOTS) {
+    this.initBots();
+  }
   // setInterval(this.tick.bind(this), 20);
 }
 
