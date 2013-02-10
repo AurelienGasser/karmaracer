@@ -67,12 +67,12 @@ GameServer.prototype.step = function() {
   var ts = new Date();
   var tolerance = 2;
   if(this.tickTs && ts - this.tickTs > this.tickInterval * tolerance) {
-    console.log('Warning: main step takes too long...')
+    console.log('Warning: main step takes too long...', this.map.name, ts - this.tickTs + 'ms');
   }
   this.tickTs = ts;
   try {
     that.physicsEngine.step();
-    if(this.tickCounter % 4 === 0) {
+    if(this.tickCounter % 2 === 0) {
       that.carManager.updatePos();
       that.weaponsManager.step();
       that.sendPositionsToPlayers();
@@ -98,7 +98,7 @@ GameServer.prototype.initGameServer = function(map) {
 
 
   // update world
-  this.ticksPerSecond = 60;
+  this.ticksPerSecond = 32;
   this.tickInterval = 1000 / this.ticksPerSecond;
   this.tickCounter = 0;
   setInterval(this.step.bind(this), this.tickInterval);
