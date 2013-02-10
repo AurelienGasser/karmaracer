@@ -4,7 +4,6 @@ var GameServerSocket = function(mapManager) {
     var Player = require('./classes/Player');
 
     this.homeClientIdCount = 0;
-
     this.homeClients = {};
 
     function addHomeClient(client){
@@ -22,7 +21,6 @@ var GameServerSocket = function(mapManager) {
     this.mapManager = mapManager;
     var that = this;
 
-
     function broadcastMapsState(){
       for (var i in that.homeClients){
         var client = that.homeClients[i];
@@ -33,27 +31,19 @@ var GameServerSocket = function(mapManager) {
 
     setInterval(broadcastMapsState, 1000);
 
-
     this.mapManager.app.io.sockets.on('connection', function(client) {
       console.log('client connected');
       client.keyboard = {};
-
 
       client.on('get_maps', function(callback) {
         addHomeClient(client);
         return callback(null, Object.keys(that.mapManager.maps));
       });
-
-
-
       client.on('get_items', function(callback) {
         return callback(null, that.mapManager.itemsByName);
       });
-
       client.on('move_car', function(info) {
-
         if(!_.isUndefined(client.player) && !client.player.playerCar.dead) {
-          // console.log(info);
           client.player.playerCar.car.applyForceToBody(info.force);
           client.player.playerCar.car.setAngle(info.angle);
         }
@@ -61,7 +51,6 @@ var GameServerSocket = function(mapManager) {
 
       client.on('get_map', function(mapName, callback) {
         console.log('get map', mapName)
-
         var map = that.mapManager.maps[mapName];
         if(_.isUndefined(map)) {
           return callback({
@@ -89,7 +78,6 @@ var GameServerSocket = function(mapManager) {
         client.gameServer.addPlayer(client.player);
       });
 
-
       client.on('saveMap', function(map) {
         try {
           var fs = require('fs');
@@ -111,7 +99,6 @@ var GameServerSocket = function(mapManager) {
       client.on('disconnect', function(socket) {
         try {
           removeHomeClient(client);
-
           if(!_.isUndefined(client.gameServer)) {
             client.gameServer.removePlayer(client.player);
           }

@@ -69,6 +69,8 @@ GameServer.prototype.play = function() {
     that.carManager.updatePos();
     that.weaponsManager.step();
     that.botManager.tick();
+
+    that.sendPositionsToPlayers();
     // that.scoreManager.broadcastScores(that);
   } catch(e) {
     console.log("error main interval", e, e.stack);
@@ -89,7 +91,6 @@ GameServer.prototype.initGameServer = function(map) {
   // update world
   setInterval(this.play.bind(this), 1000 / 16);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
-  setInterval(this.sendPositionsToPlayers.bind(this), 1000 / 16);
 };
 
 GameServer.prototype.getPlayersForShare = function() {
