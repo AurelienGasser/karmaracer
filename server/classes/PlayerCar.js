@@ -2,12 +2,14 @@ var Car = require('./PhysicsEngine/Car');
 var RocketLauncher = require('./weapons/RocketLauncher');
 var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
+var Angle90MachineGun = require('./weapons/Angle90MachineGun');
+
 
 var WeaponsByClass = {
   1: MachineGun,
-  2: MachineGun,
-  3: MachineGun,
-  4: MachineGun,
+  2: Angle90MachineGun,
+  3: SuperMachineGun,
+  4: RocketLauncher,
   5: MachineGun,
   6: SuperMachineGun,
   7: SuperMachineGun,
@@ -16,27 +18,27 @@ var WeaponsByClass = {
 };
 
 var PlayerCar = function(gameServer, client, playerName, player) {
-  this.player = player;
-  this.client = client;
-  this.isBot = !this.client;
-  this.gameServer = gameServer;
-  this.life = 100;
-  this.car = new Car(this);
-  this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
-  this.id = Math.floor(Math.random() * 1e32);
-  this.score = 0;
-  this.experience = 0;
-  this.level = 1;
-  this.updateWeapon();
-  this.dead = false;
-}
+    this.player = player;
+    this.client = client;
+    this.isBot = !this.client;
+    this.gameServer = gameServer;
+    this.life = 100;
+    this.car = new Car(this);
+    this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
+    this.id = Math.floor(Math.random() * 1e32);
+    this.score = 0;
+    this.experience = 0;
+    this.level = 1;
+    this.updateWeapon();
+    this.dead = false;
+  }
 
 PlayerCar.prototype.getShared = function() {
   return this.car.getShared();
 }
 
 PlayerCar.prototype.updatePos = function() {
-  if (!this.dead) {
+  if(!this.dead) {
     return this.car.updatePos();
   }
 }
@@ -51,10 +53,10 @@ PlayerCar.prototype.updatePlayerName = function(name) {
 
 PlayerCar.prototype.getExperience = function(experience) {
   this.experience += experience;
-  if (this.experience >= 100) {
+  if(this.experience >= 100) {
     this.levelUp();
   }
-  if (this.experience < 0) {
+  if(this.experience < 0) {
     this.levelDown();
   }
 }
@@ -65,7 +67,7 @@ PlayerCar.prototype.updateWeapon = function() {
 }
 
 PlayerCar.prototype.levelUp = function() {
-  if (this.level >= Object.keys(WeaponsByClass).length) {
+  if(this.level >= Object.keys(WeaponsByClass).length) {
     this.gameServer.gameEnd(this);
   } else {
     this.level += 1;
@@ -76,7 +78,7 @@ PlayerCar.prototype.levelUp = function() {
 
 PlayerCar.prototype.levelDown = function() {
   this.level -= 1;
-  if (this.level == 0) {
+  if(this.level == 0) {
     this.level = 1;
   }
   this.updateWeapon();
@@ -92,12 +94,12 @@ PlayerCar.prototype.die = function() {
   this.dead = true;
   this.car.scheduleForDestroy();
   this.car = null;
-  if (this.player.client) {
+  if(this.player.client) {
     this.player.client.keyboard = {};
     this.player.client.emit('dead', null);
   }
   setTimeout(function() {
-    if (this.isBot || this.player.connected) {
+    if(this.isBot || this.player.connected) {
       this.dead = false;
       this.car = new Car(this);
       this.life = 100;

@@ -1,7 +1,12 @@
+var Bullet = require('../PhysicsEngine/Bullet');
+
 var Weapon = function() {
     this.projectiles = {};
     this.accelerate = 500;
     this.lastShot = null;
+    this.lastShotInterval = 0;
+    this.startAcceleration = 1;
+    this.ProjectileClass = Bullet;
   }
 
 
@@ -10,6 +15,31 @@ Weapon.prototype.deleteDeads = function(deads) {
     var id = deads[i];
     delete this.projectiles[id];
   };
+};
+
+Weapon.prototype.getProjectileVector = function(playerCar, angle) {
+  var car = playerCar.car;
+  var distanceFromCar = car.size.w / 2;
+  var pos = car.getVector({
+    x: distanceFromCar * car.size.w,
+    y: distanceFromCar * car.size.h
+  }, angle);
+  return pos;
+};
+
+Weapon.prototype.shoot = function(playerCar) {
+  var now = (new Date()).getTime();
+  if(now - this.lastShot > this.lastShotInterval) {
+    this.lastShot = now;
+    this.addProjectile(playerCar, playerCar.car.getAngle());
+  }
+}
+
+Weapon.prototype.addProjectile = function(playerCar, angle) {
+  var pos = this.getProjectileVector(playerCar, angle);
+  var b = new this.ProjectileClass(playerCar, pos, angle);
+  b.accelerate(this.startAcceleration);
+  this.projectiles[b.id] = b;
 };
 
 Weapon.prototype.step = function() {
@@ -32,7 +62,7 @@ Weapon.prototype.step = function() {
   this.deleteDeads(deads);
 };
 
-Weapon.prototype.getGraphics = function(){
+Weapon.prototype.getGraphics = function() {
   var graphics = [];
   for(var id in this.projectiles) {
     if(this.projectiles.hasOwnProperty(id)) {

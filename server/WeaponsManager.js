@@ -22,6 +22,7 @@ WeaponsManager.prototype.getGraphicProjectiles = function() {
     if (player) {
       var weapon = player.playerCar.weapon;
       switch (weapon.name) {
+        case '90 angle machine gun':
         case 'machine gun':
         case 'super machine gun':
           projectiles.bullets = projectiles.bullets.concat(weapon.getGraphics());
