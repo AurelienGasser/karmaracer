@@ -64,6 +64,12 @@ GameServer.prototype.handleClientKeyboard = function() {
 
 GameServer.prototype.play = function() {
   var that = this;
+  var ts = new Date();
+  var tolerance = 2;
+  if (this.tickTs && ts - this.tickTs > this.tickInterval * tolerance) {
+    console.log('Warning: main step takes too long...')
+  }
+  this.tickTs = ts;
   try {
     that.physicsEngine.step();
     that.carManager.updatePos();
@@ -87,7 +93,8 @@ GameServer.prototype.initGameServer = function(map) {
 
 
   // update world
-  setInterval(this.play.bind(this), 1000 / 16);
+  this.tickInterval = 1000 / 16;
+  setInterval(this.play.bind(this), this.tickInterval);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
   setInterval(this.sendPositionsToPlayers.bind(this), 1000 / 16);
 };
