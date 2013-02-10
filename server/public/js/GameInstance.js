@@ -85,11 +85,9 @@ GameInstance.prototype.updateScoresHTML = function() {
   }
   var scores = getScores();
   var o = [];
-  console.log(that.mycar);
   for(var i = 0; i < scores.length; i++) {
     var playerScore = scores[i];
-    var userCarClass = (that.mycar.playerName === playerScore.name) ? 'userCar' : '';
-
+    var userCarClass = (that.mycar !== null && that.mycar.playerName === playerScore.name) ? 'userCar' : '';
     o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td></tr>');
   };
   this.scoresTable.html(o.join(''));

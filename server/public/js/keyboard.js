@@ -20,7 +20,11 @@ KeyboardHandler.prototype.sendKeyboardEvent = function(event, state) {
   }
 };
 
+
+
+
 KeyboardHandler.prototype.handleKey = function(key, state) {
+  var that = this;
   switch(key) {
   case KEY_B:
     this.sendKeyboardEvent('break', state);

@@ -24,10 +24,10 @@ WeaponsManager.prototype.getGraphicProjectiles = function() {
       switch (weapon.name) {
         case 'machine gun':
         case 'super machine gun':
-          projectiles.bullets = projectiles.bullets.concat(weapon.getGraphicBullets());
+          projectiles.bullets = projectiles.bullets.concat(weapon.getGraphics());
           break;
         case 'rocket launcher':
-          projectiles.rockets = projectiles.rockets.concat(weapon.getGraphicRockets());
+          projectiles.rockets = projectiles.rockets.concat(weapon.getGraphics());
           break;
       }
     }
