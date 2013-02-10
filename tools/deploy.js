@@ -1,1 +1,2 @@
-ssh root@origamix.fr 'cd /home/karmaracer/tools; ./start-nohop-karmaracer.sh ; nohup node server.js > server.nohup.out 2> server.log.err < /dev/null &'
+
+ssh root@origamix.fr 'bash -s' < 'cd /home/karmaracer/tools; ./start-nohop-karmaracer.sh &'
