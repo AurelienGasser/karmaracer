@@ -25,7 +25,12 @@ var Car = require("./PhysicsItem").extend({
     this.name = 'car';
     this.constructor.__super__.initialize.apply(this, [a]);
     this.linearTireResistance = 0.4;
-    this.angularTireResistance = 0.8;
+
+    this.angularTireResistance        = 0.8;
+    this.angularAcceleration          = 0;
+    this.maxAngularAcceleration       = 1.7;
+    this.angularAccelerationIncrement = 0.05;
+
     this.createSensor();
   },
   accelerationMax: 50,
@@ -36,6 +41,21 @@ var Car = require("./PhysicsItem").extend({
       y: acc_helper * ac * Math.sin(this.getAngle())
     };
     this.applyForceToBody(v);
+  },
+  updateAngularAcceleration: function(turningRight) {
+    if (this.turningRight != turningRight) {
+      this.angularAcceleration = 0;
+      this.turningRight = turningRight;
+    }
+    if (this.turningRight) {
+      this.angularAcceleration = Math.min(this.angularAcceleration + this.angularAccelerationIncrement, this.maxAngularAcceleration);
+    } else {
+      this.angularAcceleration = Math.max(this.angularAcceleration - this.angularAccelerationIncrement, -this.maxAngularAcceleration);
+    }
+  },
+  turn: function(turningRight) {
+    this.updateAngularAcceleration(turningRight);
+    this.constructor.__super__.turn.bind(this)(this.angularAcceleration);
   },
   updatePos: function() {
     this.reduceLinearVelocity(this.linearTireResistance);

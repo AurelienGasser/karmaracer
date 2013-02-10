@@ -16,13 +16,12 @@ var GameServer = function(app, map) {
 GameServer.prototype.handleClientKeyboard = function() {
   var that = this;
 
-  function reverseA(client, a) {
-    if(client.keyboard['backward'] === true) {
-      a = -a;
+  function reverseTurning(client, turningRight) {
+    if (client.keyboard['backward'] === true) {
+      return !turningRight;
     }
-    return a;
+    return turningRight;
   }
-  var turnAcc = 0.85;
   for(var i in that.players) {
     var player = that.players[i];
     var client = player.client;
@@ -47,15 +46,16 @@ GameServer.prototype.handleClientKeyboard = function() {
           car.accelerate(-0.2);
           break;
         case 'left':
-          var a = -turnAcc;
-          car.turn(reverseA(client, a));
+          car.turn(reverseTurning(client, false));
           break;
         case 'right':
-          var a = turnAcc;
-          car.turn(reverseA(client, a));
+          car.turn(reverseTurning(client, true));
           break;
         }
       }
+    }
+    if (!client.keyboard.left && !client.keyboard.right) {
+      car.currentAngularAcceleration = 0;
     }
   }
 
