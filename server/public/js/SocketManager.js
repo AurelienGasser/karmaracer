@@ -82,7 +82,6 @@ function SocketManager(gameInstance, onInitCallback) {
   })
 
   connection.on('objects', function(objects) {
-    //console.log(objects);
     gameInstance.cars = objects.cars;
     gameInstance.myCar = objects.myCar;
     gameInstance.physicsEngine.loadMyCar();

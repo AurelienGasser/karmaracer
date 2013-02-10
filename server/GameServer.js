@@ -66,7 +66,7 @@ GameServer.prototype.step = function() {
   var that = this;
   var ts = new Date();
   var tolerance = 2;
-  if(this.tickTs && ts - this.tickTs > this.tickInterval * tolerance) {
+  if(this.tickTs && ts - this.tickTs > 1000 / this.physicsEngine.config.step.ticksPerSecond * tolerance) {
     console.log('Warning: main step takes too long...')
   }
   this.tickTs = ts;
@@ -83,7 +83,7 @@ GameServer.prototype.step = function() {
   } catch(e) {
     console.log("error main interval", e, e.stack);
   }
-  this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
+  this.tickCounter = (this.tickCounter + 1) % this.physicsEngine.config.step.ticksPerSecond
 }
 
 
@@ -96,12 +96,9 @@ GameServer.prototype.initGameServer = function(map) {
   this.weaponsManager = new WeaponsManager(this);
   this.players = {};
 
-
   // update world
-  this.ticksPerSecond = 60;
-  this.tickInterval = 1000 / this.ticksPerSecond;
   this.tickCounter = 0;
-  setInterval(this.step.bind(this), this.tickInterval);
+  setInterval(this.step.bind(this), 1000 / this.physicsEngine.config.step.ticksPerSecond);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
 };
 
@@ -124,8 +121,6 @@ GameServer.prototype.sendPositionsToPlayers = function() {
   for(var i in this.players) {
     var p = this.players[i];
     var myCar = p.playerCar.dead ? null : p.playerCar.car.getShared();
-    myCar.density = CAR_DENSITY;
-    myCar.friction = CAR_FRICTION;
     var share = {
       myCar: myCar,
       cars: cars,

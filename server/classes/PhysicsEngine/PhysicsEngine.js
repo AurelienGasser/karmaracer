@@ -3,6 +3,7 @@ var _ = require('underscore');
 var fs = require('fs');
 var box2d = require('box2dweb-commonjs');
 var PhysicsItem = require("./PhysicsItem");
+var Car = require("./Car");
 var ContactListener = require('./ContactListener');
 
 var PhysicsEngine = backbone.Model.extend({
@@ -10,8 +11,15 @@ var PhysicsEngine = backbone.Model.extend({
   initialize: function(_map, gameServer) {
     var that = this;
     this.gScale = 32;
+    this.config = {
+      car: Car.prototype.config,
+      step: {
+        ticksPerSecond: 60,
+        velocityIterations: 8,
+        positionIterations: 3,
+      }
+    }
     this.map = _map;
-    this.timeStep = 1.0 / 60.0;
     this.iterations = 10;
     this.gameServer = gameServer;
     this.itemsToDestroy = [];
@@ -44,13 +52,14 @@ var PhysicsEngine = backbone.Model.extend({
   },
   getWorldInfo: function() {
     return {
-      "size": {
+      size: {
         w: this.map.size.w * this.gScale,
         h: this.map.size.h * this.gScale,
       },
-      "staticItems": this.getShareStaticItems(),
-      "itemsInMap": this.itemsInMap,
-      "background": this.map.background
+      staticItems: this.getShareStaticItems(),
+      itemsInMap: this.itemsInMap,
+      background: this.map.background,
+      physicalConfig: this.config
     };
   },
   getShareStaticItems: function() {
@@ -61,10 +70,7 @@ var PhysicsEngine = backbone.Model.extend({
     return shareStaticItems;
   },
   step: function() {
-    // Run Simulation!
-    this.world.Step(this.timeStep, 8, // velocity iterations
-    3); // position iterations
-    // this.world.ClearForces();
+    this.world.Step(1 / this.config.step.ticksPerSecond, this.config.step.velocityIterations, this.config.step.positionIterations);
     for (var i in this.itemsToDestroy) {
       var item = this.itemsToDestroy[i];
       item.destroy();

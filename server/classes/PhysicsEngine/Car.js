@@ -3,13 +3,23 @@ var _ = require('underscore');
 var sys = require("sys");
 var box2d = require('box2dweb-commonjs');
 
-CAR_DENSITY=1
-CAR_FRICTION=1
-
 var Car = require("./PhysicsItem").extend({
   startPosition: {
     x: 10.0,
     y: 11.5,
+  },
+  config: {
+    density: 1
+    , friction: 1
+    , restitution: 0
+    , linearTireResistance: 0.4
+    , angularTireResistance: 0.8
+    , maxAngularAcceleration: 1.7
+    , angularAccelerationIncrement: 0.05
+    , linearTireResistance: 0.4
+  },
+  getConfig: function() {
+    return this.config
   },
   urlRoot: '/cars',
   initialize: function(playerCar) {
@@ -20,20 +30,14 @@ var Car = require("./PhysicsItem").extend({
         w: 1,
         h: 0.5
       },
-      density: CAR_DENSITY,
-      friction: CAR_FRICTION,
-      restitution: 0
+      density: this.config.density,
+      friction: this.config.friction,
+      restitution: this.config.restitution
     };
     this.playerCar = playerCar;
     this.name = 'car';
     this.constructor.__super__.initialize.apply(this, [a]);
-    this.linearTireResistance = 0.4;
-
-    this.angularTireResistance        = 0.8;
-    this.angularAcceleration          = 0;
-    this.maxAngularAcceleration       = 1.7;
-    this.angularAccelerationIncrement = 0.05;
-
+    this.angularAcceleration = 0;
     this.createSensor();
   },
   accelerationMax: 50,
@@ -51,9 +55,9 @@ var Car = require("./PhysicsItem").extend({
       this.turningRight = turningRight;
     }
     if (this.turningRight) {
-      this.angularAcceleration = Math.min(this.angularAcceleration + this.angularAccelerationIncrement, this.maxAngularAcceleration);
+      this.angularAcceleration = Math.min(this.angularAcceleration + this.config.angularAccelerationIncrement, this.config.maxAngularAcceleration);
     } else {
-      this.angularAcceleration = Math.max(this.angularAcceleration - this.angularAccelerationIncrement, -this.maxAngularAcceleration);
+      this.angularAcceleration = Math.max(this.angularAcceleration - this.config.angularAccelerationIncrement, -this.config.maxAngularAcceleration);
     }
   },
   turn: function(turningRight) {
@@ -61,8 +65,8 @@ var Car = require("./PhysicsItem").extend({
     this.constructor.__super__.turn.bind(this)(this.angularAcceleration);
   },
   updatePos: function() {
-    this.reduceLinearVelocity(this.linearTireResistance);
-    this.reduceAngularVelocity(this.angularTireResistance);
+    this.reduceLinearVelocity(this.config.linearTireResistance);
+    this.reduceAngularVelocity(this.config.angularTireResistance);
     this.body.ApplyTorque(-this.body.m_torque / 15);
   },
   receiveHit: function() {

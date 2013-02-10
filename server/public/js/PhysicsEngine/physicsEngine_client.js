@@ -1,27 +1,21 @@
-var PhysicsEngine = function(gameInstance) {
-  this.timeStep = 1.0 / 60.0;
-  this.iterations = 10;
+var PhysicsEngine = function(gameInstance, physicalConfig) {
+  this.config = physicalConfig;
   this.staticItems = [];
   this.gameInstance = gameInstance;
   var gravity = new box2d.b2Vec2(0.0, 0.0);
   this.world = new box2d.b2World(gravity, false);
   this.loadStaticItems();
-  this.tickInterval = 1000 / 60;
-  setInterval(this.step.bind(this), this.tickInterval);
+  setInterval(this.step.bind(this), 1000 / this.config.step.ticksPerSecond);
 }
 
 PhysicsEngine.prototype.step = function() {
   var ts = new Date();
   var tolerance = 2;
-  if (this.tickTs && ts - this.tickTs > this.tickInterval * tolerance) {
+  if (this.tickTs && ts - this.tickTs > 1000 / this.config.step.ticksPerSecond * tolerance) {
     console.log('Warning: main step takes too long...')
   }
   this.tickTs = ts;
-  if (this.carBody) {
-    console.log(this.carBody.GetPosition())
-  }
-  this.world.Step(this.timeStep, 8, // velocity iterations
-  3); // position iterations
+  this.world.Step(1 / this.config.step.ticksPerSecond, this.config.step.velocityIterations, this.config.step.positionIterations);
 }
 
 PhysicsEngine.prototype.createSquareBody = function(bodyParams) {
@@ -72,8 +66,9 @@ PhysicsEngine.prototype.loadMyCar = function() {
   var car = {
     "position": { x: myCar.x, y: myCar.y },
     "size": { w: myCar.w, h: myCar.h },
-    "density": myCar.density,
-    "friction": myCar.friction,
+    "density": this.config.car.density,
+    "friction": this.config.car.friction,
+    "restitution": this.config.car.restitution,
     "angle": myCar.r,
     "name": 'car'
   };

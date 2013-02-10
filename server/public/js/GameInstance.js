@@ -156,7 +156,7 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   this.world.size = worldInfo.size;
   this.walls = worldInfo.staticItems;
   this.itemsInMap = worldInfo.itemsInMap;
-  this.physicsEngine = new PhysicsEngine(this);
+  this.physicsEngine = new PhysicsEngine(this, worldInfo.physicalConfig);
   this.bullets = []
   this.rockets = []
 
