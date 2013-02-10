@@ -1,5 +1,5 @@
 #!/bin/sh
 git pull origin master
 killall node
-cd server
+cd ../server
 nohup node server.js &
