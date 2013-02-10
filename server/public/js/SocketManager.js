@@ -84,7 +84,8 @@ function SocketManager(gameInstance, onInitCallback) {
   connection.on('objects', function(objects) {
     //console.log(objects);
     gameInstance.cars = objects.cars;
-    gameInstance.mycar = objects.myCar;
+    gameInstance.myCar = objects.myCar;
+    gameInstance.physicsEngine.loadMyCar();
     gameInstance.bullets = objects.projectiles.bullets;
     gameInstance.rockets = objects.projectiles.rockets;
     gameInstance.updateScoresHTML();

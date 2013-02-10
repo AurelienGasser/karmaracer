@@ -3,6 +3,9 @@ var _ = require('underscore');
 var sys = require("sys");
 var box2d = require('box2dweb-commonjs');
 
+CAR_DENSITY=1
+CAR_FRICTION=1
+
 var Car = require("./PhysicsItem").extend({
   startPosition: {
     x: 10.0,
@@ -17,8 +20,8 @@ var Car = require("./PhysicsItem").extend({
         w: 1,
         h: 0.5
       },
-      density: 1,
-      friction: 1,
+      density: CAR_DENSITY,
+      friction: CAR_FRICTION,
       restitution: 0
     };
     this.playerCar = playerCar;

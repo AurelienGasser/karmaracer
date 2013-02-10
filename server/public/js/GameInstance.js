@@ -1,7 +1,6 @@
 function GameInstance() {
   this.cars = [];
   this.explosions = {};
-  this.mycar;
   this.walls = [];
   this.drawEngine;
   this.socketManager = new SocketManager(this, this.onInitReceived.bind(this));
@@ -87,7 +86,7 @@ GameInstance.prototype.updateScoresHTML = function() {
   var o = [];
   for(var i = 0; i < scores.length; i++) {
     var playerScore = scores[i];
-    var userCarClass = (that.mycar !== null && that.mycar.playerName === playerScore.name) ? 'userCar' : '';
+    var userCarClass = (that.myCar !== null && that.myCar.playerName === playerScore.name) ? 'userCar' : '';
     o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td></tr>');
   };
   this.scoresTable.html(o.join(''));
@@ -157,6 +156,7 @@ GameInstance.prototype.onInitReceived = function(err, worldInfo) {
   this.world.size = worldInfo.size;
   this.walls = worldInfo.staticItems;
   this.itemsInMap = worldInfo.itemsInMap;
+  this.physicsEngine = new PhysicsEngine(this);
   this.bullets = []
   this.rockets = []
 

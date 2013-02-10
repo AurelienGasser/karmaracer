@@ -79,7 +79,7 @@ GameServer.prototype.step = function() {
     }
     if(this.tickCounter % 30 === 0) {
       that.botManager.tick();
-    }    
+    }
   } catch(e) {
     console.log("error main interval", e, e.stack);
   }
@@ -124,6 +124,8 @@ GameServer.prototype.sendPositionsToPlayers = function() {
   for(var i in this.players) {
     var p = this.players[i];
     var myCar = p.playerCar.dead ? null : p.playerCar.car.getShared();
+    myCar.density = CAR_DENSITY;
+    myCar.friction = CAR_FRICTION;
     var share = {
       myCar: myCar,
       cars: cars,

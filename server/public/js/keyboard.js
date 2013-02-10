@@ -16,12 +16,11 @@ function KeyboardHandler(gameInstance) {
 
 KeyboardHandler.prototype.sendKeyboardEvent = function(event, state) {
   if(connection) {
-    connection.emit('drive', event, state);
+    setTimeout(function() {
+      connection.emit('drive', event, state);
+    }, 2000)
   }
 };
-
-
-
 
 KeyboardHandler.prototype.handleKey = function(key, state) {
   var that = this;

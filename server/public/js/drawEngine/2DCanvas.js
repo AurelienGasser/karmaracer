@@ -49,7 +49,7 @@ Engine2DCanvas.prototype.draw = function() {
   if(this.gameInstance.walls.length > 0) {
     this.camera.ctx.canvas.width = $('#' + this.canvasID).width();
     this.camera.ctx.canvas.height = $('#' + this.canvasID).height();
-    var newCenter = this.gameInstance.mycar || this.oldCenter;
+    var newCenter = this.gameInstance.myCar || this.oldCenter;
     this.camera.update(newCenter);
     if (newCenter && newCenter != this.oldCenter) {
       this.oldCenter = newCenter;
