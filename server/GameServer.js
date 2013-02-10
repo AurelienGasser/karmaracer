@@ -5,75 +5,76 @@ var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
 var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
-var ScoreManager = require('./classes/ScoreManager');
+
 
 var GameServer = function(app, map) {
     this.app = app;
     this.initGameServer(map);
-    var that = this;
-
-    function play() {
-      try {
-        that.physicsEngine.step();
-        that.carManager.updatePos();
-        that.weaponsManager.step();
-        that.scoreManager.broadcastScores(that);
-      } catch(e) {
-        console.log("error main interval", e, e.stack);
-      }
-    }
-
-    function handleClientKeyboard() {
-
-      function reverseA(client, a) {
-        if(client.keyboard['backward'] === true) {
-          a = -a;
-        }
-        return a;
-      }
-      var turnAcc = 2.0;
-      for(var i in that.players) {
-        var player = that.players[i];
-        var client = player.client;
-        if(player.playerCar.dead) {
-          continue;
-        }
-        var car = player.playerCar.car;
-        for(var event in client.keyboard) {
-          var state = client.keyboard[event];
-          if(state) {
-            switch(event) {
-            case 'break':
-              car.reduceVelocityOnlyOfBody(2);
-              break;
-            case 'shoot':
-              player.playerCar.shoot();
-              break;
-            case 'forward':
-              car.accelerate(1.0);
-              break;
-            case 'backward':
-              car.accelerate(-1.0);
-              break;
-            case 'left':
-              var a = -turnAcc;
-              car.turn(reverseA(client, a));
-              break;
-            case 'right':
-              var a = turnAcc;
-              car.turn(reverseA(client, a));
-              break;
-            }
-          }
-        }
-      }
-    }
-
-    // update world
-    setInterval(play, 1000 / 16);
-    setInterval(handleClientKeyboard, 1000 / 100);
     return this;
   }
+
+GameServer.prototype.handleClientKeyboard = function() {
+  var that = this;
+
+  function reverseA(client, a) {
+    if(client.keyboard['backward'] === true) {
+      a = -a;
+    }
+    return a;
+  }
+  var turnAcc = 2.0;
+  for(var i in that.players) {
+    var player = that.players[i];
+    var client = player.client;
+    if(player.playerCar.dead) {
+      continue;
+    }
+    var car = player.playerCar.car;
+    for(var event in client.keyboard) {
+      var state = client.keyboard[event];
+      if(state) {
+        switch(event) {
+        case 'break':
+          car.reduceVelocityOnlyOfBody(2);
+          break;
+        case 'shoot':
+          player.playerCar.shoot();
+          break;
+        case 'forward':
+          car.accelerate(1.0);
+          break;
+        case 'backward':
+          car.accelerate(-1.0);
+          break;
+        case 'left':
+          var a = -turnAcc;
+          car.turn(reverseA(client, a));
+          break;
+        case 'right':
+          var a = turnAcc;
+          car.turn(reverseA(client, a));
+          break;
+        }
+      }
+    }
+  }
+
+};
+
+
+GameServer.prototype.play = function() {
+  var that = this;
+  try {
+    that.physicsEngine.step();
+    that.carManager.updatePos();
+    that.weaponsManager.step();
+    that.botManager.tick();
+    // that.scoreManager.broadcastScores(that);
+  } catch(e) {
+    console.log("error main interval", e, e.stack);
+  }
+}
+
 
 GameServer.prototype.initGameServer = function(map) {
   this.map = map;
@@ -82,8 +83,12 @@ GameServer.prototype.initGameServer = function(map) {
   this.clients = [];
   this.botManager = new BotManager(this);
   this.weaponsManager = new WeaponsManager(this);
-  this.scoreManager = new ScoreManager(this);
   this.players = {};
+
+
+  // update world
+  setInterval(this.play.bind(this), 1000 / 16);
+  setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
   setInterval(this.sendPositionsToPlayers.bind(this), 1000 / 16);
 };
 
@@ -96,15 +101,9 @@ GameServer.prototype.getPlayersForShare = function() {
     };
     players.push(pShare);
   }
-  // for(var i in this.botManager.bots) {
-  //   var b = this.botManager.bots[i];
-  //   var pShare = {
-  //     'name': b.name
-  //   };
-  //   players.push(pShare);
-  // }
   return players;
 };
+
 
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();

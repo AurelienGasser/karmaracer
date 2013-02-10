@@ -10,7 +10,10 @@ CarManager.prototype.getShared = function() {
     for(var id in list) {
       var c = list[id];
       if (!c.playerCar.dead) {
-        cars.push(c.playerCar.getShared());
+        var share = c.playerCar.getShared();
+        share.s = c.playerCar.score;
+        share.l = c.playerCar.level;
+        cars.push(share);
       }
     }
   }

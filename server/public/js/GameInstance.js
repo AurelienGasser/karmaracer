@@ -9,6 +9,7 @@ function GameInstance() {
 
   this.isMobile = false;
 
+  this.scoresTable = $('tbody#scores');
 
   // function html5_audio() {
   //   var a = document.createElement('audio');
@@ -18,7 +19,6 @@ function GameInstance() {
   // if(html5_audio()) this.play_html5_audio = true;
   // this.sounds = {};
   // this.setSound('ta', '/sounds/ta.mp3');
-
   var that = this;
 
   function reduceExplosionsAlpha() {
@@ -33,8 +33,6 @@ function GameInstance() {
 
   setInterval(reduceExplosionsAlpha, 60);
 }
-
-
 
 GameInstance.prototype.setSound = function(name, url) {
   var sound;
@@ -68,19 +66,36 @@ GameInstance.prototype.play_sound = function(url) {
     sound.attr('autostart', true);
     $('body').append(sound);
   }
-
-  // console.log('play', name, this.sounds);
-  // // body...
-  // var s = this.sounds[name];
-  // if(!_.isUndefined(s)) {
-  //   if(this.play_html5_audio) {
-  //     console.log(s.url);
-  //     s.play();
-  //   } else {
-  //     s[0].play();
-  //   }
-  // }
 };
+
+GameInstance.prototype.updateScoresHTML = function() {
+  var that = this;
+  function getScores() {
+    var scores = _.map(that.cars, function(car) {
+      return {
+        'score': car.s,
+        'level': car.l,
+        'name': car.playerName
+      };
+    });
+    scores = _.sortBy(scores, function(c) {
+      return c.score;
+    }).reverse();
+    return scores;
+  }
+  var scores = getScores();
+  var o = [];
+  console.log(that.mycar);
+  for(var i = 0; i < scores.length; i++) {
+    var playerScore = scores[i];
+    var userCarClass = (that.mycar.playerName === playerScore.name) ? 'userCar' : '';
+
+    o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td></tr>');
+  };
+  this.scoresTable.html(o.join(''));
+};
+
+
 GameInstance.prototype.updatePlayerName = function(name) {
   this.socketManager.emit('updatePlayerName', name);
   Karma.set('playerName', name);

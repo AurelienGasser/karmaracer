@@ -59,16 +59,8 @@ function SocketManager(gameInstance, onInitCallback) {
     ++that.msg_id;
   });
 
-  connection.on('scores', function(scores) {
-    var o = [];
-    var playerName = Karma.get('playerName');
-    for(var i = 0; i < scores.length; i++) {
-      var s = scores[i];
-      var userCarClass = (s.name === playerName) ? 'userCar' : '';
-      o.push('<tr class="', userCarClass, '"><td>', s.name, '</td><td>', s.score, '</td><td>', s.level, '</td></tr>');
-    };
-    $('tbody#scores').html(o.join(''));
-  });
+  // connection.on('scores', function(scores) {
+  // });
 
   function announce(text, color) {
     $('#announce').remove();
@@ -95,6 +87,7 @@ function SocketManager(gameInstance, onInitCallback) {
     gameInstance.mycar = objects.myCar;
     gameInstance.bullets = objects.projectiles.bullets;
     gameInstance.rockets = objects.projectiles.rockets;
+    gameInstance.updateScoresHTML();
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
       return list ? list.length : 0;
     })));
