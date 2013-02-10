@@ -1,0 +1,1 @@
+ssh root@origamix.fr 'cd /home/karmaracer/tools; ./start-nohop-karmaracer.sh &'
