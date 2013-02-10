@@ -2,7 +2,7 @@ function Camera(ctx, _canvasSelector){
   this.ctx = ctx;
   this.translate = {"x" : 0, "y" : 0};
   this.center = {"x" : 0, "y" : 0};
-  this.scale = 1;
+  this.scale = 1.2;
   this.realWorldSize = {"w" : 0, "h" : 0};
   this.canvasSelector = _canvasSelector;
 

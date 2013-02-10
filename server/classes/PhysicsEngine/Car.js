@@ -24,7 +24,8 @@ var Car = require("./PhysicsItem").extend({
     this.playerCar = playerCar;
     this.name = 'car';
     this.constructor.__super__.initialize.apply(this, [a]);
-    this.tireResistance = 1.8;
+    this.linearTireResistance = 0.4;
+    this.angularTireResistance = 0.8;
     this.createSensor();
   },
   accelerationMax: 50,
@@ -37,7 +38,8 @@ var Car = require("./PhysicsItem").extend({
     this.applyForceToBody(v);
   },
   updatePos: function() {
-    this.reduceVelocityOfBody(this.tireResistance);
+    this.reduceLinearVelocity(this.linearTireResistance);
+    this.reduceAngularVelocity(this.angularTireResistance);
     this.body.ApplyTorque(-this.body.m_torque / 15);
   },
   receiveHit: function() {

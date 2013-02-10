@@ -22,7 +22,7 @@ GameServer.prototype.handleClientKeyboard = function() {
     }
     return a;
   }
-  var turnAcc = 2.0;
+  var turnAcc = 0.85;
   for(var i in that.players) {
     var player = that.players[i];
     var client = player.client;
@@ -35,16 +35,16 @@ GameServer.prototype.handleClientKeyboard = function() {
       if(state) {
         switch(event) {
         case 'break':
-          car.reduceVelocityOnlyOfBody(2);
+          car.reduceAngularVelocity(0.3);
           break;
         case 'shoot':
           player.playerCar.shoot();
           break;
         case 'forward':
-          car.accelerate(1.0);
+          car.accelerate(0.2);
           break;
         case 'backward':
-          car.accelerate(-1.0);
+          car.accelerate(-0.2);
           break;
         case 'left':
           var a = -turnAcc;
@@ -62,7 +62,7 @@ GameServer.prototype.handleClientKeyboard = function() {
 };
 
 
-GameServer.prototype.play = function() {
+GameServer.prototype.step = function() {
   var that = this;
   var ts = new Date();
   var tolerance = 2;
@@ -72,13 +72,18 @@ GameServer.prototype.play = function() {
   this.tickTs = ts;
   try {
     that.physicsEngine.step();
-    that.carManager.updatePos();
-    that.weaponsManager.step();
-    that.botManager.tick();
+    if (this.tickCounter % 4 == 0) {
+      that.carManager.updatePos();
+      that.weaponsManager.step();
+    }
+    if (this.tickCounter % 30 == 0) {
+      that.botManager.tick();
+    }
     // that.scoreManager.broadcastScores(that);
   } catch(e) {
     console.log("error main interval", e, e.stack);
   }
+  this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
 }
 
 
@@ -93,8 +98,10 @@ GameServer.prototype.initGameServer = function(map) {
 
 
   // update world
-  this.tickInterval = 1000 / 16;
-  setInterval(this.play.bind(this), this.tickInterval);
+  this.ticksPerSecond = 60;
+  this.tickInterval = 1000 / this.ticksPerSecond;
+  this.tickCounter = 0;
+  setInterval(this.step.bind(this), this.tickInterval);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
   setInterval(this.sendPositionsToPlayers.bind(this), 1000 / 16);
 };

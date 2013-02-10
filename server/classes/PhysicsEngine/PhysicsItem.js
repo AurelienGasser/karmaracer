@@ -96,20 +96,18 @@ var PhysicsItem = backbone.Model.extend({
 
     }
   },
-  reduceVelocityOnlyOfBody : function(reduceBy){
+  reduceAngularVelocity : function(reduceBy) {
     if(this.body != null) {
-      this.body.m_linearVelocity.x /= 1 * reduceBy;
-      this.body.m_linearVelocity.y /= 1 * reduceBy;
+      this.body.m_angularVelocity *= (1 - reduceBy);
+      if(Math.abs(this.body.m_angularVelocity) < 0.005) this.body.m_angularVelocity = 0;
+    }
+  },
+  reduceLinearVelocity: function(reduceBy) {
+    if(this.body != null) {
+      this.body.m_linearVelocity.x *= (1 - reduceBy);
+      this.body.m_linearVelocity.y *= (1 - reduceBy);
       if(Math.abs(this.body.m_linearVelocity.x) < 0.005) this.body.m_linearVelocity.x = 0;
       if(Math.abs(this.body.m_linearVelocity.y) < 0.005) this.body.m_linearVelocity.y = 0;
-    }
-
-  },
-  reduceVelocityOfBody: function(reduceBy) {
-    if(this.body != null) {
-      this.reduceVelocityOnlyOfBody(reduceBy);
-      this.body.m_angularVelocity /= 1 * reduceBy;
-      if(Math.abs(this.body.m_angularVelocity) < 0.005) this.body.m_angularVelocity = 0;
     }
   }
 });

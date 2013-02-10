@@ -14,7 +14,6 @@ MachineGun.prototype.step = function() {
       if (bullet.body === null) {
         deads.push(id);
       } else {
-        bullet.accelerate(500);
         --bullet.life;
         if (bullet.life <= 0) {
           bullet.scheduleForDestroy();
