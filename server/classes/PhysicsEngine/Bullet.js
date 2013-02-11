@@ -18,8 +18,8 @@ var Bullet = require("./PhysicsItem").extend({
         w: 0.1,
         h: 0.1
       },
-      density: 1,
-      friction: 5,
+      density: 0.01,
+      friction: 0,
       bullet: true
     };
     this.playerCar = playerCar;
