@@ -6,13 +6,13 @@ var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 
 
 var WeaponsByClass = {
-  1: SuperMachineGun,
-  2: Angle90MachineGun,
+  1: Angle90MachineGun,
+  2: MachineGun,
   3: SuperMachineGun,
   4: RocketLauncher,
   5: MachineGun,
   6: SuperMachineGun,
-  7: SuperMachineGun,
+  7: MachineGun,
   8: SuperMachineGun,
   9: RocketLauncher,
 };

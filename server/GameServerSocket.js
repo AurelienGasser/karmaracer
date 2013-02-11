@@ -86,7 +86,7 @@ var GameServerSocket = function(mapManager) {
           that.mapManager.createOrUpdateMap(map);
           fs.writeFile(path, JSON.stringify(map), function(err) {
             if(err) {
-              console.log(err);
+              console.error(err);
             } else {
               console.log('The map was saved : ', map.name, ' on ', path);
             }

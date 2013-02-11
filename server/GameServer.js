@@ -63,27 +63,58 @@ GameServer.prototype.handleClientKeyboard = function() {
 
 
 GameServer.prototype.step = function() {
-  var that = this;
-  var ts = new Date();
-  var tolerance = 2;
-  if(this.tickTs && ts - this.tickTs > this.tickInterval * tolerance) {
-    console.log('Warning: main step takes too long...', this.map.name, ts - this.tickTs + 'ms');
+
+  function registerDateDiff(timer, name, start) {
+    var now = new Date();
+    timer[name] = now - start;
+    return now;
   }
-  this.tickTs = ts;
+
+  var maxDiff = this.tickInterval;
+  if(this.timer.lastDiff > maxDiff) {
+    console.log('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms');//, this.timer, 'max:', maxDiff);
+  } else {
+    // console.log("engine time", this.timer.lastDiff);
+  }
+
+  timer = this.timer;
+  timer.begin = new Date();
+
+  var that = this;
+
+
+  // var ts = new Date();
+  // var tolerance = 2;
+  // if(this.tickTs && ts - this.tickTs > maxDiff) {
+  // }
+  // this.tickTs = ts;
   try {
+    var start = new Date();
     that.physicsEngine.step();
+    start = registerDateDiff(timer, 'physics', start);
     if(this.tickCounter % 2 === 0) {
+      start = new Date();
       that.carManager.updatePos();
+      start = registerDateDiff(timer, 'carManager', start);
       that.weaponsManager.step();
+      start = registerDateDiff(timer, 'weaponsManager', start);
+    }
+    if(this.tickCounter % 4 === 0) {
       that.sendPositionsToPlayers();
+      start = registerDateDiff(timer, 'sendPositions', start);
     }
     if(this.tickCounter % 30 === 0) {
+      start = new Date();
       that.botManager.tick();
-    }    
+      start = registerDateDiff(timer, 'botManager', start);
+    }
   } catch(e) {
     console.log("error main interval", e, e.stack);
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
+  registerDateDiff(timer, 'lastDiff', timer.begin);
+  // console.log(timer.lastDiff);
+  this.timer = timer;
 }
 
 
@@ -91,16 +122,17 @@ GameServer.prototype.initGameServer = function(map) {
   this.map = map;
   this.physicsEngine = new PhysicsEngine(map, this);
   this.carManager = new CarManager(this);
-  this.clients = [];
   this.botManager = new BotManager(this);
   this.weaponsManager = new WeaponsManager(this);
+  this.clients = [];
   this.players = {};
-
+  this.timer = {};
 
   // update world
-  this.ticksPerSecond = 32;
+  this.ticksPerSecond = 60;
   this.tickInterval = 1000 / this.ticksPerSecond;
   this.tickCounter = 0;
+  this.tickTs = new Date();
   setInterval(this.step.bind(this), this.tickInterval);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
 };

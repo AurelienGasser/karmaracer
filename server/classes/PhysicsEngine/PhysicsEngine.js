@@ -17,11 +17,7 @@ var PhysicsEngine = backbone.Model.extend({
     this.itemsToDestroy = [];
 
     // Define world
-    // var worldAABB = new b2dweb.b2AABB();
-    // worldAABB.lowerBound.Set(-10.0, -10.0);
-    // worldAABB.upperBound.Set(_map.size.w + 10.0, _map.size.h + 10.0);
     var gravity = new box2d.b2Vec2(0.0, 0.0);
-    // var doSleep = true;
     this.world = new box2d.b2World(gravity, false);
     this.staticItems = [];
 
