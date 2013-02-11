@@ -10,6 +10,13 @@ var BotManager = function(gameServer) {
   // setInterval(this.tick.bind(this), 20);
 }
 
+BotManager.prototype.resetBots = function() {
+    for (var i in this.bots) {
+    var bot = this.bots[i];
+    bot.initCar();
+  }
+};
+
 BotManager.prototype.initBots = function() {
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
   var botDensity = 1 / 2300;

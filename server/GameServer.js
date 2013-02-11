@@ -192,7 +192,9 @@ GameServer.prototype.gameEnd = function(winnerCar) {
     for(var i in players) {
       players[i].initCar(this);
     }
-    this.players = players;
+    that.botManager.resetBots();
+
+    that.players = players;
   }.bind(this), 5000);
 }
 

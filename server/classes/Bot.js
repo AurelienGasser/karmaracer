@@ -9,6 +9,11 @@ var Bot = function(gameServer, id) {
     return this;
   }
 
+Bot.prototype.initCar = function() {
+  this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
+}
+
+
 Bot.prototype.tick = function() {
   var numAdditionalTicksToTurn = 20;
   if(this.playerCar.car) {

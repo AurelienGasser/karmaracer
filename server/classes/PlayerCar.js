@@ -4,13 +4,12 @@ var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 
-
 var WeaponsByClass = {
-  1: Angle90MachineGun,
+  1: MachineGun,
   2: MachineGun,
   3: SuperMachineGun,
-  4: RocketLauncher,
-  5: MachineGun,
+  4: MachineGun,
+  5: Angle90MachineGun,
   6: SuperMachineGun,
   7: MachineGun,
   8: SuperMachineGun,

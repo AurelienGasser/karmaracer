@@ -78,7 +78,7 @@ function SocketManager(gameInstance, onInitCallback) {
   });
 
   connection.on('game end', function(d) {
-    announce(d.winnerName + ' a gagné la partie !!!!', 'blue');
+    announce(d.winnerName + ' wins the game !!!!', 'blue');
   })
 
   connection.on('objects', function(objects) {
