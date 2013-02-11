@@ -1,10 +1,12 @@
 var backbone = require('backbone');
 var _ = require('underscore');
 
+var PhysicsItemID = 0;
+
 var PhysicsItem = backbone.Model.extend({
   urlRoot: '/physicsItem',
   initialize: function(_arguments) {
-    this.id = Math.floor(Math.random() * 1e100);
+    this.id = PhysicsItemID++;
     this.size = {
       w: _arguments['size'].w,
       h: _arguments['size'].h

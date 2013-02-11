@@ -77,26 +77,29 @@ function SocketManager(gameInstance, onInitCallback) {
     announce('You\' re dead !', 'red');
   });
 
+  function announceIn(msg, color, timeInSeconds){
+    setTimeout(function() {
+      announce(msg, color);
+    }, timeInSeconds * 1000);
+
+  }
+
   connection.on('game end', function(d) {
     announce(d.winnerName + ' wins the game !!!!', 'blue');
-    setTimeout(function() {
-      announce('2', 'red');
-    }, 3000);
-    setTimeout(function() {
-      announce('1', 'orange');
-    }, 4000);
-    setTimeout(function() {
-      announce('GO', 'green');
-  }, 5000);
 
+    announceIn('2', 'red', 3);
+    announceIn('1', 'orange', 4);
+    announceIn('GO', 'green', 5);
+    
 })
 
 connection.on('objects', function(objects) {
   //console.log(objects);
   gameInstance.cars = objects.cars;
   gameInstance.mycar = objects.myCar;
-  gameInstance.bullets = objects.projectiles.bullets;
-  gameInstance.rockets = objects.projectiles.rockets;
+  // gameInstance.bullets = objects.projectiles.bullets;
+  // gameInstance.rockets = objects.projectiles.rockets;
+  gameInstance.projectiles = objects.projectiles;
   gameInstance.updateScoresHTML();
   $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
     return list ? list.length : 0;

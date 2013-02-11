@@ -10,6 +10,7 @@ function GameInstance() {
   this.isMobile = false;
 
   this.scoresTable = $('tbody#scores');
+  this.projectiles = [];
 
   // function html5_audio() {
   //   var a = document.createElement('audio');

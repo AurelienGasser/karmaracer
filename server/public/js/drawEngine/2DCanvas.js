@@ -51,7 +51,7 @@ Engine2DCanvas.prototype.draw = function() {
     this.camera.ctx.canvas.height = $('#' + this.canvasID).height();
     var newCenter = this.gameInstance.mycar || this.oldCenter;
     this.camera.update(newCenter);
-    if (newCenter && newCenter != this.oldCenter) {
+    if(newCenter && newCenter != this.oldCenter) {
       this.oldCenter = newCenter;
     }
     this.drawItems();
@@ -85,7 +85,7 @@ var explosionHeight = 51;
 Engine2DCanvas.prototype.drawExplosions = function(ctx) {
   if(this.gameInstance.explosions != null) {
     ctx.fillStyle = '#FFFFFF';
-    for (var i in this.gameInstance.explosions) {
+    for(var i in this.gameInstance.explosions) {
       var c = this.gameInstance.explosions[i];
       ctx.save();
       ctx.translate(c.x, c.y);
@@ -99,36 +99,47 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
   }
 }
 
-Engine2DCanvas.prototype.drawBullets = function(ctx) {
-  if(this.gameInstance.bullets !== null) {
-    ctx.fillStyle = '#FFFFFF';
 
-    for(var i = 0; i < this.gameInstance.bullets.length; i++) {
-      var c = this.gameInstance.bullets[i];
-      ctx.fillRect(c.x, c.y, c.w, c.h);
+Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
+  // console.log(this.gameInstance.projectiles); 
+  if(this.gameInstance.projectiles !== null) {
+    for(var i = 0; i < this.gameInstance.projectiles.length; i++) {
+      var c = this.gameInstance.projectiles[i];
+      switch(c.name) {
+      case 'rocket launcher':
+        this.drawRocket(c, ctx);
+        break;
+      default:
+        this.drawBullet(c, ctx);
+        break;
+      }
     };
   }
 }
 
-Engine2DCanvas.prototype.drawRockets = function(ctx) {
-  if(this.gameInstance.rockets !== null) {
-    ctx.fillStyle = '#FFFFFF';
-    for(var i = 0; i < this.gameInstance.rockets.length; i++) {
-      var c = this.gameInstance.rockets[i];
-      ctx.save();
-      ctx.translate(c.x, c.y);
-      ctx.rotate(c.r);
-      ctx.drawImage(this.rocketImage, -c.w / 2, -c.h / 2, 40, 16);
-      // ctx.drawImage(this.rocketImage, 0, 0, c.w, c.h);
-      ctx.restore();
-    };
-  }
+Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
+  ctx.fillStyle = '#FFFFFF';
+  var c = bullet;
+  ctx.fillRect(c.x, c.y, c.w, c.h);
+}
+
+Engine2DCanvas.prototype.drawRocket = function(rocket, ctx) {
+
+  ctx.fillStyle = '#FFFFFF';
+  var c = rocket;
+  ctx.save();
+  ctx.translate(c.x, c.y);
+  ctx.rotate(c.r);
+  ctx.drawImage(this.rocketImage, -c.w / 2, -c.h / 2, 40, 16);
+  // ctx.drawImage(this.rocketImage, 0, 0, c.w, c.h);
+  ctx.restore();
+
 }
 
 Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
-  var wThickness  = 50;
-  var s           = this.camera.realWorldSize;
-  ctx.fillStyle   = this.gameInstance.itemsInMap.outsideWall.pattern;
+  var wThickness = 50;
+  var s = this.camera.realWorldSize;
+  ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
   // bot
   ctx.fillRect(-wThickness, s.h, s.w + 2 * wThickness, wThickness);
   // top
@@ -183,8 +194,9 @@ Engine2DCanvas.prototype.drawItems = function() {
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, cs.w, cs.h, this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);
   this.drawCars(this.ctx);
   this.drawExplosions(this.ctx);
-  this.drawBullets(this.ctx);
-  this.drawRockets(this.ctx);
+  // this.drawBullets(this.ctx);
+  // this.drawRockets(this.ctx);
+  this.drawProjectiles(this.ctx); 
 };
 
 Engine2DCanvas.prototype.tick = function() {

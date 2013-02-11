@@ -1,38 +1,46 @@
 var WeaponsManager = function(gameServer) {
-  this.gameServer = gameServer;
-}
+    this.gameServer = gameServer;
+  }
 
 WeaponsManager.prototype.step = function() {
-  for (var i in this.gameServer.players) {
-    var player = this.gameServer.players[i];
-    if (player) {
-      var client = player.client;
-      player.playerCar.weapon.step();
-    }
-  }
-}
-
-WeaponsManager.prototype.getGraphicProjectiles = function() {
-  var projectiles = {
-    bullets: [],
-    rockets: []
-  };
-  for (var i in this.gameServer.players) {
-    var player = this.gameServer.players[i];
-    if (player) {
-      var weapon = player.playerCar.weapon;
-      switch (weapon.name) {
-        case '90 angle machine gun':
-        case 'machine gun':
-        case 'super machine gun':
-          projectiles.bullets = projectiles.bullets.concat(weapon.getGraphics());
-          break;
-        case 'rocket launcher':
-          projectiles.rockets = projectiles.rockets.concat(weapon.getGraphics());
-          break;
+  function stepList(list, action) {
+    for(var i in list) {
+      var player = list[i];
+      if(player) {
+        action(player);
       }
     }
   }
+  stepList(this.gameServer.players, function(player){
+    player.playerCar.weapon.step();
+  });
+  stepList(this.gameServer.botManager.bots, function(player){
+    player.playerCar.weapon.step();
+  });
+}
+
+
+//   case '90 angle machine gun':
+//   case 'machine gun':
+//   case 'super machine gun':
+WeaponsManager.prototype.getGraphicProjectiles = function() {
+  function appendProjectilesShared(inputList, projectiles) {
+    var p = [];
+    for(var i in inputList) {
+      var player = inputList[i];
+      if(player) {
+        var weapon = player.playerCar.weapon;
+        var graphics = weapon.getGraphics();
+        p = p.concat(graphics);
+      }
+    }
+    projectiles = projectiles.concat(p);
+    return projectiles;
+  }
+  var projectiles = [];
+  projectiles = appendProjectilesShared(this.gameServer.players, projectiles);
+  projectiles = appendProjectilesShared(this.gameServer.botManager.bots, projectiles);
+  // console.log(projectiles.length);
   return projectiles;
 }
 

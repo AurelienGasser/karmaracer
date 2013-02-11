@@ -2,6 +2,7 @@ var Bullet = require('../PhysicsEngine/Bullet');
 var _ = require('underscore');
 
 var Weapon = function() {
+    this.name = 'anonymous';
     this.projectiles = {};
     this.accelerate = 500;
     this.lastShot = new Date();
@@ -46,6 +47,7 @@ Weapon.prototype.shoot = function(playerCar) {
 };
 Weapon.prototype.customShoot = function(playerCar) {
   this.addProjectile(playerCar);
+  // console.log('shoot', playerCar.playerName);
 };
 
 Weapon.prototype.addProjectile = function(playerCar, angle) {
@@ -55,7 +57,9 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   var pos = this.getProjectileVector(playerCar, angle);
   var b = new this.ProjectileClass(playerCar, pos, playerCar.car.getAngle() + angle);
   b.accelerate(this.startAcceleration);
+
   this.projectiles[b.id] = b;
+  // console.log(playerCar.playerName, 'shoot', b.id, Object.keys(this.projectiles).length);
 };
 
 Weapon.prototype.step = function() {
@@ -68,6 +72,7 @@ Weapon.prototype.step = function() {
       } else {
         projectile.accelerate(this.accelerate);
         projectile.life -= 1;
+
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();
           deads.push(id);
@@ -79,11 +84,14 @@ Weapon.prototype.step = function() {
 };
 
 Weapon.prototype.getGraphics = function() {
+  var that = this;
   var graphics = [];
   for(var id in this.projectiles) {
     if(this.projectiles.hasOwnProperty(id)) {
       var projectile = this.projectiles[id];
-      graphics.push(projectile.getShared());
+      var pShared = projectile.getShared();
+      pShared.name = that.name;
+      graphics.push(pShared);
     }
   }
   return graphics;
