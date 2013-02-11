@@ -104,7 +104,7 @@ GameServer.prototype.step = function() {
       that.sendPositionsToPlayers();
       start = registerDateDiff(timer, 'sendPositions', start);
     }
-    if(this.tickCounter % 30 === 0) {
+    if(this.tickCounter % 4 === 0) {
       start = new Date();
       that.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
