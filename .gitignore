@@ -5,3 +5,5 @@ node_modules
 *.sublime-projectnohup.out
 npm-debug.log
 *~
+out.log
+err.log

@@ -1,3 +1,3 @@
 #!/bin/sh
 npm install;
-forever start -append -l forever.log -o log/out.log -e log/err.log server/server.js
+forever start -append -l forever.log -o out.log -e err.log server/server.js
