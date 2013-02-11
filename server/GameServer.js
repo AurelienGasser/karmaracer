@@ -35,12 +35,13 @@ GameServer.prototype.handleClientKeyboard = function() {
         switch(event) {
         case 'break':
           car.reduceAngularVelocity(0.3);
+          car.reduceLinearVelocity(0.4);
           break;
         case 'shoot':
           player.playerCar.shoot();
           break;
         case 'forward':
-          car.accelerate(0.2);
+          car.accelerate(0.3);
           break;
         case 'backward':
           car.accelerate(-0.2);

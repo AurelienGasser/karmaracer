@@ -11,14 +11,6 @@ var SteeringWheelController = function(gameInstance) {
     this.gameInstance = gameInstance;
     this.gameInstance.steeringWheel = this;
     this.resize();
-    // var s = 10;
-    // setMSize(s, s);
-    // if(!that.gameInstance.isMobile) {
-    //   this.setMPosition(window.innerWidth / 2, window.innerHeight / 2);
-    //   // setMPosition(s / 2, s / 2);
-    // } else {
-    //   this.resize();
-    // }
     this.accSize = {
       w: this.acc.width(),
       h: this.acc.height()
@@ -125,7 +117,7 @@ var SteeringWheelController = function(gameInstance) {
           'x': (x / (that.mSize.w / 2)),
           'y': (y / (that.mSize.h / 2))
         }
-        var accHelper = 20;
+        var accHelper = 10;
         if(that.gameInstance.isMobile) {
           accHelper = 5;
         }

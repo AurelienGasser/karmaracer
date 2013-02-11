@@ -79,26 +79,36 @@ function SocketManager(gameInstance, onInitCallback) {
 
   connection.on('game end', function(d) {
     announce(d.winnerName + ' wins the game !!!!', 'blue');
-  })
+    setTimeout(function() {
+      announce('2', 'red');
+    }, 3000);
+    setTimeout(function() {
+      announce('1', 'orange');
+    }, 4000);
+    setTimeout(function() {
+      announce('GO', 'green');
+  }, 5000);
 
-  connection.on('objects', function(objects) {
-    //console.log(objects);
-    gameInstance.cars = objects.cars;
-    gameInstance.mycar = objects.myCar;
-    gameInstance.bullets = objects.projectiles.bullets;
-    gameInstance.rockets = objects.projectiles.rockets;
-    gameInstance.updateScoresHTML();
-    $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
-      return list ? list.length : 0;
-    })));
-    socketReceived();
-  });
+})
 
-  connection.on('explosion', function(explosion) {
-    gameInstance.addExplosion(explosion);
-  });
+connection.on('objects', function(objects) {
+  //console.log(objects);
+  gameInstance.cars = objects.cars;
+  gameInstance.mycar = objects.myCar;
+  gameInstance.bullets = objects.projectiles.bullets;
+  gameInstance.rockets = objects.projectiles.rockets;
+  gameInstance.updateScoresHTML();
+  $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
+    return list ? list.length : 0;
+  })));
+  socketReceived();
+});
 
-  this.connection = connection;
+connection.on('explosion', function(explosion) {
+  gameInstance.addExplosion(explosion);
+});
+
+this.connection = connection;
 }
 
 SocketManager.prototype.getConnection = function() {
