@@ -67,9 +67,9 @@ var MapManger = function(app, callback) {
     };
 
     function createOrUpdateMap(map) {
-      if (Object.keys(that.maps).length > 0){
-        return;
-      }
+      // if (Object.keys(that.maps).length > 0){
+      //   return;
+      // }
       console.log('c or u map ', map.name);
       if(_.isUndefined(that.maps[map])) {
         addGameServer(map);

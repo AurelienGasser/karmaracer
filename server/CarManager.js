@@ -1,19 +1,22 @@
 var Car = require('./classes/PhysicsEngine/Car');
 
 var CarManager = function(gameServer) {
-  this.gameServer = gameServer;
-}
+    this.gameServer = gameServer;
+  }
 
 CarManager.prototype.getShared = function() {
   var cars = [];
+
   function addCars(list) {
     for(var id in list) {
       var c = list[id];
-      if (!c.playerCar.dead) {
-        var share = c.playerCar.getShared();
-        share.s = c.playerCar.score;
-        share.l = c.playerCar.level;
-        cars.push(share);
+      if(c.playerCar !== null && c.playerCar.car !== null) {
+        if(!c.playerCar.dead) {
+          var share = c.playerCar.getShared();
+          share.s = c.playerCar.score;
+          share.l = c.playerCar.level;
+          cars.push(share);
+        }
       }
     }
   }
@@ -24,10 +27,10 @@ CarManager.prototype.getShared = function() {
 
 CarManager.prototype.getAliveCars = function(source) {
   var aliveCars = [];
-  for (var i in source) {
+  for(var i in source) {
     var player = source[i];
     var playerCar = player.playerCar;
-    if (!playerCar.dead) {
+    if(!playerCar.dead) {
       aliveCars.push(playerCar)
     }
   }
@@ -35,7 +38,7 @@ CarManager.prototype.getAliveCars = function(source) {
 }
 
 CarManager.prototype.updatePos = function() {
-  for (var id in this.gameServer.players) {
+  for(var id in this.gameServer.players) {
     var playerCar = this.gameServer.players[id].playerCar;
     playerCar.updatePos();
   }
@@ -44,8 +47,8 @@ CarManager.prototype.updatePos = function() {
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
   victim.receiveHit(projectile.damage);
-  if (victim.life <= 0) {
-    if (victim.dead) {
+  if(victim.life <= 0) {
+    if(victim.dead) {
       return;
     }
     victim.die();

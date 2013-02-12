@@ -20,17 +20,17 @@ BotManager.prototype.resetBots = function() {
 BotManager.prototype.initBots = function() {
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
   var botDensity = 1 / 2300;
-  var numBots = Math.ceil(mapSize * botDensity);
+  var numBots = Math.ceil(mapSize * botDensity) + 3;
   var interval = 0;
   if (numBots > 10){
     numBots = 10;
   }
-  numBots = 20;
+  // numBots = 20;
   for (var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
     }.bind(this), interval);
-    interval += 0;
+    interval += 500;
   }
 }
 

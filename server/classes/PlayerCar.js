@@ -39,16 +39,11 @@ PlayerCar.prototype.resetPlayer = function() {
 };
 
 PlayerCar.prototype.getShared = function() {
-  // if (this.car !== null){
     return this.car.getShared();  
-  // } else {
-  //   return {};
-  // }
-  
 }
 
 PlayerCar.prototype.updatePos = function() {
-  if(!this.dead) {
+  if(!this.dead && this.car !== null) {
     return this.car.updatePos();
   }
 }
@@ -111,7 +106,7 @@ PlayerCar.prototype.die = function() {
   setTimeout(function() {
     if(this.isBot || this.player.connected) {
       this.dead = false;
-      this.car = new Car(this);
+      // this.car = new Car(this);
       this.life = 100;
     }
   }.bind(this), 5000);

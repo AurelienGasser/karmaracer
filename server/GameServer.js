@@ -16,55 +16,63 @@ var GameServer = function(app, map) {
 GameServer.prototype.handleClientKeyboard = function() {
   var that = this;
 
-  function reverseTurning(client, turningRight) {
-    if(client.keyboard['backward'] === true) {
-      return !turningRight;
+  try {
+    if(this.doStep === false) {
+      return;
     }
-    return turningRight;
-  }
-  for(var i in that.players) {
-    var player = that.players[i];
-    var client = player.client;
-    if(player.playerCar.dead) {
-      continue;
+
+    function reverseTurning(client, turningRight) {
+      if(client.keyboard['backward'] === true) {
+        return !turningRight;
+      }
+      return turningRight;
     }
-    var car = player.playerCar.car;
-    for(var event in client.keyboard) {
-      var state = client.keyboard[event];
-      if(state) {
-        switch(event) {
-        case 'break':
-          car.reduceAngularVelocity(0.3);
-          car.reduceLinearVelocity(0.4);
-          break;
-        case 'shoot':
-          player.playerCar.shoot();
-          break;
-        case 'forward':
-          car.accelerate(0.3);
-          break;
-        case 'backward':
-          car.accelerate(-0.2);
-          break;
-        case 'left':
-          car.turn(reverseTurning(client, false));
-          break;
-        case 'right':
-          car.turn(reverseTurning(client, true));
-          break;
+    for(var i in that.players) {
+      var player = that.players[i];
+      var client = player.client;
+      if(player.playerCar.dead) {
+        continue;
+      }
+      var car = player.playerCar.car;
+      for(var event in client.keyboard) {
+        var state = client.keyboard[event];
+        if(state) {
+          switch(event) {
+          case 'break':
+            car.reduceAngularVelocity(0.3);
+            car.reduceLinearVelocity(0.4);
+            break;
+          case 'shoot':
+            player.playerCar.shoot();
+            break;
+          case 'forward':
+            car.accelerate(0.3);
+            break;
+          case 'backward':
+            car.accelerate(-0.2);
+            break;
+          case 'left':
+            car.turn(reverseTurning(client, false));
+            break;
+          case 'right':
+            car.turn(reverseTurning(client, true));
+            break;
+          }
         }
       }
+      if(!client.keyboard.left && !client.keyboard.right) {
+        car.currentAngularAcceleration = 0;
+      }
     }
-    if(!client.keyboard.left && !client.keyboard.right) {
-      car.currentAngularAcceleration = 0;
-    }
+  } catch(err) {
+    console.error(err);
   }
 
 };
 
 
 GameServer.prototype.step = function() {
-  if (this.doStep === false){
+  if(this.doStep === false) {
     return;
   }
 
@@ -147,7 +155,9 @@ GameServer.prototype.initGameServer = function(map) {
 
   function stepGame(time) {
     setTimeout(function() {
-      that.step();
+      if (that.doStep){
+        that.step();
+      }
       stepGame(that.tickInterval);
       that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
       if(that.tickInterval < that.minTickInterval) {
@@ -200,12 +210,18 @@ GameServer.prototype.broadcastExplosion = function(point) {
   });
 };
 
+function handleError(err){
+    console.error("caught handle",err);
+}
+
 GameServer.prototype.gameEnd = function(winnerCar) {
+  console.log('END OF GAME');
   this.broadcast('game end', {
     winnerName: winnerCar.player.playerName
   });
   this.resetGame();
   this.doStep = false;
+  // throw new Error("end of game");
   var that = this;
   setTimeout(function() {
     that.doStep = true;
