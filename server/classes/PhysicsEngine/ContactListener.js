@@ -35,7 +35,7 @@ ContactListener.prototype.init = function() {
            o1.explode(contact.GetFixtureA().GetBody().GetPosition());
          }
       }
-      if (o2.name === 'car' && (o1.name === 'bullet' || o1.name == 'rocket')) {
+      if (o2.name === 'car' && (o1.name === 'bullet' || o1.name === 'rocket')) {
         if (o1.playerCar != o2.playerCar) {
           that.gameServer.carManager.projectileHitCar(o1.playerCar, o2.playerCar, o1)
         }

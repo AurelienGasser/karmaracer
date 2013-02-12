@@ -25,12 +25,12 @@ BotManager.prototype.initBots = function() {
   if (numBots > 10){
     numBots = 10;
   }
-  numBots = 5;
+  numBots = 20;
   for (var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
     }.bind(this), interval);
-    interval += 3000;
+    interval += 0;
   }
 }
 

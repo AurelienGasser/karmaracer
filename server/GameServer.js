@@ -73,8 +73,11 @@ GameServer.prototype.step = function() {
 
   var maxDiff = this.tickInterval;
   if(this.timer.lastDiff > maxDiff) {
-    console.log('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms');//, this.timer, 'max:', maxDiff);
+    // console.log('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms, max ', this.tickInterval, 'min ', this.minTickInterval); //, this.timer, 'max:', maxDiff);
+    this.lastStepTooLong = true;
   } else {
+    this.lastStepTooLong = false;
+    // console.log(this.tickInterval);
     // console.log("engine time", this.timer.lastDiff);
   }
 
@@ -128,13 +131,28 @@ GameServer.prototype.initGameServer = function(map) {
   this.clients = [];
   this.players = {};
   this.timer = {};
+  this.lastStepTooLong = false;
 
   // update world
   this.ticksPerSecond = 60;
-  this.tickInterval = 1000 / this.ticksPerSecond;
+  this.tickInterval = 16;//1000 / this.ticksPerSecond;
+  this.minTickInterval = this.tickInterval
   this.tickCounter = 0;
   this.tickTs = new Date();
-  setInterval(this.step.bind(this), this.tickInterval);
+  // setInterval(this.step.bind(this), this.tickInterval);
+  var that = this;
+
+  function stepGame(time) {
+    setTimeout(function() {
+      that.step();
+      stepGame(that.tickInterval);
+      that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
+      if (that.tickInterval < that.minTickInterval){
+        that.tickInterval = that.minTickInterval;
+      }
+    }, time);
+  };
+  stepGame(0);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
 };
 
