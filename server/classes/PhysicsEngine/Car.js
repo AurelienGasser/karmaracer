@@ -26,9 +26,9 @@ var Car = require("./PhysicsItem").extend({
     this.constructor.__super__.initialize.apply(this, [a]);
     this.linearTireResistance = 0.4;
 
-    this.angularTireResistance        = 0.8;
-    this.angularAcceleration          = 0;
-    this.maxAngularAcceleration       = 1.7;
+    this.angularTireResistance = 0.8;
+    this.angularAcceleration = 0;
+    this.maxAngularAcceleration = 1.7;
     this.angularAccelerationIncrement = 0.05;
 
     this.createSensor();
@@ -43,11 +43,11 @@ var Car = require("./PhysicsItem").extend({
     this.applyForceToBody(v);
   },
   updateAngularAcceleration: function(turningRight) {
-    if (this.turningRight != turningRight) {
+    if(this.turningRight != turningRight) {
       this.angularAcceleration = 0;
       this.turningRight = turningRight;
     }
-    if (this.turningRight) {
+    if(this.turningRight) {
       this.angularAcceleration = Math.min(this.angularAcceleration + this.angularAccelerationIncrement, this.maxAngularAcceleration);
     } else {
       this.angularAcceleration = Math.max(this.angularAcceleration - this.angularAccelerationIncrement, -this.maxAngularAcceleration);
@@ -60,17 +60,22 @@ var Car = require("./PhysicsItem").extend({
   updatePos: function() {
     this.reduceLinearVelocity(this.linearTireResistance);
     this.reduceAngularVelocity(this.angularTireResistance);
-    this.body.ApplyTorque(-this.body.m_torque / 15);
+    if(this.body !== null) {
+      this.body.ApplyTorque(-this.body.m_torque / 15);
+    }
   },
   receiveHit: function() {
     this.playerCar.receiveHit();
   },
   getShared: function() {
-   var res =  this.constructor.__super__.getShared.bind(this)();
-   res.playerName = this.playerCar.playerName;
-   return res;
+    var res = this.constructor.__super__.getShared.bind(this)();
+    res.playerName = this.playerCar.playerName;
+    return res;
   },
   createSensor: function() {
+    if(this.body === null) {
+      return;
+    }
     var fixtureDef = new box2d.b2FixtureDef();
     fixtureDef.density = 0;
     fixtureDef.friction = 0;
@@ -79,11 +84,7 @@ var Car = require("./PhysicsItem").extend({
     var h = 0.2;
     var w = 2;
     var vertices = [
-        new box2d.b2Vec2(0, -h / 2)
-      , new box2d.b2Vec2(w, -h / 2)
-      , new box2d.b2Vec2(w,  h / 2)
-      , new box2d.b2Vec2(0,  h / 2)
-    ];
+    new box2d.b2Vec2(0, -h / 2), new box2d.b2Vec2(w, -h / 2), new box2d.b2Vec2(w, h / 2), new box2d.b2Vec2(0, h / 2)];
     fixtureDef.shape.SetAsVector(vertices, vertices.length);
     fixtureDef.isSensor = true;
     this.body.CreateFixture(fixtureDef);

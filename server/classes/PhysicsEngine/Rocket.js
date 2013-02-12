@@ -29,21 +29,21 @@ var Rocket = require("./PhysicsItem").extend({
     this.life = 25;
     this.damage = 100;
   },
-  die : function(){
-    this.life = -1;
-    this.scheduleForDestroy();
-  },
-  explode: function(point) {
-    this.die();
-    this.engine.gameServer.broadcastExplosion(point);
-  },
-  accelerate: function(ac) {
-    var v = {
-      x: this.acc_helper * ac * Math.cos(this.angle),
-      y: this.acc_helper * ac * Math.sin(this.angle)
-    };
-    this.applyForceToBody(v);
-  }
+  // die : function(){
+  //   this.life = -1;
+  //   this.scheduleForDestroy();
+  // },
+  // explode: function(point) {
+  //   this.die();
+  //   this.engine.gameServer.broadcastExplosion(point);
+  // },
+  // accelerate: function(ac) {
+  //   var v = {
+  //     x: this.acc_helper * ac * Math.cos(this.angle),
+  //     y: this.acc_helper * ac * Math.sin(this.angle)
+  //   };
+  //   this.applyForceToBody(v);
+  // }
 });
 
 module.exports = Rocket;

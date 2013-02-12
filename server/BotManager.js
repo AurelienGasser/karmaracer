@@ -13,7 +13,7 @@ var BotManager = function(gameServer) {
 BotManager.prototype.resetBots = function() {
     for (var i in this.bots) {
     var bot = this.bots[i];
-    bot.initCar();
+    bot.playerCar.resetPlayer();
   }
 };
 

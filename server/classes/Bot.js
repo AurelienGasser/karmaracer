@@ -9,9 +9,11 @@ var Bot = function(gameServer, id) {
     return this;
   }
 
-Bot.prototype.initCar = function() {
-  this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
-}
+// Bot.prototype.initCar = function() {
+//   this.playerCar.life = 100;
+//   this.playerCar.score = 0;
+//   this.playerCar.level = 0;
+// }
 
 
 Bot.prototype.tick = function() {

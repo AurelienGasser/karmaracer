@@ -23,19 +23,28 @@ var PlayerCar = function(gameServer, client, playerName, player) {
     this.client = client;
     this.isBot = !this.client;
     this.gameServer = gameServer;
-    this.life = 100;
     this.car = new Car(this);
     this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
-    this.id = playerCarID++;// Math.floor(Math.random() * 1e32);
-    this.score = 0;
-    this.experience = 0;
-    this.level = 1;
-    this.updateWeapon();
-    this.dead = false;
+    this.id = playerCarID++; // Math.floor(Math.random() * 1e32);
+    this.resetPlayer();
   }
 
+PlayerCar.prototype.resetPlayer = function() {
+  this.score = 0;
+  this.experience = 0;
+  this.level = 1;
+  this.updateWeapon();
+  this.dead = false;
+  this.life = 100;
+};
+
 PlayerCar.prototype.getShared = function() {
-  return this.car.getShared();
+  if (this.car !== null){
+    return this.car.getShared();  
+  } else {
+    return {};
+  }
+  
 }
 
 PlayerCar.prototype.updatePos = function() {
@@ -68,7 +77,7 @@ PlayerCar.prototype.updateWeapon = function() {
 }
 
 PlayerCar.prototype.levelUp = function() {
-  if(this.level >= Object.keys(WeaponsByClass).length) {
+  if(this.level >= Object.keys(WeaponsByClass).length / 2) {
     this.gameServer.gameEnd(this);
   } else {
     this.level += 1;

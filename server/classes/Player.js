@@ -1,5 +1,6 @@
 var PlayerCar = require('./PlayerCar');
 var Car = require('./PhysicsEngine/Car');
+var _ = require('underscore');
 
 var Player = function(client, playerName) {
   this.client = client;
@@ -8,7 +9,12 @@ var Player = function(client, playerName) {
 }
 
 Player.prototype.initCar = function(gameServer) {
-  this.playerCar = new PlayerCar(gameServer, this.client, this.playerName, this);
+  if (_.isUndefined(this.playerCar)){
+    this.playerCar = new PlayerCar(gameServer, this.client, this.playerName, this);  
+  }else{
+    this.playerCar.resetPlayer();    
+  }
+  
   // this.car = this.playerCar.car;
 }
 
