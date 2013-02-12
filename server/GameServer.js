@@ -64,6 +64,9 @@ GameServer.prototype.handleClientKeyboard = function() {
 
 
 GameServer.prototype.step = function() {
+  if (this.doStep === false){
+    return;
+  }
 
   function registerDateDiff(timer, name, start) {
     var now = new Date();
@@ -132,10 +135,10 @@ GameServer.prototype.initGameServer = function(map) {
   this.players = {};
   this.timer = {};
   this.lastStepTooLong = false;
-
+  this.doStep = true;
   // update world
   this.ticksPerSecond = 60;
-  this.tickInterval = 16;//1000 / this.ticksPerSecond;
+  this.tickInterval = 16; //1000 / this.ticksPerSecond;
   this.minTickInterval = this.tickInterval
   this.tickCounter = 0;
   this.tickTs = new Date();
@@ -147,7 +150,7 @@ GameServer.prototype.initGameServer = function(map) {
       that.step();
       stepGame(that.tickInterval);
       that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
-      if (that.tickInterval < that.minTickInterval){
+      if(that.tickInterval < that.minTickInterval) {
         that.tickInterval = that.minTickInterval;
       }
     }, time);
@@ -201,21 +204,26 @@ GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', {
     winnerName: winnerCar.player.playerName
   });
+  this.resetGame();
+  this.doStep = false;
   var that = this;
+  setTimeout(function() {
+    that.doStep = true;
+  }.bind(this), 5000);
+}
+
+GameServer.prototype.resetGame = function(first_argument) {
   var players = this.players;
-  this.players = [];
+
   for(var i in players) {
     players[i].client.keyboard = {};
   }
-  setTimeout(function() {
-    for(var i in players) {
-      players[i].initCar(this);
-    }
-    that.botManager.resetBots();
+  for(var i in players) {
+    players[i].initCar(this);
+  }
+  this.botManager.resetBots();
 
-    that.players = players;
-  }.bind(this), 5000);
-}
+};
 
 GameServer.prototype.addPlayer = function(player) {
   player.initCar(this);

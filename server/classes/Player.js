@@ -14,8 +14,6 @@ Player.prototype.initCar = function(gameServer) {
   }else{
     this.playerCar.resetPlayer();    
   }
-  
-  // this.car = this.playerCar.car;
 }
 
 module.exports = Player;

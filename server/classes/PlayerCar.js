@@ -39,11 +39,11 @@ PlayerCar.prototype.resetPlayer = function() {
 };
 
 PlayerCar.prototype.getShared = function() {
-  if (this.car !== null){
+  // if (this.car !== null){
     return this.car.getShared();  
-  } else {
-    return {};
-  }
+  // } else {
+  //   return {};
+  // }
   
 }
 
