@@ -7,7 +7,6 @@ var BotManager = function(gameServer) {
   if (!process.env.NO_BOTS) {
     this.initBots();
   }
-  // setInterval(this.tick.bind(this), 20);
 }
 
 BotManager.prototype.resetBots = function() {
@@ -25,7 +24,6 @@ BotManager.prototype.initBots = function() {
   if (numBots > 10){
     numBots = 10;
   }
-  // numBots = 20;
   for (var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();

@@ -97,8 +97,6 @@ PlayerCar.prototype.shoot = function() {
 PlayerCar.prototype.die = function() {
   this.getExperience(-50);
   this.dead = true;
-  this.car.scheduleForDestroy();
-  this.car = null;
   if(this.player.client) {
     this.player.client.keyboard = {};
     this.player.client.emit('dead', null);
@@ -106,7 +104,6 @@ PlayerCar.prototype.die = function() {
   setTimeout(function() {
     if(this.isBot || this.player.connected) {
       this.dead = false;
-      // this.car = new Car(this);
       this.life = 100;
     }
   }.bind(this), 5000);
