@@ -19,6 +19,14 @@
   bottom:0px;
 }
 
+/*#SteeringWheelController{
+  bottom: 0px !important;
+  left:0px !important;
+  width: 200px !important;
+  height: 200px !important;
+  background-color: red;
+}
+*/
 #pad-accelerate{
   height:75%;
   width:40%;
