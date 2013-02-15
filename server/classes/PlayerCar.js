@@ -35,7 +35,7 @@ PlayerCar.prototype.resetPlayer = function() {
   this.level = 1;
   this.updateWeapon();
   this.dead = false;
-  this.life = 100;
+  this.life = 2;
 };
 
 PlayerCar.prototype.getShared = function() {

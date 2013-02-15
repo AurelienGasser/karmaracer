@@ -5,7 +5,7 @@ var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
 var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
-var memwatch = require('memwatch');
+var MemLeakLog = require('./MemLeakLog');
 
 
 var GameServer = function(app, map) {
@@ -13,6 +13,57 @@ var GameServer = function(app, map) {
     this.initGameServer(map);
     return this;
   }
+
+GameServer.prototype.initGameServer = function(map) {
+  this.map = map;
+  this.physicsEngine = new PhysicsEngine(map, this);
+  this.carManager = new CarManager(this);
+  this.botManager = new BotManager(this);
+  this.weaponsManager = new WeaponsManager(this);
+  this.clients = [];
+  this.players = {};
+  this.timer = {};
+  this.lastStepTooLong = false;
+  this.doStep = true;
+  // update world
+  this.ticksPerSecond = 60;
+  this.tickInterval = 16; //1000 / this.ticksPerSecond;
+  this.minTickInterval = this.tickInterval
+  this.tickCounter = 0;
+  this.tickTs = new Date();
+
+  this.mem = new MemLeakLog();
+
+
+  // this.mem.register('b2Vec2');
+  this.mem.register('b2Body');
+  
+  // this.mem.register('Bullet');
+
+  // setInterval(this.step.bind(this), this.tickInterval);
+  var that = this;
+
+  function stepGame(time) {
+    setTimeout(function() {
+      that.mem.log();
+      that.mem.save();
+      if(that.doStep) {
+        that.step();
+      }
+      stepGame(that.tickInterval);
+      that.mem.save();
+      
+      
+      that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
+      if(that.tickInterval < that.minTickInterval) {
+        that.tickInterval = that.minTickInterval;
+      }
+    }, time);
+  };
+  that.mem.save();
+  stepGame(0);
+  setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
+};
 
 GameServer.prototype.handleClientKeyboard = function() {
   var that = this;
@@ -106,7 +157,6 @@ GameServer.prototype.step = function() {
   // this.tickTs = ts;
   try {
 
-    // var hd = new memwatch.HeapDiff();
 
     var start = new Date();
     that.physicsEngine.step();
@@ -127,14 +177,7 @@ GameServer.prototype.step = function() {
       that.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
     }
-    // var diff = hd.end();
-    // // console.log(diff.change.details);
-    // for (var i = 0; i < diff.change.details.length; i++) {
-    //   var mDetail = diff.change.details[i];
-    //   if (mDetail['-'] === 0){
-    //     console.log(mDetail);
-    //   }
-    // };
+    
 
   } catch(e) {
     console.log("error main interval", e, e.stack);
@@ -145,42 +188,6 @@ GameServer.prototype.step = function() {
   this.timer = timer;
 }
 
-
-GameServer.prototype.initGameServer = function(map) {
-  this.map = map;
-  this.physicsEngine = new PhysicsEngine(map, this);
-  this.carManager = new CarManager(this);
-  this.botManager = new BotManager(this);
-  this.weaponsManager = new WeaponsManager(this);
-  this.clients = [];
-  this.players = {};
-  this.timer = {};
-  this.lastStepTooLong = false;
-  this.doStep = true;
-  // update world
-  this.ticksPerSecond = 60;
-  this.tickInterval = 16; //1000 / this.ticksPerSecond;
-  this.minTickInterval = this.tickInterval
-  this.tickCounter = 0;
-  this.tickTs = new Date();
-  // setInterval(this.step.bind(this), this.tickInterval);
-  var that = this;
-
-  function stepGame(time) {
-    setTimeout(function() {
-      if (that.doStep){
-        that.step();
-      }
-      stepGame(that.tickInterval);
-      that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
-      if(that.tickInterval < that.minTickInterval) {
-        that.tickInterval = that.minTickInterval;
-      }
-    }, time);
-  };
-  stepGame(0);
-  setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
-};
 
 GameServer.prototype.getPlayersForShare = function() {
   var players = [];
@@ -223,8 +230,8 @@ GameServer.prototype.broadcastExplosion = function(point) {
   });
 };
 
-function handleError(err){
-    console.error("caught handle",err);
+function handleError(err) {
+  console.error("caught handle", err);
 }
 
 GameServer.prototype.gameEnd = function(winnerCar) {

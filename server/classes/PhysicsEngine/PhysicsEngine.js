@@ -98,7 +98,7 @@ PhysicsEngine.prototype.createSquareBody = function(userData, bodyParams) {
     fixtureDef.shape.SetAsBox(userData.size.w / 2, userData.size.h / 2);
 
     var body = this.world.CreateBody(def);
-    body.CreateFixture(fixtureDef);
+    this.fixture = body.CreateFixture(fixtureDef);
     return body;
   } catch(e) {
     console.log('error on body creation', e, e.stack);
