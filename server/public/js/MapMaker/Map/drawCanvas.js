@@ -20,7 +20,7 @@ Map.prototype.canvasDrawBackground = function() {
   if(this.mapBackgroundName !== '') {
     var bg = this.itemsByName[this.mapBackgroundName];
     //    console.log(this.mapBackgroundName, 'bg', bg);
-    if(!_.isUndefined(bg)) {
+    if(!KLib.isUndefined(bg)) {
       this.ctx.fillStyle = bg.pattern;
       this.ctx.fillRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
     }

@@ -88,7 +88,7 @@ Map.prototype.loadMap = function(mapName, callback) {
       //console.log('create', mapItem);      
     };
 
-    // if (!_.isUndefined(that.svgTag)){
+    // if (!KLib.isUndefined(that.svgTag)){
     //   that.svgLoad();
     // }
 

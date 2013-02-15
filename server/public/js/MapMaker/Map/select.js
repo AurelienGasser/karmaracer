@@ -79,7 +79,7 @@ Map.prototype.isItemSelected = function(id) {
 Map.prototype.selectItem = function(id, rect) {
   this.selectedItems.push(id);
 
-  if(!_.isUndefined(rect)) {
+  if(!KLib.isUndefined(rect)) {
     rect.isSelected = true;
     this.itemsGlow[id] = rect;
     $(rect).attr('stroke', '#000');    
@@ -94,7 +94,7 @@ Map.prototype.deselectItem = function(id) {
 
 
   var rect = this.itemsGlow[id];
-  if(!_.isUndefined(rect)) {
+  if(!KLib.isUndefined(rect)) {
     rect.isSelected = false;
     $(rect.rectSelected).hide();
     $(rect).attr('stroke', 'transparent');

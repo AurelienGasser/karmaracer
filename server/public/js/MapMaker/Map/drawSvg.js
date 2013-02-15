@@ -170,12 +170,12 @@
 
   Map.prototype.svgDrawBackground = function() {
     // console.log(this.bgImg);
-    if (!_.isUndefined(this.bgImg)){
+    if (!KLib.isUndefined(this.bgImg)){
       $(this.bgImg.node).remove();
     }
     if(this.mapBackgroundName !== '') {
       var bg = this.itemsByName[this.mapBackgroundName];
-      if(!_.isUndefined(bg)) {
+      if(!KLib.isUndefined(bg)) {
         
         this.bgImg = this.R.rect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
         this.bgImg.attr({

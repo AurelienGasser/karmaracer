@@ -34,7 +34,7 @@ MapItem.prototype.initImage = function(callback) {
 
   that.image.onload = function() {
 
-    if(that.patternType !== "none" && !_.isUndefined(that.ctx)) {
+    if(that.patternType !== "none" && !KLib.isUndefined(that.ctx)) {
       that.pattern = that.ctx.createPattern(that.image, 'repeat');
     } else {
     }

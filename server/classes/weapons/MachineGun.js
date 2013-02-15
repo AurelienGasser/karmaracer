@@ -1,9 +1,9 @@
 var Bullet = require('../PhysicsEngine/Bullet');
-var Heritage = require('../Heritage');
+var KLib = require('./../KLib');
 var Weapon = require('./Weapon');
 
 var MachineGun = function() {
-    Heritage.extend(Weapon, this);
+    KLib.extend(Weapon, this);
     this.name = 'machine gun';
     this.lastShotInterval = 32;
     this.ProjectileClass = Bullet;

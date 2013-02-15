@@ -155,7 +155,7 @@ Engine2DCanvas.prototype.drawStaticItems = function(ctx) {
   if(that.gameInstance.walls != null) {
     _.each(that.gameInstance.walls, function(c) {
       var staticItem = that.gameInstance.itemsInMap[c.name];
-      if(!_.isUndefined(staticItem) && !_.isUndefined(staticItem.pattern)) {
+      if(!KLib.isUndefined(staticItem) && !KLib.isUndefined(staticItem.pattern)) {
         // console.log(c.x, c.)
         if(staticItem.pattern === null) {
           ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
@@ -169,7 +169,7 @@ Engine2DCanvas.prototype.drawStaticItems = function(ctx) {
 }
 
 Engine2DCanvas.prototype.drawBackground = function(ctx) {
-  if(_.isUndefined(this.gameInstance.backgroundPattern)) {
+  if(KLib.isUndefined(this.gameInstance.backgroundPattern)) {
     return;
   }
   var cs = this.camera.getCanvasSize();

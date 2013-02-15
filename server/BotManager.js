@@ -17,6 +17,7 @@ BotManager.prototype.resetBots = function() {
 };
 
 BotManager.prototype.initBots = function() {
+  // return;
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
   var botDensity = 1 / 2300;
   var numBots = Math.ceil(mapSize * botDensity) + 3;

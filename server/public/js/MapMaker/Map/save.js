@@ -17,12 +17,12 @@ Map.prototype.saveMap = function() {
 
   var path = '/sprites/bg_grass1.png';
   var itemBG = this.itemsByName[this.mapBackgroundName];
-  if(!_.isUndefined(itemBG)) {
+  if(!KLib.isUndefined(itemBG)) {
     path = itemBG.path;
   }
 
   // console.log(this.itemsByName[this.mapBackgroundName]);
-  if(!_.isUndefined(path)) {
+  if(!KLib.isUndefined(path)) {
     map['background'] = {
       'path': path,
       'name': this.mapBackgroundName

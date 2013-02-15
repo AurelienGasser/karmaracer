@@ -1,10 +1,11 @@
-var _ = require('underscore');
+var KLib = require('./classes/KLib');
 var fs = require('fs');
 var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
 var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
 var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
+var memwatch = require('memwatch');
 
 
 var GameServer = function(app, map) {
@@ -104,6 +105,9 @@ GameServer.prototype.step = function() {
   // }
   // this.tickTs = ts;
   try {
+
+    // var hd = new memwatch.HeapDiff();
+
     var start = new Date();
     that.physicsEngine.step();
     start = registerDateDiff(timer, 'physics', start);
@@ -123,6 +127,15 @@ GameServer.prototype.step = function() {
       that.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
     }
+    // var diff = hd.end();
+    // // console.log(diff.change.details);
+    // for (var i = 0; i < diff.change.details.length; i++) {
+    //   var mDetail = diff.change.details[i];
+    //   if (mDetail['-'] === 0){
+    //     console.log(mDetail);
+    //   }
+    // };
+
   } catch(e) {
     console.log("error main interval", e, e.stack);
   }

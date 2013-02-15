@@ -1,9 +1,17 @@
 var express = require('express');
-var backbone = require('backbone');
-var _ = require('underscore');
+var KLib = require('./classes/KLib');
 var fs = require('fs');
 var sys = require("util");
+var memwatch = require('memwatch');
 
+
+memwatch.on('leak', function(info) { 
+  // console.log('LEAK', info);
+});
+
+memwatch.on('stats', function(stats) { 
+  // console.log('HEAP STATS', stats);
+});
 // FOR SSL IF REQUIRED
 var ssl_options = {
   key: fs.readFileSync(__dirname + '/keys/karma-key.pem'),
@@ -84,7 +92,7 @@ function index(req, res, view, draw_engine) {
     // server: 'http://' + serverHost + '/',
   };
   var map = req.params.map;
-  if(!_.isUndefined(map)) {
+  if(!KLib.isUndefined(map)) {
     options['map'] = map;
   }
   res.render(view, options);

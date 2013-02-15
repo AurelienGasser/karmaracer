@@ -1,5 +1,5 @@
 var fs = require('fs');
-var _ = require('underscore');
+var KLib = require('./classes/KLib');
 
 
 var MapManger = function(app, callback) {
@@ -38,7 +38,7 @@ var MapManger = function(app, callback) {
           var item = JSON.parse(content);
           action(item);
         };
-        if(_.isFunction(callback)) {
+        if(KLib.isFunction(callback)) {
           return callback(null);
         }
       });
@@ -71,7 +71,7 @@ var MapManger = function(app, callback) {
       //   return;
       // }
       console.log('c or u map ', map.name);
-      if(_.isUndefined(that.maps[map])) {
+      if(KLib.isUndefined(that.maps[map])) {
         addGameServer(map);
       } else {
         updateGameServerMap(map);
@@ -89,7 +89,7 @@ var MapManger = function(app, callback) {
           var map = JSON.parse(content);
           createOrUpdateMap(map);
         };
-        if(_.isFunction(callback)) {
+        if(KLib.isFunction(callback)) {
           return callback(null);
         }
       });
@@ -122,7 +122,7 @@ var MapManger = function(app, callback) {
         console.log('maps loaded')
         that.gameServerSocket = new(require('./GameServerSocket'))(res);
         loadItems(function(err) {
-          if(_.isFunction(callback)) {
+          if(KLib.isFunction(callback)) {
             return callback(null, that);
           }
         })

@@ -1,4 +1,4 @@
-var _ = require('underscore');
+var KLib = require('./classes/KLib');
 var GameServerSocket = function(mapManager) {
     var Car = require('./classes/PhysicsEngine/Car');
     var Player = require('./classes/Player');
@@ -13,7 +13,7 @@ var GameServerSocket = function(mapManager) {
     }
 
     function removeHomeClient(client){
-      if (!_.isUndefined(client.homeClient) && client.homeClient === true){
+      if (!KLib.isUndefined(client.homeClient) && client.homeClient === true){
         delete that.homeClients[client.homeID];
       }
     }
@@ -43,7 +43,7 @@ var GameServerSocket = function(mapManager) {
         return callback(null, that.mapManager.itemsByName);
       });
       client.on('move_car', function(info) {
-        if(!_.isUndefined(client.player) && !client.player.playerCar.dead) {
+        if(!KLib.isUndefined(client.player) && !client.player.playerCar.dead) {
           client.player.playerCar.car.applyForceToBody(info.force);
           client.player.playerCar.car.setAngle(info.angle);
         }
@@ -52,7 +52,7 @@ var GameServerSocket = function(mapManager) {
       client.on('get_map', function(mapName, callback) {
         console.log('get map', mapName)
         var map = that.mapManager.maps[mapName];
-        if(_.isUndefined(map)) {
+        if(KLib.isUndefined(map)) {
           return callback({
             'msg': 'map do not exists : ' + mapName
           });
@@ -99,14 +99,14 @@ var GameServerSocket = function(mapManager) {
       client.on('disconnect', function(socket) {
         try {
           removeHomeClient(client);
-          if(!_.isUndefined(client.gameServer)) {
+          if(!KLib.isUndefined(client.gameServer)) {
             client.gameServer.removePlayer(client.player);
           }
           console.log('client left:', client.playerName);
         } catch(e) {
           console.log(e, e.stack);
         }
-        if(!_.isUndefined(client.gameServer)) {
+        if(!KLib.isUndefined(client.gameServer)) {
           delete client.gameServer.clients[client.id];
         }
       });

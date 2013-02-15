@@ -1,3 +1,14 @@
+var KLib = {};
+
+KLib.isFunction = function(obj) {
+  return typeof obj === 'function';
+};
+
+//http://jsperf.com/tests-for-undefined/2
+KLib.isUndefined = function(obj) {
+  return obj === void 0;
+};
+
 function GameInstance() {
   this.cars = [];
   this.explosions = {};

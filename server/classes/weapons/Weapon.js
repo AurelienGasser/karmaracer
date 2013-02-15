@@ -1,5 +1,5 @@
 var Bullet = require('../PhysicsEngine/Bullet');
-var _ = require('underscore');
+var KLib = require('./../KLib');
 
 var Weapon = function() {
     this.name = 'anonymous';
@@ -41,7 +41,7 @@ Weapon.prototype.canShoot = function() {
 };
 
 Weapon.prototype.shoot = function(playerCar) {
-  if(!_.isUndefined(playerCar) && this.canShoot()) {
+  if(!KLib.isUndefined(playerCar) && this.canShoot()) {
     this.customShoot(playerCar);
   }
 };
@@ -51,7 +51,7 @@ Weapon.prototype.customShoot = function(playerCar) {
 };
 
 Weapon.prototype.addProjectile = function(playerCar, angle) {
-  if(_.isUndefined(angle)) {
+  if(KLib.isUndefined(angle)) {
     angle = 0;
   }
   var pos = this.getProjectileVector(playerCar, angle);
