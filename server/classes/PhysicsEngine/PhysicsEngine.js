@@ -18,10 +18,7 @@ PhysicsEngine.prototype.initialize = function(_map, gameServer) {
   this.gameServer = gameServer;
   this.itemsToDestroy = [];
 
-  // Define world
-  var gravity = new box2d.b2Vec2(0.0, 0.0);
-  this.world = new box2d.b2World(gravity, false);
-  this.staticItems = [];
+  this.createWorld();
 
   this.itemsDir = __dirname + '/../../public/items/';
   this.itemsInMap = {};
@@ -46,6 +43,15 @@ PhysicsEngine.prototype.initialize = function(_map, gameServer) {
   this.createBorders(this.map.size);
   this.loadStaticItems(this.map.staticItems);
 };
+
+PhysicsEngine.prototype.createWorld = function() {
+    // Define world
+  var gravity = new box2d.b2Vec2(0.0, 0.0);
+  this.world = new box2d.b2World(gravity, false);
+  this.staticItems = [];
+  gravity = null;
+};
+
 PhysicsEngine.prototype.getWorldInfo = function() {
   return {
     "size": {
@@ -59,7 +65,7 @@ PhysicsEngine.prototype.getWorldInfo = function() {
 }
 PhysicsEngine.prototype.getShareStaticItems = function() {
   var shareStaticItems = [];
-
+  // return shareStaticItems;
   for (var i = 0; i < this.staticItems.length; i++) {
     var w = this.staticItems[i];
     shareStaticItems.push(w.getShared());

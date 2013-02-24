@@ -12,6 +12,14 @@ var Leak = function () {
 
 }
 
+    memwatch.on('stats', function(stats) {
+      console.log('MEM STATS', stats);
+    });
+
+    memwatch.on('leak', function(info) {
+      console.log('MEM LEAK', info);
+    });
+
 
 mem.register('Leak');
 
@@ -35,18 +43,21 @@ gMem.always('Leak');
 var interval;
 var num = 10;
 
+var l;
 function step() {
 
   mem.diff();
   mem.save();
   if(num > 0) {
+    // l = null;
+    l = new Leak();
 
-    var l = new Leak();
-    l = null;
+    // new Leak();
 
   } else if(num < -20) {
     console.log('stop');
     clearInterval(interval);
+    l = null;
     mem.diff();
     mem.log();
     gMem.diff();

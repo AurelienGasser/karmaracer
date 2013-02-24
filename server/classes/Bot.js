@@ -42,7 +42,7 @@ Bot.prototype.tick = function() {
         this.playerCar.car.turn(1);
       }
     }
-    this.playerCar.shoot();
+    // this.playerCar.shoot();
     // shoot for 30 ticks once every 50 ticks
     if(this.isShooting) {
       if(!--this.shootCpt) {

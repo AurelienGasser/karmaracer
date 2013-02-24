@@ -13,7 +13,7 @@ function SocketManager(gameInstance, onInitCallback) {
   this.socketCounter = 0;
   this.timestamp = new Date().getTime();
   this.msg_id = 0;
-
+  this.gameInstance.bodies = [];
 
   var that = this;
 
@@ -77,7 +77,7 @@ function SocketManager(gameInstance, onInitCallback) {
     announce('You\' re dead !', 'red');
   });
 
-  function announceIn(msg, color, timeInSeconds){
+  function announceIn(msg, color, timeInSeconds) {
     setTimeout(function() {
       announce(msg, color);
     }, timeInSeconds * 1000);
@@ -90,28 +90,29 @@ function SocketManager(gameInstance, onInitCallback) {
     announceIn('2', 'red', 3);
     announceIn('1', 'orange', 4);
     announceIn('GO', 'green', 5);
-    
-})
 
-connection.on('objects', function(objects) {
-  //console.log(objects);
-  gameInstance.cars = objects.cars;
-  gameInstance.mycar = objects.myCar;
-  // gameInstance.bullets = objects.projectiles.bullets;
-  // gameInstance.rockets = objects.projectiles.rockets;
-  gameInstance.projectiles = objects.projectiles;
-  gameInstance.updateScoresHTML();
-  $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
-    return list ? list.length : 0;
-  })));
-  socketReceived();
-});
+  })
 
-connection.on('explosion', function(explosion) {
-  gameInstance.addExplosion(explosion);
-});
+  connection.on('objects', function(objects) {
+    //console.log(objects);
+    gameInstance.cars = objects.cars;
+    gameInstance.mycar = objects.myCar;
+    // gameInstance.bullets = objects.projectiles.bullets;
+    // gameInstance.rockets = objects.projectiles.rockets;
+    gameInstance.projectiles = objects.projectiles;
+    gameInstance.bodies = objects.bodies;
+    gameInstance.updateScoresHTML();
+    $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
+      return list ? list.length : 0;
+    })));
+    socketReceived();
+  });
 
-this.connection = connection;
+  connection.on('explosion', function(explosion) {
+    gameInstance.addExplosion(explosion);
+  });
+
+  this.connection = connection;
 }
 
 SocketManager.prototype.getConnection = function() {

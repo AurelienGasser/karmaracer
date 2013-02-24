@@ -6,7 +6,15 @@ var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
 var MemLeakLog = require('./MemLeakLog');
+var memwatch = require('memwatch');
 
+// memwatch.on('stats', function(stats) {
+//   console.log('MEM STATS', stats);
+// });
+
+// memwatch.on('leak', function(info) {
+//   console.log('MEM LEAK', info);
+// });
 
 var GameServer = function(app, map) {
     this.app = app;
@@ -16,6 +24,13 @@ var GameServer = function(app, map) {
 
 GameServer.prototype.initGameServer = function(map) {
   this.map = map;
+
+  var KarmaEngine = require('./classes/PhysicsEngine/KarmaPhysicsEngine');
+  this.kengine = new KarmaEngine({
+    'w': 2000,
+    'h': 2000
+  });
+  
   this.physicsEngine = new PhysicsEngine(map, this);
   this.carManager = new CarManager(this);
   this.botManager = new BotManager(this);
@@ -32,28 +47,29 @@ GameServer.prototype.initGameServer = function(map) {
   this.tickCounter = 0;
   this.tickTs = new Date();
 
-  this.mem = new MemLeakLog();
 
+
+  this.mem = new MemLeakLog();
+  this.mem.enable = false;
 
   // this.mem.register('b2Vec2');
   this.mem.register('b2Body');
-  
-  // this.mem.register('Bullet');
 
+  // this.mem.register('Bullet');
   // setInterval(this.step.bind(this), this.tickInterval);
   var that = this;
 
   function stepGame(time) {
     setTimeout(function() {
-      that.mem.log();
+      that.mem.diff();
       that.mem.save();
       if(that.doStep) {
         that.step();
       }
       stepGame(that.tickInterval);
+      that.mem.diff();
       that.mem.save();
-      
-      
+      that.mem.log();
       that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
       if(that.tickInterval < that.minTickInterval) {
         that.tickInterval = that.minTickInterval;
@@ -157,7 +173,7 @@ GameServer.prototype.step = function() {
   // this.tickTs = ts;
   try {
 
-
+    // console.log('step', this.tickCounter);
     var start = new Date();
     that.physicsEngine.step();
     start = registerDateDiff(timer, 'physics', start);
@@ -167,8 +183,11 @@ GameServer.prototype.step = function() {
       start = registerDateDiff(timer, 'carManager', start);
       that.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
+
+      that.kengine.step();
     }
     if(this.tickCounter % 4 === 0) {
+      // console.log('send');
       that.sendPositionsToPlayers();
       start = registerDateDiff(timer, 'sendPositions', start);
     }
@@ -177,7 +196,7 @@ GameServer.prototype.step = function() {
       that.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
     }
-    
+
 
   } catch(e) {
     console.log("error main interval", e, e.stack);
@@ -203,7 +222,11 @@ GameServer.prototype.getPlayersForShare = function() {
 
 
 GameServer.prototype.sendPositionsToPlayers = function() {
+    // console.log(this.players);
   var cars = this.carManager.getShared();
+  // cars = cars.concat(this.kengine.getShared());
+  var bodies = this.kengine.getShared();
+
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for(var i in this.players) {
     var p = this.players[i];
@@ -211,8 +234,10 @@ GameServer.prototype.sendPositionsToPlayers = function() {
     var share = {
       myCar: myCar,
       cars: cars,
-      projectiles: projectiles
+      projectiles: projectiles,
+      bodies : bodies
     };
+    // console.log(share);
     p.client.emit('objects', share);
   }
 };

@@ -25,7 +25,7 @@ BotManager.prototype.initBots = function() {
   if(numBots > 10) {
     numBots = 10;
   }
-  numBots = 5;
+  numBots = 0;
   for(var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
@@ -37,8 +37,8 @@ BotManager.prototype.initBots = function() {
 BotManager.prototype.tick = function() {
   for(var i in this.bots) {
     var bot = this.bots[i];
-    console.log(bot.playerCar.life);
-    bot.playerCar.life--;
+    // console.log(bot.playerCar.life);
+    // bot.playerCar.life--;
     bot.tick();
     if(bot.playerCar.life < 0) {
       this.removeBot();
@@ -64,6 +64,7 @@ BotManager.prototype.addBot = function() {
 BotManager.prototype.removeBot = function(gameServer) {
   // remove the first bot added
   for(var id in this.bots) {
+    this.bots[id].playerCar.car.scheduleForDestroy();
     delete this.bots[id];
     return;
   }

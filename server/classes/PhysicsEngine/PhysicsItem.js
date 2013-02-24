@@ -19,15 +19,15 @@ PhysicsItem.prototype.initialize = function(_arguments) {
   }
   this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments);
   this.engine = _arguments['physicsEngine'];
+  // this.engine.gameServer.kengine.createBody(_arguments['position'], this.size);
 }
 PhysicsItem.prototype.destroy = function() {
   if(this.body) {
-    console.log('destroy', this.name);
+    console.log('destroy', this.name, this.id);
     if(!KLib.isUndefined(this.body.fixture)) {
-      // this.body.DestroyFixture(this.body.fixture);
+      this.body.DestroyFixture(this.body.fixture);
     }
     this.engine.world.DestroyBody(this.body);
-
     this.body = null;
   }
 }

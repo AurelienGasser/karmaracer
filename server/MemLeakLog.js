@@ -2,9 +2,19 @@ var KLib = require('./classes/KLib');
 var memwatch = require('memwatch');
 
 var MemLeakLog = function(name) {
-  this.name = name;
+    this.name = name;
     this.saveHeap = {};
     this.debug = {};
+    this.logAll = false;
+    this.enable = true;
+
+    memwatch.on('stats', function(stats) {
+      console.log('MEM STATS', stats);
+    });
+
+    memwatch.on('leak', function(info) {
+      console.log('MEM LEAK', info);
+    });
   }
 
 
@@ -13,7 +23,7 @@ MemLeakLog.prototype.register = function(name) {
   this.saveHeap[name] = {
     plus: 0,
     minus: 0,
-    updates : 0
+    updates: 0
   };
   console.log('register mem', this.saveHeap);
 }
@@ -25,10 +35,16 @@ MemLeakLog.prototype.always = function(name) {
 
 
 MemLeakLog.prototype.save = function() {
+  if (!this.enable){
+    return;
+  }
   this.hd = new memwatch.HeapDiff();
 }
 
 MemLeakLog.prototype.diff = function() {
+  if (!this.enable){
+    return;
+  }
   if(KLib.isUndefined(this.hd)) {
     return;
   }
@@ -47,19 +63,25 @@ MemLeakLog.prototype.diff = function() {
       h.updates += 1;
       this.saveHeap[mDetail.what] = h;
     }
-    if (this.debug[mDetail.what] === true){
+    if(this.debug[mDetail.what] === true) {
+      console.log(mDetail);
+    }
+    if(this.logAll) {
       console.log(mDetail);
     }
   };
 };
 
 MemLeakLog.prototype.log = function() {
-  if (!KLib.isUndefined(this.name)){
+  if (!this.enable){
+    return;
+  }  
+  if(!KLib.isUndefined(this.name)) {
     console.log(this.name, this.saveHeap);
   } else {
-  console.log(this.saveHeap);  
+    console.log(this.saveHeap);
   }
-  
+
 };
 
 

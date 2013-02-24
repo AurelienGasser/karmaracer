@@ -58,6 +58,125 @@ Engine2DCanvas.prototype.draw = function() {
   }
 };
 
+Engine2DCanvas.prototype.drawBodies = function(ctx) {
+  if(this.gameInstance.bodies !== null) {
+
+    for(var i = 0; i < this.gameInstance.bodies.length; i++) {
+      var c = this.gameInstance.bodies[i];
+      ctx.save();
+      ctx.fillStyle = c.color;
+      // console.log(c);
+      // ctx.translate(c.x, c.y);
+      // ctx.rotate(c.r);
+      ctx.translate(c.x, c.y);
+
+      // console.log(c.a1);
+      ctx.beginPath();
+      ctx.moveTo(c.ul.x, c.ul.y);
+      // ctx.moveTo(0, 0);
+      ctx.lineTo(c.ur.x, c.ur.y);
+      ctx.lineTo(c.br.x, c.br.y);
+      ctx.lineTo(c.bl.x, c.bl.y);
+      ctx.closePath();
+      ctx.fill();
+
+
+
+      ctx.restore();
+
+
+      ctx.save();
+      var textSize = ctx.measureText(c.playerName);
+      var textPad = 25;
+
+      ctx.translate(c.x, c.y);
+      ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+      ctx.restore();
+    };
+
+
+    for(var i = 0; i < this.gameInstance.bodies.length; i++) {
+      var c = this.gameInstance.bodies[i];
+      var scale = 32;
+      var scale2 = scale * 6;
+
+      ctx.save();
+      ctx.translate(c.x, c.y);
+
+      function drawAxis(a) {
+        ctx.strokeStyle = '#000000';
+        ctx.beginPath();
+        ctx.moveTo(-a.x * scale2, -a.y * scale2);
+        // ctx.lineTo(coord.x, coord.y);
+        ctx.lineTo(a.x * scale2, a.y * scale2);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      function drawPoint(p) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.fillStyle = '#FF0000';
+        ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI, false);
+        ctx.fill();
+        ctx.closePath();
+        ctx.fillStyle = '#00FF00';
+        ctx.fillText(p.name, p.x, p.y);
+        ctx.restore();
+      }
+
+      function drawLine(p1, p2) {
+        drawPoint(p2)
+        ctx.save();
+        ctx.strokeStyle = '#0000FF';
+        ctx.fillStyle = '#0000FF';
+        ctx.translate(p2.x, p2.y);
+        ctx.rotate(c.r);
+        var w = 5;
+        ctx.fillRect(-w / 2, -w / 2, w, w)
+        ctx.restore();
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        // ctx.moveTo(0, 0);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.closePath();
+        ctx.stroke();
+      }
+
+      // drawLine(c.bUL, c.p3);
+      // drawLine(c.bUR, c.p4);
+      // drawLine(c.bBL, c.p5);
+      // drawLine(c.bBR, c.p6);
+      // drawLine(c.bBR, c.p5);
+      if(!_.isUndefined(c.collision)) {
+        drawAxis(c.collision.a1);
+        drawPoint(c.collision.minA);
+        drawPoint(c.collision.maxA);
+        drawPoint(c.collision.minB);
+        drawPoint(c.collision.maxB);
+
+      }
+
+      // console.log(c.p1);
+      // drawPoint(c.p1);
+      // drawPoint(c.p2);
+      // 
+      // drawPoint(c.p3);
+      // drawPoint(c.p4);
+      // drawPoint(c.p5);
+      // drawPoint(c.p6);
+      // drawPoint(c.bUL);
+      // drawPoint(c.ur);
+      // drawPoint(c.ul);
+      // drawPoint(c.br);
+      // drawPoint(c.bl);
+      ctx.restore();
+      // drawAxis(c.br, c.a2);
+      // break;
+    }
+  }
+}
+
 Engine2DCanvas.prototype.drawCars = function(ctx) {
   if(this.gameInstance.cars !== null) {
     ctx.fillStyle = '#FFFFFF';
@@ -67,6 +186,7 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.translate(c.x, c.y);
       ctx.rotate(c.r);
       ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
+      ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
       ctx.restore();
 
       var textSize = ctx.measureText(c.playerName);
@@ -193,10 +313,11 @@ Engine2DCanvas.prototype.drawItems = function() {
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, cs.w, cs.h, this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);
   this.drawCars(this.ctx);
+  this.drawBodies(this.ctx);
   this.drawExplosions(this.ctx);
   // this.drawBullets(this.ctx);
   // this.drawRockets(this.ctx);
-  this.drawProjectiles(this.ctx); 
+  this.drawProjectiles(this.ctx);
 };
 
 Engine2DCanvas.prototype.tick = function() {
