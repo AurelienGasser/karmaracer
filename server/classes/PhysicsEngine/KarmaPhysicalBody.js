@@ -1,28 +1,28 @@
 var G_bodyID = 0;
 
-var KarmaPhysicsEngineBody = function(position, size) {
-    this.gScale = 32;
-    this.id = G_bodyID++;
-    this.x = position.x;
-    this.y = position.y;
-    this.w = size.w;
-    this.h = size.h;
-    this.r = 0;
-    this.playerName = 'b' + this.id;
-    this.name = 'car';
-    this.s = 0;
-    this.l = 0;
-    this.wDiv2 = this.w / 2;
-    this.hDiv2 = this.h / 2;
-    this.color = '#FFF';
-    // this.wDiv2 = this.w ;
-    // this.hDiv2 = this.h ;
-    // this.r = Math.PI / 3;
-    this.updateCornerCache();
-    // console.log(this.UR(), this.UL(), this.BL(), this.BR());
-  }
+var KarmaPhysicalBody = function() {
+  return this;
+}
 
-KarmaPhysicsEngineBody.prototype.step = function() {
+KarmaPhysicalBody.prototype.initialize = function(position, size) {
+  this.gScale = 32;
+  this.id = G_bodyID++;
+  this.x = position.x;
+  this.y = position.y;
+  this.w = size.w;
+  this.h = size.h;
+  this.r = 0;
+  this.playerName = 'b' + this.id;
+  this.name = 'car';
+  this.s = 0;
+  this.l = 0;
+  this.wDiv2 = this.w / 2;
+  this.hDiv2 = this.h / 2;
+  this.color = '#FFF';
+  this.updateCornerCache();
+}
+
+KarmaPhysicalBody.prototype.step = function() {
   this.r += Math.random() * Math.PI / 1024;
   this.r = this.r % (2 * Math.PI);
   if(this.playerName == 'b1') {
@@ -32,38 +32,59 @@ KarmaPhysicsEngineBody.prototype.step = function() {
   this.updateCornerCache();
 };
 
-KarmaPhysicsEngineBody.prototype.cosWidthDiv2 = function() {
-  return Math.cos(this.r) * this.wDiv2;
-};
 
-KarmaPhysicsEngineBody.prototype.sinHeightDiv2 = function() {
-  return Math.cos(this.r) * this.wDiv2;
-};
-
-KarmaPhysicsEngineBody.prototype.rotateNeg = function(x, y) {
+KarmaPhysicalBody.prototype.getPosition = function() {
   return {
-    x: x * Math.cos(-this.r) - y * Math.sin(-this.r),
-    y: x * Math.sin(-this.r) + y * Math.cos(-this.r)
+    x: this.x,
+    y: this.y
+  };
+}
+KarmaPhysicalBody.prototype.getVector = function(power, angle) {
+  if(!angle) {
+    angle = 0;
   }
+  angle += this.r;
+  var v = {
+    x: power.x * Math.cos(angle),
+    y: power.y * Math.sin(angle)
+  };
+  return v;
 }
 
+KarmaPhysicalBody.prototype.addAngle = function(a) {
+  this.r += a;
+}
 
+KarmaPhysicalBody.prototype.turn = function(side) {
+  var angleToAdd = side * Math.PI / 4;
+  this.addAngle(angleToAdd);
+}
 
-KarmaPhysicsEngineBody.prototype.rotate = function(x, y) {
+KarmaPhysicalBody.prototype.cosWidthDiv2 = function() {
+  return Math.cos(this.r) * this.wDiv2;
+};
+
+KarmaPhysicalBody.prototype.sinHeightDiv2 = function() {
+  return Math.cos(this.r) * this.wDiv2;
+};
+
+KarmaPhysicalBody.prototype.rotate = function(x, y) {
   return {
     x: x * Math.cos(this.r) - y * Math.sin(this.r),
     y: x * Math.sin(this.r) + y * Math.cos(this.r)
   }
+  this.updateCornerCache();
 }
 
-KarmaPhysicsEngineBody.prototype.translate = function(coord) {
+KarmaPhysicalBody.prototype.translate = function(coord) {
   return {
     x: coord.x + this.x,
     y: coord.y + this.y
   };
+  this.updateCornerCache();
 };
 
-KarmaPhysicsEngineBody.prototype.getCorners = function() {
+KarmaPhysicalBody.prototype.getCorners = function() {
 
   return [
   this.rotate(+this.wDiv2, +this.hDiv2), this.rotate(-this.wDiv2, +this.hDiv2), this.rotate(+this.wDiv2, -this.hDiv2), this.rotate(-this.wDiv2, -this.hDiv2)]
@@ -79,35 +100,35 @@ var compareX = function(c1, c2) {
     return c2.x - c1.x;
   }
 
-KarmaPhysicsEngineBody.prototype.updateCornerCache = function() {
+KarmaPhysicalBody.prototype.updateCornerCache = function() {
   this.corners = this.getCorners();
 };
 
-KarmaPhysicsEngineBody.prototype.UR = function() {
+KarmaPhysicalBody.prototype.UR = function() {
   var maxY = this.corners.sort(compareY);
   var maxX = maxY.slice(0, 2).sort(compareX);
   return maxX[0];
 };
 
-KarmaPhysicsEngineBody.prototype.UL = function() {
+KarmaPhysicalBody.prototype.UL = function() {
   var minY = this.corners.sort(compareY);
   var maxX = minY.slice(0, 2).sort(compareX);
   return maxX[1];
 };
 
-KarmaPhysicsEngineBody.prototype.BR = function() {
+KarmaPhysicalBody.prototype.BR = function() {
   var minY = this.corners.sort(compareY).reverse();
   var maxX = minY.slice(0, 2).sort(compareX);
   return maxX[0];
 };
 
-KarmaPhysicsEngineBody.prototype.BL = function() {
+KarmaPhysicalBody.prototype.BL = function() {
   var minY = this.corners.sort(compareY).reverse();
   var maxX = minY.slice(0, 2).sort(compareX);
   return maxX[1];
 };
 
-KarmaPhysicsEngineBody.prototype.axis1 = function() {
+KarmaPhysicalBody.prototype.axis1 = function() {
   var ur = this.UR();
   var ul = this.UL();
   var a1 = {
@@ -123,7 +144,7 @@ KarmaPhysicsEngineBody.prototype.axis1 = function() {
   return a1;
 };
 
-KarmaPhysicsEngineBody.prototype.axis2 = function() {
+KarmaPhysicalBody.prototype.axis2 = function() {
   var ur = this.translate(this.UR());
   var br = this.translate(this.BR());
   var a2 = {
@@ -139,7 +160,7 @@ KarmaPhysicsEngineBody.prototype.axis2 = function() {
   return a2;
 };
 
-KarmaPhysicsEngineBody.prototype.scalePoint = function(p) {
+KarmaPhysicalBody.prototype.scalePoint = function(p) {
   if(!p) {
     return {
       x: 0,
@@ -154,7 +175,7 @@ KarmaPhysicsEngineBody.prototype.scalePoint = function(p) {
   return scaled;
 };
 
-KarmaPhysicsEngineBody.prototype.scalePointAndAddName = function(name, p) {
+KarmaPhysicalBody.prototype.scalePointAndAddName = function(name, p) {
   // console.log(p);
   var scaled = {
     x: p.x * this.gScale,
@@ -164,7 +185,7 @@ KarmaPhysicsEngineBody.prototype.scalePointAndAddName = function(name, p) {
   return scaled;
 };
 
-KarmaPhysicsEngineBody.prototype.scaleAxesMinMax = function(minMax) {
+KarmaPhysicalBody.prototype.scaleAxesMinMax = function(minMax) {
   var res = {}
   var gScale = this.gScale;
   for (var i in minMax) {
@@ -180,7 +201,7 @@ KarmaPhysicsEngineBody.prototype.scaleAxesMinMax = function(minMax) {
   return res;
 }
 
-KarmaPhysicsEngineBody.prototype.getShared = function() {
+KarmaPhysicalBody.prototype.getShared = function() {
   var ul = this.UL();
   var ur = this.UR();
   var br = this.BR();
@@ -229,6 +250,5 @@ KarmaPhysicsEngineBody.prototype.getShared = function() {
 
   return options;
 };
-module.exports = KarmaPhysicsEngineBody;
 
-// KarmaPhysicsEngineBody = null;
+module.exports = KarmaPhysicalBody;

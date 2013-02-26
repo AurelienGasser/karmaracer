@@ -43,7 +43,7 @@ var game = function() {
   };
 
 mem.register('KarmaPhysicsEngine');
-mem.register('KarmaPhysicsEngineBody');
+mem.register('KarmaPhysicalBody');
 
 mem.save();
 

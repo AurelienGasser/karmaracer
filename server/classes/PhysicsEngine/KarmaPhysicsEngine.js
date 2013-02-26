@@ -1,4 +1,4 @@
-var KarmaPhysicsEngineBody = require('./KarmaPhysicsEngineBody');
+var KarmaPhysicalBody = require('./KarmaPhysicalBody');
 
 var G_bodyID = 0;
 var KarmaPhysicsEngine = function(size) {
@@ -212,7 +212,9 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
 };
 
 KarmaPhysicsEngine.prototype.step = function() {
+  var cpt = 0;
   for(var b1ID in this.bodies) {
+    ++cpt;
     var b1 = this.bodies[b1ID];
     b1.step();
   }
@@ -239,7 +241,8 @@ KarmaPhysicsEngine.prototype.createBody = function(position, size) {
   position.y *= this.gScale;
   size.w *= this.gScale;
   size.h *= this.gScale;
-  var b = new KarmaPhysicsEngineBody(position, size);
+  var b = new KarmaPhysicalBody();
+  b.initialize(position, size);
   this.bodies[b.id] = b;
   b = null;
 };
