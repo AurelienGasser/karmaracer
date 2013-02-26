@@ -11,14 +11,6 @@ var KarmaPhysicsEngine = function(size) {
 KarmaPhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
 
-  var a = this.createBody({
-    'x': 8,
-    'y': 8
-  }, {
-    'w': 1,
-    'h': 1
-  });
-
   var b = this.createBody({
     'x': 10,
     'y': 10
@@ -88,35 +80,51 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
   A.bBR = translate(B.BR(), deltaBA);
   A.bBR.name = A.playerName + '.bBR';
 
-  var aProjection1 = this.projection(A.UL(), axis, A.playerName + 'aUL');
-  var aProjection2 = this.projection(A.BR(), axis, A.playerName + 'aUR');
+  var aProjectionUL = this.projection(A.UL(), axis, A.playerName + 'aUL');
+  var aProjectionUR = this.projection(A.UR(), axis, A.playerName + 'aUR');
+  var aProjectionBL = this.projection(A.BL(), axis, A.playerName + 'aBL');
+  var aProjectionBR = this.projection(A.BR(), axis, A.playerName + 'aBR');
   var bProjectionUL = this.projection(A.bUL, axis, A.playerName + 'bUL');
   var bProjectionUR = this.projection(A.bUR, axis, A.playerName + 'bUR');
   var bProjectionBL = this.projection(A.bBL, axis, A.playerName + 'bBL');
   var bProjectionBR = this.projection(A.bBR, axis, A.playerName + 'bBR');
 
-  var a1Value = this.scalarValue(aProjection1, axis);
-  var a2Value = this.scalarValue(aProjection2, axis);
-  var bBLValue = this.scalarValue(bProjectionBL, axis);
-  var bBRValue = this.scalarValue(bProjectionBR, axis);
+  var aULValue = this.scalarValue(aProjectionUL, axis);
+  var aURValue = this.scalarValue(aProjectionUR, axis);
+  var aBLValue = this.scalarValue(aProjectionBL, axis);
+  var aBRValue = this.scalarValue(aProjectionBR, axis);
+
   var bULValue = this.scalarValue(bProjectionUL, axis);
   var bURValue = this.scalarValue(bProjectionUR, axis);
+  var bBLValue = this.scalarValue(bProjectionBL, axis);
+  var bBRValue = this.scalarValue(bProjectionBR, axis);
 
-  A.p1 = aProjection1;
-  A.p2 = aProjection2;
-  A.p3 = bProjectionUL;
-  A.p4 = bProjectionUR;
-  A.p5 = bProjectionBL;
-  A.p6 = bProjectionBR;
+  A.p1 = aProjectionUL;
+  A.p2 = aProjectionUR;
+  A.p3 = aProjectionBL;
+  A.p4 = aProjectionBR;
+
+  A.p5 = bProjectionUL;
+  A.p6 = bProjectionUR;
+  A.p7 = bProjectionBL;
+  A.p8 = bProjectionBR;
 
   var aProjections = [];
   aProjections.push({
-    scalar: a1Value,
-    p: aProjection1
+    scalar: aULValue,
+    p: aProjectionUL
   });
   aProjections.push({
-    scalar: a2Value,
-    p: aProjection2
+    scalar: aURValue,
+    p: aProjectionUR
+  });
+  aProjections.push({
+    scalar: aBLValue,
+    p: aProjectionBL
+  });
+  aProjections.push({
+    scalar: aBRValue,
+    p: aProjectionBR
   });
 
   var bProjections = [];
@@ -139,7 +147,7 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
 
   var aSorted = aProjections.sort(compareScalar);
   var minA = aSorted[0].scalar;
-  var maxA = aSorted[1].scalar;
+  var maxA = aSorted[3].scalar;
 
 
   var bSorted = bProjections.sort(compareScalar);
@@ -148,7 +156,7 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
 
   A.axesMinMax[axisIndex] = {
    minA: aSorted[0],
-   maxA: aSorted[1],
+   maxA: aSorted[3],
    minB: bSorted[0],
    maxB: bSorted[3]
   };
