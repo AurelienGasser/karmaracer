@@ -62,11 +62,6 @@ KarmaPhysicsEngine.prototype.scalarValue = function(v1, v2) {
 };
 
 
-KarmaPhysicsEngine.prototype.collide = function(A, B) {
-  A.color = '#FF0000';
-  B.color = '#FF0000';
-};
-
 function translate(p, v) {
   return {
     x: p.x + v.x,
@@ -204,21 +199,41 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
     }
   };
   if(collide) {
-    this.collide(A, B);
-  } else {
-    A.color = '#FFF';
-    B.color = '#FFF';
+    console.log('collision between', A.id, 'and', B.id)
+    A.collides = true;
+    B.collides = true;
   }
 };
 
 KarmaPhysicsEngine.prototype.step = function() {
-  var cpt = 0;
   for(var b1ID in this.bodies) {
-    ++cpt;
+    var b = this.bodies[b1ID];
+    b.collides = false;
+  }
+  for(var b1ID in this.bodies) {
     var b1 = this.bodies[b1ID];
+    var found = false;
+    for(var b2ID in this.bodies) {
+      if (!found) {
+        if (b2ID == b1ID) {
+          found = true;
+        }
+        continue;
+      } else {
+        var b2 = this.bodies[b2ID];
+        this.collideTest(b1, b2)
+      }
+    }
     b1.step();
   }
-  this.collideTest(this.bodies[0], this.bodies[1]);
+  for(var b1ID in this.bodies) {
+    var b = this.bodies[b1ID];
+    if (b.collides) {
+      b.color = '#F00';
+    } else {
+      b.color = '#FFF';
+    }
+  }
 };
 
 KarmaPhysicsEngine.prototype.getShared = function() {
@@ -235,6 +250,11 @@ KarmaPhysicsEngine.prototype.destroy = function() {
   this.bodies = null;
   this.size = null;
 };
+
+KarmaPhysicsEngine.prototype.addBody = function(body) {
+  body.id = Math.random(); // maintain id integrity
+  this.bodies[body.id] = body;
+}
 
 KarmaPhysicsEngine.prototype.createBody = function(position, size) {
   position.x *= this.gScale;

@@ -60,7 +60,6 @@ Engine2DCanvas.prototype.draw = function() {
 
 Engine2DCanvas.prototype.drawBodies = function(ctx) {
   if(this.gameInstance.bodies !== null) {
-
     for(var i = 0; i < this.gameInstance.bodies.length; i++) {
       var c = this.gameInstance.bodies[i];
 
@@ -156,6 +155,7 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
 }
 
 Engine2DCanvas.prototype.drawCars = function(ctx) {
+  return;
   if(this.gameInstance.cars !== null) {
     ctx.fillStyle = '#FFFFFF';
     for(var i = 0; i < this.gameInstance.cars.length; i++) {

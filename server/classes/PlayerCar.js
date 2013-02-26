@@ -24,6 +24,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
     this.isBot = !this.client;
     this.gameServer = gameServer;
     this.car = new Car(this);
+    gameServer.kengine.addBody(this.car);
     this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
     this.id = playerCarID++; // Math.floor(Math.random() * 1e32);
     this.resetPlayer();
@@ -39,7 +40,7 @@ PlayerCar.prototype.resetPlayer = function() {
 };
 
 PlayerCar.prototype.getShared = function() {
-    return this.car.getShared();  
+    return this.car.getShared();
 }
 
 PlayerCar.prototype.updatePos = function() {
