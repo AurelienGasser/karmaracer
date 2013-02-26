@@ -94,7 +94,7 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
   A.bBR.name = A.playerName + '.bBR';
 
   var aProjection1 = this.projection(A.UL(), axis, A.playerName + 'aUL');
-  var aProjection2 = this.projection(A.UR(), axis, A.playerName + 'aUR');
+  var aProjection2 = this.projection(A.BR(), axis, A.playerName + 'aUR');
   var bProjectionUL = this.projection(A.bUL, axis, A.playerName + 'bUL');
   var bProjectionUR = this.projection(A.bUR, axis, A.playerName + 'bUR');
   var bProjectionBL = this.projection(A.bBL, axis, A.playerName + 'bBL');

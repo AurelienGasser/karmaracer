@@ -133,13 +133,16 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
         ctx.stroke();
       }
 
+      // drawPoint(c.ur)
+      // drawPoint(c.ul)
+      // drawPoint(c.br)
+      // drawPoint(c.bl)
+
       if(!_.isUndefined(c.collision)) {
         drawAxis(c.collision.a1);
         drawAxis(c.collision.a2);
         drawAxis(c.collision.a3);
         drawAxis(c.collision.a4);
-        // drawAxis(c.collision.a1);
-        console.log(c.collision.axesMinMax)
         for (var i = 1; i <= 4; ++i) {
           drawPoint(c.collision.axesMinMax[i].minA, '#000');
           drawPoint(c.collision.axesMinMax[i].maxA, '#F00');
