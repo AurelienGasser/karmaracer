@@ -74,7 +74,11 @@ function translate(p, v) {
   }
 }
 
-KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B) {
+function compareScalar(c1, c2) {
+  return c1.scalar - c2.scalar;
+}
+
+KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
   var deltaBA = {
     x: B.x - A.x,
     y: B.y - A.y
@@ -95,17 +99,14 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B) {
   var bProjectionUR = this.projection(A.bUR, axis, A.playerName + 'bUR');
   var bProjectionBL = this.projection(A.bBL, axis, A.playerName + 'bBL');
   var bProjectionBR = this.projection(A.bBR, axis, A.playerName + 'bBR');
-  // A.p2 = A.rotate(aProjection2.x, aProjection2.y);
-  // A.p2.name = aProjection2.name;
-  // A.p2.x += A.UR().x;
-  // A.p2.y += A.UR().y;
-  // console.log(A.p2);
+
   var a1Value = this.scalarValue(aProjection1, axis);
   var a2Value = this.scalarValue(aProjection2, axis);
   var bBLValue = this.scalarValue(bProjectionBL, axis);
   var bBRValue = this.scalarValue(bProjectionBR, axis);
   var bULValue = this.scalarValue(bProjectionUL, axis);
   var bURValue = this.scalarValue(bProjectionUR, axis);
+
   A.p1 = aProjection1;
   A.p2 = aProjection2;
   A.p3 = bProjectionUL;
@@ -141,44 +142,32 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B) {
     p: bProjectionUR
   });
 
-
-
-  var compareScalar = function(c1, c2) {
-    return c1.scalar - c2.scalar;
-  }
-
-
   var aSorted = aProjections.sort(compareScalar);
   var minA = aSorted[0].scalar;
   var maxA = aSorted[1].scalar;
-
-  A.minA = aSorted[0];
-  A.maxA = aSorted[1];
-
 
 
   var bSorted = bProjections.sort(compareScalar);
   var minB = bSorted[0].scalar;
   var maxB = bSorted[3].scalar;
 
-  A.minB = bSorted[0];
-  A.maxB = bSorted[3];
+  A.axesMinMax[axisIndex] = {
+   minA: aSorted[0],
+   maxA: aSorted[1],
+   minB: bSorted[0],
+   maxB: bSorted[3]
+  };
 
+  if (minA < minB) {
+    if (minB <= maxA) {
+      return true;
+    }
+  } else {
+    if (minA <= maxB) {
+      return true;
+    }
+  }
 
-  // console.log(minA, minB, maxA, maxB);
-  // // console.log('a', minA, maxA);
-  // // console.log('b',minB, maxB);
-  if(minB <= maxA) {
-    console.log('case 1', A.id, B.id);
-    return true;
-  }
-  if(maxB <= minA) {
-    console.log('case 2', A.id, B.id);
-    return true;
-  }
-  // 
-  // B.r += rASave;
-  // A.r = rASave;
   return false;
 };
 
@@ -193,25 +182,28 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
   if(A.id === B.id) {
     return;
   }
-  var axes = [
-  A.axis1()]
-  // var axis = A.axis1();
-  // if (A.x < B.x) {
-  //   this.axisCollideCheck(axis, axisCenter, B, A);    
-  // } else {
-  // this.axisCollideCheck(axis, A, B);
-  // }
-  var collide = false;
+  var a1 = A.axis1();
+  var a2 = A.axis2();
+  var a3 = B.axis1();
+  var a4 = B.axis2();
+
+  A.a1 = a1;
+  A.a2 = a2;
+  A.a3 = a3;
+  A.a4 = a4;
+
+  var axes = [a1, a2, a3, a4];
+
+  var collide = true;
+  A.axesMinMax = {};
   for(var i = 0; i < axes.length; i++) {
     var axis = axes[i];
-    if(this.axisCollideCheck(axis, A, B)) {
-      collide = true;
-      break;
+    if(!this.axisCollideCheck(axis, A, B, i + 1)) {
+      collide = false;
+      // break;
     }
   };
   if(collide) {
-    // A.color = '#000';
-    // B.color = '#000';
     this.collide(A, B);
   } else {
     A.color = '#FFF';
@@ -220,24 +212,11 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
 };
 
 KarmaPhysicsEngine.prototype.step = function() {
-
-
-
   for(var b1ID in this.bodies) {
     var b1 = this.bodies[b1ID];
-
     b1.step();
-
-    // for(var b2ID in this.bodies) {
-    //   var b2 = this.bodies[b2ID];
-    //   if (b2.x >= b1.x){
-    //     this.collideTest(b1, b2);  
-    //   }
-      
-    // }
   }
-
-    this.collideTest(this.bodies[0], this.bodies[1]);  
+  this.collideTest(this.bodies[0], this.bodies[1]);
 };
 
 KarmaPhysicsEngine.prototype.getShared = function() {

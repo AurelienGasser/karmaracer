@@ -23,12 +23,12 @@ var KarmaPhysicsEngineBody = function(position, size) {
   }
 
 KarmaPhysicsEngineBody.prototype.step = function() {
-  if(this.playerName == 'b1') {
-    this.x -= 0.01;
-    this.y -= 0.01;
-    // this.r += Math.random() * Math.PI / 32;
-  }
+  this.r += Math.random() * Math.PI / 1024;
   this.r = this.r % (2 * Math.PI);
+  if(this.playerName == 'b1') {
+    this.x -= 0.001;
+    this.y -= 0.001;
+  }
   this.updateCornerCache();
 };
 
@@ -114,7 +114,12 @@ KarmaPhysicsEngineBody.prototype.axis1 = function() {
     x: ur.x - ul.x,
     y: ur.y - ul.y
   };
-  this.a1 = a1;
+  if (a1.x < 0) {
+    a1 = {
+      x: -a1.x,
+      y: -a1.y
+    }
+  }
   return a1;
 };
 
@@ -125,26 +130,13 @@ KarmaPhysicsEngineBody.prototype.axis2 = function() {
     x: ur.x - br.x,
     y: ur.y - br.y
   };
-  this.a2 = a2;
+  if (a2.x < 0) {
+    a2 = {
+      x: -a2.x,
+      y: -a2.y
+    }
+  }
   return a2;
-};
-
-KarmaPhysicsEngineBody.prototype.axis3 = function() {
-  var ul = this.translate(this.UL());
-  var bl = this.translate(this.BL());
-  return {
-    x: ul.x - bl.x,
-    y: ul.y - bl.y
-  };
-};
-
-KarmaPhysicsEngineBody.prototype.axis4 = function() {
-  var ul = this.translate(this.UL());
-  var ur = this.translate(this.UR());
-  return {
-    x: ul.x - ur.x,
-    y: ul.y - ur.y
-  };
 };
 
 KarmaPhysicsEngineBody.prototype.scalePoint = function(p) {
@@ -172,13 +164,29 @@ KarmaPhysicsEngineBody.prototype.scalePointAndAddName = function(name, p) {
   return scaled;
 };
 
+KarmaPhysicsEngineBody.prototype.scaleAxesMinMax = function(minMax) {
+  var res = {}
+  var gScale = this.gScale;
+  for (var i in minMax) {
+    res[i] = {};
+    ['minA', 'maxA', 'minB', 'maxB'].forEach(function(type) {
+      res[i][type] = {
+        x: minMax[i][type].p.x * gScale,
+        y: minMax[i][type].p.y * gScale,
+        name: type,
+      }
+    })
+  }
+  return res;
+}
+
 KarmaPhysicsEngineBody.prototype.getShared = function() {
   var ul = this.UL();
   var ur = this.UR();
   var br = this.BR();
   var bl = this.BL();
   // console.log(this);
-  // 
+  //
   var options = {
     x: this.x * this.gScale,
     y: this.y * this.gScale,
@@ -196,10 +204,12 @@ KarmaPhysicsEngineBody.prototype.getShared = function() {
     color: this.color
   };
 
-  if(this.minA) {
+  if(this.axesMinMax) {
     var collision = {
       a1: this.a1,
       a2: this.a2,
+      a3: this.a3,
+      a4: this.a4,
       p1: this.scalePoint(this.p1),
       p2: this.scalePoint(this.p2),
       p3: this.scalePoint(this.p3),
@@ -210,10 +220,7 @@ KarmaPhysicsEngineBody.prototype.getShared = function() {
       bUR: this.scalePoint(this.bUR),
       bBL: this.scalePoint(this.bBL),
       bBR: this.scalePoint(this.bBR),
-      minA: this.scalePointAndAddName(this.minA.scalar + 'mA', this.minA.p),
-      maxA: this.scalePointAndAddName(this.maxA.scalar + 'MA', this.maxA.p),
-      minB: this.scalePointAndAddName(this.minB.scalar + 'mB', this.minB.p),
-      maxB: this.scalePointAndAddName(this.maxB.scalar + 'MB', this.maxB.p)
+      axesMinMax: this.scaleAxesMinMax(this.axesMinMax)
     }
     options.collision = collision;
   }

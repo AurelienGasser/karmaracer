@@ -63,32 +63,22 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
 
     for(var i = 0; i < this.gameInstance.bodies.length; i++) {
       var c = this.gameInstance.bodies[i];
+
       ctx.save();
       ctx.fillStyle = c.color;
-      // console.log(c);
-      // ctx.translate(c.x, c.y);
-      // ctx.rotate(c.r);
       ctx.translate(c.x, c.y);
-
-      // console.log(c.a1);
       ctx.beginPath();
       ctx.moveTo(c.ul.x, c.ul.y);
-      // ctx.moveTo(0, 0);
       ctx.lineTo(c.ur.x, c.ur.y);
       ctx.lineTo(c.br.x, c.br.y);
       ctx.lineTo(c.bl.x, c.bl.y);
       ctx.closePath();
       ctx.fill();
-
-
-
       ctx.restore();
-
 
       ctx.save();
       var textSize = ctx.measureText(c.playerName);
       var textPad = 25;
-
       ctx.translate(c.x, c.y);
       ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
       ctx.restore();
@@ -113,14 +103,14 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
         ctx.stroke();
       }
 
-      function drawPoint(p) {
+      function drawPoint(p, color) {
         ctx.save();
         ctx.beginPath();
-        ctx.fillStyle = '#FF0000';
+        ctx.fillStyle = color || '#FF0000';
         ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI, false);
         ctx.fill();
         ctx.closePath();
-        ctx.fillStyle = '#00FF00';
+        ctx.fillStyle = color || '#00FF00';
         ctx.fillText(p.name, p.x, p.y);
         ctx.restore();
       }
@@ -143,36 +133,21 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
         ctx.stroke();
       }
 
-      // drawLine(c.bUL, c.p3);
-      // drawLine(c.bUR, c.p4);
-      // drawLine(c.bBL, c.p5);
-      // drawLine(c.bBR, c.p6);
-      // drawLine(c.bBR, c.p5);
       if(!_.isUndefined(c.collision)) {
         drawAxis(c.collision.a1);
-        drawPoint(c.collision.minA);
-        drawPoint(c.collision.maxA);
-        drawPoint(c.collision.minB);
-        drawPoint(c.collision.maxB);
-
+        drawAxis(c.collision.a2);
+        drawAxis(c.collision.a3);
+        drawAxis(c.collision.a4);
+        // drawAxis(c.collision.a1);
+        console.log(c.collision.axesMinMax)
+        for (var i = 1; i <= 4; ++i) {
+          drawPoint(c.collision.axesMinMax[i].minA, '#000');
+          drawPoint(c.collision.axesMinMax[i].maxA, '#F00');
+          drawPoint(c.collision.axesMinMax[i].minB, '#0F0');
+          drawPoint(c.collision.axesMinMax[i].maxB, '#00F');
+        }
       }
-
-      // console.log(c.p1);
-      // drawPoint(c.p1);
-      // drawPoint(c.p2);
-      // 
-      // drawPoint(c.p3);
-      // drawPoint(c.p4);
-      // drawPoint(c.p5);
-      // drawPoint(c.p6);
-      // drawPoint(c.bUL);
-      // drawPoint(c.ur);
-      // drawPoint(c.ul);
-      // drawPoint(c.br);
-      // drawPoint(c.bl);
       ctx.restore();
-      // drawAxis(c.br, c.a2);
-      // break;
     }
   }
 }
@@ -221,7 +196,7 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
 
 
 Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
-  // console.log(this.gameInstance.projectiles); 
+  // console.log(this.gameInstance.projectiles);
   if(this.gameInstance.projectiles !== null) {
     for(var i = 0; i < this.gameInstance.projectiles.length; i++) {
       var c = this.gameInstance.projectiles[i];
