@@ -136,17 +136,19 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
       // drawPoint(c.ul)
       // drawPoint(c.br)
       // drawPoint(c.bl)
-
-      if(!_.isUndefined(c.collision)) {
-        drawAxis(c.collision.a1);
-        drawAxis(c.collision.a2);
-        drawAxis(c.collision.a3);
-        drawAxis(c.collision.a4);
-        for (var i = 1; i <= 4; ++i) {
-          drawPoint(c.collision.axesMinMax[i].minA, '#000');
-          drawPoint(c.collision.axesMinMax[i].maxA, '#F00');
-          drawPoint(c.collision.axesMinMax[i].minB, '#0F0');
-          drawPoint(c.collision.axesMinMax[i].maxB, '#00F');
+      var debug_collisions = false;
+      if (debug_collisions) {
+        if(!_.isUndefined(c.collision)) {
+          drawAxis(c.collision.a1);
+          drawAxis(c.collision.a2);
+          drawAxis(c.collision.a3);
+          drawAxis(c.collision.a4);
+          for (var i = 1; i <= 4; ++i) {
+            drawPoint(c.collision.axesMinMax[i].minA, '#000');
+            drawPoint(c.collision.axesMinMax[i].maxA, '#F00');
+            drawPoint(c.collision.axesMinMax[i].minB, '#0F0');
+            drawPoint(c.collision.axesMinMax[i].maxB, '#00F');
+          }
         }
       }
       ctx.restore();
