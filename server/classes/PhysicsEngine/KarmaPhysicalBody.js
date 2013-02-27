@@ -4,7 +4,8 @@ var KarmaPhysicalBody = function() {
   return this;
 }
 
-KarmaPhysicalBody.prototype.initialize = function(position, size) {
+KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
+  this.engine = engine;
   this.gScale = 32;
   this.id = G_bodyID++;
   this.x = position.x;
@@ -19,19 +20,12 @@ KarmaPhysicalBody.prototype.initialize = function(position, size) {
   this.wDiv2 = this.w / 2;
   this.hDiv2 = this.h / 2;
   this.color = '#FFF';
+  this.collidesWith = {};
   this.updateCornerCache();
 }
 
 KarmaPhysicalBody.prototype.step = function() {
-  this.r += Math.random() * Math.PI / 1024;
-  this.r = this.r % (2 * Math.PI);
-  if(this.playerName == 'b1') {
-    this.x -= 0.001;
-    this.y -= 0.001;
-  }
-  this.updateCornerCache();
 };
-
 
 KarmaPhysicalBody.prototype.getPosition = function() {
   return {
@@ -58,6 +52,12 @@ KarmaPhysicalBody.prototype.addAngle = function(a) {
 KarmaPhysicalBody.prototype.turn = function(side) {
   var angleToAdd = side * Math.PI / 4;
   this.addAngle(angleToAdd);
+  this.updated()
+}
+
+KarmaPhysicalBody.prototype.updated = function() {
+  this.updateCornerCache();
+  this.engine.recheckCollisions(this);
 }
 
 KarmaPhysicalBody.prototype.cosWidthDiv2 = function() {
@@ -73,7 +73,6 @@ KarmaPhysicalBody.prototype.rotate = function(x, y) {
     x: x * Math.cos(this.r) - y * Math.sin(this.r),
     y: x * Math.sin(this.r) + y * Math.cos(this.r)
   }
-  this.updateCornerCache();
 }
 
 KarmaPhysicalBody.prototype.translate = function(coord) {
@@ -81,15 +80,12 @@ KarmaPhysicalBody.prototype.translate = function(coord) {
     x: coord.x + this.x,
     y: coord.y + this.y
   };
-  this.updateCornerCache();
+  this.updated();
 };
 
 KarmaPhysicalBody.prototype.getCorners = function() {
-
   return [
   this.rotate(+this.wDiv2, +this.hDiv2), this.rotate(-this.wDiv2, +this.hDiv2), this.rotate(+this.wDiv2, -this.hDiv2), this.rotate(-this.wDiv2, -this.hDiv2)]
-
-
 };
 
 var compareY = function(c1, c2) {
@@ -206,8 +202,13 @@ KarmaPhysicalBody.prototype.getShared = function() {
   var ur = this.UR();
   var br = this.BR();
   var bl = this.BL();
-  // console.log(this);
-  //
+
+  var collides = false;
+  for (var i in this.collidesWith) {
+    collides = true;
+    break;
+  }
+
   var options = {
     x: this.x * this.gScale,
     y: this.y * this.gScale,
@@ -222,7 +223,7 @@ KarmaPhysicalBody.prototype.getShared = function() {
     ur: this.scalePointAndAddName('ur', ur),
     bl: this.scalePointAndAddName('bl', bl),
     br: this.scalePointAndAddName('br', br),
-    color: this.color
+    color: collides ? '#F00' : '#FFF'
   };
 
   if(this.axesMinMax) {

@@ -197,50 +197,37 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
 
   var axes = [a1, a2, a3, a4];
 
-  var collide = true;
   A.axesMinMax = {};
   for(var i = 0; i < axes.length; i++) {
     var axis = axes[i];
     if(!this.axisCollideCheck(axis, A, B, i + 1)) {
-      collide = false;
-      // break;
+      return false;
     }
   };
-  if(collide) {
-    console.log('collision between', A.id, 'and', B.id)
-    A.collides = true;
-    B.collides = true;
-  }
+  return true;
 };
+
+KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
+  var A = body;
+  A.collidesWith = {};
+  for(var b2ID in this.bodies) {
+    if (b2ID != A.id) {
+      var B = this.bodies[b2ID];
+      if (this.collideTest(A, B)) {
+        // console.log('collision between', A.id, 'and', B.id)
+        A.collidesWith[B.id] = B;
+        B.collidesWith[A.id] = A;
+      } else {
+        delete B.collidesWith[A.id];
+      }
+    }
+  }
+}
 
 KarmaPhysicsEngine.prototype.step = function() {
   for(var b1ID in this.bodies) {
-    var b = this.bodies[b1ID];
-    b.collides = false;
-  }
-  for(var b1ID in this.bodies) {
     var b1 = this.bodies[b1ID];
-    var found = false;
-    for(var b2ID in this.bodies) {
-      if (!found) {
-        if (b2ID == b1ID) {
-          found = true;
-        }
-        continue;
-      } else {
-        var b2 = this.bodies[b2ID];
-        this.collideTest(b1, b2)
-      }
-    }
     b1.step();
-  }
-  for(var b1ID in this.bodies) {
-    var b = this.bodies[b1ID];
-    if (b.collides) {
-      b.color = '#F00';
-    } else {
-      b.color = '#FFF';
-    }
   }
 };
 
@@ -270,7 +257,7 @@ KarmaPhysicsEngine.prototype.createBody = function(position, size) {
   size.w *= this.gScale;
   size.h *= this.gScale;
   var b = new KarmaPhysicalBody();
-  b.initialize(position, size);
+  b.initialize(this, position, size);
   this.bodies[b.id] = b;
   b = null;
 };
