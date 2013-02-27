@@ -46,18 +46,30 @@ KarmaPhysicalBody.prototype.getVector = function(power, angle) {
 }
 
 KarmaPhysicalBody.prototype.addAngle = function(a) {
-  this.r += a;
+  this.moveTo({
+    r: (this.r + a) % (Math.PI * 2)
+  })
 }
 
 KarmaPhysicalBody.prototype.turn = function(side) {
   var angleToAdd = side * Math.PI / 4;
   this.addAngle(angleToAdd);
-  this.updated()
 }
 
-KarmaPhysicalBody.prototype.updated = function() {
+KarmaPhysicalBody.prototype.moveTo = function(pos) {
+  var oldx = this.x;
+  var oldy = this.y;
+  var oldr = this.r;
+  if (typeof pos.x != 'undefined') { this.x = pos.x; }
+  if (typeof pos.y != 'undefined') { this.y = pos.y; }
+  if (typeof pos.r != 'undefined') { this.r = pos.r; }
   this.updateCornerCache();
-  this.engine.recheckCollisions(this);
+  if (this.engine.recheckCollisions(this)) {
+    this.x = oldx;
+    this.y = oldy;
+    this.r = oldr;
+    // this.updateCornerCache();
+  }
 }
 
 KarmaPhysicalBody.prototype.cosWidthDiv2 = function() {
@@ -80,7 +92,6 @@ KarmaPhysicalBody.prototype.translate = function(coord) {
     x: coord.x + this.x,
     y: coord.y + this.y
   };
-  this.updated();
 };
 
 KarmaPhysicalBody.prototype.getCorners = function() {

@@ -197,14 +197,15 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
 
   var axes = [a1, a2, a3, a4];
 
+  var collides = true;
   A.axesMinMax = {};
   for(var i = 0; i < axes.length; i++) {
     var axis = axes[i];
     if(!this.axisCollideCheck(axis, A, B, i + 1)) {
-      return false;
+      collides = false;
     }
   };
-  return true;
+  return collides;
 };
 
 KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
@@ -217,11 +218,13 @@ KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
         // console.log('collision between', A.id, 'and', B.id)
         A.collidesWith[B.id] = B;
         B.collidesWith[A.id] = A;
+        return true;
       } else {
         delete B.collidesWith[A.id];
       }
     }
   }
+  return false;
 }
 
 KarmaPhysicsEngine.prototype.step = function() {
