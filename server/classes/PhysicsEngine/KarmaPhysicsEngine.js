@@ -1,12 +1,15 @@
+var fs = require('fs');
 var KarmaPhysicalBody = require('./KarmaPhysicalBody');
 
 var G_bodyID = 0;
-var KarmaPhysicsEngine = function(size) {
-    this.gScale = 1;
-    this.bodies = {};
-    this.setupWorld(size);
-  }
-
+var KarmaPhysicsEngine = function(size, map) {
+  this.gScale = 1;
+  this.bodies = {};
+  this.staticItemTypes = {};
+  this.map = map;
+  this.setupWorld(size);
+  this.loadStaticItems();
+}
 
 KarmaPhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
@@ -264,6 +267,25 @@ KarmaPhysicsEngine.prototype.createBody = function(position, size) {
   this.bodies[b.id] = b;
   b = null;
 };
+
+KarmaPhysicsEngine.prototype.loadStaticItems = function() {
+  var staticItems = this.map.staticItems.concat([{
+    name: 'outsideWall'
+  }]);
+  var itemsDir = __dirname + '/../../public/items/';
+  for(var i = 0; i < staticItems.length; i++) {
+    var item = staticItems[i];
+    var itemJSONPath = itemsDir + item.name + '.json';
+    var itemJSONString = fs.readFileSync(itemJSONPath);
+    var itemJSON = JSON.parse(itemJSONString);
+    if(this.staticItemTypes[itemJSON.name] == undefined) {
+      this.staticItemTypes[itemJSON.name] = itemJSON;
+    }
+    if (item.name != 'outsideWall') {
+      this.createBody(item.position, item.size, item.name);
+    }
+  };
+}
 
 module.exports = KarmaPhysicsEngine;
 
