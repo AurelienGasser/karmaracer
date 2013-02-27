@@ -211,7 +211,29 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
   return collides;
 };
 
+KarmaPhysicsEngine.prototype.outOfWalls = function(point) {
+  var res = point.x < 0
+    || point.y < 0
+    || point.x > this.map.size.w
+    || point.y > this.map.size.h
+  return res;
+}
+
+function addVectors(a, b) {
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y
+  }
+}
+
 KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
+  if (this.outOfWalls(addVectors(body, body.UL()))
+    || this.outOfWalls(addVectors(body, body.UR()))
+    || this.outOfWalls(addVectors(body, body.BL()))
+    || this.outOfWalls(addVectors(body, body.BR()))) {
+    body.collidesWith['outsideWall'] = { name: 'outsideWall' };
+    return true;
+  }
   var A = body;
   A.collidesWith = {};
   for(var b2ID in this.bodies) {
