@@ -56,19 +56,79 @@ KarmaPhysicalBody.prototype.turn = function(side) {
   this.addAngle(angleToAdd);
 }
 
-KarmaPhysicalBody.prototype.moveTo = function(pos) {
-  var oldx = this.x;
-  var oldy = this.y;
-  var oldr = this.r;
-  if (typeof pos.x != 'undefined') { this.x = pos.x; }
-  if (typeof pos.y != 'undefined') { this.y = pos.y; }
-  if (typeof pos.r != 'undefined') { this.r = pos.r; }
+KarmaPhysicalBody.prototype.setPosition = function(data) {
+  if (typeof data.x != 'undefined') { this.x = data.x; }
+  if (typeof data.y != 'undefined') { this.y = data.y; }
+  if (typeof data.r != 'undefined') { this.r = data.r; }
+}
+
+KarmaPhysicalBody.prototype.tryPosition = function(to) {
+  this.setPosition(to);
   this.updateCornerCache();
-  if (this.engine.recheckCollisions(this)) {
-    this.x = oldx;
-    this.y = oldy;
-    this.r = oldr;
-    // this.updateCornerCache();
+  var res = !this.engine.recheckCollisions(this);
+  return res;
+}
+
+function getMiddle(from, to) {
+  var res = {}
+  if (typeof to.x != 'undefined') { res.x = (to.x + from.x) / 2; }
+  if (typeof to.y != 'undefined') { res.y = (to.y + from.y) / 2; }
+  if (typeof to.r != 'undefined') { res.r = (to.r + from.r) / 2; }
+  return res;
+}
+
+function positive(x) {
+  return x > 0 ? x : -x;
+}
+
+function getDistance(from, to) {
+  var res = 0;
+  if (typeof to.x != 'undefined') { res += positive(to.x - from.x); }
+  if (typeof to.y != 'undefined') { res += positive(to.y - from.y); }
+  if (typeof to.r != 'undefined') { res += positive(to.r - from.r) ; }
+  return res;
+}
+
+KarmaPhysicalBody.prototype.moveToDichotomie = function(from, to) {
+  if (this.tryPosition(to) === false) {
+    while (this.tryPosition(from) || this.tryPosition(to)) {
+      var distance = getDistance(from, to);
+      if (distance < 0.0000001) {
+        return from;
+      } else {
+        var mid = getMiddle(from, to);
+        if (this.tryPosition(mid)) {
+          from = mid;
+        } else {
+          to = mid;
+        }
+      }
+    }
+    return false; // should never happen
+  } else {
+    return to;
+  }
+}
+
+KarmaPhysicalBody.prototype.getNumCollisions = function() {
+  var res = 0;
+  for (var i in this.collidesWith) {
+    ++res;
+  }
+  return res;
+}
+
+KarmaPhysicalBody.prototype.moveTo = function(pos) {
+  var old = {
+    x: this.x,
+    y: this.y,
+    r: this.r
+  };
+  if (this.getNumCollisions() == 0) {
+    var newPos = this.moveToDichotomie(old, pos);
+    this.tryPosition(newPos) // finally set the position and update collision status / corners
+  } else {
+    return false;
   }
 }
 
@@ -183,7 +243,6 @@ KarmaPhysicalBody.prototype.scalePoint = function(p) {
 };
 
 KarmaPhysicalBody.prototype.scalePointAndAddName = function(name, p) {
-  // console.log(p);
   var scaled = {
     x: p.x * this.gScale,
     y: p.y * this.gScale
@@ -214,11 +273,7 @@ KarmaPhysicalBody.prototype.getShared = function() {
   var br = this.BR();
   var bl = this.BL();
 
-  var collides = false;
-  for (var i in this.collidesWith) {
-    collides = true;
-    break;
-  }
+  var collides = this.getNumCollisions() > 0;
 
   var options = {
     x: this.x * this.gScale,
