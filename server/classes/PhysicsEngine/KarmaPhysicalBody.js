@@ -34,6 +34,13 @@ KarmaPhysicalBody.prototype.getPosition = function() {
   };
 }
 
+var subVectors = function(a, b) {
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y
+  }
+}
+
 KarmaPhysicalBody.prototype.addVectors = function(a, b) {
   return {
     x: a.x + b.x,
@@ -137,6 +144,40 @@ KarmaPhysicalBody.prototype.getNumCollisions = function() {
   return res;
 }
 
+KarmaPhysicalBody.prototype.getPosFriction = function(_old, _new, angle, forward) {
+  var initialMove = subVectors(_new, _old);
+  var forward = 0.1;
+  var newAngle = this.r + angle;
+  var res = {
+    x: this.x + (forward * Math.cos(newAngle)),
+    y: this.y + (forward * Math.sin(newAngle)),
+    r: newAngle
+  };
+  return res;
+}
+
+KarmaPhysicalBody.prototype.getPositionsWithFriction = function(_old, _new) {
+  return [
+    , this.getPosFriction(_old, _new,  0.1,       0.25)
+    , this.getPosFriction(_old, _new,  0.05,      0.115)
+    , this.getPosFriction(_old, _new,  0.0001,    0)
+    , this.getPosFriction(_old, _new, -0.1,       0.25)
+    , this.getPosFriction(_old, _new, -0.05,      0.115)
+    , this.getPosFriction(_old, _new, -0.0001,    0)
+  ];
+}
+
+KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
+  var positionsWithFriction = this.getPositionsWithFriction(_old, _new);
+  for (var i in positionsWithFriction) {
+    var pos = positionsWithFriction[i];
+    if (this.tryPosition(pos)) {
+      return pos;
+    }
+  }
+  return null;
+}
+
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
   var old = {
     x: this.x,
@@ -149,6 +190,14 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
     var dist = getDistance(pos, newPos)
     if (getDistance(old, newPos) > COLLISION_DISTANCE_TRESHOLD) {
       return true;
+    } else if (typeof pos.r == 'undefined') {
+      var driftPos = this.tryDriftAgainstWall(old, pos);
+      if (driftPos) {
+        this.setPosition(driftPos);
+        return true;
+      } else {
+        return false;
+      }
     } else {
       return false;
     }

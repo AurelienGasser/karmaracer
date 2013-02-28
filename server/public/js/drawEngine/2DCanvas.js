@@ -239,7 +239,8 @@ Engine2DCanvas.prototype.drawRocket = function(rocket, ctx) {
 Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
   var wThickness = 50;
   var s = this.camera.realWorldSize;
-  ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
+  // ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
+  ctx.fillStyle = '#fff'
   // bot
   ctx.fillRect(-wThickness, s.h, s.w + 2 * wThickness, wThickness);
   // top
@@ -286,9 +287,9 @@ Engine2DCanvas.prototype.drawItems = function() {
   // this.backgroundContext.restore();
   // this.ctx.save();
   // this.ctx.restore();
-  this.drawBackground(this.ctx);
+  // this.drawBackground(this.ctx);
   this.drawOutsideWalls(this.ctx);
-  this.drawStaticItems(this.ctx);
+  // this.drawStaticItems(this.ctx);
 
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
   //this.ctx.drawImage(this.backgroundCanvas, 0, 0, cs.w, cs.h, this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);
