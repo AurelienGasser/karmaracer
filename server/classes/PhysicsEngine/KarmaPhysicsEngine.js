@@ -219,18 +219,11 @@ KarmaPhysicsEngine.prototype.outOfWalls = function(point) {
   return res;
 }
 
-function addVectors(a, b) {
-  return {
-    x: a.x + b.x,
-    y: a.y + b.y
-  }
-}
-
 KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
-  if (this.outOfWalls(addVectors(body, body.UL()))
-    || this.outOfWalls(addVectors(body, body.UR()))
-    || this.outOfWalls(addVectors(body, body.BL()))
-    || this.outOfWalls(addVectors(body, body.BR()))) {
+  if (this.outOfWalls(body.addVectors(body, body.UL()))
+    || this.outOfWalls(body.addVectors(body, body.UR()))
+    || this.outOfWalls(body.addVectors(body, body.BL()))
+    || this.outOfWalls(body.addVectors(body, body.BR()))) {
     body.collidesWith['outsideWall'] = { name: 'outsideWall' };
     return true;
   }

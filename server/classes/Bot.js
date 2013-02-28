@@ -9,53 +9,36 @@ var Bot = function(gameServer, id) {
     return this;
   }
 
-// Bot.prototype.initCar = function() {
-//   this.playerCar.life = 100;
-//   this.playerCar.score = 0;
-//   this.playerCar.level = 0;
-// }
-
-
 Bot.prototype.tick = function() {
   var numAdditionalTicksToTurn = 20;
   if(this.playerCar.car) {
-    if(this.sensor || this.sensorTicksSinceEnd < numAdditionalTicksToTurn) {
-      // turn
-      this.sensorTicksSinceEnd++;
-      if(this.sensorTicksSinceEnd != numAdditionalTicksToTurn) {
-        this.playerCar.car.stop();
-        this.playerCar.car.turn(2);
-      } else {
-        // console.log('stop turning')
-        this.playerCar.car.stop();
-      }
+    var car = this.playerCar.car;
+    var sensorDelta = car.getVector(2);
+    var sensor = car.addVectors(car, sensorDelta);
+    if (!this.isTurning && car.tryPosition(sensor)) {
+      car.accelerate(0.1)
     } else {
-      // go forward
-      if(this.playerCar.car.body.GetLinearVelocity().Length() < 20) {
-        this.playerCar.car.accelerate(0.03);
+      if (this.isTurning) {
+        --this.isTurning
+      } else {
+        this.isTurning = 20;
       }
-      if(this.playerCar.car.body.GetAngularVelocity() > 1) {
-        // console.log('turning too fast: reduce velocity')
-        this.playerCar.car.turn(-1);
-      } else if(this.playerCar.car.body.GetAngularVelocity() < -1) {
-        // console.log('turning too fast: reduce velocity')
-        this.playerCar.car.turn(1);
-      }
+      car.turn(0.15)
     }
     // this.playerCar.shoot();
     // shoot for 30 ticks once every 50 ticks
-    if(this.isShooting) {
-      if(!--this.shootCpt) {
-        this.isShooting = false;
-      } else {
-        this.playerCar.shoot();
-      }
-    } else {
-      if(!this.sensor && Math.random() * 50 < 1) {
-        this.isShooting = true;
-        this.shootCpt = 50;
-      }
-    }
+    // if(this.isShooting) {
+    //   if(!--this.shootCpt) {
+    //     this.isShooting = false;
+    //   } else {
+    //     // this.playerCar.shoot();
+    //   }
+    // } else {
+    //   if(!this.sensor && Math.random() * 50 < 1) {
+    //     this.isShooting = true;
+    //     this.shootCpt = 50;
+    //   }
+    // }
   }
 }
 

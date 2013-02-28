@@ -15,7 +15,7 @@ var Car = function(playerCar) {
 }
 
 Car.prototype.accelerate = function(ac) {
-  this.moveTo({
+  return this.moveTo({
     x: this.x + ac * Math.cos(this.r),
     y: this.y + ac * Math.sin(this.r)
   });

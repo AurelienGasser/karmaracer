@@ -33,14 +33,22 @@ KarmaPhysicalBody.prototype.getPosition = function() {
     y: this.y
   };
 }
+
+KarmaPhysicalBody.prototype.addVectors = function(a, b) {
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y
+  }
+}
+
 KarmaPhysicalBody.prototype.getVector = function(power, angle) {
   if(!angle) {
     angle = 0;
   }
   angle += this.r;
   var v = {
-    x: power.x * Math.cos(angle),
-    y: power.y * Math.sin(angle)
+    x: power * Math.cos(angle),
+    y: power * Math.sin(angle)
   };
   return v;
 }
@@ -62,10 +70,19 @@ KarmaPhysicalBody.prototype.setPosition = function(data) {
   if (typeof data.r != 'undefined') { this.r = data.r; }
 }
 
+// returns true if to position doesn't create any collision
 KarmaPhysicalBody.prototype.tryPosition = function(to) {
+  var old = {
+    x: this.x,
+    y: this.y,
+    r: this.r
+  };
   this.setPosition(to);
   this.updateCornerCache();
   var res = !this.engine.recheckCollisions(this);
+  this.setPosition(old);
+  this.updateCornerCache();
+  this.engine.recheckCollisions(this);
   return res;
 }
 
@@ -89,11 +106,13 @@ function getDistance(from, to) {
   return res;
 }
 
+var COLLISION_DISTANCE_TRESHOLD = 0.0000001;
+
 KarmaPhysicalBody.prototype.moveToDichotomie = function(from, to) {
   if (this.tryPosition(to) === false) {
     while (this.tryPosition(from) || this.tryPosition(to)) {
       var distance = getDistance(from, to);
-      if (distance < 0.0000001) {
+      if (distance < COLLISION_DISTANCE_TRESHOLD) {
         return from;
       } else {
         var mid = getMiddle(from, to);
@@ -126,7 +145,13 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
   };
   if (this.getNumCollisions() == 0) {
     var newPos = this.moveToDichotomie(old, pos);
-    this.tryPosition(newPos) // finally set the position and update collision status / corners
+    this.setPosition(newPos) // finally set the position and update collision status / corners
+    var dist = getDistance(pos, newPos)
+    if (getDistance(old, newPos) > COLLISION_DISTANCE_TRESHOLD) {
+      return true;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
