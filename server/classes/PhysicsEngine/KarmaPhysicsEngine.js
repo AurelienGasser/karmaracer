@@ -228,16 +228,15 @@ KarmaPhysicsEngine.prototype.step = function() {
 
     b1.step();
 
-    // for(var b2ID in this.bodies) {
-    //   var b2 = this.bodies[b2ID];
-    //   if (b2.x >= b1.x){
-    //     this.collideTest(b1, b2);  
-    //   }
-      
-    // }
+    for(var b2ID in this.bodies) {
+      var b2 = this.bodies[b2ID];
+      // if (b2.x >= b1.x){
+        this.collideTest(b1, b2);  
+      // }      
+    }
   }
 
-    this.collideTest(this.bodies[0], this.bodies[1]);  
+    // this.collideTest(this.bodies[0], this.bodies[1]);  
 };
 
 KarmaPhysicsEngine.prototype.getShared = function() {
