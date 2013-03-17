@@ -9,7 +9,7 @@ var MemLeakLog = function(name) {
     this.enable = true;
 
     memwatch.on('stats', function(stats) {
-      console.log('MEM STATS', stats);
+      // console.log('MEM STATS', stats);
     });
 
     memwatch.on('leak', function(info) {
@@ -75,7 +75,7 @@ MemLeakLog.prototype.diff = function() {
 MemLeakLog.prototype.log = function() {
   if (!this.enable){
     return;
-  }  
+  }
   if(!KLib.isUndefined(this.name)) {
     console.log(this.name, this.saveHeap);
   } else {

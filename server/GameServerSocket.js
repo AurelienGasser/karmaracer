@@ -44,8 +44,8 @@ var GameServerSocket = function(mapManager) {
       });
       client.on('move_car', function(info) {
         if(!KLib.isUndefined(client.player) && !client.player.playerCar.dead) {
-          client.player.playerCar.car.applyForceToBody(info.force);
-          client.player.playerCar.car.setAngle(info.angle);
+          client.player.playerCar.car.accelerate(info.force);
+          client.player.playerCar.car.base.r = info.angle % 2 * Math.PI;
         }
       });
 

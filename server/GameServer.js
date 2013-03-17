@@ -29,8 +29,8 @@ GameServer.prototype.initGameServer = function(map) {
   this.kengine = new KarmaEngine({
     'w': 2000,
     'h': 2000
-  });
-  
+  }, map);
+
   this.physicsEngine = new PhysicsEngine(map, this);
   this.carManager = new CarManager(this);
   this.botManager = new BotManager(this);
@@ -183,7 +183,6 @@ GameServer.prototype.step = function() {
       start = registerDateDiff(timer, 'carManager', start);
       that.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
-
       that.kengine.step();
     }
     if(this.tickCounter % 4 === 0) {

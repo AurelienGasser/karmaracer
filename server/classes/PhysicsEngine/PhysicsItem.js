@@ -109,6 +109,7 @@ PhysicsItem.prototype.applyForceToBody = function(v) {
 
   }
 }
+
 PhysicsItem.prototype.reduceAngularVelocity = function(reduceBy) {
   if(this.body != null) {
     this.body.m_angularVelocity *= (1 - reduceBy);

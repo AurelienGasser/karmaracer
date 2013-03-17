@@ -38,10 +38,10 @@ CarManager.prototype.getAliveCars = function(source) {
 }
 
 CarManager.prototype.updatePos = function() {
-  for(var id in this.gameServer.players) {
-    var playerCar = this.gameServer.players[id].playerCar;
-    playerCar.updatePos();
-  }
+  // for(var id in this.gameServer.players) {
+  //   var playerCar = this.gameServer.players[id].playerCar;
+  //   playerCar.updatePos();
+  // }
 }
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
