@@ -23,7 +23,6 @@ PhysicsItem.prototype.initialize = function(_arguments) {
 }
 PhysicsItem.prototype.destroy = function() {
   if(this.body) {
-    console.log('destroy', this.name, this.id);
     if(!KLib.isUndefined(this.body.fixture)) {
       this.body.DestroyFixture(this.body.fixture);
     }

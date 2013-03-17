@@ -6,8 +6,7 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.loaded();
   this.timer = new Date().getTime();
   this.frames = 0;
-  this.debugDraw = true;
-  //$('#debug').append('<div id="fps" class="info"/>');
+  this.debugDraw = false;
   return this;
 }
 

@@ -256,13 +256,13 @@ KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
   for(var b2ID in this.bodies) {
     if(b2ID != A.id) {
       var B = this.bodies[b2ID];
+      if(!KLib.isUndefined(B.playerCar) && B.playerCar.dead === true) {
+        continue;
+      }
       if(this.collideTest(A, B)) {
-        // console.log('collision between', A.id, 'and', B.id)
         A.collidesWith = this.bodies[B.id];
-        // B.collidesWith = A.id;
         return true;
       } else {
-        // B.collidesWith = null;
       }
     }
   }
@@ -301,7 +301,7 @@ KarmaPhysicsEngine.prototype.createBody = function(position, size, name) {
   var b, id;
   b = new KarmaPhysicalBody();
   b.initialize(this, position, size);
-  if (!KLib.isUndefined(name)){
+  if(!KLib.isUndefined(name)) {
     b.name = name;
   }
   this.bodies[b.id] = b;
@@ -332,8 +332,6 @@ KarmaPhysicsEngine.prototype.loadStaticItems = function() {
       this.staticItemTypes[itemJSON.name] = itemJSON;
     }
   };
-
-  console.log(this.staticBodies.length);
 }
 
 module.exports = KarmaPhysicsEngine;

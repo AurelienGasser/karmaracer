@@ -235,6 +235,10 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
   if(res) {
     if(this.isBullet === true) {
       this.explode();
+      if (this.collidesWith.name === 'car'){
+        var playerCar = this.collidesWith.playerCar;
+        playerCar.gameServer.carManager.projectileHitCar(this.playerCar, playerCar, this);
+      }
       return;
     }
     if(this.collidesWith.isStatic === true) {

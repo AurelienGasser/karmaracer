@@ -1,5 +1,5 @@
 var SteeringWheelController = function(gameInstance) {
-
+    return;
     console.log('gameInstance', gameInstance);
     this.m = $('<div id="SteeringWheelController"/>');
     this.acc = $('<div id="SteeringWheelControllerAcc"/>');
@@ -39,12 +39,12 @@ var SteeringWheelController = function(gameInstance) {
       that.resize();
     });
 
-    window.onorientationchange = function(){
+    window.onorientationchange = function() {
       // alert('update');
       that.resize();
     };
 
-    window.webkitfullscreenchange = function(){
+    window.webkitfullscreenchange = function() {
       // alert('o??');
     }
 

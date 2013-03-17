@@ -36,11 +36,11 @@ PlayerCar.prototype.resetPlayer = function() {
   this.level = 1;
   this.updateWeapon();
   this.dead = false;
-  this.life = 2;
+  this.life = 100;
 };
 
 PlayerCar.prototype.getShared = function() {
-    return this.car.getShared();
+  return this.car.getShared();
 }
 
 PlayerCar.prototype.updatePos = function() {
@@ -95,6 +95,15 @@ PlayerCar.prototype.shoot = function() {
   this.weapon.shoot(this);
 }
 
+PlayerCar.prototype.rebornIn = function(seconds) {
+  setTimeout(function() {
+    if(this.isBot || this.player.connected) {
+      this.dead = false;
+      this.life = 100;
+    }
+  }.bind(this), seconds * 1000);
+};
+
 PlayerCar.prototype.die = function() {
   this.getExperience(-50);
   this.dead = true;
@@ -102,12 +111,7 @@ PlayerCar.prototype.die = function() {
     this.player.client.keyboard = {};
     this.player.client.emit('dead', null);
   }
-  setTimeout(function() {
-    if(this.isBot || this.player.connected) {
-      this.dead = false;
-      this.life = 100;
-    }
-  }.bind(this), 5000);
+  this.rebornIn(5);
 }
 
 module.exports = PlayerCar;

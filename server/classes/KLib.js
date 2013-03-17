@@ -10,7 +10,6 @@ KLib.isUndefined = function(obj) {
 };
 
 KLib.extend = function(Parent, child) {
-  // console.log('EXTEND', );
   var p = new Parent();
   child.base = {};
   for(var prop in p) {

@@ -107,7 +107,7 @@ PhysicsEngine.prototype.createSquareBody = function(userData, bodyParams) {
     this.fixture = body.CreateFixture(fixtureDef);
     return body;
   } catch(e) {
-    console.log('error on body creation', e, e.stack);
+    console.error('error on body creation', e, e.stack);
     return null;
   }
 }

@@ -24,8 +24,7 @@ Weapon.prototype.getProjectileVector = function(playerCar, angle) {
   var distanceFromCar = car.w;
   var pos = car.getVector({
     x: distanceFromCar,
-    // * car.size.w,
-    y: distanceFromCar // * car.size.h
+    y: distanceFromCar
   }, angle);
   return pos;
 };
@@ -47,7 +46,6 @@ Weapon.prototype.shoot = function(playerCar) {
 };
 Weapon.prototype.customShoot = function(playerCar) {
   this.addProjectile(playerCar);
-  // console.log('shoot', playerCar.playerName);
 };
 
 Weapon.prototype.addProjectile = function(playerCar, angle) {
@@ -71,7 +69,7 @@ Weapon.prototype.step = function() {
       if(projectile.body === null) {
         deads.push(id);
       } else {
-        projectile.accelerate(1.25);
+        projectile.accelerate(2);
         projectile.life -= 1;
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();
