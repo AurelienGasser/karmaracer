@@ -218,7 +218,7 @@ Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
 }
 
 Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
-  ctx.fillStyle = '#FFFFFF';
+  ctx.fillStyle = '#00F';
   var c = bullet;
   ctx.fillRect(c.x, c.y, c.w, c.h);
 }

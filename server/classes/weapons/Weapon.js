@@ -54,9 +54,14 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   if(KLib.isUndefined(angle)) {
     angle = 0;
   }
-  var pos = this.getProjectileVector(playerCar, angle);
-  var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle);
-  b.accelerate(this.startAcceleration);
+
+  var pos = {
+    x: playerCar.car.x,
+    y: playerCar.car.y
+  }; //this.getProjectileVector(playerCar, angle);
+  
+  console.log(angle, pos, playerCar.car.x);
+  var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle); 
   this.projectiles[b.id] = b;
 };
 
@@ -68,7 +73,7 @@ Weapon.prototype.step = function() {
       if(projectile.body === null) {
         deads.push(id);
       } else {
-        projectile.accelerate(0.5);
+        projectile.accelerate(1.25);
         projectile.life -= 1;
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();
