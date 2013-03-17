@@ -3,12 +3,14 @@ var KarmaPhysicalBody = require('./KarmaPhysicalBody');
 
 var G_bodyID = 0;
 var KarmaPhysicsEngine = function(size, map) {
-  this.gScale = 1;
+  this.itemsToDestroy = [];
+  this.gScale = 32;
   this.bodies = {};
   this.staticItemTypes = {};
   this.map = map;
   this.setupWorld(size);
   this.loadStaticItems();
+
 }
 
 KarmaPhysicsEngine.prototype.setupWorld = function(size) {
@@ -219,6 +221,31 @@ KarmaPhysicsEngine.prototype.outOfWalls = function(point) {
   return res;
 }
 
+
+
+KarmaPhysicsEngine.prototype.getWorldInfo = function() {
+  return {
+    "size": {
+      w: this.map.size.w * this.gScale,
+      h: this.map.size.h * this.gScale,
+    },
+    "staticItems": this.getShareStaticItems(),
+    "itemsInMap": this.staticItemTypes,
+    "background": this.map.background
+  };
+}
+KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
+  var shareStaticItems = [];
+  var items = this.staticBodies;
+  // return shareStaticItems;
+  for (var i = 0; i < items.length; i++) {
+    var w = items[i];
+    shareStaticItems.push(w.getShared());
+  };
+  return shareStaticItems;
+}
+
+
 KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
   if (this.outOfWalls(body.addVectors(body, body.UL()))
     || this.outOfWalls(body.addVectors(body, body.UR()))
@@ -273,32 +300,38 @@ KarmaPhysicsEngine.prototype.addBody = function(body) {
 }
 
 KarmaPhysicsEngine.prototype.createBody = function(position, size) {
-  position.x *= this.gScale;
-  position.y *= this.gScale;
-  size.w *= this.gScale;
-  size.h *= this.gScale;
-  var b = new KarmaPhysicalBody();
+  var b, id;
+  // position.x *= this.gScale;
+  // position.y *= this.gScale;
+  // size.w *= this.gScale;
+  // size.h *= this.gScale;
+  b = new KarmaPhysicalBody();
   b.initialize(this, position, size);
   this.bodies[b.id] = b;
+  id = b.id;
   b = null;
+  return id;
 };
 
 KarmaPhysicsEngine.prototype.loadStaticItems = function() {
   var staticItems = this.map.staticItems.concat([{
     name: 'outsideWall'
   }]);
+  this.staticBodies = [];
   var itemsDir = __dirname + '/../../public/items/';
   for(var i = 0; i < staticItems.length; i++) {
     var item = staticItems[i];
     var itemJSONPath = itemsDir + item.name + '.json';
     var itemJSONString = fs.readFileSync(itemJSONPath);
     var itemJSON = JSON.parse(itemJSONString);
+    if (item.name != 'outsideWall') {
+      var id = this.createBody(item.position, item.size, item.name);
+      this.staticBodies.push(this.bodies[id]);
+    }
     if(this.staticItemTypes[itemJSON.name] == undefined) {
       this.staticItemTypes[itemJSON.name] = itemJSON;
     }
-    if (item.name != 'outsideWall') {
-      this.createBody(item.position, item.size, item.name);
-    }
+
   };
 }
 

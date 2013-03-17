@@ -64,8 +64,7 @@ var GameServerSocket = function(mapManager) {
         console.log('enter in', mapName)
         var gameServer = that.mapManager.gameServers[mapName];
         if (gameServer) {
-          var physicsEngine = gameServer.physicsEngine;
-          var worldInfo = physicsEngine.getWorldInfo();
+          var worldInfo = gameServer.kengine.getWorldInfo();
           client.emit('init', worldInfo);
           gameServer.clients[client.id] = client;
           client.gameServer = gameServer;

@@ -6,7 +6,7 @@ var KarmaPhysicalBody = function() {
 
 KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.engine = engine;
-  this.gScale = 32;
+  this.gScale = this.engine.gScale;
   this.id = G_bodyID++;
   this.x = position.x;
   this.y = position.y;
@@ -26,6 +26,10 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
 
 KarmaPhysicalBody.prototype.step = function() {
 };
+
+KarmaPhysicalBody.prototype.scheduleForDestroy = function() {
+  this.engine.itemsToDestroy.push(this);
+}
 
 KarmaPhysicalBody.prototype.getPosition = function() {
   return {
