@@ -23,9 +23,9 @@ Bullet.prototype.die = function() {
   this.scheduleForDestroy();
 };
 
-Bullet.prototype.explode = function(point) {
+Bullet.prototype.explode = function() {
   this.die();
-  this.engine.gameServer.broadcastExplosion(point);
+  this.playerCar.gameServer.broadcastExplosion(this.getPosition());
 };
 
 module.exports = Bullet;

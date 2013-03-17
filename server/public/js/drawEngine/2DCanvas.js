@@ -6,6 +6,7 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.loaded();
   this.timer = new Date().getTime();
   this.frames = 0;
+  this.debugDraw = true;
   //$('#debug').append('<div id="fps" class="info"/>');
   return this;
 }
@@ -59,7 +60,7 @@ Engine2DCanvas.prototype.draw = function() {
 };
 
 Engine2DCanvas.prototype.drawBodies = function(ctx) {
-  if(this.gameInstance.bodies !== null) {
+  if(this.debugDraw && this.gameInstance.bodies !== null) {
     for(var i = 0; i < this.gameInstance.bodies.length; i++) {
       var c = this.gameInstance.bodies[i];
 
@@ -137,13 +138,13 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
       // drawPoint(c.br)
       // drawPoint(c.bl)
       var debug_collisions = false;
-      if (debug_collisions) {
+      if(debug_collisions) {
         if(!_.isUndefined(c.collision)) {
           drawAxis(c.collision.a1);
           drawAxis(c.collision.a2);
           drawAxis(c.collision.a3);
           drawAxis(c.collision.a4);
-          for (var i = 1; i <= 4; ++i) {
+          for(var i = 1; i <= 4; ++i) {
             drawPoint(c.collision.axesMinMax[i].minA, '#000');
             drawPoint(c.collision.axesMinMax[i].maxA, '#F00');
             drawPoint(c.collision.axesMinMax[i].minB, '#0F0');
@@ -157,16 +158,18 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
 }
 
 Engine2DCanvas.prototype.drawCars = function(ctx) {
-  return;
   if(this.gameInstance.cars !== null) {
-    ctx.fillStyle = '#FFFFFF';
     for(var i = 0; i < this.gameInstance.cars.length; i++) {
       var c = this.gameInstance.cars[i];
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(c.r);
       ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
-      ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+
+      // if(this.debugDraw) {
+      //   ctx.fillStyle = '#FFFFFF';
+      //   ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+      // }
       ctx.restore();
 
       var textSize = ctx.measureText(c.playerName);
@@ -239,8 +242,12 @@ Engine2DCanvas.prototype.drawRocket = function(rocket, ctx) {
 Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
   var wThickness = 50;
   var s = this.camera.realWorldSize;
-  // ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
-  ctx.fillStyle = '#fff'
+  if(this.debugDraw) {
+    ctx.fillStyle = '#00FF00';
+  } else {
+    ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
+  }
+
   // bot
   ctx.fillRect(-wThickness, s.h, s.w + 2 * wThickness, wThickness);
   // top
@@ -253,9 +260,11 @@ Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
 
 Engine2DCanvas.prototype.drawStaticItems = function(ctx) {
   var that = this;
+  // console.log(that.gameInstance.walls);
   if(that.gameInstance.walls != null) {
     _.each(that.gameInstance.walls, function(c) {
       var staticItem = that.gameInstance.itemsInMap[c.name];
+      //      console.log(staticItem);
       if(!KLib.isUndefined(staticItem) && !KLib.isUndefined(staticItem.pattern)) {
         // console.log(c.x, c.)
         if(staticItem.pattern === null) {
@@ -275,26 +284,15 @@ Engine2DCanvas.prototype.drawBackground = function(ctx) {
   }
   var cs = this.camera.getCanvasSize();
   ctx.fillStyle = this.gameInstance.backgroundPattern;
-  //this.camera.realWorldSize.w, this.camera.realWorldSize.h
-  //ctx.fillRect(0, 0, cs.w, cs.h);
   ctx.fillRect(0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
-  //ctx.fillRect(this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);
 }
 
 Engine2DCanvas.prototype.drawItems = function() {
-  //  var cs = this.camera.getCanvasSize();
-  // this.backgroundContext.save();
-  // this.backgroundContext.restore();
-  // this.ctx.save();
-  // this.ctx.restore();
-  // this.drawBackground(this.ctx);
-  this.drawOutsideWalls(this.ctx);
-  // this.drawStaticItems(this.ctx);
-
-  //this.ctx.drawImage(this.backgroundCanvas, 0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
-  //this.ctx.drawImage(this.backgroundCanvas, 0, 0, cs.w, cs.h, this.camera.center.x - cs.w / 2, this.camera.center.y - cs.h / 2, cs.w * 2, cs.h * 2);
-  this.drawCars(this.ctx);
+  this.drawBackground(this.ctx);
   this.drawBodies(this.ctx);
+  this.drawOutsideWalls(this.ctx);
+  this.drawStaticItems(this.ctx);
+  this.drawCars(this.ctx);
   this.drawExplosions(this.ctx);
   // this.drawBullets(this.ctx);
   // this.drawRockets(this.ctx);

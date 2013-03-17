@@ -1,4 +1,4 @@
-// var KLib = require('./../classes/KLib');
+var KLib = require('./../KLib');
 var G_bodyID = 0;
 
 var KarmaPhysicalBody = function() {
@@ -28,14 +28,11 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
 }
 
 KarmaPhysicalBody.prototype.accelerate = function(ac) {
-
   var newpos = {
     x: this.x + ac * Math.cos(this.r),
     y: this.y + ac * Math.sin(this.r)
   };
-  console.log(this.name, ac, this.r, this.x, this.y, newpos);
   this.moveTo(newpos);
-
 }
 
 KarmaPhysicalBody.prototype.step = function() {
@@ -90,7 +87,7 @@ KarmaPhysicalBody.prototype.addAngle = function(a) {
 }
 
 KarmaPhysicalBody.prototype.turn = function(side) {
-  var angleToAdd = side * Math.PI / 4;
+  var angleToAdd = side * Math.PI / 2;
   this.addAngle(angleToAdd);
 }
 
@@ -214,34 +211,30 @@ KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
 }
 
 
-var isUndefined = function(obj) {
-    return obj === void 0;
-  };
+
 
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
-  console.log(this.name, pos);
   var old = {
     x: this.x,
     y: this.y,
     r: this.r
   };
-  if(isUndefined(pos.x)) {
+  if(KLib.isUndefined(pos.x)) {
     pos.x = this.x;
   }
-  if(isUndefined(pos.y)) {
+  if(KLib.isUndefined(pos.y)) {
     pos.y = this.y;
   }
-  if(isUndefined(pos.r)) {
+  if(KLib.isUndefined(pos.r)) {
     pos.r = this.r;
   }
   this.setPosition(pos);
   this.updateCornerCache();
 
-  // console.log(this.isBullet, this.name);
   var res = this.engine.recheckCollisions(this);
   if(res) {
     if(this.isBullet === true) {
-      this.die();
+      this.explode();
       return;
     }
     if(this.collidesWith.isStatic === true) {

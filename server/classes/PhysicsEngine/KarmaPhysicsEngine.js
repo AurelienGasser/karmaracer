@@ -1,5 +1,6 @@
 var fs = require('fs');
 var KarmaPhysicalBody = require('./KarmaPhysicalBody');
+var KLib = require('./../KLib');
 
 var G_bodyID = 0;
 var KarmaPhysicsEngine = function(size, map) {
@@ -25,19 +26,10 @@ KarmaPhysicsEngine.prototype.destroyBodies = function() {
 
 KarmaPhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
-
-  var b = this.createBody({
-    'x': 10,
-    'y': 10
-  }, {
-    'w': 2,
-    'h': 2
-  });
 };
+
 KarmaPhysicsEngine.prototype.projection = function(corner, axis, name) {
-  // console.log('corner', corner, Math.pow(axis.x,2));
   var res = (corner.x * axis.x + corner.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
-  // console.log('res', res, corner,axis);
   var p = {
     x: res * axis.x,
     y: res * axis.y
@@ -52,9 +44,7 @@ KarmaPhysicsEngine.prototype.projectionWithTranslate = function(base_vector, cor
     x: corner.x - base_vector.x,
     y: corner.y - base_vector.y
   }
-  // console.log('corner', corner, Math.pow(axis.x,2));
   var res = (pointTranslated.x * axis.x + pointTranslated.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
-  // console.log('res', res, corner,axis);
   var p = {
     x: res * axis.x,
     y: res * axis.y
@@ -307,14 +297,13 @@ KarmaPhysicsEngine.prototype.addBody = function(body) {
   this.bodies[body.id] = body;
 }
 
-KarmaPhysicsEngine.prototype.createBody = function(position, size) {
+KarmaPhysicsEngine.prototype.createBody = function(position, size, name) {
   var b, id;
-  // position.x *= this.gScale;
-  // position.y *= this.gScale;
-  // size.w *= this.gScale;
-  // size.h *= this.gScale;
   b = new KarmaPhysicalBody();
   b.initialize(this, position, size);
+  if (!KLib.isUndefined(name)){
+    b.name = name;
+  }
   this.bodies[b.id] = b;
   id = b.id;
   b = null;
@@ -333,7 +322,7 @@ KarmaPhysicsEngine.prototype.loadStaticItems = function() {
     var itemJSONPath = itemsDir + item.name + '.json';
     var itemJSONString = fs.readFileSync(itemJSONPath);
     var itemJSON = JSON.parse(itemJSONString);
-    if(item.name != 'outsideWall') {
+    if(item.name !== 'outsideWall') {
       var id = this.createBody(item.position, item.size, item.name);
       b = this.bodies[id];
       b.isStatic = true;
@@ -342,8 +331,9 @@ KarmaPhysicsEngine.prototype.loadStaticItems = function() {
     if(this.staticItemTypes[itemJSON.name] == undefined) {
       this.staticItemTypes[itemJSON.name] = itemJSON;
     }
-
   };
+
+  console.log(this.staticBodies.length);
 }
 
 module.exports = KarmaPhysicsEngine;

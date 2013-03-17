@@ -200,6 +200,7 @@ GameServer.prototype.step = function() {
 
   } catch(e) {
     console.log("error main interval", e, e.stack);
+    throw e;
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
   registerDateDiff(timer, 'lastDiff', timer.begin);
@@ -250,8 +251,8 @@ GameServer.prototype.broadcast = function(key, data) {
 
 GameServer.prototype.broadcastExplosion = function(point) {
   this.broadcast('explosion', {
-    x: point.x * this.physicsEngine.gScale,
-    y: point.y * this.physicsEngine.gScale
+    x: point.x * this.kengine.gScale,
+    y: point.y * this.kengine.gScale
   });
 };
 

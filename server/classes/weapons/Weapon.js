@@ -59,8 +59,6 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
     x: playerCar.car.x,
     y: playerCar.car.y
   }; //this.getProjectileVector(playerCar, angle);
-  
-  console.log(angle, pos, playerCar.car.x);
   var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle); 
   this.projectiles[b.id] = b;
 };
