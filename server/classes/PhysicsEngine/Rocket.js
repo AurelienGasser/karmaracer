@@ -1,11 +1,13 @@
 // var backbone = require('backbone');
 var KLib = require('../KLib');
 var sys = require("sys");
-var PhysicsItem = require('./PhysicsItem');
+// var PhysicsItem = require('./PhysicsItem');
 
+var KPhysicalBody = require('./KarmaPhysicalBody');
 
 
 var Rocket = function(playerCar, pos, angle) {
+  KLib.extend(KPhysicalBody, this);
     this.initialize(playerCar, pos, angle);
   }
 
@@ -29,7 +31,8 @@ Rocket.prototype.initialize = function(playerCar, pos, angle) {
   };
   this.playerCar = playerCar;
   this.name = 'rocket';
-  this.constructor.__super__.initialize.apply(this, [a]);
+  // this.constructor.__super__.initialize.apply(this, [a]);
+  this.initialize(playerCar.gameServer.kengine, a.position, a.size);
   this.angle = angle;
   this.life = 25;
   this.damage = 100;

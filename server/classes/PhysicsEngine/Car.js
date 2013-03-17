@@ -10,16 +10,11 @@ var Car = function(playerCar) {
   };
   this.playerCar = playerCar;
   this.name = 'car';
-  this.initialize(playerCar.gameServer.kengine, this.startPosition, { w: 1, h: 0.5 });
+  this.initialize(this.playerCar.gameServer.kengine, this.startPosition, { w: 1, h: 0.5 });
   return this;
 }
 
-Car.prototype.accelerate = function(ac) {
-  return this.moveTo({
-    x: this.x + ac * Math.cos(this.r),
-    y: this.y + ac * Math.sin(this.r)
-  });
-}
+
 
 Car.prototype.turn = function(turningRight) {
   this.base.turn.bind(this)((turningRight ? 1 : -1) * Math.PI / 128)

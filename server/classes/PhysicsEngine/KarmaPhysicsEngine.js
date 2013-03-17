@@ -3,15 +3,25 @@ var KarmaPhysicalBody = require('./KarmaPhysicalBody');
 
 var G_bodyID = 0;
 var KarmaPhysicsEngine = function(size, map) {
-  this.itemsToDestroy = [];
-  this.gScale = 32;
-  this.bodies = {};
-  this.staticItemTypes = {};
-  this.map = map;
-  this.setupWorld(size);
-  this.loadStaticItems();
+    this.itemsToDestroy = [];
+    this.gScale = 32;
+    this.bodies = {};
+    this.staticItemTypes = {};
+    this.map = map;
+    this.setupWorld(size);
+    this.loadStaticItems();
+  }
 
-}
+
+KarmaPhysicsEngine.prototype.destroyBodies = function() {
+  for(var i in this.itemsToDestroy) {
+    var item = this.itemsToDestroy[i];
+    item.destroy();
+    delete this.bodies[item.id];
+  }
+  this.itemsToDestroy = [];
+};
+
 
 KarmaPhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
@@ -160,18 +170,18 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
   var maxB = bSorted[3].scalar;
 
   A.axesMinMax[axisIndex] = {
-   minA: aSorted[0],
-   maxA: aSorted[3],
-   minB: bSorted[0],
-   maxB: bSorted[3]
+    minA: aSorted[0],
+    maxA: aSorted[3],
+    minB: bSorted[0],
+    maxB: bSorted[3]
   };
 
-  if (minA < minB) {
-    if (minB <= maxA) {
+  if(minA < minB) {
+    if(minB <= maxA) {
       return true;
     }
   } else {
-    if (minA <= maxB) {
+    if(minA <= maxB) {
       return true;
     }
   }
@@ -214,10 +224,7 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
 };
 
 KarmaPhysicsEngine.prototype.outOfWalls = function(point) {
-  var res = point.x < 0
-    || point.y < 0
-    || point.x > this.map.size.w
-    || point.y > this.map.size.h
+  var res = point.x < 0 || point.y < 0 || point.x > this.map.size.w || point.y > this.map.size.h
   return res;
 }
 
@@ -238,7 +245,7 @@ KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
   var shareStaticItems = [];
   var items = this.staticBodies;
   // return shareStaticItems;
-  for (var i = 0; i < items.length; i++) {
+  for(var i = 0; i < items.length; i++) {
     var w = items[i];
     shareStaticItems.push(w.getShared());
   };
@@ -247,25 +254,25 @@ KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
 
 
 KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
-  if (this.outOfWalls(body.addVectors(body, body.UL()))
-    || this.outOfWalls(body.addVectors(body, body.UR()))
-    || this.outOfWalls(body.addVectors(body, body.BL()))
-    || this.outOfWalls(body.addVectors(body, body.BR()))) {
-    body.collidesWith['outsideWall'] = { name: 'outsideWall' };
+  if(this.outOfWalls(body.addVectors(body, body.UL())) || this.outOfWalls(body.addVectors(body, body.UR())) || this.outOfWalls(body.addVectors(body, body.BL())) || this.outOfWalls(body.addVectors(body, body.BR()))) {
+    body.collidesWith = {
+      name: 'outsideWall',
+      isStatic: true
+    };
     return true;
   }
   var A = body;
-  A.collidesWith = {};
+  A.collidesWith = null;
   for(var b2ID in this.bodies) {
-    if (b2ID != A.id) {
+    if(b2ID != A.id) {
       var B = this.bodies[b2ID];
-      if (this.collideTest(A, B)) {
+      if(this.collideTest(A, B)) {
         // console.log('collision between', A.id, 'and', B.id)
-        A.collidesWith[B.id] = B;
-        B.collidesWith[A.id] = A;
+        A.collidesWith = this.bodies[B.id];
+        // B.collidesWith = A.id;
         return true;
       } else {
-        delete B.collidesWith[A.id];
+        // B.collidesWith = null;
       }
     }
   }
@@ -277,6 +284,7 @@ KarmaPhysicsEngine.prototype.step = function() {
     var b1 = this.bodies[b1ID];
     b1.step();
   }
+  this.destroyBodies();
 };
 
 KarmaPhysicsEngine.prototype.getShared = function() {
@@ -314,6 +322,7 @@ KarmaPhysicsEngine.prototype.createBody = function(position, size) {
 };
 
 KarmaPhysicsEngine.prototype.loadStaticItems = function() {
+  var b;
   var staticItems = this.map.staticItems.concat([{
     name: 'outsideWall'
   }]);
@@ -324,9 +333,11 @@ KarmaPhysicsEngine.prototype.loadStaticItems = function() {
     var itemJSONPath = itemsDir + item.name + '.json';
     var itemJSONString = fs.readFileSync(itemJSONPath);
     var itemJSON = JSON.parse(itemJSONString);
-    if (item.name != 'outsideWall') {
+    if(item.name != 'outsideWall') {
       var id = this.createBody(item.position, item.size, item.name);
-      this.staticBodies.push(this.bodies[id]);
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
     }
     if(this.staticItemTypes[itemJSON.name] == undefined) {
       this.staticItemTypes[itemJSON.name] = itemJSON;

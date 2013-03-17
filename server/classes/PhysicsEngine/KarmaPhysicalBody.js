@@ -1,3 +1,4 @@
+// var KLib = require('./../classes/KLib');
 var G_bodyID = 0;
 
 var KarmaPhysicalBody = function() {
@@ -22,13 +23,27 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.color = '#FFF';
   this.collidesWith = {};
   this.updateCornerCache();
+  this.isStatic = false;
+}
+
+KarmaPhysicalBody.prototype.accelerate = function(ac) {
+  return this.moveTo({
+    x: this.x + ac * Math.cos(this.r),
+    y: this.y + ac * Math.sin(this.r)
+  });
+
 }
 
 KarmaPhysicalBody.prototype.step = function() {
+  this.collidesWith = null;
 };
 
 KarmaPhysicalBody.prototype.scheduleForDestroy = function() {
   this.engine.itemsToDestroy.push(this);
+}
+
+KarmaPhysicalBody.prototype.destroy = function() {
+  this.engine = null;
 }
 
 KarmaPhysicalBody.prototype.getPosition = function() {
@@ -58,8 +73,8 @@ KarmaPhysicalBody.prototype.getVector = function(power, angle) {
   }
   angle += this.r;
   var v = {
-    x: power * Math.cos(angle),
-    y: power * Math.sin(angle)
+    x: power.x * Math.cos(angle),
+    y: power.y * Math.sin(angle)
   };
   return v;
 }
@@ -91,6 +106,7 @@ KarmaPhysicalBody.prototype.tryPosition = function(to) {
   this.setPosition(to);
   this.updateCornerCache();
   var res = !this.engine.recheckCollisions(this);
+
   this.setPosition(old);
   this.updateCornerCache();
   this.engine.recheckCollisions(this);
@@ -182,32 +198,61 @@ KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
   return null;
 }
 
+
+var isUndefined = function(obj) {
+  return obj === void 0;
+};
+
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
   var old = {
     x: this.x,
     y: this.y,
     r: this.r
   };
-  if (this.getNumCollisions() == 0) {
-    var newPos = this.moveToDichotomie(old, pos);
-    this.setPosition(newPos) // finally set the position and update collision status / corners
-    var dist = getDistance(pos, newPos)
-    if (getDistance(old, newPos) > COLLISION_DISTANCE_TRESHOLD) {
-      return true;
-    } else if (typeof pos.r == 'undefined') {
-      var driftPos = this.tryDriftAgainstWall(old, pos);
-      if (driftPos) {
-        this.setPosition(driftPos);
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  } else {
-    return false;
+  if (isUndefined(pos.x)){
+    pos.x = this.x;
   }
+  if (isUndefined(pos.y)){
+    pos.y = this.y;
+  }
+  if (isUndefined(pos.r)){
+    pos.r = this.r;
+  }
+  this.setPosition(pos);
+  this.updateCornerCache();
+  var res = this.engine.recheckCollisions(this);
+  if (res){
+    if (this.collidesWith.isStatic){
+      this.x = old.x;
+      this.y = old.y;
+    } else {
+      this.setPosition(old);
+    }
+    this.updateCornerCache();
+  }
+  return res;
+
+
+  // if (this.getNumCollisions() == 0) {
+  //   var newPos = this.moveToDichotomie(old, pos);
+  //   this.setPosition(newPos) // finally set the position and update collision status / corners
+  //   var dist = getDistance(pos, newPos)
+  //   if (getDistance(old, newPos) > COLLISION_DISTANCE_TRESHOLD) {
+  //     return true;
+  //   } else if (typeof pos.r == 'undefined') {
+  //     // var driftPos = this.tryDriftAgainstWall(old, pos);
+  //     // if (driftPos) {
+  //     //   this.setPosition(driftPos);
+  //       return true;
+  //     // } else {
+  //     //   return false;
+  //     // }
+  //   } else {
+  //     return false;
+  //   }
+  // } else {
+  //   return false;
+  // }
 }
 
 KarmaPhysicalBody.prototype.cosWidthDiv2 = function() {

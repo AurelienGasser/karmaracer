@@ -134,6 +134,7 @@ GameServer.prototype.handleClientKeyboard = function() {
     }
   } catch(err) {
     console.error(err);
+    throw err;
   }
 
 };
