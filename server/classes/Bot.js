@@ -11,13 +11,13 @@ var Bot = function(gameServer, id) {
 
 Bot.prototype.tick = function() {
   var numAdditionalTicksToTurn = 20;
-  var maxRandom = 3;
-  var diff = 1;
+  var maxRandom = 5;
+  var diff = 2;
   if(this.playerCar.car) {
     var car = this.playerCar.car;
 
     var random = parseInt(Math.random() * maxRandom, 10);
-    if(random < diff * 2) {
+    if(random < diff) {
       car.turn(true);
     }
     car.accelerate(0.5);
