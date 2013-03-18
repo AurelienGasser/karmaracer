@@ -254,7 +254,7 @@ KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
   var A = body;
   A.collidesWith = null;
   for(var b2ID in this.bodies) {
-    if(b2ID != A.id) {
+    if(b2ID !== A.id) {
       var B = this.bodies[b2ID];
       if(!KLib.isUndefined(B.playerCar) && B.playerCar.dead === true) {
         continue;

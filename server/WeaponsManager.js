@@ -2,19 +2,22 @@ var WeaponsManager = function(gameServer) {
     this.gameServer = gameServer;
   }
 
-WeaponsManager.prototype.step = function() {
-  function stepList(list, action) {
-    for(var i in list) {
-      var player = list[i];
-      if(player) {
-        action(player);
-      }
+
+WeaponsManager.prototype.stepList = function(list, action) {
+
+  for(var i in list) {
+    var player = list[i];
+    if(player) {
+      action(player);
     }
   }
-  stepList(this.gameServer.players, function(player){
+};
+
+WeaponsManager.prototype.step = function() {
+  this.stepList(this.gameServer.players, function(player) {
     player.playerCar.weapon.step();
   });
-  stepList(this.gameServer.botManager.bots, function(player){
+  this.stepList(this.gameServer.botManager.bots, function(player) {
     player.playerCar.weapon.step();
   });
 }

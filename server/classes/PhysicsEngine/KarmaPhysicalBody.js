@@ -36,6 +36,17 @@ KarmaPhysicalBody.prototype.accelerate = function(ac) {
   this.moveTo(newpos);
 }
 
+KarmaPhysicalBody.prototype.accelerateAndTurn = function(ac, a) {
+  var newpos = {
+    x: this.x + ac * Math.cos(this.r),
+    y: this.y + ac * Math.sin(this.r),
+    r: (this.r + a) % (Math.PI * 2)
+  };
+  this.moveTo(newpos);
+}
+
+
+
 KarmaPhysicalBody.prototype.step = function() {
   this.collidesWith = null;
 };
@@ -84,7 +95,7 @@ KarmaPhysicalBody.prototype.getVector = function(power, angle) {
 KarmaPhysicalBody.prototype.addAngle = function(a) {
   this.moveTo({
     r: (this.r + a) % (Math.PI * 2)
-  })
+  });
 }
 
 KarmaPhysicalBody.prototype.turn = function(side) {
@@ -235,6 +246,7 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
   this.updateCornerCache();
 
   var res = this.engine.recheckCollisions(this);
+  // var res = false;
   if(res) {
 
     if(!this.collide(old)) {

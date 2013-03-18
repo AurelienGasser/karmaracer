@@ -25,7 +25,7 @@ BotManager.prototype.initBots = function() {
   if(numBots > 10) {
     numBots = 10;
   }
-  numBots = 0;
+  numBots = 19;
   for(var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
@@ -55,8 +55,10 @@ BotManager.prototype.getBotName = function() {
 }
 
 BotManager.prototype.addBot = function() {
-  var id = this.getBotName();
-  this.bots[id] = new Bot(this.gameServer, id);
+  var b, name;
+  name = this.getBotName();
+  b = new Bot(this.gameServer, name);
+  this.bots[b.id] = b;
 }
 
 BotManager.prototype.removeBot = function(gameServer) {
