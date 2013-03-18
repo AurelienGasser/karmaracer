@@ -17,6 +17,18 @@ var Bullet = function(playerCar, pos, angle) {
     this.damage = 5;
   }
 
+Bullet.prototype.collide = function(oldPosition) {
+  if(this.collidesWith.name === 'car' || this.collidesWith.name === 'bot') {
+    if(this.collidesWith.id !== this.playerCar.car.id) {
+      var playerCar = this.collidesWith.playerCar;
+      playerCar.gameServer.carManager.projectileHitCar(this.playerCar, playerCar, this);
+      this.explode();
+    }
+  } else {
+    this.explode();
+  }
+  return true;
+};
 
 Bullet.prototype.die = function() {
   this.life = -1;

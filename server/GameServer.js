@@ -8,13 +8,13 @@ var WeaponsManager = require('./WeaponsManager');
 var MemLeakLog = require('./MemLeakLog');
 var memwatch = require('memwatch');
 
-// memwatch.on('stats', function(stats) {
-//   console.log('MEM STATS', stats);
-// });
+memwatch.on('stats', function(stats) {
+  console.log('MEM STATS', stats);
+});
 
-// memwatch.on('leak', function(info) {
-//   console.log('MEM LEAK', info);
-// });
+memwatch.on('leak', function(info) {
+  console.log('MEM LEAK', info);
+});
 
 var GameServer = function(app, map) {
     this.app = app;

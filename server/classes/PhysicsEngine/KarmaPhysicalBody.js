@@ -212,6 +212,9 @@ KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
 }
 
 
+KarmaPhysicalBody.prototype.collide = function(oldPosition) {
+  // console.log(this.name, 'collide');
+};
 
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
   var old = {
@@ -233,21 +236,18 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
 
   var res = this.engine.recheckCollisions(this);
   if(res) {
-    if(this.isBullet === true) {
-      this.explode();
-      if(this.collidesWith.name === 'car') {
-        var playerCar = this.collidesWith.playerCar;
-        playerCar.gameServer.carManager.projectileHitCar(this.playerCar, playerCar, this);
+
+    if(!this.collide(old)) {
+      if(this.collidesWith.isStatic === true) {
+        this.x = old.x;
+        this.y = old.y;
+      } else {
+        this.setPosition(old);
       }
-      return;
+      this.updateCornerCache();
     }
-    if(this.collidesWith.isStatic === true) {
-      this.x = old.x;
-      this.y = old.y;
-    } else {
-      this.setPosition(old);
-    }
-    this.updateCornerCache();
+
+
   }
   return;
 
