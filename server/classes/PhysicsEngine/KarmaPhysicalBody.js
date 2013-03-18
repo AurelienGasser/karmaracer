@@ -25,6 +25,7 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.updateCornerCache();
   this.isStatic = false;
   this.isBullet = false;
+  this.shareCollisionInfo = false;
 }
 
 KarmaPhysicalBody.prototype.accelerate = function(ac) {
@@ -87,7 +88,7 @@ KarmaPhysicalBody.prototype.addAngle = function(a) {
 }
 
 KarmaPhysicalBody.prototype.turn = function(side) {
-  var angleToAdd = side * Math.PI / 2;
+  var angleToAdd = side * (Math.PI / 2);
   this.addAngle(angleToAdd);
 }
 
@@ -212,7 +213,6 @@ KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
 
 
 
-
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
   var old = {
     x: this.x,
@@ -235,7 +235,7 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
   if(res) {
     if(this.isBullet === true) {
       this.explode();
-      if (this.collidesWith.name === 'car'){
+      if(this.collidesWith.name === 'car') {
         var playerCar = this.collidesWith.playerCar;
         playerCar.gameServer.carManager.projectileHitCar(this.playerCar, playerCar, this);
       }
@@ -410,12 +410,6 @@ KarmaPhysicalBody.prototype.scaleAxesMinMax = function(minMax) {
 }
 
 KarmaPhysicalBody.prototype.getShared = function() {
-  var ul = this.UL();
-  var ur = this.UR();
-  var br = this.BR();
-  var bl = this.BL();
-
-  var collides = this.getNumCollisions() > 0;
 
   var options = {
     x: this.x * this.gScale,
@@ -424,18 +418,21 @@ KarmaPhysicalBody.prototype.getShared = function() {
     h: this.h * this.gScale,
     r: this.r,
     name: this.name,
-    playerName: this.playerName,
-    s: 0,
-    l: 0,
-    ul: this.scalePointAndAddName('ul', ul),
-    ur: this.scalePointAndAddName('ur', ur),
-    bl: this.scalePointAndAddName('bl', bl),
-    br: this.scalePointAndAddName('br', br),
-    color: collides ? '#F00' : '#FFF'
+    playerName: this.playerName
   };
 
-  if(this.axesMinMax) {
+  if(this.shareCollisionInfo) {
+    var ul = this.UL();
+    var ur = this.UR();
+    var br = this.BR();
+    var bl = this.BL();
+    var collides = this.collidesWith !== null;
     var collision = {
+      ul: this.scalePointAndAddName('ul', ul),
+      ur: this.scalePointAndAddName('ur', ur),
+      bl: this.scalePointAndAddName('bl', bl),
+      br: this.scalePointAndAddName('br', br),
+      color: collides ? '#F00' : '#FFF',
       a1: this.a1,
       a2: this.a2,
       a3: this.a3,

@@ -19,17 +19,18 @@ var Car = function(playerCar) {
   }
 
 Car.prototype.goToFreeLandingPoint = function() {
-  var currentPosition = this.getPosition();
-  var res = this.engine.recheckCollisions(this);
-  if(res) {
-    var pos = {
-      x: (Math.random() * 1e10) % this.engine.size.w,
-      y: (Math.random() * 1e10) % this.engine.size.h,
-      r: 0
-    };
-    // console.log(pos, this.engine.size);
-    this.setPosition(pos);
-    this.goToFreeLandingPoint(pos);
+  if(this.engine !== null) {
+    var currentPosition = this.getPosition();
+    var res = this.engine.recheckCollisions(this);
+    if(res) {
+      var pos = {
+        x: (Math.random() * 1e10) % this.engine.size.w,
+        y: (Math.random() * 1e10) % this.engine.size.h,
+        r: 0
+      };
+      this.setPosition(pos);
+      this.goToFreeLandingPoint(pos);
+    }
   }
 };
 
@@ -44,6 +45,8 @@ Car.prototype.receiveHit = function() {
 Car.prototype.getShared = function() {
   var res = this.base.getShared.call(this);
   res.playerName = this.playerCar.playerName;
+  res.s = this.playerCar.score;
+  res.l = this.playerCar.level;
   return res;
 }
 

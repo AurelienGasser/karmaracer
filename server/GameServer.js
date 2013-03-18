@@ -223,11 +223,8 @@ GameServer.prototype.getPlayersForShare = function() {
 
 
 GameServer.prototype.sendPositionsToPlayers = function() {
-    // console.log(this.players);
   var cars = this.carManager.getShared();
-  // cars = cars.concat(this.kengine.getShared());
-  var bodies = this.kengine.getShared();
-
+  // var bodies = this.kengine.getShared();
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for(var i in this.players) {
     var p = this.players[i];
@@ -236,9 +233,8 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       myCar: myCar,
       cars: cars,
       projectiles: projectiles,
-      bodies : bodies
+      // bodies : bodies
     };
-    // console.log(share);
     p.client.emit('objects', share);
   }
 };

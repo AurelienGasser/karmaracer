@@ -94,13 +94,13 @@ function SocketManager(gameInstance, onInitCallback) {
   })
 
   connection.on('objects', function(objects) {
-    //console.log(objects);
+    // console.log(objects);
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
     // gameInstance.bullets = objects.projectiles.bullets;
     // gameInstance.rockets = objects.projectiles.rockets;
     gameInstance.projectiles = objects.projectiles;
-    gameInstance.bodies = objects.bodies;
+    // gameInstance.bodies = objects.bodies;
     gameInstance.updateScoresHTML();
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
       return list ? list.length : 0;

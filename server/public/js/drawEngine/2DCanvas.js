@@ -244,6 +244,7 @@ Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
   if(this.debugDraw) {
     ctx.fillStyle = '#00FF00';
   } else {
+    // console.log(this.gameInstance.itemsInMap.outsideWall.pattern);
     ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
   }
 

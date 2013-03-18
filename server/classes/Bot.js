@@ -11,49 +11,19 @@ var Bot = function(gameServer, id) {
 
 Bot.prototype.tick = function() {
   var numAdditionalTicksToTurn = 20;
+  var maxRandom = 3;
+  var diff = 1;
   if(this.playerCar.car) {
     var car = this.playerCar.car;
-    var sensorDelta = car.getVector(2);
-    var sensor = car.addVectors(car, sensorDelta);
-    if (!this.isTurning && car.tryPosition(sensor)) {
-      car.accelerate(0.1)
-    } else {
-      if (this.isTurning) {
-        --this.isTurning
-      } else {
-        this.isTurning = 20;
-      }
-      car.turn(0.15)
+
+    var random = parseInt(Math.random() * maxRandom, 10);
+    if(random < diff * 2) {
+      car.turn(true);
     }
-    // this.playerCar.shoot();
-    // shoot for 30 ticks once every 50 ticks
-    // if(this.isShooting) {
-    //   if(!--this.shootCpt) {
-    //     this.isShooting = false;
-    //   } else {
-    //     // this.playerCar.shoot();
-    //   }
-    // } else {
-    //   if(!this.sensor && Math.random() * 50 < 1) {
-    //     this.isShooting = true;
-    //     this.shootCpt = 50;
-    //   }
-    // }
-  }
-}
-
-Bot.prototype.sensorBegin = function() {
-  this.sensor = true;
-  if(this.playerCar.car !== null) {
-    this.playerCar.car.stop();
-  }
-}
-
-Bot.prototype.sensorEnd = function() {
-  this.sensor = false;
-  this.sensorTicksSinceEnd = 0;
-  if(this.playerCar.car !== null) {
-    this.playerCar.car.stop();
+    car.accelerate(0.5);
+    if(random === 0) {
+      // this.playerCar.shoot();
+    }
   }
 }
 

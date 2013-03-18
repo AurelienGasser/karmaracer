@@ -100,6 +100,7 @@ PlayerCar.prototype.rebornIn = function(seconds) {
     if(this.isBot || this.player.connected) {
       this.dead = false;
       this.life = 100;
+      this.car.goToFreeLandingPoint();
     }
   }.bind(this), seconds * 1000);
 };

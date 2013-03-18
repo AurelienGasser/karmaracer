@@ -13,8 +13,6 @@ CarManager.prototype.getShared = function() {
       if(c.playerCar !== null && c.playerCar.car !== null) {
         if(!c.playerCar.dead) {
           var share = c.playerCar.getShared();
-          share.s = c.playerCar.score;
-          share.l = c.playerCar.level;
           cars.push(share);
         }
       }

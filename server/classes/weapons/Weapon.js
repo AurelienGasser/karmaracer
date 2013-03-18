@@ -69,7 +69,7 @@ Weapon.prototype.step = function() {
       if(projectile.body === null) {
         deads.push(id);
       } else {
-        projectile.accelerate(2);
+        projectile.accelerate(1);
         projectile.life -= 1;
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();
