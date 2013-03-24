@@ -180,8 +180,6 @@ GameServer.prototype.step = function() {
     start = registerDateDiff(timer, 'physics', start);
     if(this.tickCounter % 2 === 0) {
       start = new Date();
-      that.carManager.updatePos();
-      start = registerDateDiff(timer, 'carManager', start);
       that.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
       that.kengine.step();
@@ -196,15 +194,13 @@ GameServer.prototype.step = function() {
       that.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
     }
-
-
   } catch(e) {
     console.log("error main interval", e, e.stack);
     throw e;
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
   registerDateDiff(timer, 'lastDiff', timer.begin);
-  console.log(timer);
+  // console.log(timer);
   this.timer = timer;
 }
 

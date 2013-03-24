@@ -2,7 +2,6 @@ var PlayerCar = require('./PlayerCar');
 
 var GBot_ID = 0;
 var Bot = function(gameServer, name) {
-    // this.id = id;
     this.isBot = true;
     this.gameServer = gameServer;
     this.name = name + ' (bot)';
@@ -16,25 +15,21 @@ var Bot = function(gameServer, name) {
 Bot.prototype.tick = function() {
   var numAdditionalTicksToTurn = 20;
   var maxRandom = 5;
-  var diff = 2;
+  var diff = 1;
   if(this.playerCar.car) {
     var car = this.playerCar.car;
     var random = parseInt(Math.random() * maxRandom, 10);
     if(random < diff) {
-      car.accelerateAndTurn(0.5, Math.PI / 4);
+      var turnLeft = (Math.random() - 0.5 > 0 ? 1 : -1);
+      var angle = turnLeft * Math.PI / 4
+      car.accelerateAndTurn(0.5, angle);
     } else {
       car.accelerate(0.5);
-    }
-    
-
-
-    if(random === 0) {
-      // this.playerCar.shoot();
     }
   }
 }
 
-Bot.prototype.collide = function(oldPosition) {
+Bot.prototype.performCollideAction = function(oldPosition) {
   // console.log(this.name, 'collide');
   this.x = oldPosition.x;
   this.y = oldPosition.y;

@@ -35,12 +35,6 @@ CarManager.prototype.getAliveCars = function(source) {
   return aliveCars;
 }
 
-CarManager.prototype.updatePos = function() {
-  // for(var id in this.gameServer.players) {
-  //   var playerCar = this.gameServer.players[id].playerCar;
-  //   playerCar.updatePos();
-  // }
-}
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;

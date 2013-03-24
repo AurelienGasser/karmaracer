@@ -21,11 +21,16 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.wDiv2 = this.w / 2;
   this.hDiv2 = this.h / 2;
   this.color = '#FFF';
-  this.collidesWith = null;
+  this.resetCollisions();
   this.updateCornerCache();
   this.isStatic = false;
   this.isBullet = false;
   this.shareCollisionInfo = false;
+  this.moveToPosition = this.getPositionAndAngle();
+}
+
+KarmaPhysicalBody.prototype.resetCollisions = function(ac) {
+  this.collidesWith = null;
 }
 
 KarmaPhysicalBody.prototype.accelerate = function(ac) {
@@ -44,12 +49,6 @@ KarmaPhysicalBody.prototype.accelerateAndTurn = function(ac, a) {
   };
   this.moveTo(newpos);
 }
-
-
-
-KarmaPhysicalBody.prototype.step = function() {
-  this.collidesWith = null;
-};
 
 KarmaPhysicalBody.prototype.scheduleForDestroy = function() {
   this.engine.itemsToDestroy.push(this);
@@ -116,21 +115,21 @@ KarmaPhysicalBody.prototype.setPosition = function(data) {
 }
 
 // returns true if to position doesn't create any collision
-KarmaPhysicalBody.prototype.tryPosition = function(to) {
-  var old = {
-    x: this.x,
-    y: this.y,
-    r: this.r
-  };
-  this.setPosition(to);
-  this.updateCornerCache();
-  var res = !this.engine.recheckCollisions(this);
+// KarmaPhysicalBody.prototype.tryPosition = function(to) {
+//   var old = {
+//     x: this.x,
+//     y: this.y,
+//     r: this.r
+//   };
+//   this.setPosition(to);
+//   this.updateCornerCache();
+//   var res = !this.engine.checkCollisions(this);
 
-  this.setPosition(old);
-  this.updateCornerCache();
-  this.engine.recheckCollisions(this);
-  return res;
-}
+//   this.setPosition(old);
+//   this.updateCornerCache();
+//   this.engine.checkCollisions(this);
+//   return res;
+// }
 
 function getMiddle(from, to) {
   var res = {}
@@ -223,34 +222,32 @@ KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
 }
 
 
-KarmaPhysicalBody.prototype.collide = function(oldPosition) {
-  // console.log(this.name, 'collide');
+KarmaPhysicalBody.prototype.performCollideAction = function(oldPosition) {
+  // must be overriden in children classes
 };
 
-KarmaPhysicalBody.prototype.moveTo = function(pos) {
-  var old = {
+KarmaPhysicalBody.prototype.getPositionAndAngle = function(first_argument) {
+  var pos = {
     x: this.x,
     y: this.y,
     r: this.r
   };
-  if(KLib.isUndefined(pos.x)) {
-    pos.x = this.x;
-  }
-  if(KLib.isUndefined(pos.y)) {
-    pos.y = this.y;
-  }
-  if(KLib.isUndefined(pos.r)) {
-    pos.r = this.r;
-  }
+  return pos;
+};
+
+KarmaPhysicalBody.prototype.doMove = function() {
+  var old, pos;
+  old = this.getPositionAndAngle();
+
+  pos = this.moveToPosition;
   this.setPosition(pos);
   this.updateCornerCache();
 
-  var res = this.engine.recheckCollisions(this);
-  // var res = false;
+  var res = this.engine.checkCollisions(this);
   if(res) {
-
-    if(!this.collide(old)) {
-      if(this.collidesWith.isStatic === true) {
+    if(!this.performCollideAction(old)) {
+      if(this.collidesWith.isStatic === true 
+        || this.isBot) {
         this.x = old.x;
         this.y = old.y;
       } else {
@@ -258,10 +255,24 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
       }
       this.updateCornerCache();
     }
-
-
   }
   return;
+};
+
+KarmaPhysicalBody.prototype.moveTo = function(pos) {
+  
+  if(!KLib.isUndefined(pos.x)) {
+    // pos.x = this.x;
+    this.moveToPosition.x = pos.x;
+  }
+  if(!KLib.isUndefined(pos.y)) {
+    // pos.y = this.y;
+    this.moveToPosition.y = pos.y;
+  }
+  if(!KLib.isUndefined(pos.r)) {
+    // pos.r = this.r;
+    this.moveToPosition.r = pos.r;
+  }
 
 
   // if (this.getNumCollisions() == 0) {

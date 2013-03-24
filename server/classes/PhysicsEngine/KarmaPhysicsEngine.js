@@ -14,6 +14,7 @@ var KarmaPhysicsEngine = function(size, map) {
   }
 
 
+
 KarmaPhysicsEngine.prototype.destroyBodies = function() {
   for(var i in this.itemsToDestroy) {
     var item = this.itemsToDestroy[i];
@@ -243,7 +244,10 @@ KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
 }
 
 
-KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
+KarmaPhysicsEngine.prototype.checkCollisions = function(body) {
+  if (body.collidesWith !== null) {
+    return true;
+  }
   if(this.outOfWalls(body.addVectors(body, body.UL())) || this.outOfWalls(body.addVectors(body, body.UR())) || this.outOfWalls(body.addVectors(body, body.BL())) || this.outOfWalls(body.addVectors(body, body.BR()))) {
     body.collidesWith = {
       name: 'outsideWall',
@@ -252,7 +256,6 @@ KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
     return true;
   }
   var A = body;
-  A.collidesWith = null;
   for(var b2ID in this.bodies) {
     if(b2ID !== A.id) {
       var B = this.bodies[b2ID];
@@ -261,22 +264,38 @@ KarmaPhysicsEngine.prototype.recheckCollisions = function(body) {
       }
       if(this.collideTest(A, B)) {
         A.collidesWith = this.bodies[B.id];
+        B.collidesWith = A;
         return true;
-      } else {
-      }
+      } else {}
     }
   }
   return false;
 }
 
 KarmaPhysicsEngine.prototype.step = function() {
-  for(var b1ID in this.bodies) {
-    var b1 = this.bodies[b1ID];
-    b1.step();
+  var A, AID;
+  for(AID in this.bodies) {
+    A = this.bodies[AID];
+    if(A.isStatic === false) {
+      A.resetCollisions();
+    }
+  }
+  for(AID in this.bodies) {
+    A = this.bodies[AID];
+    if(A.isStatic === false) {
+      A.doMove();
+    }
   }
   this.destroyBodies();
 };
 
+
+// KarmaPhysicsEngine.prototype.step = function() {
+//   for(var b1ID in this.bodies) {
+//     var b1 = this.bodies[b1ID];
+//     b1.step();
+//   }
+// };
 KarmaPhysicsEngine.prototype.getShared = function() {
   var bodies = [];
   for(var bID in this.bodies) {

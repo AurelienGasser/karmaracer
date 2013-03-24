@@ -15,14 +15,16 @@ var Car = function(playerCar) {
     });
     this.name = 'car';
     this.goToFreeLandingPoint();
+    this.isBot = playerCar.isBot;
     return this;
   }
 
 Car.prototype.goToFreeLandingPoint = function() {
   if(this.engine !== null) {
-    var currentPosition = this.getPosition();
-    var res = this.engine.recheckCollisions(this);
+    var currentPosition = this.getPosition();    
+    var res = this.engine.checkCollisions(this);
     if(res) {
+      this.resetCollisions();
       var pos = {
         x: (Math.random() * 1e10) % this.engine.size.w,
         y: (Math.random() * 1e10) % this.engine.size.h,
