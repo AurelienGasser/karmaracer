@@ -183,6 +183,7 @@ GameServer.prototype.step = function() {
       that.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
       that.kengine.step();
+      start = registerDateDiff(timer, 'Physics', start);
     }
     if(this.tickCounter % 4 === 0) {
       // console.log('send');
@@ -200,7 +201,7 @@ GameServer.prototype.step = function() {
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
   registerDateDiff(timer, 'lastDiff', timer.begin);
-  // console.log(timer);
+  console.log(timer);
   this.timer = timer;
 }
 

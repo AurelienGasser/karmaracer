@@ -21,11 +21,12 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.wDiv2 = this.w / 2;
   this.hDiv2 = this.h / 2;
   this.color = '#FFF';
+  this.projections = [];
   this.resetCollisions();
   this.updateCornerCache();
   this.isStatic = false;
   this.isBullet = false;
-  this.shareCollisionInfo = false;
+  this.shareCollisionInfo = engine.shareCollisionInfo;
   this.moveToPosition = this.getPositionAndAngle();
 }
 
@@ -334,6 +335,10 @@ var compareX = function(c1, c2) {
 
 KarmaPhysicalBody.prototype.updateCornerCache = function() {
   this.corners = this.getCorners();
+  this.a1 = this.axis1();
+  this.a2 = this.axis2();
+  this.projections[1] = this.getAxisProjections(this.a1);
+  this.projections[2] = this.getAxisProjections(this.a2);
 };
 
 KarmaPhysicalBody.prototype.UR = function() {
@@ -391,6 +396,42 @@ KarmaPhysicalBody.prototype.axis2 = function() {
   }
   return a2;
 };
+
+KarmaPhysicalBody.prototype.getAxisProjections = function(axis) {
+  var aProjectionUL = this.engine.projection(this.UL(), axis, this.playerName + 'aUL');
+  var aProjectionUR = this.engine.projection(this.UR(), axis, this.playerName + 'aUR');
+  var aProjectionBL = this.engine.projection(this.BL(), axis, this.playerName + 'aBL');
+  var aProjectionBR = this.engine.projection(this.BR(), axis, this.playerName + 'aBR');
+  var aULValue = this.engine.scalarValue(aProjectionUL, axis);
+  var aURValue = this.engine.scalarValue(aProjectionUR, axis);
+  var aBLValue = this.engine.scalarValue(aProjectionBL, axis);
+  var aBRValue = this.engine.scalarValue(aProjectionBR, axis);
+  if (this.shareCollisionInfo) {
+    this.p1 = aProjectionUL;
+    this.p2 = aProjectionUR;
+    this.p3 = aProjectionBL;
+    this.p4 = aProjectionBR;
+  } 
+  var aProjections = [];
+  aProjections.push({
+    scalar: aULValue,
+    p: aProjectionUL
+  });
+  aProjections.push({
+    scalar: aURValue,
+    p: aProjectionUR
+  });
+  aProjections.push({
+    scalar: aBLValue,
+    p: aProjectionBL
+  });
+  aProjections.push({
+    scalar: aBRValue,
+    p: aProjectionBR
+  });
+  return aProjections;
+};
+
 
 KarmaPhysicalBody.prototype.scalePoint = function(p) {
   if(!p) {
@@ -458,8 +499,6 @@ KarmaPhysicalBody.prototype.getShared = function() {
       color: collides ? '#F00' : '#FFF',
       a1: this.a1,
       a2: this.a2,
-      a3: this.a3,
-      a4: this.a4,
       p1: this.scalePoint(this.p1),
       p2: this.scalePoint(this.p2),
       p3: this.scalePoint(this.p3),
@@ -471,6 +510,10 @@ KarmaPhysicalBody.prototype.getShared = function() {
       bBL: this.scalePoint(this.bBL),
       bBR: this.scalePoint(this.bBR),
       axesMinMax: this.scaleAxesMinMax(this.axesMinMax)
+    }
+    if (this.collidesWith !== null) {
+      collision.a3 = this.collidesWith.a1;
+      collision.a4 = this.collidesWith.a2;
     }
     options.collision = collision;
   }

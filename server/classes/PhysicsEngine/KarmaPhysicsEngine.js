@@ -4,6 +4,7 @@ var KLib = require('./../KLib');
 
 var G_bodyID = 0;
 var KarmaPhysicsEngine = function(size, map) {
+    this.shareCollisionInfo = false;
     this.itemsToDestroy = [];
     this.gScale = 32;
     this.bodies = {};
@@ -12,8 +13,6 @@ var KarmaPhysicsEngine = function(size, map) {
     this.setupWorld(size);
     this.loadStaticItems();
   }
-
-
 
 KarmaPhysicsEngine.prototype.destroyBodies = function() {
   for(var i in this.itemsToDestroy) {
@@ -86,52 +85,28 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
   A.bBR = translate(B.BR(), deltaBA);
   A.bBR.name = A.playerName + '.bBR';
 
-  var aProjectionUL = this.projection(A.UL(), axis, A.playerName + 'aUL');
-  var aProjectionUR = this.projection(A.UR(), axis, A.playerName + 'aUR');
-  var aProjectionBL = this.projection(A.BL(), axis, A.playerName + 'aBL');
-  var aProjectionBR = this.projection(A.BR(), axis, A.playerName + 'aBR');
   var bProjectionUL = this.projection(A.bUL, axis, A.playerName + 'bUL');
   var bProjectionUR = this.projection(A.bUR, axis, A.playerName + 'bUR');
   var bProjectionBL = this.projection(A.bBL, axis, A.playerName + 'bBL');
   var bProjectionBR = this.projection(A.bBR, axis, A.playerName + 'bBR');
-
-  var aULValue = this.scalarValue(aProjectionUL, axis);
-  var aURValue = this.scalarValue(aProjectionUR, axis);
-  var aBLValue = this.scalarValue(aProjectionBL, axis);
-  var aBRValue = this.scalarValue(aProjectionBR, axis);
 
   var bULValue = this.scalarValue(bProjectionUL, axis);
   var bURValue = this.scalarValue(bProjectionUR, axis);
   var bBLValue = this.scalarValue(bProjectionBL, axis);
   var bBRValue = this.scalarValue(bProjectionBR, axis);
 
-  A.p1 = aProjectionUL;
-  A.p2 = aProjectionUR;
-  A.p3 = aProjectionBL;
-  A.p4 = aProjectionBR;
+  var aProjections;
+  if (axisIndex == 1 || axisIndex == 2) {
+    // only use cache for axes 1 and 2
+    aProjections = A.projections[axisIndex];
+  } else {
+    aProjections = A.getAxisProjections(axis);
+  }
 
   A.p5 = bProjectionUL;
   A.p6 = bProjectionUR;
   A.p7 = bProjectionBL;
   A.p8 = bProjectionBR;
-
-  var aProjections = [];
-  aProjections.push({
-    scalar: aULValue,
-    p: aProjectionUL
-  });
-  aProjections.push({
-    scalar: aURValue,
-    p: aProjectionUR
-  });
-  aProjections.push({
-    scalar: aBLValue,
-    p: aProjectionBL
-  });
-  aProjections.push({
-    scalar: aBRValue,
-    p: aProjectionBR
-  });
 
   var bProjections = [];
   bProjections.push({
@@ -160,12 +135,14 @@ KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) 
   var minB = bSorted[0].scalar;
   var maxB = bSorted[3].scalar;
 
-  A.axesMinMax[axisIndex] = {
-    minA: aSorted[0],
-    maxA: aSorted[3],
-    minB: bSorted[0],
-    maxB: bSorted[3]
-  };
+  if (this.shareCollisionInfo) {
+    A.axesMinMax[axisIndex] = {
+      minA: aSorted[0],
+      maxA: aSorted[3],
+      minB: bSorted[0],
+      maxB: bSorted[3]
+    };
+  }
 
   if(minA < minB) {
     if(minB <= maxA) {
@@ -191,24 +168,14 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
   if(A.id === B.id) {
     return;
   }
-  var a1 = A.axis1();
-  var a2 = A.axis2();
-  var a3 = B.axis1();
-  var a4 = B.axis2();
-
-  A.a1 = a1;
-  A.a2 = a2;
-  A.a3 = a3;
-  A.a4 = a4;
-
-  var axes = [a1, a2, a3, a4];
-
+  var axes = [A.a1, A.a2, B.a1, B.a2];
   var collides = true;
   A.axesMinMax = {};
   for(var i = 0; i < axes.length; i++) {
     var axis = axes[i];
     if(!this.axisCollideCheck(axis, A, B, i + 1)) {
       collides = false;
+      break;
     }
   };
   return collides;
