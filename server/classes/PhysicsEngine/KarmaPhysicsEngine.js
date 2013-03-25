@@ -166,7 +166,12 @@ function myRotate(p, r) {
 
 KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
   if(A.id === B.id) {
-    return;
+    return false;
+  }
+  var radiusSum = A.radius + B.radius;
+  if (Math.abs(A.x - B.x) >= radiusSum
+      || Math.abs(A.y - B.y) >= radiusSum) {
+    return false;
   }
   var axes = [A.a1, A.a2, B.a1, B.a2];
   var collides = true;

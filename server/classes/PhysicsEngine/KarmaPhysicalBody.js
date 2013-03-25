@@ -14,6 +14,7 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.w = size.w;
   this.h = size.h;
   this.r = 0;
+  this.radius = size.radius || Math.sqrt(size.w * size.w + size.h * size.h);
   this.playerName = 'b' + this.id;
   this.name = 'body';
   this.s = 0;
@@ -211,18 +212,6 @@ KarmaPhysicalBody.prototype.getPositionsWithFriction = function(_old, _new) {
   return [, this.getPosFriction(_old, _new, 0.1, 0.25), this.getPosFriction(_old, _new, 0.05, 0.115), this.getPosFriction(_old, _new, 0.0001, 0), this.getPosFriction(_old, _new, -0.1, 0.25), this.getPosFriction(_old, _new, -0.05, 0.115), this.getPosFriction(_old, _new, -0.0001, 0)];
 }
 
-KarmaPhysicalBody.prototype.tryDriftAgainstWall = function(_old, _new) {
-  var positionsWithFriction = this.getPositionsWithFriction(_old, _new);
-  for(var i in positionsWithFriction) {
-    var pos = positionsWithFriction[i];
-    if(this.tryPosition(pos)) {
-      return pos;
-    }
-  }
-  return null;
-}
-
-
 KarmaPhysicalBody.prototype.performCollideAction = function(oldPosition) {
   // must be overriden in children classes
 };
@@ -258,7 +247,6 @@ KarmaPhysicalBody.prototype.doMove = function() {
 };
 
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
-
   if(!KLib.isUndefined(pos.x)) {
     // pos.x = this.x;
     this.moveToPosition.x = pos.x;
@@ -277,28 +265,6 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
   } else {
     delete this.moveToPosition.r;
   }
-
-
-  // if (this.getNumCollisions() == 0) {
-  //   var newPos = this.moveToDichotomie(old, pos);
-  //   this.setPosition(newPos) // finally set the position and update collision status / corners
-  //   var dist = getDistance(pos, newPos)
-  //   if (getDistance(old, newPos) > COLLISION_DISTANCE_TRESHOLD) {
-  //     return true;
-  //   } else if (typeof pos.r == 'undefined') {
-  //     // var driftPos = this.tryDriftAgainstWall(old, pos);
-  //     // if (driftPos) {
-  //     //   this.setPosition(driftPos);
-  //       return true;
-  //     // } else {
-  //     //   return false;
-  //     // }
-  //   } else {
-  //     return false;
-  //   }
-  // } else {
-  //   return false;
-  // }
 }
 
 KarmaPhysicalBody.prototype.cosWidthDiv2 = function() {
