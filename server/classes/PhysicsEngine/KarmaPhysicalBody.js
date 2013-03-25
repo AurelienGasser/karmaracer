@@ -239,15 +239,13 @@ KarmaPhysicalBody.prototype.getPositionAndAngle = function(first_argument) {
 KarmaPhysicalBody.prototype.doMove = function() {
   var old, pos;
   old = this.getPositionAndAngle();
-
   pos = this.moveToPosition;
   this.setPosition(pos);
   this.updateCornerCache();
-
   var res = this.engine.checkCollisions(this);
   if(res) {
     if(!this.performCollideAction(old)) {
-      if(this.collidesWith.isStatic === true 
+      if(this.collidesWith.isStatic === true
         || this.isBot) {
         this.x = old.x;
         this.y = old.y;
@@ -257,22 +255,27 @@ KarmaPhysicalBody.prototype.doMove = function() {
       this.updateCornerCache();
     }
   }
-  return;
 };
 
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
-  
+
   if(!KLib.isUndefined(pos.x)) {
     // pos.x = this.x;
     this.moveToPosition.x = pos.x;
+  } else {
+    delete this.moveToPosition.x;
   }
   if(!KLib.isUndefined(pos.y)) {
     // pos.y = this.y;
     this.moveToPosition.y = pos.y;
+  } else {
+    delete this.moveToPosition.y;
   }
   if(!KLib.isUndefined(pos.r)) {
     // pos.r = this.r;
     this.moveToPosition.r = pos.r;
+  } else {
+    delete this.moveToPosition.r;
   }
 
 
@@ -411,7 +414,7 @@ KarmaPhysicalBody.prototype.getAxisProjections = function(axis) {
     this.p2 = aProjectionUR;
     this.p3 = aProjectionBL;
     this.p4 = aProjectionBR;
-  } 
+  }
   var aProjections = [];
   aProjections.push({
     scalar: aULValue,
