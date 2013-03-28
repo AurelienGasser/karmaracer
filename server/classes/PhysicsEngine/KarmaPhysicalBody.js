@@ -33,6 +33,7 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
 
 KarmaPhysicalBody.prototype.resetCollisions = function(ac) {
   this.collidesWith = null;
+  // this.moveToPosition = this.getPositionAndAngle();
 }
 
 KarmaPhysicalBody.prototype.accelerate = function(ac) {
@@ -100,7 +101,7 @@ KarmaPhysicalBody.prototype.addAngle = function(a) {
 }
 
 KarmaPhysicalBody.prototype.turn = function(side) {
-  var angleToAdd = side * (Math.PI / 2);
+  var angleToAdd = side * (Math.PI * 1.5);
   this.addAngle(angleToAdd);
 }
 
@@ -126,7 +127,6 @@ KarmaPhysicalBody.prototype.setPosition = function(data) {
 //   this.setPosition(to);
 //   this.updateCornerCache();
 //   var res = !this.engine.checkCollisions(this);
-
 //   this.setPosition(old);
 //   this.updateCornerCache();
 //   this.engine.checkCollisions(this);
@@ -234,8 +234,7 @@ KarmaPhysicalBody.prototype.doMove = function() {
   var res = this.engine.checkCollisions(this);
   if(res) {
     if(!this.performCollideAction(old)) {
-      if(this.collidesWith.isStatic === true
-        || this.isBot) {
+      if(this.collidesWith.isStatic === true || this.isBot) {
         this.x = old.x;
         this.y = old.y;
       } else {
@@ -251,19 +250,19 @@ KarmaPhysicalBody.prototype.moveTo = function(pos) {
     // pos.x = this.x;
     this.moveToPosition.x = pos.x;
   } else {
-    delete this.moveToPosition.x;
+    // delete this.moveToPosition.x;
   }
   if(!KLib.isUndefined(pos.y)) {
     // pos.y = this.y;
     this.moveToPosition.y = pos.y;
   } else {
-    delete this.moveToPosition.y;
+    // delete this.moveToPosition.y;
   }
   if(!KLib.isUndefined(pos.r)) {
     // pos.r = this.r;
     this.moveToPosition.r = pos.r;
   } else {
-    delete this.moveToPosition.r;
+    // delete this.moveToPosition.r;
   }
 }
 
@@ -375,7 +374,7 @@ KarmaPhysicalBody.prototype.getAxisProjections = function(axis) {
   var aURValue = this.engine.scalarValue(aProjectionUR, axis);
   var aBLValue = this.engine.scalarValue(aProjectionBL, axis);
   var aBRValue = this.engine.scalarValue(aProjectionBR, axis);
-  if (this.shareCollisionInfo) {
+  if(this.shareCollisionInfo) {
     this.p1 = aProjectionUL;
     this.p2 = aProjectionUR;
     this.p3 = aProjectionBL;
@@ -454,6 +453,18 @@ KarmaPhysicalBody.prototype.getShared = function() {
     playerName: this.playerName
   };
 
+  if(!KLib.isUndefined(this.line)) {
+    options.p1 = this.p1;
+    options.p2 = this.p2;
+    options.p3 = this.p3;
+    options.p1.x *= this.gScale;
+    options.p1.y *= this.gScale;
+    options.p2.x *= this.gScale;
+    options.p2.y *= this.gScale;
+    options.p3.x *= this.gScale;
+    options.p3.y *= this.gScale;
+  }
+
   if(this.shareCollisionInfo) {
     var ul = this.UL();
     var ur = this.UR();
@@ -480,7 +491,7 @@ KarmaPhysicalBody.prototype.getShared = function() {
       bBR: this.scalePoint(this.bBR),
       axesMinMax: this.scaleAxesMinMax(this.axesMinMax)
     }
-    if (this.collidesWith !== null) {
+    if(this.collidesWith !== null) {
       collision.a3 = this.collidesWith.a1;
       collision.a4 = this.collidesWith.a2;
     }

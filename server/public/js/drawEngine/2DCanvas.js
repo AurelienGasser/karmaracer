@@ -222,7 +222,23 @@ Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
 Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
   ctx.fillStyle = '#0F0';
   var c = bullet;
-  ctx.fillRect(c.x, c.y, c.w, c.h);
+  // ctx.fillRect(c.x, c.y, c.w, c.h);
+  ctx.save();
+  ctx.beginPath();
+  var a = c;
+
+  console.log(a.line, a.x, a.y);
+
+  ctx.moveTo(a.p1.x, a.p1.y);
+  // var len = 500;
+  // ctx.lineTo(a.x + Math.cos(a.r) * len, a.y + Math.sin(a.r) * len);
+  ctx.lineTo(a.p3.x, a.p3.y);
+  // ctx.rotate(-a.r);
+  // ctx.lineTo(320, 320);
+  ctx.closePath();
+  ctx.stroke();
+
+  ctx.restore();
 }
 
 Engine2DCanvas.prototype.drawRocket = function(rocket, ctx) {

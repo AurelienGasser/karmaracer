@@ -3,6 +3,7 @@ var sys = require("sys");
 var KPhysicalBody = require('./KarmaPhysicalBody');
 
 var Bullet = function(playerCar, pos, angle) {
+    console.log(angle);
     KLib.extend(KPhysicalBody, this);
     this.playerCar = playerCar;
     var size = {
@@ -13,9 +14,26 @@ var Bullet = function(playerCar, pos, angle) {
     this.isBullet = true;
     this.name = 'bullet';
     this.r = angle;
-    this.life = 25;
+    this.life = 2;
     this.damage = 5;
+    this.p1 = {
+      x: this.x,
+      y: this.y
+    }
+    var len = 10;
+    var getOtherPoint = function(center, r, len) {
+        var p = {
+          x: center.x + Math.cos(r) * len,
+          y: center.y + Math.sin(r) * len
+        };
+        return p;
+      }
+    this.p2 = getOtherPoint(this.p1, -this.r, len);
+    this.p3 = getOtherPoint(this.p1, this.r, len);
+    this.line = this.engine.getLine(this.p1, this.p2);
   }
+
+
 
 Bullet.prototype.performCollideAction = function(oldPosition) {
   if(this.collidesWith.name === 'car' || this.collidesWith.name === 'bot') {
@@ -35,9 +53,10 @@ Bullet.prototype.die = function() {
   this.scheduleForDestroy();
 };
 
-Bullet.prototype.explode = function() {
-  this.die();
-  this.playerCar.gameServer.broadcastExplosion(this.getPosition());
+Bullet.prototype.explode = function(p) {
+  // this.die();
+  // var p = this.getPosition();
+  this.playerCar.gameServer.broadcastExplosion(p);
 };
 
 module.exports = Bullet;

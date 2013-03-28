@@ -52,7 +52,6 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   if(KLib.isUndefined(angle)) {
     angle = 0;
   }
-
   var pos = {
     x: playerCar.car.x,
     y: playerCar.car.y
@@ -69,7 +68,16 @@ Weapon.prototype.step = function() {
       if(projectile.body === null) {
         deads.push(id);
       } else {
-        projectile.accelerate(1);
+        // projectile.accelerate(1);
+        var b = projectile.engine.lineCollidesBody(projectile.line, projectile.playerCar.car);
+        if (b !== null){
+          // console.log('collide', b.body.name, b.point);
+          var p = {
+            x : b.point.x,
+            y : b.point.y
+          }
+          projectile.explode(p);
+        }
         projectile.life -= 1;
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();
