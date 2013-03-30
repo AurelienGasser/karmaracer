@@ -239,13 +239,38 @@ KarmaPhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
 
 KarmaPhysicsEngine.prototype.lineCollidesSegment = function(line, p1, p2, b) {
   var segment = this.getLine(p1, p2);
-  
+
   var intersect = this.lineIntersectLine(line, segment);
+
+
+
+  return this.pointIsInSegment(intersect, p1, p2);
   // console.log(b.playerName, b.name, intersect, p1, p2);
+  // if(intersect === null) {
+  //   return null;
+  // }
+  // intersect.y = -intersect.y;
+  // if(intersect.x < Math.min(p1.x, p2.x)) {
+  //   return null;
+  // }
+  // if(intersect.x > Math.max(p1.x, p2.x)) {
+  //   return null;
+  // }
+  // if(intersect.y < Math.min(p1.y, p2.y)) {
+  //   return null;
+  // }
+  // if(intersect.y > Math.max(p1.y, p2.y)) {
+  //   return null;
+  // }
+  // return intersect;
+};
+
+
+KarmaPhysicsEngine.prototype.pointIsInSegment = function(intersect, p1, p2) {
   if(intersect === null) {
     return null;
   }
-  intersect.y = - intersect.y;
+  intersect.y = -intersect.y;
   if(intersect.x < Math.min(p1.x, p2.x)) {
     return null;
   }
@@ -258,48 +283,45 @@ KarmaPhysicsEngine.prototype.lineCollidesSegment = function(line, p1, p2, b) {
   if(intersect.y > Math.max(p1.y, p2.y)) {
     return null;
   }
-  // intersect.y = - intersect.y;
-  console.log('collide', intersect.x);
   return intersect;
 };
 
 
+KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
-KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points){
-
-  function getScore(source, p){
+  function getScore(source, p) {
     return Math.abs(source.x - p.x) * Math.abs(source.y - p.y);
   }
 
   var twins = [];
-  for (var i = 0; i < points.length; i++) {
+  for(var i = 0; i < points.length; i++) {
     var point = points[i];
     twins.push({
-      score : getScore(source, point),
-      point : point
+      score: getScore(source, point),
+      point: point
     });
   };
 
-  var sorted = twins.sort(function(a, b){
+  var sorted = twins.sort(function(a, b) {
     return a.score - b.score;
   });
 
   return sorted[0];
 }
 
+
+KarmaPhysicsEngine.prototype.segmentCollidesBody = function(p1, p2) {
+
+};
+
 KarmaPhysicsEngine.prototype.lineCollidesBody = function(line, source) {
+  var points = [];
   for(var bID in this.bodies) {
     var B = this.bodies[bID];
-    // if (B.name !== 'wall'){
-    //   continue;
-    // }
     var s1 = this.lineCollidesSegment(line, translate(B.UL(), B), translate(B.UR(), B), B);
     var s2 = this.lineCollidesSegment(line, translate(B.UR(), B), translate(B.BR(), B), B);
     var s3 = this.lineCollidesSegment(line, translate(B.BR(), B), translate(B.BL(), B), B);
     var s4 = this.lineCollidesSegment(line, translate(B.BL(), B), translate(B.UL(), B), B);
-
-    // console.log(B.playerName, B.name, s1, s2, s3, s4);
-    var points = [];
     var res = {
       body: B
     };
@@ -315,9 +337,9 @@ KarmaPhysicsEngine.prototype.lineCollidesBody = function(line, source) {
     if(s4 != null) {
       points.push(s4);
     }
-    if(points.length > 0) {
-      return this.getClosestPoint(source, points);
-    }
+  }
+  if(points.length > 0) {
+    return this.getClosestPoint(source, points);
   }
   return null;
 };
