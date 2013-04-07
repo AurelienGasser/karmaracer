@@ -100,6 +100,7 @@ function SocketManager(gameInstance, onInitCallback) {
     // gameInstance.bullets = objects.projectiles.bullets;
     // gameInstance.rockets = objects.projectiles.rockets;
     gameInstance.projectiles = objects.projectiles;
+    gameInstance.collisionPoints = objects.collisionPoints;
     // gameInstance.bodies = objects.bodies;
     gameInstance.updateScoresHTML();
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {

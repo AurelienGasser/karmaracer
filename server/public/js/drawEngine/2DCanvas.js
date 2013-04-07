@@ -102,20 +102,9 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
         ctx.stroke();
       }
 
-      function drawPoint(p, color) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.fillStyle = color || '#FF0000';
-        ctx.arc(p.x, p.y, 2, 0, 2 * Math.PI, false);
-        ctx.fill();
-        ctx.closePath();
-        ctx.fillStyle = color || '#00FF00';
-        ctx.fillText(p.name, p.x, p.y);
-        ctx.restore();
-      }
 
       function drawLine(p1, p2) {
-        drawPoint(p2)
+        drawPoint(ctx, p2)
         ctx.save();
         ctx.strokeStyle = '#0000FF';
         ctx.fillStyle = '#0000FF';
@@ -132,10 +121,10 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
         ctx.stroke();
       }
 
-      // drawPoint(c.ur)
-      // drawPoint(c.ul)
-      // drawPoint(c.br)
-      // drawPoint(c.bl)
+      // drawPoint(ctx, c.ur)
+      // drawPoint(ctx, c.ul)
+      // drawPoint(ctx, c.br)
+      // drawPoint(ctx, c.bl)
       var debug_collisions = false;
       if(debug_collisions) {
         if(!_.isUndefined(c.collision)) {
@@ -144,10 +133,10 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
           drawAxis(c.collision.a3);
           drawAxis(c.collision.a4);
           for(var i = 1; i <= 4; ++i) {
-            drawPoint(c.collision.axesMinMax[i].minA, '#000');
-            drawPoint(c.collision.axesMinMax[i].maxA, '#F00');
-            drawPoint(c.collision.axesMinMax[i].minB, '#0F0');
-            drawPoint(c.collision.axesMinMax[i].maxB, '#00F');
+            drawPoint(ctx, c.collision.axesMinMax[i].minA, '#000');
+            drawPoint(ctx, c.collision.axesMinMax[i].maxA, '#F00');
+            drawPoint(ctx, c.collision.axesMinMax[i].minB, '#0F0');
+            drawPoint(ctx, c.collision.axesMinMax[i].maxB, '#00F');
           }
         }
       }
@@ -177,6 +166,8 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.translate(c.x, c.y);
       ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
       ctx.restore();
+
+      this.drawBullet(c, ctx);
     };
   }
 }
@@ -219,6 +210,18 @@ Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
   }
 }
 
+Engine2DCanvas.prototype.drawCollisionPoints = function() {
+  if (!this.gameInstance.collisionPoints) {
+    console.log('nopoints')
+    return;
+  }
+  var ctx = this.ctx;
+  for (var i in this.gameInstance.collisionPoints) {
+    var a = this.gameInstance.collisionPoints[i];
+    drawPoint(ctx, a, '#F00');
+  }
+}
+
 Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
   ctx.fillStyle = '#0F0';
   var c = bullet;
@@ -227,14 +230,19 @@ Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
   ctx.beginPath();
   var a = c;
 
-  console.log(a.line, a.x, a.y);
+  // console.log(a.line, a.x, a.y);
 
-  ctx.moveTo(a.p1.x, a.p1.y);
+  // ctx.moveTo(a.p1.x, a.p1.y);
+    ctx.translate(a.x, a.y);
+
   // var len = 500;
   // ctx.lineTo(a.x + Math.cos(a.r) * len, a.y + Math.sin(a.r) * len);
-  ctx.lineTo(a.p3.x, a.p3.y);
-  // ctx.rotate(-a.r);
-  // ctx.lineTo(320, 320);
+  // ctx.lineTo(a.p3.x, a.p3.y);
+  
+  ctx.moveTo(0, 0);
+  ctx.rotate(a.r);
+  ctx.moveTo(-500, 0);
+  ctx.lineTo(500, 0);
   ctx.closePath();
   ctx.stroke();
 
@@ -313,6 +321,7 @@ Engine2DCanvas.prototype.drawItems = function() {
   // this.drawBullets(this.ctx);
   // this.drawRockets(this.ctx);
   this.drawProjectiles(this.ctx);
+  this.drawCollisionPoints();
 };
 
 Engine2DCanvas.prototype.tick = function() {
@@ -327,4 +336,18 @@ Engine2DCanvas.prototype.tick = function() {
     this.frames = 0;
   }
 
+}
+
+function drawPoint(ctx, p, color) {
+  ctx.save();
+  ctx.beginPath();
+  ctx.fillStyle = color || '#FF0000';
+  ctx.arc(p.x, p.y, 10, 0, 2 * Math.PI, false);
+  ctx.fill();
+  ctx.closePath();
+  ctx.fillStyle = color || '#00FF00';
+  if (p.name) {
+    ctx.fillText(p.name, p.x, p.y);
+  }
+  ctx.restore();
 }

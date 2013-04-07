@@ -230,6 +230,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       myCar: myCar,
       cars: cars,
       projectiles: projectiles,
+      collisionPoints: p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null
       // bodies : bodies
     };
     p.client.emit('objects', share);
@@ -243,6 +244,7 @@ GameServer.prototype.broadcast = function(key, data) {
 }
 
 GameServer.prototype.broadcastExplosion = function(point) {
+  console.log(point);
   this.broadcast('explosion', {
     x: point.x * this.kengine.gScale,
     y: point.y * this.kengine.gScale

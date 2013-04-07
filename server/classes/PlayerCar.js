@@ -69,7 +69,7 @@ PlayerCar.prototype.getExperience = function(experience) {
 
 PlayerCar.prototype.updateWeapon = function() {
   var WeaponClass = WeaponsByClass[this.level];
-  this.weapon = new WeaponClass();
+  this.weapon = new WeaponClass(this.gameServer.kengine);
 }
 
 PlayerCar.prototype.levelUp = function() {

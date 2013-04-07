@@ -1,7 +1,8 @@
 var Bullet = require('../PhysicsEngine/Bullet');
 var KLib = require('./../KLib');
 
-var Weapon = function() {
+var Weapon = function(engine) {
+    this.engine = engine;
     this.name = 'anonymous';
     this.projectiles = {};
     this.accelerate = 500;
@@ -56,8 +57,26 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
     x: playerCar.car.x,
     y: playerCar.car.y
   }; //this.getProjectileVector(playerCar, angle);
-  var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle); 
-  this.projectiles[b.id] = b;
+  var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle);
+  // this.projectiles[b.id] = b;
+
+  var collisionPointsUnsorted = this.engine.bulletCollision(b);
+  this.collisionPoints = []
+  var gScale = this.engine.gScale;
+  for (var i in collisionPointsUnsorted) {
+    // var p = collisionPointsUnsorted[i].point;
+    var p = collisionPointsUnsorted[i];
+    this.collisionPoints.push({
+      x: p.x * gScale,
+      y: p.y * gScale
+    }); 
+  }
+    console.log(this.collisionPoints.length)  
+  // for (var i = 0; i < points.length; i++) {
+  //   var p = points[i];
+  //   b.explode(p.point);
+  // };
+  //  
 };
 
 Weapon.prototype.step = function() {
@@ -69,15 +88,17 @@ Weapon.prototype.step = function() {
         deads.push(id);
       } else {
         // projectile.accelerate(1);
-        var b = projectile.engine.lineCollidesBody(projectile.line, projectile.playerCar.car);
-        if (b !== null){
-          // console.log('collide', b.body.name, b.point);
-          var p = {
-            x : b.point.x,
-            y : b.point.y
-          }
-          projectile.explode(p);
-        }
+        // var b = projectile.engine.segmentCollidesFirstBody(projectile.line, projectile.p1, projectile.p2);
+        // var points = projectile.engine.lineCollidesBodies(projectile.line, projectile.playerCar.car);
+        // var 
+        // if(b !== null) {
+        //   // console.log('collide', b.body.name, b.point);
+        //   var p = {
+        //     x: b.point.x,
+        //     y: b.point.y
+        //   }
+        //   projectile.explode(p);
+        // }
         projectile.life -= 1;
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();

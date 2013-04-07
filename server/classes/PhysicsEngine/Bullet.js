@@ -3,34 +3,37 @@ var sys = require("sys");
 var KPhysicalBody = require('./KarmaPhysicalBody');
 
 var Bullet = function(playerCar, pos, angle) {
-    console.log(angle);
-    KLib.extend(KPhysicalBody, this);
+    // angle = -0.9252754126021274;
+    // KLib.extend(KPhysicalBody, this);
     this.playerCar = playerCar;
-    var size = {
-      w: 0.1,
-      h: 0.1
-    };
-    this.initialize(this.playerCar.gameServer.kengine, pos, size);
+    // var size = {
+    //   w: 0.1,
+    //   h: 0.1
+    // };
+    this.x = pos.x;
+    this.y = pos.y;
+    // this.initialize(this.playerCar.gameServer.kengine, pos, size);
     this.isBullet = true;
     this.name = 'bullet';
     this.r = angle;
     this.life = 2;
     this.damage = 5;
-    this.p1 = {
-      x: this.x,
-      y: this.y
-    }
-    var len = 10;
-    var getOtherPoint = function(center, r, len) {
-        var p = {
-          x: center.x + Math.cos(r) * len,
-          y: center.y + Math.sin(r) * len
-        };
-        return p;
-      }
-    this.p2 = getOtherPoint(this.p1, -this.r, len);
-    this.p3 = getOtherPoint(this.p1, this.r, len);
-    this.line = this.engine.getLine(this.p1, this.p2);
+    this.len = 10;
+    // this.p1 = {
+    //   x: this.x,
+    //   y: this.y
+    // }
+    // var len = 5;
+    // var getOtherPoint = function(center, r, len) {
+    //     var p = {
+    //       x: center.x + Math.cos(r) * len,
+    //       y: center.y + Math.sin(r) * len
+    //     };
+    //     return p;
+    //   }
+    // this.p2 = getOtherPoint(this.p1, this.r, this.len);
+    // // this.p3 = getOtherPoint(this.p1, this.r, len);
+    // this.line = this.engine.getLine(this.p1, this.p2);
   }
 
 

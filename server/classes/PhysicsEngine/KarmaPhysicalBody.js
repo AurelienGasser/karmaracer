@@ -453,16 +453,17 @@ KarmaPhysicalBody.prototype.getShared = function() {
     playerName: this.playerName
   };
 
-  if(!KLib.isUndefined(this.line)) {
-    options.p1 = this.p1;
-    options.p2 = this.p2;
-    options.p3 = this.p3;
-    options.p1.x *= this.gScale;
-    options.p1.y *= this.gScale;
-    options.p2.x *= this.gScale;
-    options.p2.y *= this.gScale;
-    options.p3.x *= this.gScale;
-    options.p3.y *= this.gScale;
+  if(!KLib.isUndefined(this.len)) {
+    // options.p1 = this.p1;
+    // options.p2 = this.p2;
+    // // options.p3 = this.p3;
+    // options.p1.x *= this.gScale;
+    // options.p1.y *= this.gScale;
+    // options.p2.x *= this.gScale;
+    // options.p2.y *= this.gScale;
+    // options.p3.x *= this.gScale;
+    // options.p3.y *= this.gScale;
+    options.len = this.len * this.gScale;
   }
 
   if(this.shareCollisionInfo) {
