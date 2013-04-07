@@ -241,8 +241,8 @@ Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
   
   ctx.moveTo(0, 0);
   ctx.rotate(a.r);
-  ctx.moveTo(-500, 0);
-  ctx.lineTo(500, 0);
+  // ctx.moveTo(-320, 0);
+  ctx.lineTo(320, 0);
   ctx.closePath();
   ctx.stroke();
 

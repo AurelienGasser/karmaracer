@@ -242,7 +242,7 @@ KarmaPhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
 KarmaPhysicsEngine.prototype.getVector = function(p1, p2) {
   return {
     x: p2.x - p1.x,
-    y: p2.y - p2.y
+    y: p2.y - p1.y
   };
 }
 
@@ -263,21 +263,21 @@ KarmaPhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
     return null;
   }
 
-  var q_minus_p = { 
-    x: q.x - p.x, 
-    y: q.y - q.x 
+  var q_minus_p = {
+    x: q.x - p.x,
+    y: q.y - p.y
   };
   var t = this.vectorCrossProduct(q_minus_p, s) / r_times_s;
-  console.log('t', t);
-  // if(t < 0 || t > 1) {
-  //   // on the line but out of segment
-  //   return null;
-  // }
+
+  if(t < 0 || t > 1) {
+    // on the line but out of segment
+    return null;
+  }
   var u = this.vectorCrossProduct(q_minus_p, r) / r_times_s;
-    // if(u < 0 || u > 1) {
-  //   // on the line but ouf of segment
-  //   return null;
-  // }
+  if(u < 0 || u > 1) {
+    // on the line but ouf of segment
+    return null;
+  }
   return {
     x: p.x + t * r.x,
     y: p.y + t * r.y
@@ -294,8 +294,8 @@ KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
     y: projectile.y
   }
   var vBullet = {
-    x: Math.cos(projectile.r) * 1,
-    y: Math.sin(projectile.r) * 1
+    x: Math.cos(projectile.r) * projectile.len,
+    y: Math.sin(projectile.r) * projectile.len
   }
 
   var UL = B.UL();
@@ -312,25 +312,24 @@ KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   var v2 = this.getVector(UR, BR);
   var v3 = this.getVector(BR, BL);
   var v4 = this.getVector(BL, UL);
-  console.log('pBullet', pBullet);
-  console.log('vBullet', vBullet);
-  console.log('p1', p1);
-  console.log('v1', v1);
+  // console.log('pBullet', pBullet);
+  // console.log('vBullet', vBullet);
+  // console.log('p1', p1);
+  // console.log('v1', v1);
   var i1 = this.segmentCollideSegment(pBullet, vBullet, p1, v1);
-  console.log('i1', i1);
-  // var i2 = this.segmentCollideSegment(pBullet, vBullet, p2, v2);
-  // var i3 = this.segmentCollideSegment(pBullet, vBullet, p3, v3);
-  // var i4 = this.segmentCollideSegment(pBullet, vBullet, p4, v4);
+  // console.log('i2', pBullet, vBullet, p2, v2, UR, BR);
+  var i2 = this.segmentCollideSegment(pBullet, vBullet, p2, v2);
+  var i3 = this.segmentCollideSegment(pBullet, vBullet, p3, v3);
+  var i4 = this.segmentCollideSegment(pBullet, vBullet, p4, v4);
 
-  // var points = [i1, i2, i3, i4];
-  var points = [i1];
-
+  var points = [i1, i2, i3, i4];
+  // var points = [i4];
 
 
   // return closestPoint;
   var res = [];
-  for (var i in points) {
-    if (points[i]) {
+  for(var i in points) {
+    if(points[i]) {
       res.push(points[i])
     }
   }
@@ -377,7 +376,6 @@ KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
 //   // // intersect.y = - intersect.y;
 //   // return intersect;
 // };
-
 // KarmaPhysicsEngine.prototype.pointIsInSegment = function(intersect, p1, p2) {
 //   if(intersect === null) {
 //     return null;
@@ -398,7 +396,6 @@ KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
 //   }
 //   return intersect;
 // };
-
 KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
   function getScore(source, p) {
@@ -415,7 +412,7 @@ KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
       });
     }
   };
-  if (twins.length == 0) {
+  if(twins.length == 0) {
     return null;
   }
   var sorted = twins.sort(function(a, b) {
@@ -521,7 +518,6 @@ KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 //   // }
 //   // return null;
 // };
-
 KarmaPhysicsEngine.prototype.checkCollisions = function(body) {
   if(body.collidesWith !== null) {
     return true;

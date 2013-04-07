@@ -1,1 +1,1 @@
-{"name":"aurelien","size":{"w":32,"h":32},"background":{"path":"/sprites/bg_stone1.png","name":"stone"},"staticItems":[{"name":"wall","position":{"x":20,"y":9},"size":{"w":12,"h":11}}]}
+{"name":"aurelien","size":{"w":32,"h":32},"background":{"path":"/sprites/bg_stone1.png","name":"stone"},"staticItems":[{"name":"wall","position":{"x":20,"y":9},"size":{"w":12,"h":11}},{"name":"wall","position":{"x":8,"y":18},"size":{"w":4,"h":4}}]}
