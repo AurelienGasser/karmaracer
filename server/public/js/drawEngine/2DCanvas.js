@@ -212,7 +212,6 @@ Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
 
 Engine2DCanvas.prototype.drawCollisionPoints = function() {
   if (!this.gameInstance.collisionPoints) {
-    console.log('nopoints')
     return;
   }
   var ctx = this.ctx;

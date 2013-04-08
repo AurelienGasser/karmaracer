@@ -252,14 +252,9 @@ KarmaPhysicsEngine.prototype.vectorCrossProduct = function(v, w) {
 
 // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 KarmaPhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
-  console.log('p', p);
-  console.log('r', r);
-  console.log('q', q);
-  console.log('s', s);
   var r_times_s = this.vectorCrossProduct(r, s);
   if(r_times_s === 0) {
     // segments are parallel
-    console.log('parallel')
     return null;
   }
 
@@ -312,27 +307,19 @@ KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   var v2 = this.getVector(UR, BR);
   var v3 = this.getVector(BR, BL);
   var v4 = this.getVector(BL, UL);
-  // console.log('pBullet', pBullet);
-  // console.log('vBullet', vBullet);
-  // console.log('p1', p1);
-  // console.log('v1', v1);
   var i1 = this.segmentCollideSegment(pBullet, vBullet, p1, v1);
-  // console.log('i2', pBullet, vBullet, p2, v2, UR, BR);
   var i2 = this.segmentCollideSegment(pBullet, vBullet, p2, v2);
   var i3 = this.segmentCollideSegment(pBullet, vBullet, p3, v3);
   var i4 = this.segmentCollideSegment(pBullet, vBullet, p4, v4);
 
   var points = [i1, i2, i3, i4];
-  // var points = [i4];
-
-
-  // return closestPoint;
   var res = [];
   for(var i in points) {
-    if(points[i]) {
+    if(points[i] !== null) {
       res.push(points[i])
     }
   }
+    // return closestPoint;
   return res;
 };
 
@@ -343,59 +330,13 @@ KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
     if(projectile.playerCar.car.id === B.id) {
       continue;
     }
-    // var collidePoint = this.bulletCollideBody(projectile, B);
     var _points = this.bulletCollideBody(projectile, B);
-    // if(collidePoint !== null) {
-    //   points.push(collidePoint);
-    // }
     points = points.concat(_points);
   }
   return points;
 };
 
-// KarmaPhysicsEngine.prototype.lineCollidesSegment = function(line, p1, p2, b) {
-//   var segmentLine = this.getLine(p1, p2);
-//   var intersectPoint = this.lineIntersectLine(line, segmentLine);
-//   return this.pointIsInSegment(intersectPoint, p1, p2);
-//   // if(intersect === null) {
-//   //   return null;
-//   // }
-//   // intersect.y = -intersect.y;
-//   // if(intersect.x < Math.min(p1.x, p2.x)) {
-//   //   return null;
-//   // }
-//   // if(intersect.x > Math.max(p1.x, p2.x)) {
-//   //   return null;
-//   // }
-//   // if(intersect.y < Math.min(p1.y, p2.y)) {
-//   //   return null;
-//   // }
-//   // if(intersect.y > Math.max(p1.y, p2.y)) {
-//   //   return null;
-//   // }
-//   // // intersect.y = - intersect.y;
-//   // return intersect;
-// };
-// KarmaPhysicsEngine.prototype.pointIsInSegment = function(intersect, p1, p2) {
-//   if(intersect === null) {
-//     return null;
-//   }
-//   // intersect.y = -intersect.y;
-//   console.log(intersect, p1, p2);
-//   if(intersect.x < Math.min(p1.x, p2.x)) {
-//     return null;
-//   }
-//   if(intersect.x > Math.max(p1.x, p2.x)) {
-//     return null;
-//   }
-//   if(intersect.y < Math.min(p1.y, p2.y)) {
-//     return null;
-//   }
-//   if(intersect.y > Math.max(p1.y, p2.y)) {
-//     return null;
-//   }
-//   return intersect;
-// };
+
 KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
   function getScore(source, p) {
@@ -423,101 +364,6 @@ KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 }
 
 
-// KarmaPhysicsEngine.prototype.segmentCollidesFirstBody = function(line, p1, p2) {
-//   var bodies = [];
-//   for(var bID in this.bodies) {
-//     var B = this.bodies[bID];
-//     var collidePoint = this.segmentCollidesBody(line, p1, p2, B);
-//     if(collidePoint !== null) {
-//       return collidePoint;
-//     }
-//   }
-//   return null;
-// };
-// KarmaPhysicsEngine.prototype.lineCollidesClosestBody = function(first_argument) {
-//   // body...
-// };
-// KarmaPhysicsEngine.prototype.lineCollidesBodies = function(line, sourceBody) {
-//   var points = [];
-//   for(var bID in this.bodies) {
-//     var B = this.bodies[bID];
-//     if(sourceBody.id === B.id) {
-//       continue;
-//     }
-//     var collidePoints = this.lineCollidesBody(line, sourceBody, B);
-//     return collidePoints;
-//     points = points.concat(collidePoints);
-//     // if(collidePoint !== null) {
-//     //   points.push(collidePoint);
-//     //   return collidePoint;
-//     // }
-//   }
-//   return points;
-//   // if(points.length === 0) {
-//   //   return null;
-//   // }
-//   // return this.getClosestPoint(source, points);
-//   // return null;
-// }
-// KarmaPhysicsEngine.prototype.segmentCollidesBody = function(line, p1, p2, B) {
-//   var points = [];
-//   //side intersection
-//   var s1 = this.lineCollidesSegment(line, translate(B.UL(), B), translate(B.UR(), B), B);
-//   var s2 = this.lineCollidesSegment(line, translate(B.UR(), B), translate(B.BR(), B), B);
-//   var s3 = this.lineCollidesSegment(line, translate(B.BR(), B), translate(B.BL(), B), B);
-//   var s4 = this.lineCollidesSegment(line, translate(B.BL(), B), translate(B.UL(), B), B);
-//   // var res = {
-//   //   body: B
-//   // };
-//   if(s1 !== null && this.pointIsInSegment(s1, p1, p2)) {
-//     points.push(s1);
-//   }
-//   if(s2 !== null && this.pointIsInSegment(s2, p1, p2)) {
-//     points.push(s2);
-//   }
-//   if(s3 !== null && this.pointIsInSegment(s3, p1, p2)) {
-//     points.push(s3);
-//   }
-//   if(s4 !== null) {
-//     console.log(s4, p1, p2);
-//   }
-//   if(s4 !== null && this.pointIsInSegment(s4, p1, p2)) {
-//     points.push(s4);
-//   }
-//   if(points.length > 0) {
-//     return this.getClosestPoint(p1, points);
-//   }
-//   return null;
-// };
-// KarmaPhysicsEngine.prototype.lineCollidesBody = function(line, source, B) {
-//   var points = [];
-//   //side intersection
-//   // var s1 = this.lineCollidesSegment(line, translate(B.UL(), B), translate(B.UR(), B), B);
-//   // var s2 = this.lineCollidesSegment(line, translate(B.UR(), B), translate(B.BR(), B), B);
-//   // var s3 = this.lineCollidesSegment(line, translate(B.BR(), B), translate(B.BL(), B), B);
-//   var s4 = this.lineCollidesSegment(line, translate(B.BL(), B), translate(B.UL(), B), B);
-//   // var res = {
-//   //   body: B
-//   // };
-//   // if(s1 !== null) {
-//   //   // points.push(s1);
-//   // }
-//   // if(s2 != null) {
-//   //   // points.push(s2);
-//   // }
-//   // if(s3 != null) {
-//   //   // points.push(s3);
-//   // }
-//   // console.log(s4);
-//   if(s4 != null) {
-//     points.push(s4);
-//   }
-//   return points;
-//   // if(points.length > 0) {
-//   //   return this.getClosestPoint(source, points);
-//   // }
-//   // return null;
-// };
 KarmaPhysicsEngine.prototype.checkCollisions = function(body) {
   if(body.collidesWith !== null) {
     return true;
@@ -566,12 +412,6 @@ KarmaPhysicsEngine.prototype.step = function() {
 };
 
 
-// KarmaPhysicsEngine.prototype.step = function() {
-//   for(var b1ID in this.bodies) {
-//     var b1 = this.bodies[b1ID];
-//     b1.step();
-//   }
-// };
 KarmaPhysicsEngine.prototype.getShared = function() {
   var bodies = [];
   for(var bID in this.bodies) {
