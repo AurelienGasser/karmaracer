@@ -59,19 +59,32 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   }; //this.getProjectileVector(playerCar, angle);
   var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle);
   // this.projectiles[b.id] = b;
+  var collision = this.engine.bulletCollision(b);
 
-  var collisionPointsUnsorted = this.engine.bulletCollision(b);
-  this.collisionPoints = []
+  // this.collisionPoints = []
   var gScale = this.engine.gScale;
-  for (var i in collisionPointsUnsorted) {
-    // var p = collisionPointsUnsorted[i].point;
-    var p = collisionPointsUnsorted[i];
-    this.collisionPoints.push({
-      x: p.x * gScale,
-      y: p.y * gScale
-    }); 
+  if(collision !== null) {
+    b.explode(collision.point);
+    // this.collisionPoints.push({
+    //   x: collision.point.x * gScale,
+    //   y: collision.point.y * gScale
+    // });
+
   }
-    console.log(this.collisionPoints.length)  
+
+
+
+  
+  // for(var i in collisionPointsUnsorted) {
+  //   // var p = collisionPointsUnsorted[i].point;
+  //   var p = collisionPointsUnsorted[i];
+  //   console.log('collide', p, i);
+  //   this.collisionPoints.push({
+  //     x: p.point.x * gScale,
+  //     y: p.point.y * gScale
+  //   });
+  // }
+  // console.log(this.collisionPoints.length)  
   // for (var i = 0; i < points.length; i++) {
   //   var p = points[i];
   //   b.explode(p.point);

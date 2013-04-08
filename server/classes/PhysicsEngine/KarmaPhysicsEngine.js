@@ -319,21 +319,32 @@ KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
       res.push(points[i])
     }
   }
+
+
     // return closestPoint;
-  return res;
+  return res
 };
 
 KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
-  var points = [];
+  var pointsAndBullets = [];
   for(var bID in this.bodies) {
     var B = this.bodies[bID];
     if(projectile.playerCar.car.id === B.id) {
       continue;
     }
     var _points = this.bulletCollideBody(projectile, B);
-    points = points.concat(_points);
+    for (var i = 0; i < _points.length; i++) {
+      var p = _points[i];
+      pointsAndBullets.push({
+        body:B,
+        point:p
+      });
+    };
+    // points = points.concat(_points);
   }
-  return points;
+
+  return this.getClosestPoint(projectile, pointsAndBullets);
+  // return pointsAndBullets;
 };
 
 
@@ -345,11 +356,13 @@ KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
   var twins = [];
   for(var i = 0; i < points.length; i++) {
-    var point = points[i];
+    var pointAndBody = points[i];
+    var point = pointAndBody.point;
     if(point !== null) {
       twins.push({
         score: getScore(source, point),
-        point: point
+        point: point,
+        body : pointAndBody.body
       });
     }
   };
