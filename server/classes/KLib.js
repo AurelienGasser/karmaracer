@@ -9,17 +9,24 @@ KLib.isUndefined = function(obj) {
   return obj === void 0;
 };
 
-KLib.extend = function(Parent, child) {
-  var p = new Parent();
-  child.base = {};
-  for(var prop in p) {
-    if(KLib.isUndefined(child[prop])) {
-      var value = p[prop];
-      child[prop] = value;
-    } else {
-      child.base[prop] = Parent.prototype[prop];
+KLib.extend = function (Parent, child) {
+    function construct(constructor, args) {
+      function F() {
+        return constructor.apply(this, args);
+      }
+      F.prototype = constructor.prototype;
+      return new F();
     }
+    var p = construct(Parent, Array.prototype.slice.call(arguments, 2));
+    child.base = {};
+    for (var prop in p) {
+      if (KLib.isUndefined(child[prop])) {
+        var value = p[prop];
+        child[prop] = value;
+      } else {
+        child.base[prop] = Parent.prototype[prop];
+      }
+    };
   };
-}
 
 module.exports = KLib;

@@ -26,7 +26,7 @@ GameServer.prototype.initGameServer = function(map) {
   this.map = map;
 
   var KarmaEngine = require('./classes/PhysicsEngine/KarmaPhysicsEngine');
-  this.kengine = new KarmaEngine({
+  this.engine = new KarmaEngine({
     'w': map.size.w,
     'h': map.size.h
   }, map);
@@ -182,7 +182,7 @@ GameServer.prototype.step = function() {
       start = new Date();
       that.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
-      that.kengine.step();
+      that.engine.step();
       start = registerDateDiff(timer, 'Physics', start);
     }
     if(this.tickCounter % 4 === 0) {
@@ -221,7 +221,7 @@ GameServer.prototype.getPlayersForShare = function() {
 
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();
-  // var bodies = this.kengine.getShared();
+  // var bodies = this.engine.getShared();
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for(var i in this.players) {
     var p = this.players[i];
@@ -246,8 +246,8 @@ GameServer.prototype.broadcast = function(key, data) {
 GameServer.prototype.broadcastExplosion = function(point) {
   console.log(point);
   this.broadcast('explosion', {
-    x: point.x * this.kengine.gScale,
-    y: point.y * this.kengine.gScale
+    x: point.x * this.engine.gScale,
+    y: point.y * this.engine.gScale
   });
 };
 

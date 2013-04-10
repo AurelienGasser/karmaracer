@@ -12,7 +12,7 @@ var Bullet = function(playerCar, pos, angle) {
     // };
     this.x = pos.x;
     this.y = pos.y;
-    // this.initialize(this.playerCar.gameServer.kengine, pos, size);
+    // this.initialize(this.playerCar.gameServer.engine, pos, size);
     this.isBullet = true;
     this.name = 'bullet';
     this.r = angle;

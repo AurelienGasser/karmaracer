@@ -1,8 +1,9 @@
 var Bullet = require('../PhysicsEngine/Bullet');
 var KLib = require('./../KLib');
 
-var Weapon = function(engine) {
-    this.engine = engine;
+var Weapon = function(gameServer) {
+    this.gameServer = gameServer;
+    this.engine = this.gameServer.engine;
     this.name = 'anonymous';
     this.projectiles = {};
     this.accelerate = 500;
@@ -65,16 +66,14 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   var gScale = this.engine.gScale;
   if(collision !== null) {
     b.explode(collision.point);
+    if(collision.body.name === 'car') {
+      that.gameServer.carManager.projectileHitCar(b.playerCar, collision.body.playerCar, b)
+    }
     // this.collisionPoints.push({
     //   x: collision.point.x * gScale,
     //   y: collision.point.y * gScale
     // });
-
   }
-
-
-
-  
   // for(var i in collisionPointsUnsorted) {
   //   // var p = collisionPointsUnsorted[i].point;
   //   var p = collisionPointsUnsorted[i];

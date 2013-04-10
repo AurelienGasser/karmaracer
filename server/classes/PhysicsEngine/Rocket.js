@@ -32,7 +32,7 @@ Rocket.prototype.initialize = function(playerCar, pos, angle) {
   this.playerCar = playerCar;
   this.name = 'rocket';
   // this.constructor.__super__.initialize.apply(this, [a]);
-  this.initialize(playerCar.gameServer.kengine, a.position, a.size);
+  this.initialize(playerCar.gameServer.engine, a.position, a.size);
   this.angle = angle;
   this.life = 25;
   this.damage = 100;

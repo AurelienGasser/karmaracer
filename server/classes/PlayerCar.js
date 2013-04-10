@@ -24,7 +24,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
     this.isBot = !this.client;
     this.gameServer = gameServer;
     this.car = new Car(this);
-    gameServer.kengine.addBody(this.car);
+    gameServer.engine.addBody(this.car);
     this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
     this.id = playerCarID++; // Math.floor(Math.random() * 1e32);
     this.resetPlayer();
@@ -69,7 +69,7 @@ PlayerCar.prototype.getExperience = function(experience) {
 
 PlayerCar.prototype.updateWeapon = function() {
   var WeaponClass = WeaponsByClass[this.level];
-  this.weapon = new WeaponClass(this.gameServer.kengine);
+  this.weapon = new WeaponClass(this.gameServer);
 }
 
 PlayerCar.prototype.levelUp = function() {

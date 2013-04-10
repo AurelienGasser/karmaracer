@@ -19,7 +19,7 @@ PhysicsItem.prototype.initialize = function(_arguments) {
   }
   this.body = _arguments['physicsEngine'].createSquareBody(this, _arguments);
   this.engine = _arguments['physicsEngine'];
-  // this.engine.gameServer.kengine.createBody(_arguments['position'], this.size);
+  // this.engine.gameServer.engine.createBody(_arguments['position'], this.size);
 }
 PhysicsItem.prototype.destroy = function() {
   if(this.body) {

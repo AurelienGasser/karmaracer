@@ -9,7 +9,7 @@ var Car = function(playerCar) {
       y: 11.5,
     };
     this.playerCar = playerCar;
-    this.initialize(this.playerCar.gameServer.kengine, this.startPosition, {
+    this.initialize(this.playerCar.gameServer.engine, this.startPosition, {
       w: 1,
       h: 0.5
     });
