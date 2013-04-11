@@ -161,23 +161,44 @@ Engine2DCanvas.prototype.drawLifeBar = function(ctx, c) {
       ctx.restore();
 };
 
-Engine2DCanvas.prototype.drawGunFlame = function(ctx, car) {
-  var maxFlame = 12,
-      ratio = 1.5;
+var maxFlameTick = 12;
+
+Engine2DCanvas.prototype.drawSingleGunFlame = function(ctx, car, angle, distance) {
+  var ratio = 1.5;
+  ctx.rotate(angle);
   var w = car.w/2;
   var h = car.h/2;
+  if (car.flame > maxFlameTick / 2) {
+    ctx.drawImage(this.gunFlameImage, 0, 0,  135, 125, distance, -h/2, w, h);
+  } else {
+    ctx.drawImage(this.gunFlameImage, 0, 0,  135, 125, distance, -h/2/ratio, w/ratio, h/ratio);
+  }
+  ctx.rotate(-angle);
+}
+
+Engine2DCanvas.prototype.drawGunFlame = function(ctx, car) {
   if (KLib.isUndefined(this.carFlameTicks[car.id])) {
     this.carFlameTicks[car.id] = 0;
   }
   car.flame = this.carFlameTicks[car.id];
-  if (car.flame > maxFlame / 2) {
-    ctx.drawImage(this.gunFlameImage, 0, 0,  135, 125, car.w / 2, -h/2, w, h);
-  } else {
-    ctx.drawImage(this.gunFlameImage, 0, 0,  135, 125, car.w / 2, -h/2/ratio, w/ratio, h/ratio);
+  switch (car.shootingWithWeapon) {
+    case '90 angle machine gun':
+      this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
+      this.drawSingleGunFlame(ctx, car,  Math.PI / 2, car.w / 4);
+      this.drawSingleGunFlame(ctx, car, -Math.PI / 2, car.w / 4);
+      break;
+    case 'super machine gun':
+      this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
+      this.drawSingleGunFlame(ctx, car,  Math.PI / 4, car.w / 4);
+      this.drawSingleGunFlame(ctx, car, -Math.PI / 4, car.w / 4);
+      break;
+    case 'machine gun':
+    default:
+      this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
+      break;
   }
-  this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlame;
+  this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
 };
-
 
 Engine2DCanvas.prototype.drawCars = function(ctx) {
   if(this.gameInstance.cars !== null) {
@@ -188,7 +209,7 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.rotate(c.r);
         ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
 
-      if (c.isShooting) {
+      if (c.shootingWithWeapon) {
         this.drawGunFlame(ctx, c);
       }
 

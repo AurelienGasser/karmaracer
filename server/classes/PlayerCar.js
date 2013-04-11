@@ -36,14 +36,14 @@ PlayerCar.prototype.resetPlayer = function() {
   this.dead = false;
   this.life = 100;
   this.maxLife = 100;
-  this.isShooting = false;
+  this.shootingWithWeapon = null;
 };
 
 PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
   share.life = this.life;
   share.maxLife = this.maxLife;
-  share.isShooting = this.isShooting;
+  share.shootingWithWeapon = this.shootingWithWeapon;
   return share;
 }
 
@@ -74,6 +74,10 @@ PlayerCar.prototype.getExperience = function(experience) {
 PlayerCar.prototype.updateWeapon = function() {
   var WeaponClass = WeaponsByClass[this.level];
   this.weapon = new WeaponClass(this.gameServer);
+  if (this.shootingWithWeapon) {
+    // when level up while shooting, directly update the current shooting weapon
+    this.shootingWithWeapon = this.weapon.name;
+  }
 }
 
 PlayerCar.prototype.levelUp = function() {

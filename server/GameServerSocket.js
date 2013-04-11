@@ -115,14 +115,14 @@ var GameServerSocket = function(mapManager) {
             client.keyboard[event] = true;
             if (event === 'shoot') {
               if (client.player.playerCar) {
-                client.player.playerCar.isShooting = true;
+                client.player.playerCar.shootingWithWeapon = client.player.playerCar.weapon.name;
               }
             }
           } else {
             client.keyboard[event] = false;
             if (event === 'shoot') {
               if (client.player.playerCar) {
-                client.player.playerCar.isShooting = false;
+                client.player.playerCar.shootingWithWeapon = null;
               }
             }
           }
