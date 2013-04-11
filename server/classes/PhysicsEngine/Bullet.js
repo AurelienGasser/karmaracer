@@ -34,6 +34,14 @@ var Bullet = function(playerCar, pos, angle) {
     // this.p2 = getOtherPoint(this.p1, this.r, this.len);
     // // this.p3 = getOtherPoint(this.p1, this.r, len);
     // this.line = this.engine.getLine(this.p1, this.p2);
+    this.pBullet = {
+      x: this.x,
+      y: this.y
+    }
+    this.vBullet = {
+      x: Math.cos(this.r) * this.len,
+      y: Math.sin(this.r) * this.len
+    }
   }
 
 

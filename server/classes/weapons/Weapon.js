@@ -59,6 +59,7 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
     y: playerCar.car.y
   };
   var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle);
+
   var collision = this.engine.bulletCollision(b);
 
   var gScale = this.engine.gScale;

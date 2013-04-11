@@ -284,14 +284,8 @@ KarmaPhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
 };
 
 KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
-  var pBullet = {
-    x: projectile.x,
-    y: projectile.y
-  }
-  var vBullet = {
-    x: Math.cos(projectile.r) * projectile.len,
-    y: Math.sin(projectile.r) * projectile.len
-  }
+  var pBullet = projectile.pBullet,
+      vBullet = projectile.vBullet;
 
   var UL = B.UL();
   var UR = B.UR();
@@ -319,11 +313,35 @@ KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
       res.push(points[i])
     }
   }
-
-
-    // return closestPoint;
   return res
 };
+
+KarmaPhysicsEngine.prototype.bulletCollideWall = function(projectile) {
+  var pBullet = projectile.pBullet,
+      vBullet = projectile.vBullet;
+
+  var getWall = function(px, py, vx, vy) {
+    return {
+      p :{ x: px,y: py},
+      v :{ x: vx,  y: vy}
+    };
+  }
+  var walls = [];
+  walls.push(getWall(0, 0, this.map.size.w, 0));
+  walls.push(getWall(0, 0, 0,this.map.size.h));
+  walls.push(getWall(this.map.size.w, this.map.size.h, -this.map.size.w,0));
+  walls.push(getWall(this.map.size.w, this.map.size.h, 0,-this.map.size.h));
+
+
+  for (var i=0; i < walls.length; i++) {
+    var w = walls[i];
+    var collide = this.segmentCollideSegment(pBullet, vBullet, w.p, w.v);
+    if (collide !== null) {
+      return collide;
+    }
+  }
+  return null;
+}
 
 KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
   var pointsAndBullets = [];
@@ -340,11 +358,12 @@ KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
         point:p
       });
     };
-    // points = points.concat(_points);
   }
-
+  pointsAndBullets.push({
+    body: { name: 'outsideWall' },
+    point: this.bulletCollideWall(projectile)
+  });
   return this.getClosestPoint(projectile, pointsAndBullets);
-  // return pointsAndBullets;
 };
 
 
