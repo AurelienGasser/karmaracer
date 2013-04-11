@@ -142,10 +142,7 @@ MobileTerminalHandler.prototype.initTouchScreenEvents = function() {
 }
 
 function updateOrientation(gameInstance) {
-  //alert('orientation');
-  //console.log('update orientation');
   window.scrollTo(0, 0);
-  // alert(gameInstance);
   gameInstance.steeringWheel.resize();
   if(gameInstance.drawEngine.camera != null) {
     gameInstance.drawEngine.camera.resizeCanvas({

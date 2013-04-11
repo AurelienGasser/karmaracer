@@ -5,7 +5,6 @@ var Karma = function() {
     } else {
       this.karma = JSON.parse(localStorage.karma);
     }
-    // console.log(localStorage.karma, this.karma);
     var that = this;
 
     function get(v) {

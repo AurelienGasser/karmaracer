@@ -42,7 +42,6 @@ KeyboardHandlerMap.prototype.handleKey = function(key, down) {
       this.canvasMap.scale *= 0.9;
       break;
     case 82: // R
-      //console.log('release items');
       if (down){
         this.canvasMap.deselectAllItems();
       }
@@ -51,7 +50,7 @@ KeyboardHandlerMap.prototype.handleKey = function(key, down) {
       this.canvasMap.keyPress.shift = down;
 
     default :
-      //console.log(key);
+      //console.info(key);
   }
 }
 

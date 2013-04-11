@@ -169,7 +169,6 @@
 
 
   Map.prototype.svgDrawBackground = function() {
-    // console.log(this.bgImg);
     if (!KLib.isUndefined(this.bgImg)){
       $(this.bgImg.node).remove();
     }

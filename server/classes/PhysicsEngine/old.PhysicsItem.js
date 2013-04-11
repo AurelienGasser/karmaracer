@@ -83,7 +83,6 @@ PhysicsItem.prototype.turn = function(side) {
 
 
 PhysicsItem.prototype.getShared = function() {
-  // console.log('ENGINE', this);
   var pos = this.getPosition();
   var share = {
     x: pos.x * this.engine.gScale,

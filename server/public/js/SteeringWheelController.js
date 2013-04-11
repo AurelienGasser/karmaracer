@@ -1,6 +1,5 @@
 var SteeringWheelController = function(gameInstance) {
     return;
-    console.log('gameInstance', gameInstance);
     this.m = $('<div id="SteeringWheelController"/>');
     this.acc = $('<div id="SteeringWheelControllerAcc"/>');
 
@@ -30,7 +29,6 @@ var SteeringWheelController = function(gameInstance) {
         var jWheel = $(this);
         jWheel.toggleClass('enable');
         that.enable = jWheel.hasClass('enable');
-        // console.log(that.enable);
       }
 
     that.m.click(toogleEnable);
@@ -56,8 +54,6 @@ var SteeringWheelController = function(gameInstance) {
         if(!that.enable) {
           return;
         }
-        // $('body').append('ss');
-        // console.log('send', that.force.x);
         that.gameInstance.socketManager.emit('move_car', {
           'force': that.force,
           'angle': angle(that.force)
@@ -121,19 +117,11 @@ var SteeringWheelController = function(gameInstance) {
         if(that.gameInstance.isMobile) {
           accHelper = 5;
         }
-
-
         force.x *= accHelper;
         force.y *= accHelper;
         that.force = force;
-
-        //alert(force.x);
       };
-
-    console.log('is mobile', that.gameInstance.isMobile);
-
-
-    // alert(that.gameInstance.isMobile);
+    console.info('is mobile', that.gameInstance.isMobile);
     if(that.gameInstance.isMobile) {
       that.m.bind('touchstart', startAcceleration);
       that.m.bind('touchend', stopAcceleration);
@@ -185,7 +173,6 @@ SteeringWheelController.prototype.setMPosition = function(x, y) {
   var that = this;
   var mX = x - that.mSize.w / 2;
   var mY = y - that.mSize.h / 2;
-  console.log('set position', mX, mY);
   that.m.css('left', mX + 'px');
   that.m.css('top', mY + 'px');
   that.updateCenter();
@@ -198,7 +185,6 @@ SteeringWheelController.prototype.resize = function() {
     'width': '100%',
     'height': '100%'
   });
-  // console.log('resize', window.innerWidth, window.innerHeight);
   // this.setMSize(this.m.width(), this.m.height());
   // this.setMPosition(window.innerWidth / 2, window.innerHeight / 2);
 };

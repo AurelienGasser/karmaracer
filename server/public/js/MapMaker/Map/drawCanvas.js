@@ -11,15 +11,12 @@ Map.prototype.canvasInit = function(selector) {
   this.canvas.onmousemove = this.mouseMove.bind(this);
   this.canvas.onmousedown = this.mouseDown.bind(this);
   this.canvas.onmouseup = this.mouseUp.bind(this);
-
-  //console.log(this.canvasTag);
   this.canvasTag.css('width', this.realWorldSize.w).css('height', this.realWorldSize.h);
 };
 
 Map.prototype.canvasDrawBackground = function() {
   if(this.mapBackgroundName !== '') {
     var bg = this.itemsByName[this.mapBackgroundName];
-    //    console.log(this.mapBackgroundName, 'bg', bg);
     if(!KLib.isUndefined(bg)) {
       this.ctx.fillStyle = bg.pattern;
       this.ctx.fillRect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
@@ -82,9 +79,7 @@ Map.prototype.canvasDrawItem = function(item) {
     this.ctx.shadowOffsetX = 0;
     this.ctx.shadowOffsetY = 0;
   }
-  // console.log(item.patternType);
   if(item.patternType !== "none") {
-    //console.log(item);
     this.ctx.fillStyle = item.pattern;
     this.ctx.save();
     this.ctx.translate(item.position.x, item.position.y);

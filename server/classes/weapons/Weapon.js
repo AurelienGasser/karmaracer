@@ -77,13 +77,11 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   // for(var i in collisionPointsUnsorted) {
   //   // var p = collisionPointsUnsorted[i].point;
   //   var p = collisionPointsUnsorted[i];
-  //   console.log('collide', p, i);
   //   this.collisionPoints.push({
   //     x: p.point.x * gScale,
   //     y: p.point.y * gScale
   //   });
   // }
-  // console.log(this.collisionPoints.length)  
   // for (var i = 0; i < points.length; i++) {
   //   var p = points[i];
   //   b.explode(p.point);
@@ -104,7 +102,6 @@ Weapon.prototype.step = function() {
         // var points = projectile.engine.lineCollidesBodies(projectile.line, projectile.playerCar.car);
         // var 
         // if(b !== null) {
-        //   // console.log('collide', b.body.name, b.point);
         //   var p = {
         //     x: b.point.x,
         //     y: b.point.y

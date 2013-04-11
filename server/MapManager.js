@@ -17,11 +17,10 @@ var MapManger = function(app, callback) {
     function updateGameServerMap(map) {
       var gameServer = that.gameServers[map.name];
       gameServer.initGameServer(map);
-      console.log('update game ', map.name);
+      console.info('update game ', map.name);
     };
 
     function loadItems(callback) {
-      //that.itemsByName = {};
       var path = __dirname + '/public/items';
       getJSONSForDirectory(path, function(item) {
         that.itemsByName[item.name] = item;
@@ -61,7 +60,6 @@ var MapManger = function(app, callback) {
       });
 
       walker.on('end', function() {
-        //console.log(files);
         return callback(null, files);
       });
     };
@@ -70,7 +68,7 @@ var MapManger = function(app, callback) {
       if (Object.keys(that.maps).length > 0){
         return;
       }
-      console.log('c or u map ', map.name);
+      console.info('c or u map ', map.name);
       if(KLib.isUndefined(that.maps[map])) {
         addGameServer(map);
       } else {
@@ -119,7 +117,7 @@ var MapManger = function(app, callback) {
 
     function load(callback) {
       loadMaps(function(err) {
-        console.log('maps loaded')
+        console.info('maps loaded')
         that.gameServerSocket = new(require('./GameServerSocket'))(res);
         loadItems(function(err) {
           if(KLib.isFunction(callback)) {

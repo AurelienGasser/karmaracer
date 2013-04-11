@@ -9,11 +9,11 @@ var MemLeakLog = require('./MemLeakLog');
 var memwatch = require('memwatch');
 
 memwatch.on('stats', function(stats) {
-  console.log('MEM STATS', stats);
+  console.info('MEM STATS', stats);
 });
 
 memwatch.on('leak', function(info) {
-  console.log('MEM LEAK', info);
+  console.info('MEM LEAK', info);
 });
 
 var GameServer = function(app, map) {
@@ -153,12 +153,11 @@ GameServer.prototype.step = function() {
 
   var maxDiff = this.tickInterval;
   if(this.timer.lastDiff > maxDiff) {
-    // console.log('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms, max ', this.tickInterval, 'min ', this.minTickInterval); //, this.timer, 'max:', maxDiff);
+    // console.error('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms, max ', this.tickInterval, 'min ', this.minTickInterval); //, this.timer, 'max:', maxDiff);
     this.lastStepTooLong = true;
   } else {
     this.lastStepTooLong = false;
-    // console.log(this.tickInterval);
-    // console.log("engine time", this.timer.lastDiff);
+    // console.info("engine time", this.timer.lastDiff);
   }
 
   timer = this.timer;
@@ -174,7 +173,6 @@ GameServer.prototype.step = function() {
   // this.tickTs = ts;
   try {
 
-    // console.log('step', this.tickCounter);
     var start = new Date();
     // that.physicsEngine.step();
     start = registerDateDiff(timer, 'physics', start);
@@ -186,7 +184,6 @@ GameServer.prototype.step = function() {
       start = registerDateDiff(timer, 'Physics', start);
     }
     if(this.tickCounter % 4 === 0) {
-      // console.log('send');
       that.sendPositionsToPlayers();
       start = registerDateDiff(timer, 'sendPositions', start);
     }
@@ -196,12 +193,11 @@ GameServer.prototype.step = function() {
       start = registerDateDiff(timer, 'botManager', start);
     }
   } catch(e) {
-    console.log("error main interval", e, e.stack);
+    console.error("error main interval", e, e.stack);
     throw e;
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
   registerDateDiff(timer, 'lastDiff', timer.begin);
-  // console.log(timer);
   this.timer = timer;
 }
 
@@ -244,7 +240,6 @@ GameServer.prototype.broadcast = function(key, data) {
 }
 
 GameServer.prototype.broadcastExplosion = function(point) {
-  console.log(point);
   this.broadcast('explosion', {
     x: point.x * this.engine.gScale,
     y: point.y * this.engine.gScale
@@ -256,7 +251,6 @@ function handleError(err) {
 }
 
 GameServer.prototype.gameEnd = function(winnerCar) {
-  console.log('END OF GAME');
   this.broadcast('game end', {
     winnerName: winnerCar.player.playerName
   });

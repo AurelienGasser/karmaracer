@@ -6,11 +6,11 @@ var memwatch = require('memwatch');
 
 
 memwatch.on('leak', function(info) { 
-  // console.log('LEAK', info);
+  // console.info('LEAK', info);
 });
 
 memwatch.on('stats', function(stats) { 
-  // console.log('HEAP STATS', stats);
+  // console.info('HEAP STATS', stats);
 });
 // FOR SSL IF REQUIRED
 var ssl_options = {
@@ -28,14 +28,13 @@ var os = require("os");
 var hostname = os.hostname();
 
 app.configure('local', function() {
-  console.log('start on host', hostname);
 });
 
 var http = require('http');
 var server = http.createServer(app);
 server.on('error', function(e) {
-  console.log('Critical Server Error:', e);
-  console.log(e.stack);
+  console.error('Critical Server Error:', e);
+  console.error(e.stack);
   process.exit(1)
 })
 

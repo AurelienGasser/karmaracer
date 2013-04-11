@@ -19,9 +19,7 @@ function SocketManager(gameInstance, onInitCallback) {
 
   function socketReceived() {
     var now = new Date().getTime();
-    //
     if(now - that.timestamp > 1000) {
-      //console.log(that.socketCounter);
       that.timestamp = now;
       $('#socketps').html('socket/ps: ' + that.socketCounter);
       that.socketCounter = 0;
@@ -33,7 +31,7 @@ function SocketManager(gameInstance, onInitCallback) {
   $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
 
   connection.on('connect', function(data) {
-    console.log('client connected', G_mapName);
+    console.info('client connected', G_mapName);
     if(!_.isUndefined(G_mapName)) {
       connection.emit('enter_map', G_mapName);
     }
@@ -42,7 +40,7 @@ function SocketManager(gameInstance, onInitCallback) {
 
   connection.on('init', function(worldInfo) {
     onInitCallback(null, worldInfo);
-    console.log('worldInfo', worldInfo);
+    console.info('worldInfo', worldInfo);
     if(!Karma.get('playerName') || Karma.get('playerName').length === 0) {
       Karma.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
     }
@@ -58,9 +56,6 @@ function SocketManager(gameInstance, onInitCallback) {
     onChatMsgReceived(msg, key);
     ++that.msg_id;
   });
-
-  // connection.on('scores', function(scores) {
-  // });
 
   function announce(text, color) {
     $('#announce').remove();
@@ -94,14 +89,10 @@ function SocketManager(gameInstance, onInitCallback) {
   })
 
   connection.on('objects', function(objects) {
-    // console.log(objects);
     gameInstance.cars = objects.cars;
     gameInstance.mycar = objects.myCar;
-    // gameInstance.bullets = objects.projectiles.bullets;
-    // gameInstance.rockets = objects.projectiles.rockets;
     gameInstance.projectiles = objects.projectiles;
     gameInstance.collisionPoints = objects.collisionPoints;
-    // gameInstance.bodies = objects.bodies;
     gameInstance.updateScoresHTML();
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
       return list ? list.length : 0;

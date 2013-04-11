@@ -24,7 +24,6 @@ function setSizeEvents(map) {
     var h = parseInt(heightDOM.val(), 10) * map.gScale;
     map.realWorldSize.w = w;
     map.realWorldSize.h = h;
-    console.log('update size', w, h);
   }
 
   widthDOM.change(updateSizeFromDOM);
@@ -37,11 +36,10 @@ function setBackgroundItemsEvents(map) {
 
   var o = [];
   o.push('<datalist id="bg-list">');
-  //console.log(map.backgroundItems);
   for(var i = 0; i < map.backgroundItems.length; i++) {
     var bg = map.backgroundItems[i];
     o.push('<option value="', bg.name, '">');
-    //o.push(bg.name, '</option>');
+    o.push(bg.name, '</option>');
   };
   o.push('</datalist>');
 

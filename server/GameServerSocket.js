@@ -24,7 +24,6 @@ var GameServerSocket = function(mapManager) {
     function broadcastMapsState(){
       for (var i in that.homeClients){
         var client = that.homeClients[i];
-        // console.log('send to', client.homeID);
         client.emit('maps_state', that.mapManager.getMapsWithPlayers());
       }
     }
@@ -32,7 +31,7 @@ var GameServerSocket = function(mapManager) {
     setInterval(broadcastMapsState, 1000);
 
     this.mapManager.app.io.sockets.on('connection', function(client) {
-      console.log('client connected');
+      console.info('client connected');
       client.keyboard = {};
 
       client.on('get_maps', function(callback) {
@@ -50,7 +49,7 @@ var GameServerSocket = function(mapManager) {
       });
 
       client.on('get_map', function(mapName, callback) {
-        console.log('get map', mapName)
+        console.info('get map', mapName)
         var map = that.mapManager.maps[mapName];
         if(KLib.isUndefined(map)) {
           return callback({
@@ -61,7 +60,7 @@ var GameServerSocket = function(mapManager) {
       });
 
       client.on('enter_map', function(mapName) {
-        console.log('enter in', mapName)
+        console.info('enter in', mapName)
         var gameServer = that.mapManager.gameServers[mapName];
         if (gameServer) {
           var worldInfo = gameServer.engine.getWorldInfo();
@@ -72,7 +71,7 @@ var GameServerSocket = function(mapManager) {
       });
 
       client.on('init_done', function(userData) {
-        console.log('client initialized:', userData.playerName, ' on ', client.gameServer.map.name);
+        console.info('client initialized:', userData.playerName, ' on ', client.gameServer.map.name);
         client.player = new Player(client, userData.playerName);
         client.gameServer.addPlayer(client.player);
       });
@@ -87,7 +86,7 @@ var GameServerSocket = function(mapManager) {
             if(err) {
               console.error(err);
             } else {
-              console.log('The map was saved : ', map.name, ' on ', path);
+              console.info('The map was saved : ', map.name, ' on ', path);
             }
           });
         } catch(e) {
@@ -101,9 +100,9 @@ var GameServerSocket = function(mapManager) {
           if(!KLib.isUndefined(client.gameServer)) {
             client.gameServer.removePlayer(client.player);
           }
-          console.log('client left:', client.playerName);
+          console.info('client left:', client.playerName);
         } catch(e) {
-          console.log(e, e.stack);
+          console.error(e, e.stack);
         }
         if(!KLib.isUndefined(client.gameServer)) {
           delete client.gameServer.clients[client.id];
@@ -118,7 +117,7 @@ var GameServerSocket = function(mapManager) {
             client.keyboard[event] = false;
           }
         } catch(e) {
-          console.log(e.stack);
+          console.error(e.stack);
         }
       });
 
@@ -126,7 +125,7 @@ var GameServerSocket = function(mapManager) {
         try {
           client.player.playerCar.updatePlayerName(name);
         } catch(e) {
-          console.log(e, e.stack);
+          console.error(e, e.stack);
         }
       });
 
@@ -134,7 +133,7 @@ var GameServerSocket = function(mapManager) {
         try {
           client.gameServer.botManager.addBot();
         } catch(e) {
-          console.log(e, e.stack);
+          console.error(e, e.stack);
         }
       });
 
@@ -142,7 +141,7 @@ var GameServerSocket = function(mapManager) {
         try {
           client.gameServer.botManager.removeBot();
         } catch(e) {
-          console.log(e, e.stack);
+          console.error(e, e.stack);
         }
       });
 

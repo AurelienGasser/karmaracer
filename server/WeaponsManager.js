@@ -43,7 +43,6 @@ WeaponsManager.prototype.getGraphicProjectiles = function() {
   var projectiles = [];
   projectiles = appendProjectilesShared(this.gameServer.players, projectiles);
   projectiles = appendProjectilesShared(this.gameServer.botManager.bots, projectiles);
-  // console.log(projectiles.length);
   return projectiles;
 }
 

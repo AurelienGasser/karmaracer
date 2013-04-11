@@ -30,7 +30,6 @@ Bot.prototype.tick = function() {
 }
 
 Bot.prototype.performCollideAction = function(oldPosition) {
-  // console.log(this.name, 'collide');
   this.x = oldPosition.x;
   this.y = oldPosition.y;
   this.r = oldPosition.r + Math.PI / 8;

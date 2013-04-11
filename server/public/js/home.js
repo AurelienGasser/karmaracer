@@ -20,7 +20,7 @@ $(function() {
 
     for (var i in mapStates){
       var m = mapStates[i];
-      console.log(m);
+      console.info(m);
       var players = _.map(m.players, function(p){
         return p.name;
       }).join(', ');

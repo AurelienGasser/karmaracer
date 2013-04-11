@@ -34,7 +34,6 @@ function GameInstance() {
   var that = this;
 
   function reduceExplosionsAlpha() {
-    // console.log(that.explosions);
     for(var explosionId in that.explosions) {
       that.explosions[explosionId].alpha -= 0.1;
       if(that.explosions[explosionId].alpha < 0) {
@@ -126,7 +125,6 @@ GameInstance.prototype.loadImages = function(callback) {
   var imageNumLoaded = 0;
 
   function imageLoaded() {
-    //console.log(imageNumLoaded, imagesNumToLoad);
     if(imageNumLoaded === imagesNumToLoad - 1) {
       return callback();
     }
@@ -148,7 +146,6 @@ GameInstance.prototype.loadImages = function(callback) {
     var img = new Image();
     img.src = i.image.path;
     img.onload = function() {
-      //console.log(i);
       if(i.patternType !== 'none') {
         var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
         this.itemsInMap[item].pattern = _pattern;

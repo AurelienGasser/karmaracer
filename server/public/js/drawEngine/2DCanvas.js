@@ -194,7 +194,6 @@ Engine2DCanvas.prototype.drawExplosions = function(ctx) {
 
 
 Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
-  // console.log(this.gameInstance.projectiles);
   if(this.gameInstance.projectiles !== null) {
     for(var i = 0; i < this.gameInstance.projectiles.length; i++) {
       var c = this.gameInstance.projectiles[i];
@@ -224,14 +223,9 @@ Engine2DCanvas.prototype.drawCollisionPoints = function() {
 Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
   ctx.fillStyle = '#0F0';
   var c = bullet;
-  // ctx.fillRect(c.x, c.y, c.w, c.h);
   ctx.save();
   ctx.beginPath();
   var a = c;
-
-  // console.log(a.line, a.x, a.y);
-
-  // ctx.moveTo(a.p1.x, a.p1.y);
     ctx.translate(a.x, a.y);
 
   // var len = 500;
@@ -267,7 +261,6 @@ Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
   if(this.debugDraw) {
     ctx.fillStyle = '#00FF00';
   } else {
-    // console.log(this.gameInstance.itemsInMap.outsideWall.pattern);
     ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
   }
 
@@ -283,13 +276,10 @@ Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
 
 Engine2DCanvas.prototype.drawStaticItems = function(ctx) {
   var that = this;
-  // console.log(that.gameInstance.walls);
   if(that.gameInstance.walls != null) {
     _.each(that.gameInstance.walls, function(c) {
       var staticItem = that.gameInstance.itemsInMap[c.name];
-      //      console.log(staticItem);
       if(!KLib.isUndefined(staticItem) && !KLib.isUndefined(staticItem.pattern)) {
-        // console.log(c.x, c.)
         if(staticItem.pattern === null) {
           ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
         } else {

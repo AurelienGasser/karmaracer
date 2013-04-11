@@ -13,11 +13,11 @@ var Leak = function () {
 }
 
     memwatch.on('stats', function(stats) {
-      console.log('MEM STATS', stats);
+      console.info('MEM STATS', stats);
     });
 
     memwatch.on('leak', function(info) {
-      console.log('MEM LEAK', info);
+      console.info('MEM LEAK', info);
     });
 
 
@@ -55,7 +55,6 @@ function step() {
     // new Leak();
 
   } else if(num < -20) {
-    console.log('stop');
     clearInterval(interval);
     l = null;
     mem.diff();

@@ -18,7 +18,6 @@ function MapItem(_jsonItem, _ctx, _id) {
   this.ctx = _ctx;
 
   this.image = null;
-  //  console.log('jsonItem', this.jsonItem);
 }
 
 MapItem.prototype.initImage = function(callback) {
@@ -29,7 +28,7 @@ MapItem.prototype.initImage = function(callback) {
   var that = this;
 
   that.image.onerror = function() {
-    console.log('error on load image', this.src);
+    console.error('error on load image', this.src);
   }
 
   that.image.onload = function() {

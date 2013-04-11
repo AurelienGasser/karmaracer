@@ -62,14 +62,10 @@ Map.prototype.isMousePositionInItem = function(item) {
 
 
 Map.prototype.deselectAllItems = function() {
-
-  console.log('deselectItems', this.itemsGlow);
   for(var id in this.itemsGlow) {
     this.deselectItem(id);
   }
-
   this.selectedItems = [];
-
 };
 
 Map.prototype.isItemSelected = function(id) {
@@ -90,9 +86,6 @@ Map.prototype.selectItem = function(id, rect) {
 
 Map.prototype.deselectItem = function(id) {
   this.selectedItems.splice(this.selectedItems.indexOf(id), 1);
-  console.log('deselectItem', id);
-
-
   var rect = this.itemsGlow[id];
   if(!KLib.isUndefined(rect)) {
     rect.isSelected = false;

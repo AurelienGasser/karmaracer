@@ -55,7 +55,7 @@ KeyboardHandler.prototype.handleKey = function(key, state) {
     }
     break;
   default:
-    //console.log(key);
+    //console.info(key);
   }
 }
 

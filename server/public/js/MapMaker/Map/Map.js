@@ -63,17 +63,14 @@ function Map(selector) {
 
 Map.prototype.loadMap = function(mapName, callback) {
   var that = this;
-  //console.log('loading map', mapName)
   that.connection.emit('get_map', mapName, function(err, map) {
-    //console.log('get map', that.mapName);
     if(err !== null) {
-      console.log('no map with name', mapName);
+      console.info('no map with name', mapName);
       return callback({
         'msg': 'no map with name',
         'type': 'warn'
       });
     }
-    //console.log('map ok', map);
     that.mapBackgroundName = map.background.name;
 
     for(var i = 0; i < map.staticItems.length; i++) {
@@ -85,7 +82,6 @@ Map.prototype.loadMap = function(mapName, callback) {
       mapItem.position.y = sItem.position.y * that.gScale;
       mapItem.size.w = sItem.size.w * that.gScale;
       mapItem.size.h = sItem.size.h * that.gScale;
-      //console.log('create', mapItem);      
     };
 
     // if (!KLib.isUndefined(that.svgTag)){
@@ -136,7 +132,6 @@ Map.prototype.tick = function() {
   
   var now = new Date();
   var tickDiff = now.getTime() - this.tickStart;
-  //console.log(tickDiff);
   if(tickDiff > 1000) {
     $('#fps').html('fps:' + this.tickCount);
     this.tickCount = 0;
@@ -196,7 +191,7 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
       'path': item.image.src
     };
     that.backgroundItems.push(bgItem);
-    //console.log(that.backgroundItems);
+    
   case 'horizontal':
   case 'vertical':
     demoDiv.css('background-image', 'url("' + item.image.src + '")');
@@ -212,7 +207,7 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
 
   $('#' + itemID).click(function() {
     var sourceMapItem = that.itemsByName[item.name];
-    console.log('add map item', sourceMapItem);
+    console.info('add map item', sourceMapItem);
     var mapItem = that.createMapItem(sourceMapItem);
     mapItem.size.w = sourceMapItem.size.w * that.gScale;
     mapItem.size.h = sourceMapItem.size.h * that.gScale;
