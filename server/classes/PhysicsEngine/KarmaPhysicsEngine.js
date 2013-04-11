@@ -460,7 +460,6 @@ KarmaPhysicsEngine.prototype.destroy = function() {
 };
 
 KarmaPhysicsEngine.prototype.addBody = function(body) {
-  body.id = Math.random(); // maintain id integrity
   this.bodies[body.id] = body;
 }
 

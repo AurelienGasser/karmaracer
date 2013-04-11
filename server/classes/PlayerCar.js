@@ -16,8 +16,6 @@ var WeaponsByClass = {
   9: RocketLauncher,
 };
 
-
-var playerCarID = 0;
 var PlayerCar = function(gameServer, client, playerName, player) {
     this.player = player;
     this.client = client;
@@ -26,7 +24,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
     this.car = new Car(this);
     gameServer.engine.addBody(this.car);
     this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
-    this.id = playerCarID++; // Math.floor(Math.random() * 1e32);
+    this.id = this.car.id;
     this.resetPlayer();
   }
 

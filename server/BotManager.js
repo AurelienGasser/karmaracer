@@ -38,9 +38,6 @@ BotManager.prototype.tick = function() {
   for(var i in this.bots) {
     var bot = this.bots[i];
     bot.tick();
-    if(bot.playerCar.life < 0) {
-      this.removeBot();
-    }
   }
 }
 

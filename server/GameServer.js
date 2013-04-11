@@ -278,7 +278,7 @@ GameServer.prototype.resetGame = function(first_argument) {
 
 GameServer.prototype.addPlayer = function(player) {
   player.initCar(this);
-  player.id = Math.random();
+  player.id = player.playerCar.id;
   this.players[player.id] = player;
 }
 

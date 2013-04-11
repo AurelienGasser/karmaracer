@@ -1,6 +1,5 @@
 var PlayerCar = require('./PlayerCar');
 
-var GBot_ID = 0;
 var Bot = function(gameServer, name) {
     this.isBot = true;
     this.gameServer = gameServer;
@@ -8,7 +7,7 @@ var Bot = function(gameServer, name) {
     this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
     // this.playerCar.car.name = 'bot';
     this.playerCar.car.collide = this.collide;
-    this.id = GBot_ID++;
+    this.id = this.playerCar.id;
     return this;
   }
 

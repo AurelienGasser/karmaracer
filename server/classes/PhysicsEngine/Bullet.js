@@ -44,9 +44,8 @@ var Bullet = function(playerCar, pos, angle) {
     }
   }
 
-
-
 Bullet.prototype.performCollideAction = function(oldPosition) {
+  // TODO: remove this function
   if(this.collidesWith.name === 'car' || this.collidesWith.name === 'bot') {
     if(this.collidesWith.id !== this.playerCar.car.id) {
       var playerCar = this.collidesWith.playerCar;
