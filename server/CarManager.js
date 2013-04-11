@@ -38,7 +38,6 @@ CarManager.prototype.getAliveCars = function(source) {
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
-  console.log(victim.id, attacker.id, projectile.damage);
   victim.receiveHit(projectile.damage);
   if(victim.life <= 0) {
     if(victim.dead) {

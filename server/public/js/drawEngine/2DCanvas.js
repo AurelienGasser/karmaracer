@@ -147,8 +147,6 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
 
 
 Engine2DCanvas.prototype.drawLifeBar = function(ctx, c) {
-  
-
       ctx.save();
       ctx.translate(-c.w/2, - 40);
       var maxLifeSize = c.w;
@@ -157,9 +155,7 @@ Engine2DCanvas.prototype.drawLifeBar = function(ctx, c) {
       ctx.fillStyle = '#F00';
       var ratioSize = maxLifeSize * (c.life / c.maxLife);
       ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize,5);
-
       ctx.restore();
-
 };
 
 Engine2DCanvas.prototype.drawCars = function(ctx) {
