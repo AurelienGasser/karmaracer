@@ -1,7 +1,7 @@
 function sendMsg() {
   if ($('#chat_input').val().trim() != '') {
     var msg = (Karma.get('playerName')) + ': ' + $('#chat_input').val();
-    gameInstance.socketManager.emit('chat', msg);
+    G_gameInstance.socketManager.emit('chat', msg);
   }
   $('#chat_input').val('');
   hideChat();
