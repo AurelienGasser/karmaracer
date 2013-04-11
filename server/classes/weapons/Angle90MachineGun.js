@@ -3,8 +3,8 @@ var KLib = require('./../KLib');
 var Weapon = require('./Weapon');
 
 
-var Angle90MachineGun = function() {
-    KLib.extend(Weapon, this);
+var Angle90MachineGun = function(gameServer) {
+    KLib.extend(Weapon, this, gameServer);
     this.lastShotInterval = 32;
     this.ProjectileClass = Bullet;
     this.startAcceleration = 1;

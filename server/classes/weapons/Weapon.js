@@ -57,36 +57,17 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
   var pos = {
     x: playerCar.car.x,
     y: playerCar.car.y
-  }; //this.getProjectileVector(playerCar, angle);
+  };
   var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle);
-  // this.projectiles[b.id] = b;
   var collision = this.engine.bulletCollision(b);
 
-  // this.collisionPoints = []
   var gScale = this.engine.gScale;
   if(collision !== null) {
     b.explode(collision.point);
     if(collision.body.name === 'car') {
-      that.gameServer.carManager.projectileHitCar(b.playerCar, collision.body.playerCar, b)
+      this.gameServer.carManager.projectileHitCar(b.playerCar, collision.body.playerCar, b)
     }
-    // this.collisionPoints.push({
-    //   x: collision.point.x * gScale,
-    //   y: collision.point.y * gScale
-    // });
   }
-  // for(var i in collisionPointsUnsorted) {
-  //   // var p = collisionPointsUnsorted[i].point;
-  //   var p = collisionPointsUnsorted[i];
-  //   this.collisionPoints.push({
-  //     x: p.point.x * gScale,
-  //     y: p.point.y * gScale
-  //   });
-  // }
-  // for (var i = 0; i < points.length; i++) {
-  //   var p = points[i];
-  //   b.explode(p.point);
-  // };
-  //  
 };
 
 Weapon.prototype.step = function() {
@@ -97,17 +78,6 @@ Weapon.prototype.step = function() {
       if(projectile.body === null) {
         deads.push(id);
       } else {
-        // projectile.accelerate(1);
-        // var b = projectile.engine.segmentCollidesFirstBody(projectile.line, projectile.p1, projectile.p2);
-        // var points = projectile.engine.lineCollidesBodies(projectile.line, projectile.playerCar.car);
-        // var 
-        // if(b !== null) {
-        //   var p = {
-        //     x: b.point.x,
-        //     y: b.point.y
-        //   }
-        //   projectile.explode(p);
-        // }
         projectile.life -= 1;
         if(projectile.life <= 0) {
           projectile.scheduleForDestroy();

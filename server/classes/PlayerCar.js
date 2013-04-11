@@ -37,10 +37,14 @@ PlayerCar.prototype.resetPlayer = function() {
   this.updateWeapon();
   this.dead = false;
   this.life = 100;
+  this.maxLife = 100;
 };
 
 PlayerCar.prototype.getShared = function() {
-  return this.car.getShared();
+  var share = this.car.getShared();
+  share.life = this.life;
+  share.maxLife = this.maxLife;
+  return share;
 }
 
 PlayerCar.prototype.updatePos = function() {

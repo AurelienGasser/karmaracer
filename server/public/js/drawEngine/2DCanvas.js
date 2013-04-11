@@ -145,6 +145,23 @@ Engine2DCanvas.prototype.drawBodies = function(ctx) {
   }
 }
 
+
+Engine2DCanvas.prototype.drawLifeBar = function(ctx, c) {
+  
+
+      ctx.save();
+      ctx.translate(-c.w/2, - 40);
+      var maxLifeSize = c.w;
+      ctx.fillStyle = '#0F0';
+      ctx.fillRect(0, 0, maxLifeSize, 5);
+      ctx.fillStyle = '#F00';
+      var ratioSize = maxLifeSize * (c.life / c.maxLife);
+      ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize,5);
+
+      ctx.restore();
+
+};
+
 Engine2DCanvas.prototype.drawCars = function(ctx) {
   if(this.gameInstance.cars !== null) {
     for(var i = 0; i < this.gameInstance.cars.length; i++) {
@@ -152,6 +169,8 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(c.r);
+
+      
       ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
 
       // if(this.debugDraw) {
@@ -165,6 +184,7 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+      this.drawLifeBar(ctx, c);
       ctx.restore();
 
       this.drawBullet(c, ctx);

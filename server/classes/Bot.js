@@ -6,7 +6,7 @@ var Bot = function(gameServer, name) {
     this.gameServer = gameServer;
     this.name = name + ' (bot)';
     this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
-    this.playerCar.car.name = 'bot';
+    // this.playerCar.car.name = 'bot';
     this.playerCar.car.collide = this.collide;
     this.id = GBot_ID++;
     return this;

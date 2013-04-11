@@ -25,7 +25,7 @@ BotManager.prototype.initBots = function() {
   if(numBots > 10) {
     numBots = 10;
   }
-  numBots = 0;
+  numBots = 10;
   for(var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
