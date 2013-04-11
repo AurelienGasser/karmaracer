@@ -7,6 +7,7 @@ function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.timer = new Date().getTime();
   this.frames = 0;
   this.debugDraw = false;
+  this.carFlameTicks = {};
   return this;
 }
 
@@ -39,6 +40,8 @@ Engine2DCanvas.prototype.init = function() {
   this.explosionImage.src = '/sprites/explosion.png';
   this.rocketImage = new Image();
   this.rocketImage.src = '/images/rocket.png';
+  this.gunFlameImage = new Image();
+  this.gunFlameImage.src = '/sprites/gun_flame.png';
 };
 
 Engine2DCanvas.prototype.loaded = function() {
@@ -158,6 +161,24 @@ Engine2DCanvas.prototype.drawLifeBar = function(ctx, c) {
       ctx.restore();
 };
 
+Engine2DCanvas.prototype.drawGunFlame = function(ctx, car) {
+  var maxFlame = 12,
+      ratio = 1.5;
+  var w = car.w/2;
+  var h = car.h/2;
+  if (KLib.isUndefined(this.carFlameTicks[car.id])) {
+    this.carFlameTicks[car.id] = 0;
+  }
+  car.flame = this.carFlameTicks[car.id];
+  if (car.flame > maxFlame / 2) {
+    ctx.drawImage(this.gunFlameImage, 0, 0,  135, 125, car.w / 2, -h/2, w, h);
+  } else {
+    ctx.drawImage(this.gunFlameImage, 0, 0,  135, 125, car.w / 2, -h/2/ratio, w/ratio, h/ratio);
+  }
+  this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlame;
+};
+
+
 Engine2DCanvas.prototype.drawCars = function(ctx) {
   if(this.gameInstance.cars !== null) {
     for(var i = 0; i < this.gameInstance.cars.length; i++) {
@@ -165,15 +186,18 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       ctx.save();
       ctx.translate(c.x, c.y);
       ctx.rotate(c.r);
+        ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
 
-      
-      ctx.drawImage(this.carImage, 0, 0, 128, 64, -c.w / 2, -c.h / 2, c.w, c.h);
+      if (c.isShooting) {
+        this.drawGunFlame(ctx, c);
+      }
 
       // if(this.debugDraw) {
       //   ctx.fillStyle = '#FFFFFF';
       //   ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
       // }
       ctx.restore();
+
 
       var textSize = ctx.measureText(c.playerName);
       var textPad = 25;
@@ -247,13 +271,13 @@ Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
   // var len = 500;
   // ctx.lineTo(a.x + Math.cos(a.r) * len, a.y + Math.sin(a.r) * len);
   // ctx.lineTo(a.p3.x, a.p3.y);
-  
+
   ctx.moveTo(0, 0);
   ctx.rotate(a.r);
   // ctx.moveTo(-320, 0);
   ctx.lineTo(320, 0);
   ctx.closePath();
-  ctx.stroke();
+  // ctx.stroke();
 
   ctx.restore();
 }

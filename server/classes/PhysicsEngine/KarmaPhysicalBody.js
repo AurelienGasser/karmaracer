@@ -453,6 +453,8 @@ KarmaPhysicalBody.prototype.getShared = function() {
     playerName: this.playerName
   };
 
+  options.id = this.id;
+
   if(!KLib.isUndefined(this.len)) {
     // options.p1 = this.p1;
     // options.p2 = this.p2;
@@ -498,7 +500,6 @@ KarmaPhysicalBody.prototype.getShared = function() {
     }
     options.collision = collision;
   }
-
 
 
   return options;

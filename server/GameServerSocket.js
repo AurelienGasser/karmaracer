@@ -113,8 +113,18 @@ var GameServerSocket = function(mapManager) {
         try {
           if(state === 'start') {
             client.keyboard[event] = true;
+            if (event === 'shoot') {
+              if (client.player.playerCar) {
+                client.player.playerCar.isShooting = true;
+              }
+            }
           } else {
             client.keyboard[event] = false;
+            if (event === 'shoot') {
+              if (client.player.playerCar) {
+                client.player.playerCar.isShooting = false;
+              }
+            }
           }
         } catch(e) {
           console.error(e.stack);

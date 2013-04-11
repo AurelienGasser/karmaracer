@@ -38,12 +38,14 @@ PlayerCar.prototype.resetPlayer = function() {
   this.dead = false;
   this.life = 100;
   this.maxLife = 100;
+  this.isShooting = false;
 };
 
 PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
   share.life = this.life;
   share.maxLife = this.maxLife;
+  share.isShooting = this.isShooting;
   return share;
 }
 
