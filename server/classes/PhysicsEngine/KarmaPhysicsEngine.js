@@ -350,6 +350,9 @@ KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
     if(projectile.playerCar.car.id === B.id) {
       continue;
     }
+    if(!KLib.isUndefined(B.playerCar) && B.playerCar.dead === true) {
+      continue;
+    }
     var _points = this.bulletCollideBody(projectile, B);
     for (var i = 0; i < _points.length; i++) {
       var p = _points[i];
