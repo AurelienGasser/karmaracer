@@ -8,16 +8,18 @@ html
     script(type='text/javascript', src='/js/libs/underscore.js')
     script(type='text/javascript', src='/js/Karma.js')
     script(type='text/javascript', src='/js/home.js')
+    script(type='text/javascript', src='/js/fb/login.js')
     link(rel='stylesheet', href='/css/home.css')
   body
     .header
-      h1  Welcome to Karma Racer !
+      h1  Welcome to Karma Racer !!
       form#playerNameForm(href="#")
         input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
         input(type="submit", style="display: none")
     br
     br
     div#mainContent
+      div#fb-root
       div#mapsContainer
         h2 Click on a map to play
         ul#maps

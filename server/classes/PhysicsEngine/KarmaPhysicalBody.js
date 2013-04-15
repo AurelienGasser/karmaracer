@@ -2,8 +2,8 @@ var KLib = require('./../KLib');
 var G_bodyID = 0;
 
 var KarmaPhysicalBody = function() {
-    return this;
-  }
+  return this;
+}
 
 KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.engine = engine;
@@ -29,6 +29,7 @@ KarmaPhysicalBody.prototype.initialize = function(engine, position, size) {
   this.isBullet = false;
   this.shareCollisionInfo = engine.shareCollisionInfo;
   this.moveToPosition = this.getPositionAndAngle();
+  this.oldMoveToPosition = this.getPositionAndAngle();
 }
 
 KarmaPhysicalBody.prototype.resetCollisions = function(ac) {
@@ -69,11 +70,11 @@ KarmaPhysicalBody.prototype.getPosition = function() {
 }
 
 var subVectors = function(a, b) {
-    return {
-      x: a.x - b.x,
-      y: a.y - b.y
-    }
+  return {
+    x: a.x - b.x,
+    y: a.y - b.y
   }
+}
 
 KarmaPhysicalBody.prototype.addVectors = function(a, b) {
   return {
@@ -83,7 +84,7 @@ KarmaPhysicalBody.prototype.addVectors = function(a, b) {
 }
 
 KarmaPhysicalBody.prototype.getVector = function(power, angle) {
-  if(!angle) {
+  if (!angle) {
     angle = 0;
   }
   angle += this.r;
@@ -106,42 +107,27 @@ KarmaPhysicalBody.prototype.turn = function(side) {
 }
 
 KarmaPhysicalBody.prototype.setPosition = function(data) {
-  if(typeof data.x != 'undefined') {
+  if (typeof data.x != 'undefined') {
     this.x = data.x;
   }
-  if(typeof data.y != 'undefined') {
+  if (typeof data.y != 'undefined') {
     this.y = data.y;
   }
-  if(typeof data.r != 'undefined') {
+  if (typeof data.r != 'undefined') {
     this.r = data.r;
   }
 }
 
-// returns true if to position doesn't create any collision
-// KarmaPhysicalBody.prototype.tryPosition = function(to) {
-//   var old = {
-//     x: this.x,
-//     y: this.y,
-//     r: this.r
-//   };
-//   this.setPosition(to);
-//   this.updateCornerCache();
-//   var res = !this.engine.checkCollisions(this);
-//   this.setPosition(old);
-//   this.updateCornerCache();
-//   this.engine.checkCollisions(this);
-//   return res;
-// }
 
 function getMiddle(from, to) {
   var res = {}
-  if(typeof to.x != 'undefined') {
+  if (typeof to.x != 'undefined') {
     res.x = (to.x + from.x) / 2;
   }
-  if(typeof to.y != 'undefined') {
+  if (typeof to.y != 'undefined') {
     res.y = (to.y + from.y) / 2;
   }
-  if(typeof to.r != 'undefined') {
+  if (typeof to.r != 'undefined') {
     res.r = (to.r + from.r) / 2;
   }
   return res;
@@ -153,13 +139,13 @@ function positive(x) {
 
 function getDistance(from, to) {
   var res = 0;
-  if(typeof to.x != 'undefined') {
+  if (typeof to.x != 'undefined') {
     res += positive(to.x - from.x);
   }
-  if(typeof to.y != 'undefined') {
+  if (typeof to.y != 'undefined') {
     res += positive(to.y - from.y);
   }
-  if(typeof to.r != 'undefined') {
+  if (typeof to.r != 'undefined') {
     res += positive(to.r - from.r);
   }
   return res;
@@ -168,14 +154,14 @@ function getDistance(from, to) {
 var COLLISION_DISTANCE_TRESHOLD = 0.0000001;
 
 KarmaPhysicalBody.prototype.moveToDichotomie = function(from, to) {
-  if(this.tryPosition(to) === false) {
-    while(this.tryPosition(from) || this.tryPosition(to)) {
+  if (this.tryPosition(to) === false) {
+    while (this.tryPosition(from) || this.tryPosition(to)) {
       var distance = getDistance(from, to);
-      if(distance < COLLISION_DISTANCE_TRESHOLD) {
+      if (distance < COLLISION_DISTANCE_TRESHOLD) {
         return from;
       } else {
         var mid = getMiddle(from, to);
-        if(this.tryPosition(mid)) {
+        if (this.tryPosition(mid)) {
           from = mid;
         } else {
           to = mid;
@@ -190,7 +176,7 @@ KarmaPhysicalBody.prototype.moveToDichotomie = function(from, to) {
 
 KarmaPhysicalBody.prototype.getNumCollisions = function() {
   var res = 0;
-  for(var i in this.collidesWith) {
+  for (var i in this.collidesWith) {
     ++res;
   }
   return res;
@@ -226,19 +212,20 @@ KarmaPhysicalBody.prototype.getPositionAndAngle = function(first_argument) {
 };
 
 KarmaPhysicalBody.prototype.doMove = function() {
-  var old, pos;
-  old = this.getPositionAndAngle();
+  var pos;
+  this.oldMoveToPosition = this.getPositionAndAngle();
   pos = this.moveToPosition;
   this.setPosition(pos);
   this.updateCornerCache();
   var res = this.engine.checkCollisions(this);
-  if(res) {
-    if(!this.performCollideAction(old)) {
-      if(this.collidesWith.isStatic === true || this.isBot) {
-        this.x = old.x;
-        this.y = old.y;
+  console.log(this.id, res);
+  if (res) {
+    if (!this.performCollideAction(this.oldMoveToPosition)) {
+      if (this.collidesWith.isStatic === true || this.isBot) {
+        this.x = this.oldMoveToPosition.x;
+        this.y = this.oldMoveToPosition.y;
       } else {
-        this.setPosition(old);
+        this.setPosition(this.oldMoveToPosition);
       }
       this.updateCornerCache();
     }
@@ -246,19 +233,19 @@ KarmaPhysicalBody.prototype.doMove = function() {
 };
 
 KarmaPhysicalBody.prototype.moveTo = function(pos) {
-  if(!KLib.isUndefined(pos.x)) {
+  if (!KLib.isUndefined(pos.x)) {
     // pos.x = this.x;
     this.moveToPosition.x = pos.x;
   } else {
     // delete this.moveToPosition.x;
   }
-  if(!KLib.isUndefined(pos.y)) {
+  if (!KLib.isUndefined(pos.y)) {
     // pos.y = this.y;
     this.moveToPosition.y = pos.y;
   } else {
     // delete this.moveToPosition.y;
   }
-  if(!KLib.isUndefined(pos.r)) {
+  if (!KLib.isUndefined(pos.r)) {
     // pos.r = this.r;
     this.moveToPosition.r = pos.r;
   } else {
@@ -294,12 +281,12 @@ KarmaPhysicalBody.prototype.getCorners = function() {
 };
 
 var compareY = function(c1, c2) {
-    return c2.y - c1.y;
-  }
+  return c2.y - c1.y;
+}
 
 var compareX = function(c1, c2) {
-    return c2.x - c1.x;
-  }
+  return c2.x - c1.x;
+}
 
 KarmaPhysicalBody.prototype.updateCornerCache = function() {
   this.corners = this.getCorners();
@@ -340,7 +327,7 @@ KarmaPhysicalBody.prototype.axis1 = function() {
     x: ur.x - ul.x,
     y: ur.y - ul.y
   };
-  if(a1.x < 0) {
+  if (a1.x < 0) {
     a1 = {
       x: -a1.x,
       y: -a1.y
@@ -356,7 +343,7 @@ KarmaPhysicalBody.prototype.axis2 = function() {
     x: ur.x - br.x,
     y: ur.y - br.y
   };
-  if(a2.x < 0) {
+  if (a2.x < 0) {
     a2 = {
       x: -a2.x,
       y: -a2.y
@@ -374,7 +361,7 @@ KarmaPhysicalBody.prototype.getAxisProjections = function(axis) {
   var aURValue = this.engine.scalarValue(aProjectionUR, axis);
   var aBLValue = this.engine.scalarValue(aProjectionBL, axis);
   var aBRValue = this.engine.scalarValue(aProjectionBR, axis);
-  if(this.shareCollisionInfo) {
+  if (this.shareCollisionInfo) {
     this.p1 = aProjectionUL;
     this.p2 = aProjectionUR;
     this.p3 = aProjectionBL;
@@ -402,7 +389,7 @@ KarmaPhysicalBody.prototype.getAxisProjections = function(axis) {
 
 
 KarmaPhysicalBody.prototype.scalePoint = function(p) {
-  if(!p) {
+  if (!p) {
     return {
       x: 0,
       y: 0
@@ -428,7 +415,7 @@ KarmaPhysicalBody.prototype.scalePointAndAddName = function(name, p) {
 KarmaPhysicalBody.prototype.scaleAxesMinMax = function(minMax) {
   var res = {}
   var gScale = this.gScale;
-  for(var i in minMax) {
+  for (var i in minMax) {
     res[i] = {};
     ['minA', 'maxA', 'minB', 'maxB'].forEach(function(type) {
       res[i][type] = {
@@ -455,7 +442,7 @@ KarmaPhysicalBody.prototype.getShared = function() {
 
   options.id = this.id;
 
-  if(!KLib.isUndefined(this.len)) {
+  if (!KLib.isUndefined(this.len)) {
     // options.p1 = this.p1;
     // options.p2 = this.p2;
     // // options.p3 = this.p3;
@@ -468,7 +455,7 @@ KarmaPhysicalBody.prototype.getShared = function() {
     options.len = this.len * this.gScale;
   }
 
-  if(this.shareCollisionInfo) {
+  if (this.shareCollisionInfo) {
     var ul = this.UL();
     var ur = this.UR();
     var br = this.BR();
@@ -494,7 +481,7 @@ KarmaPhysicalBody.prototype.getShared = function() {
       bBR: this.scalePoint(this.bBR),
       axesMinMax: this.scaleAxesMinMax(this.axesMinMax)
     }
-    if(this.collidesWith !== null) {
+    if (this.collidesWith !== null) {
       collision.a3 = this.collidesWith.a1;
       collision.a4 = this.collidesWith.a2;
     }

@@ -9,11 +9,11 @@ var MemLeakLog = function(name) {
     this.enable = true;
 
     memwatch.on('stats', function(stats) {
-      console.info('MEM STATS', stats);
+      // console.info('MEM STATS', stats);
     });
 
     memwatch.on('leak', function(info) {
-      console.info('MEM LEAK', info);
+      // console.info('MEM LEAK', info);
     });
   }
 

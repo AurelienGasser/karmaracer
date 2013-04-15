@@ -6,15 +6,6 @@ var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
 var MemLeakLog = require('./MemLeakLog');
-var memwatch = require('memwatch');
-
-memwatch.on('stats', function(stats) {
-  console.info('MEM STATS', stats);
-});
-
-memwatch.on('leak', function(info) {
-  console.info('MEM LEAK', info);
-});
 
 var GameServer = function(app, map) {
     this.app = app;
