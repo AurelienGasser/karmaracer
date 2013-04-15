@@ -221,12 +221,9 @@ KarmaPhysicalBody.prototype.doMove = function() {
   console.log(this.id, res);
   if (res) {
     if (!this.performCollideAction(this.oldMoveToPosition)) {
-      if (this.collidesWith.isStatic === true || this.isBot) {
-        this.x = this.oldMoveToPosition.x;
-        this.y = this.oldMoveToPosition.y;
-      } else {
-        this.setPosition(this.oldMoveToPosition);
-      }
+      this.x = this.oldMoveToPosition.x;
+      this.y = this.oldMoveToPosition.y;
+      this.oldMoveToPosition.r = this.r;
       this.updateCornerCache();
     }
   }
