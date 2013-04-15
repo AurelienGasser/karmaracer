@@ -12,14 +12,15 @@ html
     link(rel='stylesheet', href='/css/home.css')
   body
     .header
+      div#fb-root
       h1  Welcome to Karma Racer !!
-      form#playerNameForm(href="#")
-        input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
-        input(type="submit", style="display: none")
+      div#fb-login Login FB
+      form#playerNameForm(href="#")        
+        //input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
+        //input(type="submit", style="display: none")
     br
     br
     div#mainContent
-      div#fb-root
       div#mapsContainer
         h2 Click on a map to play
         ul#maps
