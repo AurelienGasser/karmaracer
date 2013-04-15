@@ -14,7 +14,7 @@ var kFB = {};
       } else if (response.status === 'not_authorized') {
         // not_authorized
         console.info('not_authorized');
-        // login();
+        login();
 
       } else {
         // not_logged_in
@@ -25,6 +25,8 @@ var kFB = {};
   }
 
   function afterLogin(user) {
+
+    // console.log('hi', Karma.get('playerName'), user.name, user);
     updateName();
 
   }
@@ -32,11 +34,16 @@ var kFB = {};
 
   function initFB() {
     FB.Event.subscribe('auth.login', function(response) {
-      console.log('log in done');
+      console.log('log in done', response);
       afterLogin();
     });
 
-    getLoginStatus();
+    // getLoginStatus();
+
+    $('#fb-login').on('click', function() {
+      getLoginStatus();
+    });
+
 
   }
 
@@ -53,20 +60,28 @@ var kFB = {};
 
   function setup() {
     window.fbAsyncInit = function() {
-      var prod ='512708015460560';
+      var prod = '512708015460560';
       var dev = '156724717828757';
+      var host = window.location.hostname + ':' + window.location.port;
+      var channelFile = 'http://' + host + '/channel.html';
       var options = {
-        appId: dev, // App ID
-        channelUrl: 'http://localhost:8080/channel.html', // Channel File
+        appId: prod, // App ID
+        channelUrl: channelFile, // Channel File
         status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session
         xfbml: true // parse XFBML
       };
-        var host = window.location.hostname;
 
-      if (host.indexOf('localhost') !== -1){
-        options.appId = prod;
+
+
+      // console.log(host.indexOf('localhost'));
+      if (host.indexOf('localhost') !== -1) {
+        options.appId = dev;
       }
+
+      console.log(host, options.appId, channelFile);
+
+      // console.log()
       FB.init(options);
 
 
@@ -94,9 +109,6 @@ var kFB = {};
   };
 
 
-  $('#fb-login').on('click', function() {
-    login();
-  });
 
   function appendProfileImage(container, callback) {
     FB.api("/me/picture?width=180&height=180", function(response) {
@@ -116,6 +128,10 @@ var kFB = {};
         var o = ['</br></br>', user.name];
         $container.append(o.join(''));
       });
+
+      Karma.set('playerName', user.name);
+      console.log('hi', Karma.get('playerName'), user.name, user);
+
 
 
     });
