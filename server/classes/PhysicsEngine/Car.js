@@ -1,6 +1,6 @@
 var KLib = require('../KLib');
 var sys = require("sys");
-var KPhysicalBody = require('./KarmaPhysicalBody');
+var KPhysicalBody = require('./PhysicalBody');
 
 var Car = function(playerCar) {
     KLib.extend(KPhysicalBody, this);

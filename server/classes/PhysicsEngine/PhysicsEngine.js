@@ -1,9 +1,9 @@
 var fs = require('fs');
-var KarmaPhysicalBody = require('./KarmaPhysicalBody');
+var PhysicalBody = require('./PhysicalBody');
 var KLib = require('./../KLib');
 
 var G_bodyID = 0;
-var KarmaPhysicsEngine = function(size, map) {
+var PhysicsEngine = function(size, map) {
   this.shareCollisionInfo = false;
   this.itemsToDestroy = [];
   this.gScale = 32;
@@ -14,7 +14,7 @@ var KarmaPhysicsEngine = function(size, map) {
   this.loadStaticItems();
 }
 
-KarmaPhysicsEngine.prototype.destroyBodies = function() {
+PhysicsEngine.prototype.destroyBodies = function() {
   for (var i in this.itemsToDestroy) {
     var item = this.itemsToDestroy[i];
     item.destroy();
@@ -24,11 +24,11 @@ KarmaPhysicsEngine.prototype.destroyBodies = function() {
 };
 
 
-KarmaPhysicsEngine.prototype.setupWorld = function(size) {
+PhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
 };
 
-KarmaPhysicsEngine.prototype.projection = function(corner, axis, name) {
+PhysicsEngine.prototype.projection = function(corner, axis, name) {
   var res = (corner.x * axis.x + corner.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
   var p = {
     x: res * axis.x,
@@ -39,7 +39,7 @@ KarmaPhysicsEngine.prototype.projection = function(corner, axis, name) {
   return p;
 };
 
-KarmaPhysicsEngine.prototype.projectionWithTranslate = function(base_vector, corner, axis, name) {
+PhysicsEngine.prototype.projectionWithTranslate = function(base_vector, corner, axis, name) {
   var pointTranslated = {
     x: corner.x - base_vector.x,
     y: corner.y - base_vector.y
@@ -54,7 +54,7 @@ KarmaPhysicsEngine.prototype.projectionWithTranslate = function(base_vector, cor
   return p;
 };
 
-KarmaPhysicsEngine.prototype.scalarValue = function(v1, v2) {
+PhysicsEngine.prototype.scalarValue = function(v1, v2) {
   return v1.x * v2.x + v1.y * v2.y;
 };
 
@@ -70,7 +70,7 @@ function compareScalar(c1, c2) {
   return c1.scalar - c2.scalar;
 }
 
-KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
+PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
   var deltaBA = {
     x: B.x - A.x,
     y: B.y - A.y
@@ -164,7 +164,7 @@ function myRotate(p, r) {
   }
 }
 
-KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
+PhysicsEngine.prototype.collideTest = function(A, B) {
   if (A.id === B.id) {
     return false;
   }
@@ -185,14 +185,14 @@ KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
   return collides;
 };
 
-KarmaPhysicsEngine.prototype.outOfWalls = function(point) {
+PhysicsEngine.prototype.outOfWalls = function(point) {
   var res = point.x < 0 || point.y < 0 || point.x > this.map.size.w || point.y > this.map.size.h
   return res;
 }
 
 
 
-KarmaPhysicsEngine.prototype.getWorldInfo = function() {
+PhysicsEngine.prototype.getWorldInfo = function() {
   return {
     "size": {
       w: this.map.size.w * this.gScale,
@@ -203,7 +203,7 @@ KarmaPhysicsEngine.prototype.getWorldInfo = function() {
     "background": this.map.background
   };
 }
-KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
+PhysicsEngine.prototype.getShareStaticItems = function() {
   var shareStaticItems = [];
   var items = this.staticBodies;
   // return shareStaticItems;
@@ -214,7 +214,7 @@ KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
   return shareStaticItems;
 }
 
-KarmaPhysicsEngine.prototype.getLine = function(p1, p2) {
+PhysicsEngine.prototype.getLine = function(p1, p2) {
   var l = {};
   l.A = p2.y - p1.y;
   l.B = p1.x - p2.x;
@@ -223,7 +223,7 @@ KarmaPhysicsEngine.prototype.getLine = function(p1, p2) {
 };
 
 //http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=geometry2
-KarmaPhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
+PhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
   var det = line1.A * line2.B - line2.A * line1.B
   if (det == 0) {
     //Lines are parallel
@@ -239,19 +239,19 @@ KarmaPhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
 };
 
 
-KarmaPhysicsEngine.prototype.getVector = function(p1, p2) {
+PhysicsEngine.prototype.getVector = function(p1, p2) {
   return {
     x: p2.x - p1.x,
     y: p2.y - p1.y
   };
 }
 
-KarmaPhysicsEngine.prototype.vectorCrossProduct = function(v, w) {
+PhysicsEngine.prototype.vectorCrossProduct = function(v, w) {
   return v.x * w.y - v.y * w.x
 }
 
 // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-KarmaPhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
+PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   var r_times_s = this.vectorCrossProduct(r, s);
   if (r_times_s === 0) {
     // segments are parallel
@@ -283,7 +283,7 @@ KarmaPhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   // }
 };
 
-KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
+PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
@@ -316,7 +316,7 @@ KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   return res
 };
 
-KarmaPhysicsEngine.prototype.bulletCollideWall = function(projectile) {
+PhysicsEngine.prototype.bulletCollideWall = function(projectile) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
@@ -349,7 +349,7 @@ KarmaPhysicsEngine.prototype.bulletCollideWall = function(projectile) {
   return null;
 }
 
-KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
+PhysicsEngine.prototype.bulletCollision = function(projectile) {
   var pointsAndBullets = [];
   for (var bID in this.bodies) {
     var B = this.bodies[bID];
@@ -378,7 +378,7 @@ KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
 };
 
 
-KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
+PhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
   function getScore(source, p) {
     return Math.abs(source.x - p.x) * Math.abs(source.y - p.y);
@@ -407,7 +407,7 @@ KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 }
 
 
-KarmaPhysicsEngine.prototype.checkCollisions = function(body) {
+PhysicsEngine.prototype.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
     return true;
   }
@@ -437,7 +437,7 @@ KarmaPhysicsEngine.prototype.checkCollisions = function(body) {
 }
 
 
-KarmaPhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
+PhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
   if (p1.x !== p2.x) {
     return false;
   }
@@ -450,7 +450,7 @@ KarmaPhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
   return true;
 };
 
-KarmaPhysicsEngine.prototype.step = function() {
+PhysicsEngine.prototype.step = function() {
 
   var A, AID;
   for (AID in this.bodies) {
@@ -474,7 +474,7 @@ KarmaPhysicsEngine.prototype.step = function() {
 };
 
 
-KarmaPhysicsEngine.prototype.getShared = function() {
+PhysicsEngine.prototype.getShared = function() {
   var bodies = [];
   for (var bID in this.bodies) {
     var body = this.bodies[bID];
@@ -484,18 +484,18 @@ KarmaPhysicsEngine.prototype.getShared = function() {
 }
 
 
-KarmaPhysicsEngine.prototype.destroy = function() {
+PhysicsEngine.prototype.destroy = function() {
   this.bodies = null;
   this.size = null;
 };
 
-KarmaPhysicsEngine.prototype.addBody = function(body) {
+PhysicsEngine.prototype.addBody = function(body) {
   this.bodies[body.id] = body;
 }
 
-KarmaPhysicsEngine.prototype.createBody = function(position, size, name) {
+PhysicsEngine.prototype.createBody = function(position, size, name) {
   var b, id;
-  b = new KarmaPhysicalBody();
+  b = new PhysicalBody();
   b.initialize(this, position, size);
   if (!KLib.isUndefined(name)) {
     b.name = name;
@@ -506,7 +506,7 @@ KarmaPhysicsEngine.prototype.createBody = function(position, size, name) {
   return id;
 };
 
-KarmaPhysicsEngine.prototype.loadStaticItems = function() {
+PhysicsEngine.prototype.loadStaticItems = function() {
   var b;
   var staticItems = this.map.staticItems.concat([{
     name: 'outsideWall'
@@ -530,6 +530,6 @@ KarmaPhysicsEngine.prototype.loadStaticItems = function() {
   };
 }
 
-module.exports = KarmaPhysicsEngine;
+module.exports = PhysicsEngine;
 
-// KarmaPhysicsEngine = null;
+// PhysicsEngine = null;

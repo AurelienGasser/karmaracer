@@ -1,6 +1,6 @@
 var KLib = require('./../KLib');
 var sys = require("sys");
-var KPhysicalBody = require('./KarmaPhysicalBody');
+var KPhysicalBody = require('./PhysicalBody');
 
 var Bullet = function(playerCar, pos, angle) {
     // angle = -0.9252754126021274;
@@ -43,20 +43,6 @@ var Bullet = function(playerCar, pos, angle) {
       y: Math.sin(this.r) * this.len
     }
   }
-
-Bullet.prototype.performCollideAction = function(oldPosition) {
-  // TODO: remove this function
-  if(this.collidesWith.name === 'car' || this.collidesWith.name === 'bot') {
-    if(this.collidesWith.id !== this.playerCar.car.id) {
-      var playerCar = this.collidesWith.playerCar;
-      playerCar.gameServer.carManager.projectileHitCar(this.playerCar, playerCar, this);
-      this.explode();
-    }
-  } else {
-    this.explode();
-  }
-  return true;
-};
 
 Bullet.prototype.die = function() {
   this.life = -1;

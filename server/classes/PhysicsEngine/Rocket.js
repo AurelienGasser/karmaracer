@@ -3,7 +3,7 @@ var KLib = require('../KLib');
 var sys = require("sys");
 // var PhysicsItem = require('./PhysicsItem');
 
-var KPhysicalBody = require('./KarmaPhysicalBody');
+var KPhysicalBody = require('./PhysicalBody');
 
 
 var Rocket = function(playerCar, pos, angle) {
