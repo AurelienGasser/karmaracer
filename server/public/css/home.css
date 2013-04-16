@@ -7,12 +7,29 @@ body{
 }
 
 #playerName{
-  width: 200px;
+  width: 300px;
   height: 32px;
   line-height: 32px;
   font-size: larger;
   vertical-align: middle;
+  text-align: center;
+  opacity: 0.5;
+}
 
+#fb-login-box{
+  min-height: 220px;
+}
+#fb-login{
+  border: none;
+  cursor: pointer;
+}
+
+#login-zone{
+  
+}
+
+#playerName:focus{
+  opacity: 1;
 }
 
 #mainContent {

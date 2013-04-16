@@ -6,44 +6,45 @@ var kFB = {};
 
 
     FB.getLoginStatus(function(response) {
-      console.log('login response', response);
       if (response.status === 'connected') {
         // connected
-        console.info('connected', response);
         afterLogin(response);
       } else if (response.status === 'not_authorized') {
         // not_authorized
-        console.info('not_authorized');
         login();
-
       } else {
         // not_logged_in
-        console.info('not_logged_in');
-        // login();
+        login();
       }
     });
   }
 
-  function afterLogin(user) {
+  function loginIfAuthorized() {
 
-    // console.log('hi', Karma.get('playerName'), user.name, user);
+    FB.getLoginStatus(function(response) {
+      if (response.status === 'not_logged_in') {
+        login();
+      }
+      if (response.status === 'connected') {
+        afterLogin();
+      }
+    });
+  }
+
+  function afterLogin() {
     updateName();
-
   }
 
 
   function initFB() {
     FB.Event.subscribe('auth.login', function(response) {
-      console.log('log in done', response);
       afterLogin();
     });
-
-    // getLoginStatus();
-
+    loginIfAuthorized();
     $('#fb-login').on('click', function() {
       getLoginStatus();
+      $(this).off('click');
     });
-
 
   }
 
@@ -52,6 +53,7 @@ var kFB = {};
     FB.login(function(response) {
       if (response.authResponse) {
         // connected
+        afterLogin();
       } else {
         // cancelled
       }
@@ -72,20 +74,12 @@ var kFB = {};
         xfbml: true // parse XFBML
       };
 
-
-
-      // console.log(host.indexOf('localhost'));
       if (host.indexOf('localhost') !== -1) {
         options.appId = dev;
       }
 
       console.log(host, options.appId, channelFile);
-
-      // console.log()
       FB.init(options);
-
-
-
       // Additional init code here
       initFB();
 
@@ -118,22 +112,17 @@ var kFB = {};
   }
 
   function updateName() {
-    // console.log('Welcome! Fetching your information.... ');
     FB.api('/me', function(user) {
-      console.log(user, 'Good to see you, ' + user.name + '.');
-
-      var $container = $('#fb-login');
+      var $container = $('#fb-login-box');
       $container.html('');
       appendProfileImage($container, function() {
-        var o = ['</br></br>', user.name];
-        $container.append(o.join(''));
       });
 
-      Karma.set('playerName', user.name);
-      console.log('hi', Karma.get('playerName'), user.name, user);
-
-
-
+      var exists = Karma.exists('playerName');
+      if (!exists) {
+        Karma.set('playerName', user.name);
+        $('#playerName').val(user.name);
+      }
     });
   }
 

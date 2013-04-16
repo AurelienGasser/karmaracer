@@ -52,6 +52,10 @@ $(function() {
     return false;
   })
 
+  $('#playerName').keyup(function(e){
+    Karma.set('playerName', $(this).val());
+  });
+
   function addMaps(maps) {
 
 

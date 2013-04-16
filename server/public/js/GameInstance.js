@@ -9,8 +9,6 @@ KLib.isUndefined = function(obj) {
   return obj === void 0;
 };
 
-console.log('player name', Karma.get('playerName'));
-
 function GameInstance() {
   this.cars = [];
   this.explosions = {};

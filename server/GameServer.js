@@ -98,8 +98,8 @@ GameServer.prototype.handleClientKeyboard = function() {
         if(state) {
           switch(event) {
           case 'break':
-            car.reduceAngularVelocity(0.3);
-            car.reduceLinearVelocity(0.4);
+            // car.reduceAngularVelocity(0.3);
+            // car.reduceLinearVelocity(0.4);
             break;
           case 'shoot':
             player.playerCar.shoot();

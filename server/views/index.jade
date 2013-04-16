@@ -14,10 +14,12 @@ html
     .header
       div#fb-root
       h1  Welcome to Karma Racer !!
-      div#fb-login Login FB
-      form#playerNameForm(href="#")        
-        //input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
-        //input(type="submit", style="display: none")
+      div#login-zone
+        div#fb-login-box
+          img#fb-login(src='/images/connect-fb.jpg',title='connect using your facebook account')
+        form#playerNameForm(href="#")        
+          input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
+          input(type="submit", style="display: none")
     br
     br
     div#mainContent
