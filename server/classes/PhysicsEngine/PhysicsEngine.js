@@ -517,7 +517,26 @@ PhysicsEngine.prototype.loadStaticItems = function() {
     var itemJSONPath = itemsDir + item.name + '.json';
     var itemJSONString = fs.readFileSync(itemJSONPath);
     var itemJSON = JSON.parse(itemJSONString);
-    if (item.name !== 'outsideWall') {
+    if (item.name === 'outsideWall') {
+      var wallThickness = 1;
+      var id;
+      id = this.createBody({ x: this.map.size.w / 2, y: this.map.size.h + wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallTop');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+      id = this.createBody({ x: -wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallLeft');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+      id = this.createBody({ x: this.map.size.w  + wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallRight');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+      id = this.createBody({ x: this.map.size.w / 2, y: -wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallBottom');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+    } else {
       var id = this.createBody(item.position, item.size, item.name);
       b = this.bodies[id];
       b.isStatic = true;
