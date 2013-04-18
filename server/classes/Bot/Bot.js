@@ -1,4 +1,4 @@
-var PlayerCar = require('./PlayerCar');
+var PlayerCar = require('./../PlayerCar');
 
 var Bot = function(gameServer, name) {
     this.isBot = true;
