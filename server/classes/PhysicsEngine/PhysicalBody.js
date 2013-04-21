@@ -218,7 +218,6 @@ PhysicalBody.prototype.doMove = function() {
   this.setPosition(pos);
   this.updateCornerCache();
   var res = this.engine.checkCollisions(this);
-  console.log(this.id, res);
   if (res) {
     if (!this.performCollideAction(this.oldMoveToPosition)) {
       this.x = this.oldMoveToPosition.x;
