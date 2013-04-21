@@ -2,6 +2,7 @@ var KLib = require('./classes/KLib');
 var fs = require('fs');
 // var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
 // var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
+var config = require('./config');
 var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
@@ -117,6 +118,9 @@ GameServer.prototype.handleClientKeyboard = function() {
             car.turn(reverseTurning(client, true));
             break;
           }
+        }
+        if (config.STEP_BY_STEP_MODE === true) {
+          delete client.keyboard[event];
         }
       }
       if(!client.keyboard.left && !client.keyboard.right) {
