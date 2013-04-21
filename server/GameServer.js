@@ -71,7 +71,12 @@ GameServer.prototype.initGameServer = function(map) {
   that.mem.save();
   stepGame(0);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
+  this.postInit();
 };
+
+GameServer.prototype.postInit = function() {
+  // post init: add bots, etc..
+}
 
 GameServer.prototype.handleClientKeyboard = function() {
   var that = this;
