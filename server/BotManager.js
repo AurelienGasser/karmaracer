@@ -1,3 +1,4 @@
+var config = require('./config');
 var botNames = require('./botNames');
 var Bot = require('./classes/Bot/Bot');
 var DummyBot = require('./classes/Bot/DummyBot');
@@ -26,7 +27,7 @@ BotManager.prototype.initBots = function() {
   if(numBots > 10) {
     numBots = 10;
   }
-  numBots = 5;
+  numBots = config.BOTS_PER_MAP;
   for(var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
