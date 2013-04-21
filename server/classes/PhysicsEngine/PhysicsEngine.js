@@ -28,14 +28,15 @@ PhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
 };
 
-PhysicsEngine.prototype.projection = function(corner, axis, name) {
-  var res = (corner.x * axis.x + corner.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
+PhysicsEngine.prototype.projection = function(a, b, name) {
+  var res = (a.x * b.x + a.y * b.y) / (b.x * b.x + b.y * b.y);
   var p = {
-    x: res * axis.x,
-    y: res * axis.y
+    x: res * b.x,
+    y: res * b.y
   };
-
-  p.name = name;
+  if (!KLib.isUndefined(name)) {
+    p.name = name;
+  }
   return p;
 };
 
@@ -405,7 +406,6 @@ PhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
   return sorted[0];
 }
-
 
 PhysicsEngine.prototype.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
