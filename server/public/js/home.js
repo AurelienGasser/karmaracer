@@ -9,7 +9,7 @@ $(function() {
     TopBar.setTopBar();
 
     var host = window.location.hostname;
-    var connection = io.connect(host);
+    var connection = io.connect(host, {secure: true});
 
 
     connection.emit('get_maps', function(err, maps) {

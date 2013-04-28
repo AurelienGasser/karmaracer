@@ -55,11 +55,7 @@ memwatch.on('leak', function(info) {
 memwatch.on('stats', function(stats) {
   // console.info('HEAP STATS', stats);
 });
-// FOR SSL IF REQUIRED
-var ssl_options = {
-  key: fs.readFileSync(__dirname + '/keys/karma-key.pem'),
-  cert: fs.readFileSync(__dirname + '/keys/karma-cert.pem')
-};
+
 
 var app = express();
 var port = 8080;
@@ -73,7 +69,24 @@ var hostname = os.hostname();
 app.configure('local', function() {});
 
 var http = require('http');
-var server = http.createServer(app);
+
+
+// FOR SSL IF REQUIRED
+var ssl_options = {
+  key: fs.readFileSync(__dirname + '/keys/karma-key.pem'),
+  cert: fs.readFileSync(__dirname + '/keys/karma-cert.pem')
+};
+
+const https = require('https');
+
+// const crypto = require('crypto');
+// var credentials = crypto.createCredentials({key: ssl_options.key, cert: ssl_options.cert});
+
+// var server = http.createServer(app);
+// server.setSecure(credentials);
+
+var server = https.createServer(ssl_options, app).listen(443);
+
 server.on('error', function(e) {
   console.error('Critical Server Error:', e);
   console.error(e.stack);
@@ -129,7 +142,7 @@ io.configure(function() {
 });
 
 
-server.listen(port);
+// server.listen(port);
 
 
 
