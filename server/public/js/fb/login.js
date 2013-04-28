@@ -84,9 +84,6 @@ var kFB = {};
 
 
   function initFB() {
-
-    console.log(G_fbid);
-
     FB.Event.subscribe('auth.login', function(response) {
       afterLogin();
     });
@@ -115,9 +112,6 @@ var kFB = {};
   function setup() {
     window.fbAsyncInit = function() {
       // publish_actions
-      
-
-      console.log(kFB.conf);
       var channelFile = 'http://' + kFB.host + '/channel.html';
       var options = {
         appId: kFB.conf.appID, // App ID

@@ -1,7 +1,7 @@
 Map.prototype.saveMap = function() {
 
 
-
+  console.log('savemap');
   var that = this;
   var iWidth = this.realWorldSize.w;
   var iHeight = this.realWorldSize.h;
@@ -17,11 +17,11 @@ Map.prototype.saveMap = function() {
 
   var path = '/sprites/bg_grass1.png';
   var itemBG = this.itemsByName[this.mapBackgroundName];
-  if(!KLib.isUndefined(itemBG)) {
+  if (!KLib.isUndefined(itemBG)) {
     path = itemBG.path;
   }
 
-  if(!KLib.isUndefined(path)) {
+  if (!KLib.isUndefined(path)) {
     map['background'] = {
       'path': path,
       'name': this.mapBackgroundName
@@ -32,13 +32,13 @@ Map.prototype.saveMap = function() {
     var jsonItem = {};
     jsonItem.name = item.name;
     jsonItem.position = {
-      x: parseInt((item.position.x + item.size.w / 2) / that.gScale),
-      y: parseInt((item.position.y + item.size.h / 2) / that.gScale)
+      x: (item.position.x + item.size.w / 2) / that.gScale,
+      y: (item.position.y + item.size.h / 2) / that.gScale
     };
     jsonItem.size = {
       w: parseInt(item.size.w / that.gScale),
       h: parseInt(item.size.h / that.gScale)
-    };    
+    };
     map.staticItems.push(jsonItem);
   });
   var mapString = JSON.stringify(map);

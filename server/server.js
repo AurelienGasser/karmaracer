@@ -185,7 +185,6 @@ app.get('/', ensureAuthenticated, function(req, res) {
 
 app.post('/', function(req, res) {
   res.redirect('/auth/facebook');
-  // index(req, res, "index.jade", "CANVAS");
 });
 
 

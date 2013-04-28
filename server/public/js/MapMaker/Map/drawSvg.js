@@ -6,6 +6,10 @@
 
 
   Map.prototype.svgRaphaelAddItem = function(item) {
+
+    item.position.x -= item.size.w / 2;
+    item.position.y -= item.size.h / 2;
+
     var that = this;
     var opacityStart = 1;
     var opacityDrag = 0.5;
@@ -56,6 +60,9 @@
     addOption('toBack');
     var remove = getJOption('removeItem');
     li.append(remove);
+    // console.log(c.toString());
+    // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
+    // li.append('</br>pos' + JSON.stringify(item.position));
     remove.click(function(e){
       that.removeMapItem(item.id);
       $(c.node).remove();
@@ -93,6 +100,16 @@
           x: this.sizer.ox + dx,
           y: this.sizer.oy + dy
         });
+        if (item.position.x < 0){
+          // this.sizer.attr('x', 0);
+          item.position.x = 0;
+        }
+        if (item.position.y < 0){
+          // this.sizer.attr('y', 0);
+          item.position.y = 0;
+        }
+
+
       };
     var up = function() {
         // restoring state
@@ -129,6 +146,13 @@
     $(c.node).click(function(e) {
       $('#canvas-debug').children().hide();
       c.li.show();
+
+
+      li.find('span').remove();
+    // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
+    li.append('<span>pos' + JSON.stringify(item.position) + '</span>');
+
+
       e.preventDefault();
       return false;
     })

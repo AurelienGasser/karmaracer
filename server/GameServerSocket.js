@@ -102,6 +102,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   client.on('saveMap', function(map) {
     try {
+      console.log('saveMap', map);
       var fs = require('fs');
       var path = __dirname + "/public/maps/" + map.name + '.json';
       //reload map

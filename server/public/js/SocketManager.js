@@ -31,7 +31,6 @@ function SocketManager(gameInstance, onInitCallback) {
   $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
 
   connection.on('connect', function(data) {
-    console.info('client connected', G_mapName);
     if(!_.isUndefined(G_mapName)) {
       connection.emit('enter_map', G_mapName);
     }
@@ -40,7 +39,6 @@ function SocketManager(gameInstance, onInitCallback) {
 
   connection.on('init', function(worldInfo) {
     onInitCallback(null, worldInfo);
-    console.info('worldInfo', worldInfo);
     if(!Karma.get('playerName') || Karma.get('playerName').length === 0) {
       Karma.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
     }
