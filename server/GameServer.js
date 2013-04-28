@@ -241,6 +241,10 @@ function handleError(err) {
   console.error("caught handle", err);
 }
 
+GameServer.prototype.updateScores = function() {
+  this.carManager.updateScores();
+};
+
 GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', {
     winnerName: winnerCar.player.playerName

@@ -35,9 +35,14 @@ CarManager.prototype.getAliveCars = function(source) {
   return aliveCars;
 }
 
+CarManager.prototype.updateScores = function() {
+  // this.gameServer.players
+
+};
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
+  attacker.highScore += 1;
   victim.receiveHit(projectile.damage);
   if(victim.life <= 0) {
     if(victim.dead) {

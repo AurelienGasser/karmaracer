@@ -15,7 +15,12 @@
     "box2dweb-commonjs": ">=2.1.0",
     "walk": ">=0.0.1",
     "forever-monitor": ">=0.0.1",
-    "memwatch" : ">=0.0.1"
+    "memwatch": ">=0.0.1",
+    "passport-facebook": ">=0.0.1",
+    "passport": ">=0.0.1",
+    "connect": ">=0.0.1",
+    "cookie": ">=0.0.1",
+    "fbgraph":">=0.0.1"
   },
   "private": true
 }

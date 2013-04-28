@@ -44,12 +44,5 @@ Car.prototype.receiveHit = function() {
   this.playerCar.receiveHit();
 }
 
-Car.prototype.getShared = function() {
-  var res = this.base.getShared.call(this);
-  res.playerName = this.playerCar.playerName;
-  res.s = this.playerCar.score;
-  res.l = this.playerCar.level;
-  return res;
-}
 
 module.exports = Car;

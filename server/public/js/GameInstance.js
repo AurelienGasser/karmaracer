@@ -86,7 +86,8 @@ GameInstance.prototype.updateScoresHTML = function() {
       return {
         'score': car.s,
         'level': car.l,
-        'name': car.playerName
+        'name': car.playerName,
+        'highScore' : car.highScore
       };
     });
     scores = _.sortBy(scores, function(c) {
@@ -99,7 +100,7 @@ GameInstance.prototype.updateScoresHTML = function() {
   for(var i = 0; i < scores.length; i++) {
     var playerScore = scores[i];
     var userCarClass = (that.mycar !== null && that.mycar.playerName === playerScore.name) ? 'userCar' : '';
-    o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td></tr>');
+    o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
   };
   this.scoresTable.html(o.join(''));
 };

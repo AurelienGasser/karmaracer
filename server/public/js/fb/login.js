@@ -31,12 +31,48 @@ var kFB = {};
     });
   }
 
+
+  function setScore(user, score) {
+    FB.api("/me/scores", 'post', {
+      score: score,
+      // access_token: FB.getSession().access_token
+    }, function(response) {
+      if (!response || response.error) {
+        console.error(response);
+      } else {
+        console.log(response);
+      }
+    });
+  }
+
+  function getScore(user) {
+    FB.api("/" + user.id + "/scores/karmaracer_dev", function(response) {
+      if (!response || response.error) {
+        console.error(response);
+      } else {
+        console.log(response);
+        var score = response.data[0].score;
+        if (score !== 0) {
+          $('#fb-login-box').append('<div title="High Score" id="fb-login-score">' + score + '</div>');
+          // $('#fb-login-score').html(score);
+        }
+
+      }
+    });
+  }
+
+
+
   function afterLogin() {
     updateName();
+
   }
 
 
   function initFB() {
+
+    console.log(G_fbid);
+
     FB.Event.subscribe('auth.login', function(response) {
       afterLogin();
     });
@@ -57,6 +93,8 @@ var kFB = {};
       } else {
         // cancelled
       }
+    }, {
+      scope: 'publish_actions'
     });
   }
 
@@ -64,6 +102,7 @@ var kFB = {};
     window.fbAsyncInit = function() {
       var prod = '512708015460560';
       var dev = '156724717828757';
+      // publish_actions
       var host = window.location.hostname + ':' + window.location.port;
       var channelFile = 'http://' + host + '/channel.html';
       var options = {
@@ -77,8 +116,6 @@ var kFB = {};
       if (host.indexOf('localhost') !== -1) {
         options.appId = dev;
       }
-
-      console.log(host, options.appId, channelFile);
       FB.init(options);
       // Additional init code here
       initFB();
@@ -115,14 +152,16 @@ var kFB = {};
     FB.api('/me', function(user) {
       var $container = $('#fb-login-box');
       $container.html('');
-      appendProfileImage($container, function() {
-      });
+      appendProfileImage($container, function() {});
 
       var exists = Karma.exists('playerName');
       if (!exists) {
         Karma.set('playerName', user.name);
         $('#playerName').val(user.name);
       }
+
+      getScore(user);
+      // setScore(user, 500);
     });
   }
 

@@ -3,6 +3,8 @@ var RocketLauncher = require('./weapons/RocketLauncher');
 var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 var Angle90MachineGun = require('./weapons/Angle90MachineGun');
+var KLib = require('./KLib');
+
 
 var WeaponsByClass = {
   1: MachineGun,
@@ -16,17 +18,48 @@ var WeaponsByClass = {
   9: RocketLauncher,
 };
 
+
+
 var PlayerCar = function(gameServer, client, playerName, player) {
-    this.player = player;
-    this.client = client;
-    this.isBot = !this.client;
-    this.gameServer = gameServer;
-    this.car = new Car(this);
-    gameServer.engine.addBody(this.car);
-    this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
-    this.id = this.car.id;
-    this.resetPlayer();
+  this.player = player;
+  this.client = client;
+  this.isBot = !this.client;
+  this.gameServer = gameServer;
+  this.car = new Car(this);
+  gameServer.engine.addBody(this.car);
+  this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
+  this.id = this.car.id;
+  this.resetPlayer();
+  this.highScore = 0;
+  if (this.client !== null) {
+    this.FBInit();
   }
+}
+
+PlayerCar.prototype.FBInit = function(callback) {
+  this.fbid = this.client.handshake.session.fbsid;
+  return this.FBUpdateScore(callback);
+};
+
+PlayerCar.prototype.FBUpdateScore = function(callback) {
+  var that = this;
+
+  this.client.graph.get("/" + that.fbid + "/scores/karmaracer_dev", function(err, response) {
+    console.log('graph score', response);
+    if (!response || response.error) {
+      console.error(response);
+    } else {
+      var score = response.data[0].score;
+      if (score !== 0) {
+        that.highScore = score;
+        if (KLib.isFunction(callback)) {
+          return callback(null);
+        }
+      }
+    }
+  });
+
+};
 
 PlayerCar.prototype.resetPlayer = function() {
   this.score = 0;
@@ -43,12 +76,16 @@ PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
   share.life = this.life;
   share.maxLife = this.maxLife;
+  share.highScore = this.highScore;
   share.shootingWithWeapon = this.shootingWithWeapon;
+  share.playerName = this.playerName;
+  share.s = this.score;
+  share.l = this.level;
   return share;
 }
 
 PlayerCar.prototype.updatePos = function() {
-  if(!this.dead && this.car !== null) {
+  if (!this.dead && this.car !== null) {
     return this.car.updatePos();
   }
 }
@@ -63,10 +100,10 @@ PlayerCar.prototype.updatePlayerName = function(name) {
 
 PlayerCar.prototype.getExperience = function(experience) {
   this.experience += experience;
-  if(this.experience >= 100) {
+  if (this.experience >= 100) {
     this.levelUp();
   }
-  if(this.experience < 0) {
+  if (this.experience < 0) {
     this.levelDown();
   }
 }
@@ -81,7 +118,7 @@ PlayerCar.prototype.updateWeapon = function() {
 }
 
 PlayerCar.prototype.levelUp = function() {
-  if(this.level >= Object.keys(WeaponsByClass).length / 2) {
+  if (this.level >= Object.keys(WeaponsByClass).length / 2) {
     this.gameServer.gameEnd(this);
   } else {
     this.level += 1;
@@ -92,7 +129,7 @@ PlayerCar.prototype.levelUp = function() {
 
 PlayerCar.prototype.levelDown = function() {
   this.level -= 1;
-  if(this.level == 0) {
+  if (this.level == 0) {
     this.level = 1;
   }
   this.updateWeapon();
@@ -105,7 +142,7 @@ PlayerCar.prototype.shoot = function() {
 
 PlayerCar.prototype.rebornIn = function(seconds) {
   setTimeout(function() {
-    if(this.isBot || this.player.connected) {
+    if (this.isBot || this.player.connected) {
       this.dead = false;
       this.life = 100;
       this.car.goToFreeLandingPoint();
@@ -116,7 +153,7 @@ PlayerCar.prototype.rebornIn = function(seconds) {
 PlayerCar.prototype.die = function() {
   this.getExperience(-50);
   this.dead = true;
-  if(this.player.client) {
+  if (this.player.client) {
     this.player.client.keyboard = {};
     this.player.client.emit('dead', null);
   }
