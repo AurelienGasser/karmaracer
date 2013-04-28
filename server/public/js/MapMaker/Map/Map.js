@@ -52,7 +52,7 @@ function Map(selector) {
   this.backgroundItems = [];
 
   $(selector).css('width', this.realWorldSize.w).css('height', this.realWorldSize.h);
-  
+
 
   this.itemsGlow = {};
   var that = this;
@@ -106,7 +106,7 @@ Map.prototype.startTick = function() {
 
 
 Map.prototype.outputDebug  = function() {
-  
+
   var debugoutput = [];
   debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y, '</li>');
   debugoutput.push('<li>Canvas Down Pos : ', this.mouseDownPosition.x, ', ', this.mouseDownPosition.y, '</li>');
@@ -129,7 +129,7 @@ Map.prototype.outputDebug  = function() {
 
 Map.prototype.tick = function() {
   this.tickCount++;
-  
+
   var now = new Date();
   var tickDiff = now.getTime() - this.tickStart;
   if(tickDiff > 1000) {
@@ -191,7 +191,7 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
       'path': item.image.src
     };
     that.backgroundItems.push(bgItem);
-    
+
   case 'horizontal':
   case 'vertical':
     demoDiv.css('background-image', 'url("' + item.image.src + '")');

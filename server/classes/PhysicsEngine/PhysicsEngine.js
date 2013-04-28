@@ -28,14 +28,15 @@ PhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
 };
 
-PhysicsEngine.prototype.projection = function(corner, axis, name) {
-  var res = (corner.x * axis.x + corner.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
+PhysicsEngine.prototype.projection = function(a, b, name) {
+  var res = (a.x * b.x + a.y * b.y) / (b.x * b.x + b.y * b.y);
   var p = {
-    x: res * axis.x,
-    y: res * axis.y
+    x: res * b.x,
+    y: res * b.y
   };
-
-  p.name = name;
+  if (!KLib.isUndefined(name)) {
+    p.name = name;
+  }
   return p;
 };
 
@@ -406,7 +407,6 @@ PhysicsEngine.prototype.getClosestPoint = function(source, points) {
   return sorted[0];
 }
 
-
 PhysicsEngine.prototype.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
     return true;
@@ -517,7 +517,26 @@ PhysicsEngine.prototype.loadStaticItems = function() {
     var itemJSONPath = itemsDir + item.name + '.json';
     var itemJSONString = fs.readFileSync(itemJSONPath);
     var itemJSON = JSON.parse(itemJSONString);
-    if (item.name !== 'outsideWall') {
+    if (item.name === 'outsideWall') {
+      var wallThickness = 1;
+      var id;
+      id = this.createBody({ x: this.map.size.w / 2, y: this.map.size.h + wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallTop');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+      id = this.createBody({ x: -wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallLeft');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+      id = this.createBody({ x: this.map.size.w  + wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallRight');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+      id = this.createBody({ x: this.map.size.w / 2, y: -wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallBottom');
+      b = this.bodies[id];
+      b.isStatic = true;
+      this.staticBodies.push(b);
+    } else {
       var id = this.createBody(item.position, item.size, item.name);
       b = this.bodies[id];
       b.isStatic = true;

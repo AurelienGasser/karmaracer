@@ -1,5 +1,7 @@
+var config = require('./config');
 var botNames = require('./botNames');
-var Bot = require('./classes/Bot');
+var Bot = require('./classes/Bot/Bot');
+var DummyBot = require('./classes/Bot/DummyBot');
 
 var BotManager = function(gameServer) {
     this.gameServer = gameServer;
@@ -25,7 +27,7 @@ BotManager.prototype.initBots = function() {
   if(numBots > 10) {
     numBots = 10;
   }
-  numBots = 10;
+  numBots = config.BOTS_PER_MAP;
   for(var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();
@@ -51,11 +53,19 @@ BotManager.prototype.getBotName = function() {
   return botName;
 }
 
-BotManager.prototype.addBot = function() {
+BotManager.prototype.addBotWithClass = function(botClass) {
   var b, name;
   name = this.getBotName();
-  b = new Bot(this.gameServer, name);
+  b = new botClass(this.gameServer, name);
   this.bots[b.id] = b;
+}
+
+BotManager.prototype.addBot = function() {
+  this.addBotWithClass(Bot);
+}
+
+BotManager.prototype.addDummyBot = function() {
+  this.addBotWithClass(DummyBot);
 }
 
 BotManager.prototype.removeBot = function(gameServer) {

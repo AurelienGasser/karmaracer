@@ -7,3 +7,4 @@ npm-debug.log
 *~
 out.log
 err.log
+server/config.js

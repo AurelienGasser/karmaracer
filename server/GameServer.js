@@ -2,6 +2,7 @@ var KLib = require('./classes/KLib');
 var fs = require('fs');
 // var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
 // var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
+var config = require('./config');
 var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
@@ -70,7 +71,12 @@ GameServer.prototype.initGameServer = function(map) {
   that.mem.save();
   stepGame(0);
   setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
+  this.postInit();
 };
+
+GameServer.prototype.postInit = function() {
+  // post init: add bots, etc..
+}
 
 GameServer.prototype.handleClientKeyboard = function() {
   var that = this;
@@ -117,6 +123,9 @@ GameServer.prototype.handleClientKeyboard = function() {
             car.turn(reverseTurning(client, true));
             break;
           }
+        }
+        if (config.STEP_BY_STEP_MODE === true) {
+          delete client.keyboard[event];
         }
       }
       if(!client.keyboard.left && !client.keyboard.right) {
