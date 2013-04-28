@@ -17,6 +17,7 @@ html
       var G_mapName = '#{map}';
       var G_defaultDrawEngineType = '#{default_draw_engine}';
       var G_MOBILE_DEVICE = false;
+      var G_fbid = '#{fbid}'
     script(type='text/javascript', src='/js/SocketManager.js')
     script(type='text/javascript', src='/js/chat.js')
     script(type='text/javascript', src='/js/drawEngine/camera.js')
@@ -25,8 +26,10 @@ html
     script(type='text/javascript', src='/js/GameInstance.js')
     script(type='text/javascript', src='/js/startup.js')
     script(type='text/javascript', src='/js/SteeringWheelController.js')
-    link(rel='stylesheet', href='/css/race.css')
+    script(type='text/javascript', src='/js/fb/login.js')      
+    link(rel='stylesheet', href='/css/race.css')    
     link(rel='stylesheet', href='/css/chat.css')
+    link(rel='stylesheet', href='/css/topBar.css')      
   body
     #botMenu
       input#addBot(type="button", value="Add bot")
@@ -38,7 +41,7 @@ html
       #high-score
     canvas#game-canvas
     #loadingtext Loading world...
-    #player_name_div: input#player_name(placeholder="Your name")
+    //#player_name_div: input#player_name(placeholder="Your name")
     div#left_panel
       table.scores
         thead

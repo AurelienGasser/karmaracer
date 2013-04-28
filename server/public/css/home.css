@@ -10,81 +10,6 @@ body, form, input{
   text-align: center;
 }
 
-#fbHighScore{
-  cursor: help;
-  line-height: 40px;
-  height: 40px;
-}
-
-#playerName{
-  height: 40px;
-  line-height: 40px;
-  width: 300px;
-/* 
-  font-size: larger;
-  vertical-align: middle;
-  text-align: center;
-*/  /*opacity: 0.5;*/
-  background-color: #eee;
-  border: none;
-  padding-right: 5px;
-}
-
-#playerName:focus{
-  background-color: white;
-}
-
-
-.fb-picture{
-  width: 40px;
-  height: 40px;
-}
-
-#fb-login-box{
-  width: 200px;
-  vertical-align: top;
-}
-#fb-login-box > * {
-  display: inline-block;
-}
-
-#fb-login{
-  border: none;
-  cursor: pointer;
-}
-
-
-
-#topBarBoxes {
-  margin: 0px;
-  padding: 0px;
-  width:100%;
-}
-#topBarBoxes li {
-  display: inline-block;
-  overflow: hidden;
-  vertical-align: top;
-  list-style: none;
-  margin: 5px;
-}
-
-#login-zone{
-  position: fixed;
-  right: 0px;
-  height: 50px;
-  top:0px;
-  background-color: #eee;
-  width: 100%;
-  vertical-align: top;
-  text-align: right;
-}
-
-
-/*#login-zone > * {
-  display: inline-block;;
-  margin:5px;
-}
-*/
 
 #mainContent {
   width: 100%;
@@ -133,24 +58,6 @@ h1 {
   box-shadow: #eee 2px 2px 2px;
 }
 
-#topHelp{
-  position: relative;
-  left: 0px;
-  text-align: left;
-}
-
-#keys{
-  position: fixed;
-  background-color: #eee;
-  display: none;
-  right: 0px;
-}
-
-#iconHelp{
-  width: 40px;
-  height: 40px;  
-  cursor: help;
-}
 
 .editLink {
   font-size: 11px;
@@ -163,21 +70,3 @@ h1 {
   vertical-align: top;
 }
 
-
-#help {
-  /*float: right;*/
-  display: inline-block;
-  vertical-align: top;
-}
-
-ul#keys li{
-  list-style: none;
-}
-
-.help_keys {
-  text-align: left;
-}
-
-.help_keys_text {
-  padding-left: 1em;
-}

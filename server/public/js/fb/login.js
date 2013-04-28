@@ -42,7 +42,7 @@ var kFB = {};
             score = response.data[0].score;
           }
           $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
-          $('#login-zone').slideDown();
+          $('#topBar').slideDown();
           $('#mainContent').fadeIn(2000);
         }
       });
@@ -53,6 +53,33 @@ var kFB = {};
   }
 
 
+  function createHelp(k, text) {
+    return {
+      'key': k,
+      'text': text
+    };
+  }
+
+  function getHelps() {
+    var helps = [];
+    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / go backward'));
+    helps.push(createHelp('&#8592;&nbsp;&#8594;', 'turn left / right'));
+    helps.push(createHelp('&#60;space&#62;', 'shoot'));
+    helps.push(createHelp('L/P', 'zoom / unzoom'));
+    helps.push(createHelp('B', 'break'));
+    helps.push(createHelp('Mouse Click', 'drive'));
+
+    var o = [];
+    for (var i = 0; i < helps.length; i++) {
+      var h = helps[i];
+      o.push('<td class="help_keys">' + h.key + '</td><td class="help_keys_text">' + h.text + '</td>');
+    };
+    var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
+    return html;
+}
+  
+
+
 
   function afterLogin() {
     updateName();
@@ -61,7 +88,7 @@ var kFB = {};
 
   function createHeader() {
     var o = [];
-    o.push('<div id="login-zone"><ul id="topBarBoxes">');
+    o.push('<div id="topBar"><ul id="topBarBoxes">');
 
     o.push('<li><form id="playerNameForm" href="#">');
     o.push('Welcome to Karma Racer, <input id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
@@ -88,7 +115,8 @@ var kFB = {};
       $keys.hide();
     })
 
-    KarmaHome.start();
+    $('#keys').html(getHelps());
+    // KarmaHome.start();
 
 
   }

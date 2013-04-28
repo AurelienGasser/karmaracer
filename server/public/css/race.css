@@ -1,6 +1,15 @@
 body {
     font-family: 'Armata';
- /*font-size  12px*/
+    font-size  :12px;
+}
+
+#topBar{
+opacity: 0.5;
+}
+
+
+#topBar:hover{
+opacity: 1;
 }
 
 /*body,html {
