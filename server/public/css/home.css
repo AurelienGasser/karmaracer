@@ -92,7 +92,7 @@ body, form, input{
   margin: 0px auto;
   text-align: center;
   vertical-align: top;
-  /*display: none;*/
+  display: none;
 }
 
 h1 {

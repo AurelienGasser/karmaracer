@@ -10,13 +10,19 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 
 var graph = require('fbgraph');
 
-var FACEBOOK_APP_ID = "156724717828757"
-var FACEBOOK_APP_SECRET = "ffaa699130856b56f56c6d2b04afd2d8";
+
+var fbConf = require('./classes/FBConf');
+
+
+console.log(fbConf);
+
+// var FACEBOOK_APP_ID = "156724717828757"
+// var FACEBOOK_APP_SECRET = "ffaa699130856b56f56c6d2b04afd2d8";
 
 passport.use(new FacebookStrategy({
-  clientID: FACEBOOK_APP_ID,
-  clientSecret: FACEBOOK_APP_SECRET,
-  callbackURL: "http://localhost:8080/auth/facebook/callback"
+  clientID: fbConf.appID,
+  clientSecret: fbConf.appSecret,
+  callbackURL: fbConf.callbackURL
 },
 
 function(accessToken, refreshToken, profile, done) {

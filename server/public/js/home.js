@@ -6,7 +6,7 @@ $(function() {
   KarmaHome.start = function() {
     if (Karma.get('playerName')) {
       $('#playerName').val(Karma.get('playerName'));
-      $('#mainContent').show();
+      // $('#mainContent').show();
     } else {
       $('#playerName').keyup(function() {
         $('#mainContent').css('display', 'block');

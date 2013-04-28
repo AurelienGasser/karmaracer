@@ -43,6 +43,7 @@ var kFB = {};
           }
           $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
           $('#login-zone').slideDown();
+          $('#mainContent').fadeIn(2000);
         }
       });
     } catch (err) {
@@ -55,13 +56,10 @@ var kFB = {};
 
   function afterLogin() {
     updateName();
-
   }
 
 
   function createHeader() {
-
-
     var o = [];
     o.push('<div id="login-zone"><ul id="topBarBoxes">');
 
