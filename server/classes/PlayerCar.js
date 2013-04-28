@@ -69,7 +69,10 @@ PlayerCar.prototype.FBGetHighScore = function(callback) {
       if (!response || response.error) {
         console.error(response);
       } else {
-        var score = response.data[0].score;
+        var score = 0;
+        if (response.data.length > 0) {
+          score = response.data[0].score;
+        }
         if (score !== 0) {
           that.highScore = score;
           if (KLib.isFunction(callback)) {

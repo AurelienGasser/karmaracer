@@ -17,13 +17,14 @@ body, form, input{
 }
 
 #playerName{
-  width: 300px;
   height: 40px;
   line-height: 40px;
+  width: 300px;
+/* 
   font-size: larger;
   vertical-align: middle;
   text-align: center;
-  /*opacity: 0.5;*/
+*/  /*opacity: 0.5;*/
   background-color: #eee;
   border: none;
   padding-right: 5px;
@@ -57,13 +58,14 @@ body, form, input{
 #topBarBoxes {
   margin: 0px;
   padding: 0px;
+  width:100%;
 }
 #topBarBoxes li {
   display: inline-block;
   overflow: hidden;
   vertical-align: top;
   list-style: none;
-  margin: 0px 5px;
+  margin: 5px;
 }
 
 #login-zone{
@@ -78,11 +80,11 @@ body, form, input{
 }
 
 
-#login-zone > * {
+/*#login-zone > * {
   display: inline-block;;
   margin:5px;
 }
-
+*/
 
 #mainContent {
   width: 100%;
@@ -131,6 +133,25 @@ h1 {
   box-shadow: #eee 2px 2px 2px;
 }
 
+#topHelp{
+  position: relative;
+  left: 0px;
+  text-align: left;
+}
+
+#keys{
+  position: fixed;
+  background-color: #eee;
+  display: none;
+  right: 0px;
+}
+
+#iconHelp{
+  width: 40px;
+  height: 40px;  
+  cursor: help;
+}
+
 .editLink {
   font-size: 11px;
 }
@@ -154,7 +175,7 @@ ul#keys li{
 }
 
 .help_keys {
-  text-align: right;
+  text-align: left;
 }
 
 .help_keys_text {

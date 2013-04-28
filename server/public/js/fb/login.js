@@ -32,19 +32,23 @@ var kFB = {};
   }
 
   function getScore(user) {
-    FB.api("/" + user.id + "/scores/karmaracer_dev", function(response) {
-      if (!response || response.error) {
-        console.error(response);
-      } else {
-        console.log(response);
-        var score = response.data[0].score;
-        if (score !== 0) {
+    try {
+      FB.api("/" + user.id + "/scores/karmaracer_dev", function(response) {
+        if (!response || response.error) {
+          console.error(response);
+        } else {
+          var score = 0;
+          if (response.data.length > 0) {
+            score = response.data[0].score;
+          }
           $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
-          // $('#fb-login-score').html(score);
+          $('#login-zone').slideDown();
         }
+      });
+    } catch (err) {
+      console.error(err);
 
-      }
-    });
+    }
   }
 
 
@@ -55,9 +59,47 @@ var kFB = {};
   }
 
 
+  function createHeader() {
+
+
+    var o = [];
+    o.push('<div id="login-zone"><ul id="topBarBoxes">');
+
+    o.push('<li><form id="playerNameForm" href="#">');
+    o.push('Welcome to Karma Racer, <input id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
+    o.push('<input type="submit" style="display:none"/>');
+    o.push('</form></li>');
+
+    o.push('<li id="fbHighScore"/>');
+
+    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp"/>');
+    o.push('<div id="keys"></div>');
+    o.push('</li>')
+
+    o.push('<li id="fbLoginImage"/>');
+
+    o.push('</ul>');
+    var loginZone = $(o.join(''));
+    loginZone.hide();
+    $('body').append(loginZone);
+
+    var $keys = $('#keys');
+    $("#iconHelp").hover(function() {
+      $keys.show();
+    }, function() {
+      $keys.hide();
+    })
+
+    KarmaHome.start();
+
+
+  }
+
   function initFB() {
 
     console.log(G_fbid);
+
+    createHeader();
 
     FB.Event.subscribe('auth.login', function(response) {
       afterLogin();
@@ -125,8 +167,6 @@ var kFB = {};
     }(document));
   };
 
-
-
   function setProfileImage(container, callback) {
     FB.api("/me/picture?width=180&height=180", function(response) {
       container.html('<img class="fb-picture" src="' + response.data.url + '">');
@@ -141,9 +181,14 @@ var kFB = {};
       setProfileImage($('#fbLoginImage'), function() {});
 
       var exists = Karma.exists('playerName');
-      if (!exists || Karma.get('playerName') === '') {
+      console.log('name', Karma.get('playerName'));
+
+      var savedName = Karma.get('playerName');
+      if (!exists || savedName === '') {
         Karma.set('playerName', user.name);
         $('#playerName').val(user.name);
+      } else {
+        $('#playerName').val(savedName);
       }
 
       getScore(user);
