@@ -64,7 +64,6 @@ PlayerCar.prototype.FBSetHighScore = function() {
 PlayerCar.prototype.FBGetHighScore = function(callback) {
   try {
     var that = this;
-
     this.client.graph.get("/" + that.fbid + "/scores/karmaracer_dev", function(err, response) {
       console.log('graph score', response);
       if (!response || response.error) {

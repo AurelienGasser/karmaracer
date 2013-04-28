@@ -31,20 +31,6 @@ var kFB = {};
     });
   }
 
-
-  function setScore(user, score) {
-    FB.api("/me/scores", 'post', {
-      score: score,
-      // access_token: FB.getSession().access_token
-    }, function(response) {
-      if (!response || response.error) {
-        console.error(response);
-      } else {
-        console.log(response);
-      }
-    });
-  }
-
   function getScore(user) {
     FB.api("/" + user.id + "/scores/karmaracer_dev", function(response) {
       if (!response || response.error) {
@@ -53,7 +39,7 @@ var kFB = {};
         console.log(response);
         var score = response.data[0].score;
         if (score !== 0) {
-          $('#fb-login-box').append('<div title="High Score" id="fb-login-score">' + score + '</div>');
+          $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
           // $('#fb-login-score').html(score);
         }
 
@@ -141,21 +127,21 @@ var kFB = {};
 
 
 
-  function appendProfileImage(container, callback) {
+  function setProfileImage(container, callback) {
     FB.api("/me/picture?width=180&height=180", function(response) {
-      container.append('<img src="' + response.data.url + '">');
+      container.html('<img class="fb-picture" src="' + response.data.url + '">');
       return callback(null, response);
     });
   }
 
   function updateName() {
     FB.api('/me', function(user) {
-      var $container = $('#fb-login-box');
-      $container.html('');
-      appendProfileImage($container, function() {});
+      // var $container = $('#fb-login-box');
+      // $container.html('');
+      setProfileImage($('#fbLoginImage'), function() {});
 
       var exists = Karma.exists('playerName');
-      if (!exists) {
+      if (!exists || Karma.get('playerName') === '') {
         Karma.set('playerName', user.name);
         $('#playerName').val(user.name);
       }

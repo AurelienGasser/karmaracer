@@ -19,13 +19,13 @@ html
       div#fb-root
       h1  Welcome to Karma Racer !!
       div#login-zone
-        div#fb-login-box
-          img#fb-login(src='/images/connect-fb.jpg',title='connect using your facebook account')
-        form#playerNameForm(href="#")        
-          input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
-          input(type="submit", style="display: none")
-    br
-    br
+        ul#topBarBoxes
+          li
+            form#playerNameForm(href="#")        
+              input#playerName(type='text', placeholder='Your name', required='required', name='playerName', autocomplete="off")
+              input(type="submit", style="display: none")
+          li#fbHighScore            
+          li#fbLoginImage
     div#mainContent
       div#mapsContainer
         h2 Click on a map to play
