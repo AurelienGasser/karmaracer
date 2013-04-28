@@ -3,16 +3,6 @@ var Player = require('./classes/Player');
 
 var GameServerSocket = function(mapManager) {
 
-
-  var FACEBOOK_APP_ID = "156724717828757"
-  var FACEBOOK_APP_SECRET = "ffaa699130856b56f56c6d2b04afd2d8";
-  var Facebook = require('facebook-node-sdk');
-  var facebook = new Facebook({
-    appID: FACEBOOK_APP_ID,
-    secret: FACEBOOK_APP_SECRET
-  });
-
-
   var Car = require('./classes/PhysicsEngine/Car');
 
 
