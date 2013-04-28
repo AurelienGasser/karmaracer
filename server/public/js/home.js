@@ -4,14 +4,9 @@ $(function() {
 
 
   KarmaHome.start = function() {
-    if (Karma.get('playerName')) {
-      $('#playerName').val(Karma.get('playerName'));
-      // $('#mainContent').show();
-    } else {
-      $('#playerName').keyup(function() {
-        $('#mainContent').css('display', 'block');
-      })
-    }
+
+
+    TopBar.setTopBar();
 
     var host = window.location.hostname;
     var connection = io.connect(host);

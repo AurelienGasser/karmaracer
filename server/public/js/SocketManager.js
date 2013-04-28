@@ -44,7 +44,6 @@ function SocketManager(gameInstance, onInitCallback) {
     if(!Karma.get('playerName') || Karma.get('playerName').length === 0) {
       Karma.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
     }
-    $('#player_name').val(Karma.get('playerName'));
     connection.emit('init_done', {
       playerName: Karma.get('playerName')
     });

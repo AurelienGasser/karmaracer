@@ -10,6 +10,7 @@ KLib.isUndefined = function(obj) {
 };
 
 function GameInstance() {
+  TopBar.setTopBar();
   this.cars = [];
   this.explosions = {};
   this.mycar;
@@ -34,9 +35,9 @@ function GameInstance() {
   var that = this;
 
   function reduceExplosionsAlpha() {
-    for(var explosionId in that.explosions) {
+    for (var explosionId in that.explosions) {
       that.explosions[explosionId].alpha -= 0.1;
-      if(that.explosions[explosionId].alpha < 0) {
+      if (that.explosions[explosionId].alpha < 0) {
         delete that.explosions[explosionId];
       }
     }
@@ -47,7 +48,7 @@ function GameInstance() {
 
 GameInstance.prototype.setSound = function(name, url) {
   var sound;
-  if(this.play_html5_audio) {
+  if (this.play_html5_audio) {
     sound = new Audio(url);
     sound.load();
   } else {
@@ -64,7 +65,7 @@ GameInstance.prototype.setSound = function(name, url) {
 
 GameInstance.prototype.play_sound = function(url) {
 
-  if(this.play_html5_audio) {
+  if (this.play_html5_audio) {
     var snd = new Audio(url);
     snd.load();
     snd.play();
@@ -81,13 +82,14 @@ GameInstance.prototype.play_sound = function(url) {
 
 GameInstance.prototype.updateScoresHTML = function() {
   var that = this;
+
   function getScores() {
     var scores = _.map(that.cars, function(car) {
       return {
         'score': car.s,
         'level': car.l,
         'name': car.playerName,
-        'highScore' : car.highScore
+        'highScore': car.highScore
       };
     });
     scores = _.sortBy(scores, function(c) {
@@ -97,7 +99,7 @@ GameInstance.prototype.updateScoresHTML = function() {
   }
   var scores = getScores();
   var o = [];
-  for(var i = 0; i < scores.length; i++) {
+  for (var i = 0; i < scores.length; i++) {
     var playerScore = scores[i];
     var userCarClass = (that.mycar !== null && that.mycar.playerName === playerScore.name) ? 'userCar' : '';
     o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
@@ -113,7 +115,7 @@ GameInstance.prototype.updatePlayerName = function(name) {
 
 GameInstance.prototype.setUIEvents = function() {
   var that = this;
-  $('#player_name').keyup(function(e) {
+  $('#playerName').keyup(function(e) {
     that.updatePlayerName($(this).val());
   });
 };
@@ -126,7 +128,7 @@ GameInstance.prototype.loadImages = function(callback) {
   var imageNumLoaded = 0;
 
   function imageLoaded() {
-    if(imageNumLoaded === imagesNumToLoad - 1) {
+    if (imageNumLoaded === imagesNumToLoad - 1) {
       return callback();
     }
     imageNumLoaded += 1;
@@ -147,7 +149,7 @@ GameInstance.prototype.loadImages = function(callback) {
     var img = new Image();
     img.src = i.image.path;
     img.onload = function() {
-      if(i.patternType !== 'none') {
+      if (i.patternType !== 'none') {
         var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
         this.itemsInMap[item].pattern = _pattern;
       } else {
