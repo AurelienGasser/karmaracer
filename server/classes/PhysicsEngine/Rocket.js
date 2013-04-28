@@ -8,8 +8,8 @@ var KPhysicalBody = require('./PhysicalBody');
 
 var Rocket = function(playerCar, pos, angle) {
   KLib.extend(KPhysicalBody, this);
-    this.initialize(playerCar, pos, angle);
-  }
+  this.initialize(playerCar, pos, angle);
+}
 
 Rocket.prototype.initialize = function(playerCar, pos, angle) {
   var car = playerCar.car;

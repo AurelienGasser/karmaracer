@@ -6,18 +6,29 @@ var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 var KLib = require('./KLib');
 var FBConf = require('./FBConf')
 
+// var WeaponsByClass = {
+//   1: SuperMachineGun,
+//   2: SuperMachineGun,
+//   3: SuperMachineGun,
+//   4: SuperMachineGun,
+//   5: Angle90MachineGun,
+//   6: SuperMachineGun,
+//   7: MachineGun,
+//   8: SuperMachineGun,
+//   9: RocketLauncher,
+// };
+
 var WeaponsByClass = {
-  1: SuperMachineGun,
-  2: SuperMachineGun,
+  1: MachineGun,
+  2: MachineGun,
   3: SuperMachineGun,
-  4: SuperMachineGun,
+  4: MachineGun,
   5: Angle90MachineGun,
   6: SuperMachineGun,
   7: MachineGun,
   8: SuperMachineGun,
-  9: RocketLauncher,
+  9: MachineGun,
 };
-
 
 
 var PlayerCar = function(gameServer, client, playerName, player) {
@@ -143,7 +154,7 @@ PlayerCar.prototype.updateWeapon = function() {
 }
 
 PlayerCar.prototype.levelUp = function() {
-  if (this.level >= Object.keys(WeaponsByClass).length / 10) {
+  if (this.level >= Object.keys(WeaponsByClass).length / 2) {
     this.gameServer.gameEnd(this);
   } else {
     this.level += 1;

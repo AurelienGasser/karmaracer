@@ -3,8 +3,8 @@ var KLib = require('./../KLib');
 var Weapon = require('./Weapon');
 
 
-var MachineGun = function() {
-    KLib.extend(Weapon, this);
+var MachineGun = function(gameServer) {
+    KLib.extend(Weapon, this, gameServer);
     this.name = 'rocket launcher';
     this.accelerate = 1;
     this.lastShotInterval = 1000;
