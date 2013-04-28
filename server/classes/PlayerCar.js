@@ -7,10 +7,10 @@ var KLib = require('./KLib');
 
 
 var WeaponsByClass = {
-  1: MachineGun,
-  2: MachineGun,
+  1: SuperMachineGun,
+  2: SuperMachineGun,
   3: SuperMachineGun,
-  4: MachineGun,
+  4: SuperMachineGun,
   5: Angle90MachineGun,
   6: SuperMachineGun,
   7: MachineGun,
@@ -38,27 +38,50 @@ var PlayerCar = function(gameServer, client, playerName, player) {
 
 PlayerCar.prototype.FBInit = function(callback) {
   this.fbid = this.client.handshake.session.fbsid;
-  return this.FBUpdateScore(callback);
+  return this.FBGetHighScore(callback);
 };
 
-PlayerCar.prototype.FBUpdateScore = function(callback) {
-  var that = this;
 
-  this.client.graph.get("/" + that.fbid + "/scores/karmaracer_dev", function(err, response) {
-    console.log('graph score', response);
-    if (!response || response.error) {
-      console.error(response);
-    } else {
-      var score = response.data[0].score;
-      if (score !== 0) {
-        that.highScore = score;
-        if (KLib.isFunction(callback)) {
-          return callback(null);
+PlayerCar.prototype.FBSetHighScore = function() {
+  var that = this;
+  console.log('update score', that.highScore);
+  try {
+    this.client.graph.post("/me/scores", {
+      score: that.highScore,
+    }, function(response) {
+      if (!response || response.error) {
+        console.error(response);
+      } else {
+        // ok upated
+      }
+    });
+  } catch (err) {
+    console.error(err);
+  }
+
+};
+
+PlayerCar.prototype.FBGetHighScore = function(callback) {
+  try {
+    var that = this;
+
+    this.client.graph.get("/" + that.fbid + "/scores/karmaracer_dev", function(err, response) {
+      console.log('graph score', response);
+      if (!response || response.error) {
+        console.error(response);
+      } else {
+        var score = response.data[0].score;
+        if (score !== 0) {
+          that.highScore = score;
+          if (KLib.isFunction(callback)) {
+            return callback(null);
+          }
         }
       }
-    }
-  });
-
+    });
+  } catch (err) {
+    console.error(err);
+  }
 };
 
 PlayerCar.prototype.resetPlayer = function() {
@@ -118,7 +141,7 @@ PlayerCar.prototype.updateWeapon = function() {
 }
 
 PlayerCar.prototype.levelUp = function() {
-  if (this.level >= Object.keys(WeaponsByClass).length / 2) {
+  if (this.level >= Object.keys(WeaponsByClass).length / 10) {
     this.gameServer.gameEnd(this);
   } else {
     this.level += 1;

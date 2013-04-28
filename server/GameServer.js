@@ -241,17 +241,17 @@ function handleError(err) {
   console.error("caught handle", err);
 }
 
-GameServer.prototype.updateScores = function() {
-  this.carManager.updateScores();
+GameServer.prototype.updateHighScores = function() {
+  this.carManager.updateHighScores();
 };
 
 GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', {
     winnerName: winnerCar.player.playerName
   });
+  this.updateHighScores();
   this.resetGame();
   this.doStep = false;
-  // throw new Error("end of game");
   var that = this;
   setTimeout(function() {
     that.doStep = true;
