@@ -4,7 +4,7 @@ var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 var KLib = require('./KLib');
-
+var FBConf = require('./FBConf')
 
 var WeaponsByClass = {
   1: SuperMachineGun,
@@ -64,7 +64,7 @@ PlayerCar.prototype.FBSetHighScore = function() {
 PlayerCar.prototype.FBGetHighScore = function(callback) {
   try {
     var that = this;
-    this.client.graph.get("/" + that.fbid + "/scores/karmaracer_dev", function(err, response) {
+    this.client.graph.get("/" + that.fbid + "/scores/" + FBConf.appName, function(err, response) {
       console.log('graph score', response);
       if (!response || response.error) {
         console.error(response);

@@ -2,9 +2,34 @@ var kFB = {};
 
 (function() {
 
+
+
+  kFB.host = function(){
+    var host = window.location.hostname + ':' + window.location.port;
+    return host;
+  }();
+
+  kFB.conf = function() {
+    var dev = {
+      appID: '156724717828757',
+      appName: 'karmaracer_dev'
+    };
+
+    var prod = {
+      appID: '512708015460560',
+      appName: 'karmaracer'
+    };
+
+    if (kFB.host.indexOf('localhost') !== -1) {
+      return dev;
+    }
+    return prod;
+
+  }();
+
+
+
   function getLoginStatus() {
-
-
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
         // connected
@@ -20,7 +45,6 @@ var kFB = {};
   }
 
   function loginIfAuthorized() {
-
     FB.getLoginStatus(function(response) {
       if (response.status === 'not_logged_in') {
         login();
@@ -33,7 +57,7 @@ var kFB = {};
 
   function getScore(user) {
     try {
-      FB.api("/" + user.id + "/scores/karmaracer_dev", function(response) {
+      FB.api("/" + user.id + "/scores/" + kFB.conf.appName, function(response) {
         if (!response || response.error) {
           console.error(response);
         } else {
@@ -51,8 +75,6 @@ var kFB = {};
 
     }
   }
-
-
 
 
 
@@ -92,22 +114,18 @@ var kFB = {};
 
   function setup() {
     window.fbAsyncInit = function() {
-      var prod = '512708015460560';
-      var dev = '156724717828757';
       // publish_actions
-      var host = window.location.hostname + ':' + window.location.port;
-      var channelFile = 'http://' + host + '/channel.html';
+      
+
+      console.log(kFB.conf);
+      var channelFile = 'http://' + kFB.host + '/channel.html';
       var options = {
-        appId: prod, // App ID
+        appId: kFB.conf.appID, // App ID
         channelUrl: channelFile, // Channel File
         status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session
         xfbml: true // parse XFBML
       };
-
-      if (host.indexOf('localhost') !== -1) {
-        options.appId = dev;
-      }
       FB.init(options);
       // Additional init code here
       initFB();
