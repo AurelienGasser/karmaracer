@@ -183,6 +183,12 @@ app.get('/', ensureAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
 
+app.post('/', function(req, res) {
+  res.redirect('/auth/facebook');
+  // index(req, res, "index.jade", "CANVAS");
+});
+
+
 app.get('/login', function(req, res) {
   index(req, res, "login.jade", "CANVAS");
 });
