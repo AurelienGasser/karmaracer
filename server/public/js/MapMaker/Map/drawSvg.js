@@ -32,7 +32,7 @@
     var li = $('<li></li>');
 
 
-    function getJOption(optName){
+    function getJOption(optName) {
       var opt = $('<div><a href="#">' + optName + '</a></div>');
       return opt;
     }
@@ -41,7 +41,7 @@
       var opt = getJOption(optName);
       opt.click(function(e) {
 
-        if(optName === 'toFront') {
+        if (optName === 'toFront') {
           c[optName]();
           s[optName]();
         } else {
@@ -63,7 +63,7 @@
     // console.log(c.toString());
     // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
     // li.append('</br>pos' + JSON.stringify(item.position));
-    remove.click(function(e){
+    remove.click(function(e) {
       that.removeMapItem(item.id);
       $(c.node).remove();
       $(s.node).remove();
@@ -75,82 +75,83 @@
 
     // start, move, and up are the drag functions
     var start = function() {
-        // storing original coordinates
-        this.ox = this.attr("x");
-        this.oy = this.attr("y");
-        this.attr({
-          opacity: opacityDrag
-        });
+      // storing original coordinates
+      this.ox = this.attr("x");
+      this.oy = this.attr("y");
+      this.attr({
+        opacity: opacityDrag
+      });
 
-        this.sizer.ox = this.sizer.attr("x");
-        this.sizer.oy = this.sizer.attr("y");
-        this.sizer.attr({
-          opacity: opacityStart
-        });
-      };
+      this.sizer.ox = this.sizer.attr("x");
+      this.sizer.oy = this.sizer.attr("y");
+      this.sizer.attr({
+        opacity: opacityStart
+      });
+    };
     var move = function(dx, dy) {
-        // move will be called with dx and dy
-        this.attr({
-          x: this.ox + dx,
-          y: this.oy + dy
-        });
-        item.position.x = this.ox + dx;
-        item.position.y = this.oy + dy;
-        this.sizer.attr({
-          x: this.sizer.ox + dx,
-          y: this.sizer.oy + dy
-        });
-        if (item.position.x < 0){
-          // this.sizer.attr('x', 0);
-          item.position.x = 0;
-        }
-        if (item.position.y < 0){
-          // this.sizer.attr('y', 0);
-          item.position.y = 0;
-        }
+      // move will be called with dx and dy
+      this.attr({
+        x: this.ox + dx,
+        y: this.oy + dy
+      });
+      item.position.x = this.ox + dx;
+      item.position.y = this.oy + dy;
+      this.sizer.attr({
+        x: this.sizer.ox + dx,
+        y: this.sizer.oy + dy
+      });
+      if (item.position.x < 0) {
+        // this.sizer.attr('x', 0);
+        item.position.x = 0;
+      }
+      if (item.position.y < 0) {
+        // this.sizer.attr('y', 0);
+        item.position.y = 0;
+      }
 
 
-      };
+    };
     var up = function() {
-        // restoring state
-        this.attr({
-          opacity: opacityStart
-        });
-        this.sizer.attr({
-          opacity: opacityStart
-        });
-      };
+      // restoring state
+      this.attr({
+        opacity: opacityStart
+      });
+      this.sizer.attr({
+        opacity: opacityStart
+      });
+    };
     var rstart = function() {
-        // storing original coordinates
-        this.ox = this.attr("x");
-        this.oy = this.attr("y");
+      // storing original coordinates
+      this.ox = this.attr("x");
+      this.oy = this.attr("y");
 
-        this.box.ow = this.box.attr("width");
-        this.box.oh = this.box.attr("height");
-      };
+      this.box.ow = this.box.attr("width");
+      this.box.oh = this.box.attr("height");
+    };
     var rmove = function(dx, dy) {
-        // move will be called with dx and dy
-        this.attr({
-          x: this.ox + dx,
-          y: this.oy + dy
-        });
-        this.box.attr({
-          width: this.box.ow + dx,
-          height: this.box.oh + dy
-        });
-        item.size.w = this.box.attr("width");
-        item.size.h = this.box.attr("height");
+      // move will be called with dx and dy
+      this.attr({
+        x: this.ox + dx,
+        y: this.oy + dy
+      });
+      this.box.attr({
+        width: this.box.ow + dx,
+        height: this.box.oh + dy
+      });
+      item.size.w = this.box.attr("width");
+      item.size.h = this.box.attr("height");
 
-      };
+    };
     // rstart and rmove are the resize functions;
     $(c.node).click(function(e) {
       $('#canvas-debug').children().hide();
       c.li.show();
 
 
-      li.find('span').remove();
-    // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
-    li.append('<span>pos' + JSON.stringify(item.position) + '</span>');
+      li.find('div.mm-clean').remove();
+      // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
+      li.append('<div class="mm-clean">pos : ' + JSON.stringify(item.position) + '</div>');
+      li.append('<div class="mm-clean">size : ' + JSON.stringify(item.size) + '</div>');
 
 
       e.preventDefault();
@@ -183,7 +184,7 @@
 
   Map.prototype.svgDraw = function() {
     this.svgDrawBackground();
-    for(var i in this.MapItems) {
+    for (var i in this.MapItems) {
       var item = this.MapItems[i];
       this.svgRaphaelAddItem(item);
     }
@@ -193,13 +194,13 @@
 
 
   Map.prototype.svgDrawBackground = function() {
-    if (!KLib.isUndefined(this.bgImg)){
+    if (!KLib.isUndefined(this.bgImg)) {
       $(this.bgImg.node).remove();
     }
-    if(this.mapBackgroundName !== '') {
+    if (this.mapBackgroundName !== '') {
       var bg = this.itemsByName[this.mapBackgroundName];
-      if(!KLib.isUndefined(bg)) {
-        
+      if (!KLib.isUndefined(bg)) {
+
         this.bgImg = this.R.rect(0, 0, this.realWorldSize.w, this.realWorldSize.h);
         this.bgImg.attr({
           "fill": "url('" + bg.path + "')"

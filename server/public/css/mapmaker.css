@@ -55,7 +55,10 @@ body{
 
 #properties li input{
   width: 120px;
+}
 
+#map-enable{
+  width: 32px !important;
 }
 
 body{

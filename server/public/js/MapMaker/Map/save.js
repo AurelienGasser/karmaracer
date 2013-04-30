@@ -9,6 +9,7 @@ Map.prototype.saveMap = function() {
   // this.canvas.toDataURL("image/png");
   var map = {
     "name": $('#map-name').val(),
+    "enable" : that.enable,
     "size": {
       "w": parseInt(iWidth / this.gScale, 10),
       "h": iHeight / this.gScale

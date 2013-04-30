@@ -193,9 +193,9 @@ app.get('/login', function(req, res) {
 });
 
 
-app.get('/canvas', function(req, res) {
-  index(req, res, "index.jade", "CANVAS");
-});
+// app.get('/canvas', function(req, res) {
+//   index(req, res, "index.jade", "CANVAS");
+// });
 
 
 

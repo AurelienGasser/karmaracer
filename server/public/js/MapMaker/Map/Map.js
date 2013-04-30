@@ -49,9 +49,12 @@ function Map(selector) {
   this.mapBackgroundName = '';
   this.itemsByName = {};
   this.zoomBox = null;
+  this.enable = false;
   this.backgroundItems = [];
 
-  $(selector).css('width', this.realWorldSize.w).css('height', this.realWorldSize.h);
+  this.$map = $(selector);
+
+  this.$map.css('width', this.realWorldSize.w).css('height', this.realWorldSize.h);
 
 
   this.itemsGlow = {};
@@ -61,19 +64,43 @@ function Map(selector) {
 
 }
 
+
+Map.prototype.resize = function() {
+  this.$map.css('width', this.realWorldSize.w).css('height', this.realWorldSize.h);
+};
+
 Map.prototype.loadMap = function(mapName, callback) {
   var that = this;
   that.connection.emit('get_map', mapName, function(err, map) {
-    if(err !== null) {
+    if (err !== null) {
       console.info('no map with name', mapName);
       return callback({
         'msg': 'no map with name',
         'type': 'warn'
       });
     }
+    console.log(map);
     that.mapBackgroundName = map.background.name;
+    that.enable = map.enable;
 
-    for(var i = 0; i < map.staticItems.length; i++) {
+    $('#map-width').val(map.size.w);
+    $('#map-height').val(map.size.h);
+    $enable = $('#map-enable');
+    
+    if (map.enable === true){      
+      $enable.prop('checked', true);
+    }
+    $enable.click(function(){
+      that.enable = this.checked;
+      console.log(that.enable, this.checked);
+    });
+
+    that.realWorldSize.w = map.size.w * that.gScale;
+    that.realWorldSize.h = map.size.h * that.gScale;
+
+    
+    that.resize();
+    for (var i = 0; i < map.staticItems.length; i++) {
       var sItem = map.staticItems[i];
       var sItemFull = that.itemsByName[sItem.name];
 
@@ -88,7 +115,7 @@ Map.prototype.loadMap = function(mapName, callback) {
     //   that.svgLoad();
     // }
 
-    if(_.isFunction(callback)) {
+    if (_.isFunction(callback)) {
       return callback(null);
     }
 
@@ -105,7 +132,7 @@ Map.prototype.startTick = function() {
 
 
 
-Map.prototype.outputDebug  = function() {
+Map.prototype.outputDebug = function() {
 
   var debugoutput = [];
   debugoutput.push('<li>Canvas Mouse Pos : ', this.canvasMousePosition.x, ', ', this.canvasMousePosition.y, '</li>');
@@ -132,7 +159,7 @@ Map.prototype.tick = function() {
 
   var now = new Date();
   var tickDiff = now.getTime() - this.tickStart;
-  if(tickDiff > 1000) {
+  if (tickDiff > 1000) {
     $('#fps').html('fps:' + this.tickCount);
     this.tickCount = 0;
     this.tickStart = now.getTime();
@@ -150,14 +177,14 @@ function Step(items, action, callback) {
   var itemCount = 0;
 
   function end() {
-    if(itemCount === itemsLength - 1) {
-      if(_.isFunction(callback)) {
+    if (itemCount === itemsLength - 1) {
+      if (_.isFunction(callback)) {
         return callback(null);
       }
     }
     itemCount += 1;
   }
-  for(var i = 0; i < items.length; i++) {
+  for (var i = 0; i < items.length; i++) {
     var item = items[i];
     action(item, end);
   };
@@ -184,20 +211,20 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
   var UL = $('<ul class="item-properties"/>');
   itemLi.append(UL);
   var demoDiv = $('<li class="kr-mm-demo"/>');
-  switch(item.patternType) {
-  case 'both':
-    var bgItem = {
-      'name': item.name,
-      'path': item.image.src
-    };
-    that.backgroundItems.push(bgItem);
+  switch (item.patternType) {
+    case 'both':
+      var bgItem = {
+        'name': item.name,
+        'path': item.image.src
+      };
+      that.backgroundItems.push(bgItem);
 
-  case 'horizontal':
-  case 'vertical':
-    demoDiv.css('background-image', 'url("' + item.image.src + '")');
-    break;
-  default:
-    demoDiv.append('<img class="kr-item-demo" src="' + item.image.src + '"/>');
+    case 'horizontal':
+    case 'vertical':
+      demoDiv.css('background-image', 'url("' + item.image.src + '")');
+      break;
+    default:
+      demoDiv.append('<img class="kr-item-demo" src="' + item.image.src + '"/>');
   }
   demoDiv.addClass('kr-mm-demo-' + item.patternType);
   UL.append('<li class="kr-pp-item-name">' + item.name + '</li>');
@@ -233,7 +260,7 @@ Map.prototype.removeMapItem = function(id) {
 Map.prototype.loadItemFromServer = function(item, callback) {
   var that = this;
   var itemsDOMContainer = $('#items');
-  if(_.isFunction(callback)) {
+  if (_.isFunction(callback)) {
     var mapItem = new MapItem(item, that.ctx, item.name);
 
     mapItem.initImage(function(err, mapItemWithImage) {

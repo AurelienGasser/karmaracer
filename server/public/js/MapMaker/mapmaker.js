@@ -24,6 +24,7 @@ function setSizeEvents(map) {
     var h = parseInt(heightDOM.val(), 10) * map.gScale;
     map.realWorldSize.w = w;
     map.realWorldSize.h = h;
+    map.resize();
   }
 
   widthDOM.change(updateSizeFromDOM);
@@ -69,10 +70,7 @@ function start() {
         //map.startTick();
         map.svgInit(mapID);
       });
-
     });
-
-
   })
 
 

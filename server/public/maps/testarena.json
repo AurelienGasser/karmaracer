@@ -1,5 +1,6 @@
 {
   "name": "testarena",
+  "enable" : true,
   "background": {
     "path": "/sprites/grass3.jpg",
     "name" : "grass3"
