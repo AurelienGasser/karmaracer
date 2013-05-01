@@ -18,27 +18,103 @@ margin: 5px;
 #topBar{
   position: fixed;
   right: 0px;
+  top:-30px;
   height: 50px;
-  top:0px;
-  background-color: #eee;
   width: 100%;
   vertical-align: top;
   text-align: right;
   z-index: 6000;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;
+  background-color: white;
+  opacity: 0.5;
+  border-bottom: 1px solid #eee;
 }
+
+#topBar:hover, #topBar.init{
+  top:0px;
+  background-color: #eee;
+  opacity: 1;
+  border-bottom: none;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;  
+}
+
+#topBar input{
+  background-color: white;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;  
+
+}
+
+#topBar:hover input, #topBar.init input{
+  background-color: #eee;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;  
+}
+
+/*
+#topBar img, #topBar input, #topBar #fbHighScore div, #fbHighScore{
+   -webkit-transition: 1s ease-in-out;
+  -moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;  
+  height: 8px;
+  font-size: 2px;
+}
+
+#topBar img{
+  height: 8px;
+  width: 8px;
+   -webkit-transition: 1s ease-in-out;
+  -moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;  
+}
+
+
+
+#topBar:hover img, #topBar:hover input,  #topBar:hover li#fbHighScore{
+   -webkit-transition: 1s ease-in-out;
+  -moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;  
+    font-size: 12px; 
+  height: 40px;
+}
+
+#topBar:hover img{
+   -webkit-transition: 1s ease-in-out;
+  -moz-transition: 1s ease-in-out;
+  -o-transition: 1s ease-in-out;
+  transition: 1s ease-in-out;
+  width: 40px;
+}*/
 
 
 #fbHighScore{
-  cursor: help;
   line-height: 40px;
   height: 40px;
 }
 
+#fbHighScore div{
+  cursor: help;
+}
+
 #playerName{
+  /*cursor: help;*/
   height: 40px;
   line-height: 40px;
   width: 300px;
-  background-color: #eee;
+  /*background-color: white;*/
   border: none;
   padding-right: 5px;
 }

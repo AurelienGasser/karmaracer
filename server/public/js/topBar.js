@@ -4,10 +4,10 @@ var TopBar = {};
 
   function setTopBar() {
     var o = [];
-    o.push('<div id="topBar"><ul id="topBarBoxes">');
+    o.push('<div id="topBar" class="init"><ul id="topBarBoxes">');
 
     o.push('<li><form id="playerNameForm" href="#">');
-    o.push('Welcome to Karma Racer, <input id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
+    o.push('Welcome to Karma Racer, <input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
     o.push('<input type="submit" style="display:none"/>');
     o.push('</form></li>');
 
@@ -36,6 +36,8 @@ var TopBar = {};
     $playerName.keyup(function() {
       Karma.set('playerName', $playerName.val());
     });
+
+
   }
 
   function createHelp(k, text) {
@@ -63,7 +65,11 @@ var TopBar = {};
     return html;
   }
   TopBar.show = function() {
-    $('#topBar').slideDown();
+    $bar = $('#topBar');
+    $bar.slideDown();
+    setTimeout(function(){
+      $bar.removeClass('init');
+    }, 2500);    
   }
 
   TopBar.setTopBar = setTopBar;

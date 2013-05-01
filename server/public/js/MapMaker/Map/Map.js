@@ -59,9 +59,6 @@ function Map(selector) {
 
   this.itemsGlow = {};
   var that = this;
-
-
-
 }
 
 
@@ -73,7 +70,7 @@ Map.prototype.loadMap = function(mapName, callback) {
   var that = this;
   that.connection.emit('get_map', mapName, function(err, map) {
     if (err !== null) {
-      console.info('no map with name', mapName);
+      console.error('no map with name', mapName);
       return callback({
         'msg': 'no map with name',
         'type': 'warn'

@@ -224,6 +224,7 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       var textPad = 25;
       ctx.save();
       ctx.translate(c.x, c.y);
+      ctx.fillStyle = 'white'
       ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
       this.drawLifeBar(ctx, c);
       ctx.restore();

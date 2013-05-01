@@ -9,7 +9,7 @@ Map.prototype.saveMap = function() {
   // this.canvas.toDataURL("image/png");
   var map = {
     "name": $('#map-name').val(),
-    "enable" : that.enable,
+    "enable": that.enable,
     "size": {
       "w": parseInt(iWidth / this.gScale, 10),
       "h": iHeight / this.gScale
@@ -43,6 +43,24 @@ Map.prototype.saveMap = function() {
     map.staticItems.push(jsonItem);
   });
   var mapString = JSON.stringify(map);
+
+  // var $c = $('<canvas id="canvasSave"></canvas>');
+  // $('body').append($c)
+  // var svg = this.$map.html().replace(/>\s+/g, ">").replace(/\s+</g, "<");
+  // console.log(svg);
+  // canvg('canvasSave', svg, {
+  //   renderCallback: function() {
+  //     var img = $c[0].toDataURL("image/png");
+  //     console.log(img);
+
+  //     var img = Canvas2Image.saveAsPNG($c[0], true);
+  //     $("body").append(img);
+
+  //   },
+  //   ignoreMouse: true,
+  //   ignoreAnimation: true
+  // });
+
 
   this.connection.emit('saveMap', map);
 }

@@ -1,1 +1,1 @@
-{"name":"nmap","enable":false,"size":{"w":64,"h":16},"background":{"path":"/sprites/bg_grass1.png","name":"grass"},"staticItems":[{"name":"wall","position":{"x":28.5625,"y":6.375},"size":{"w":5,"h":5}}]}
+{"name":"nmap","enable":true,"size":{"w":64,"h":16},"background":{"path":"/sprites/bg_grass1.png","name":"grass"},"staticItems":[{"name":"wall","position":{"x":28.5625,"y":6.375},"size":{"w":5,"h":5}}]}

@@ -2,7 +2,7 @@ body{
   font-family: 'Armata';
   margin-top: 60px;
 }
-body, form, input{
+body, input{
     font-size: 12px;
 }
 
