@@ -14,7 +14,7 @@ var graph = require('fbgraph');
 var fbConf = require('./classes/FBConf');
 
 
-console.log(fbConf);
+console.info(fbConf);
 
 // var FACEBOOK_APP_ID = "156724717828757"
 // var FACEBOOK_APP_SECRET = "ffaa699130856b56f56c6d2b04afd2d8";
@@ -175,7 +175,7 @@ app.get('/mm\.:map', function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
 
-app.get('/game\.:map', ensureAuthenticated, function(req, res) {
+app.get('/game\.:map', function(req, res) {
   index(req, res, "game.jade", "CANVAS");
 });
 

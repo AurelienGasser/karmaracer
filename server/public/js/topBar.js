@@ -37,6 +37,8 @@ var TopBar = {};
       Karma.set('playerName', $playerName.val());
     });
 
+    loginZone.children().hide();
+
 
   }
 
@@ -66,7 +68,9 @@ var TopBar = {};
   }
   TopBar.show = function() {
     $bar = $('#topBar');
-    $bar.slideDown();
+    $bar.slideDown(function(){
+      $bar.children().fadeIn();
+    });
     setTimeout(function(){
       $bar.removeClass('init');
     }, 2500);    
