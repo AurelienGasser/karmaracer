@@ -9,14 +9,16 @@ var FBConf = function() {
     appID: '156724717828757',
     appSecret: 'ffaa699130856b56f56c6d2b04afd2d8',
     callbackURL: 'https://localhost/auth/facebook/callback',
-    appName : 'karmaracer_dev'
+    appName : 'karmaracer_dev',
+    env : 'dev'
   };
 
   var prod = {
     appID: '512708015460560',
     appSecret: '208a70456e24df5d25f4e136aa83a930',
     callbackURL: 'https://karma.origamix.fr/auth/facebook/callback',
-    appName : 'karmaracer'
+    appName : 'karmaracer',
+    env : 'prod'
   };
 
   if (host === 'ks3096106.kimsufi.com') {

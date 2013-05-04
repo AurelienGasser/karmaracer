@@ -8,7 +8,7 @@ function sendMsg() {
 }
 
 function onChatMsgReceived(msg, key) {
-  $('#chat_msgs ul').append('<li id="'+key+'">' + msg + '</li>');
+  $('#chat_msgs').append('<li id="'+key+'">' + msg + '</li>');
   setTimeout(function() {
     $('li#' + key).fadeOut(500, function() {
       $('li#' + key).remove();
@@ -18,14 +18,19 @@ function onChatMsgReceived(msg, key) {
 
 function showChat() {
   $('#chat_input_label').html((Karma.get('playerName')) + ' :');
-  $('#chat_input').show();
+  $('#chat_input_wrapper').show();
   $('#chat_input').focus();
-  $('#chat_input_label_wrapper').css('display', 'inline-block');
+  // $('#chat_input_label_wrapper').css('display', 'inline-block');
+
+  $('#chat_input_wrapper').addClass('enable');
+  console.log('showChat');
 }
 
 function hideChat() {
   $('#chat_input').blur();
-  $('#chat_input_label_wrapper').css('display', 'none');
+  $('#chat_input_wrapper').hide();
+  $('#chat_input_wrapper').removeClass('enable');
+  console.log('hideChat');
 }
 
 function clearChatInputField() {

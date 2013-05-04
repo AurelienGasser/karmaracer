@@ -16,9 +16,6 @@ var fbConf = require('./classes/FBConf');
 
 console.info(fbConf);
 
-// var FACEBOOK_APP_ID = "156724717828757"
-// var FACEBOOK_APP_SECRET = "ffaa699130856b56f56c6d2b04afd2d8";
-
 passport.use(new FacebookStrategy({
   clientID: fbConf.appID,
   clientSecret: fbConf.appSecret,
@@ -56,13 +53,9 @@ memwatch.on('stats', function(stats) {
   // console.info('HEAP STATS', stats);
 });
 
-
 var app = express();
 var port = 8080;
 
-// app.set('views', __dirname + '/views');
-// app.set('view engine', 'jade');
-// var serverHost = 'karma.origamix.fr';
 var os = require("os");
 var hostname = os.hostname();
 
@@ -72,10 +65,13 @@ var http = require('http');
 
 
 // FOR SSL IF REQUIRED
+var sslServer = fbConf.env;
 var ssl_options = {
-  key: fs.readFileSync(__dirname + '/keys/karma-key.pem'),
-  cert: fs.readFileSync(__dirname + '/keys/karma-cert.pem')
+  key: fs.readFileSync(__dirname + '/keys/' + sslServer + '.key'),
+  cert: fs.readFileSync(__dirname + '/keys/' + sslServer + '.crt')
 };
+
+console.log(ssl_options);
 
 const https = require('https');
 

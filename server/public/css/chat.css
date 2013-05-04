@@ -1,76 +1,59 @@
 #chat {
-  position: absolute;
-  bottom: 0;
-  height: 300px;
+  position: fixed;
+  bottom: 0px;
+  left:0px;
   width: 100%;
   text-align: center;
-}
-
-#chat table {
-  margin: 0 auto;
-  width: 500px;
-  height: 100%;
-}
-
-#chat table tr td {
   vertical-align: bottom;
-}
-
-#chat_msgs_wrapper {
-  height: 100%;
+  z-index: 500;
 }
 
 #chat_msgs {
   text-align: left;
 }
 
-#chat_msgs ul li {
-  color: orangered;
+#chat_msgs li {
+  font-size: 14px;
+  padding: 5px;
+  color:white;
 }
 
-#chat_msgs ul {
+#chat_msgs {
   list-style-type: none;
   padding: 0;
   margin: 0;
 }
 
-#chat_input_wrapper td {
-  vertical-align: bottom;
-}
-
-#chat_input_label_wrapper {
-  margin-left: -300px;
-  width: 300px;
-  text-align: right;
+#chat_input_wrapper {  
   display: none;
+  /*bottom:-40px;  */
+}
+#chat_input_wrapper * {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 40px;
+  height: 40px;
 }
 
-#chat_input_label_wrapper * {
-  float: right;
-  color: orangered;
+#chat_input_label{
+  margin-right: 5px;
 }
 
-#chat_input_label_pad {
-  width: 8px;
-  height: 10px;
+#chat_input_wrapper.enable{
+  background-color: #eee;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;
+  /*bottom:0px;  */
 }
+
+
 
 #chat_input {
-  display: none;
   width: 500px;
   vertical-align: bottom;
   background-color: transparent;
   border: none;
   outline: none;
-  color: orangered;
 }
-
-/*#player_name {
-  width: 150px;
-}
-
-#player_name_div {
-  position: absolute;
-  top: 0;
-  right: 0;
-}*/
