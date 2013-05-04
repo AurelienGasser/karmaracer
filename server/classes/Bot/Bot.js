@@ -8,7 +8,8 @@ var Bot = function(gameServer, name) {
     // this.playerCar.car.name = 'bot';
     this.playerCar.car.collide = this.collide;
 
-    var r = parseInt((Math.random() * 1e5) % 2, 10);
+    var maxCar = 4;
+    var r = parseInt((Math.random() * 1e5) % maxCar, 10);
     r += 2;
     this.playerCar.car.carImageName = 'c' + r;
     this.id = this.playerCar.id;
