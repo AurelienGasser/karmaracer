@@ -10,7 +10,8 @@ var FBConf = function() {
     appSecret: 'ffaa699130856b56f56c6d2b04afd2d8',
     callbackURL: 'https://localhost/auth/facebook/callback',
     appName : 'karmaracer_dev',
-    env : 'dev'
+    env : 'dev',
+    gameMaxLevel : 1
   };
 
   var prod = {
@@ -18,7 +19,8 @@ var FBConf = function() {
     appSecret: '208a70456e24df5d25f4e136aa83a930',
     callbackURL: 'https://karma.origamix.fr/auth/facebook/callback',
     appName : 'karmaracer',
-    env : 'prod'
+    env : 'prod',
+    gameMaxLevel : 5
   };
 
   if (host === 'ks3096106.kimsufi.com') {

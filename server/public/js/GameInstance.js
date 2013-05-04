@@ -24,6 +24,7 @@ function GameInstance() {
   this.scoresTable = $('tbody#scores');
   this.projectiles = [];
 
+  this.loadCars();
   // function html5_audio() {
   //   var a = document.createElement('audio');
   //   return !!(a.canPlayType && a.canPlayType('audio/mpeg;').replace(/no/, ''));
@@ -45,6 +46,27 @@ function GameInstance() {
 
   setInterval(reduceExplosionsAlpha, 60);
 }
+
+
+GameInstance.prototype.loadCars = function() {
+  var that = this;
+  var getCar = function(name, imageName, w, h){
+    return {
+      name: name,
+      path: '/sprites/' + imageName,
+      w: w,
+      h: h
+    };
+  }
+  var registerCar = function(car) {
+    that.carsImages[car.name] = car;
+  }
+
+  this.carsImages = {};
+  registerCar(getCar('c1', 'car.png', 128, 64));
+  registerCar(getCar('c2', 'car2.png', 82, 36));
+  registerCar(getCar('c3', 'car3.png', 72, 32));
+};
 
 GameInstance.prototype.setSound = function(name, url) {
   var sound;

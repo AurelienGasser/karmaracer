@@ -38,9 +38,11 @@ height: 400px;
 }
 
 #announce {
-    font-size: 72px;
+    font-size: 60px;
     height: 200px;
     left: 0px;
+    top:100px;
+    /*background-color: #999;*/
     position: absolute;
     text-align: center;
     width: 100%;
@@ -93,9 +95,11 @@ html,body {
 #loadingtext {
     color: white;
     font-size: 2em;
-    left: 150px;
+    left: 50%;
     position: absolute;
-    top: 250px;
+    top: 50%;
+    width: 200px;
+    margin-left: -100px;    
 }
 
 #left_panel {

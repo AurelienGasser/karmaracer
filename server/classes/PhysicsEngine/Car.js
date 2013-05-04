@@ -16,6 +16,7 @@ var Car = function(playerCar) {
     this.name = 'car';
     this.goToFreeLandingPoint();
     this.isBot = playerCar.isBot;
+    this.carImageName = 'c1';
     return this;
   }
 
