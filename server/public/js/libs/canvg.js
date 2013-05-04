@@ -2471,7 +2471,7 @@
 		svg.Element.desc.prototype = new svg.Element.ElementBase;		
 		
 		svg.Element.MISSING = function(node) {
-			if (console) console.log('ERROR: Element \'' + node.nodeName + '\' not yet implemented.');
+			if (console) console.error('ERROR: Element \'' + node.nodeName + '\' not yet implemented.');
 		}
 		svg.Element.MISSING.prototype = new svg.Element.ElementBase;
 		

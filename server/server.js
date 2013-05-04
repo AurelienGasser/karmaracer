@@ -71,15 +71,7 @@ var ssl_options = {
   cert: fs.readFileSync(__dirname + '/keys/' + sslServer + '.crt')
 };
 
-console.log(ssl_options);
-
 const https = require('https');
-
-// const crypto = require('crypto');
-// var credentials = crypto.createCredentials({key: ssl_options.key, cert: ssl_options.cert});
-
-// var server = http.createServer(app);
-// server.setSecure(credentials);
 
 var server = https.createServer(ssl_options, app).listen(443);
 

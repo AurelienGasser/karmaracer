@@ -55,7 +55,6 @@ PlayerCar.prototype.FBInit = function(callback) {
 
 PlayerCar.prototype.FBSetHighScore = function() {
   var that = this;
-  console.log('update score', that.highScore);
   try {
     this.client.graph.post("/me/scores", {
       score: that.highScore,
@@ -76,7 +75,6 @@ PlayerCar.prototype.FBGetHighScore = function(callback) {
   try {
     var that = this;
     this.client.graph.get("/" + that.fbid + "/scores/" + FBConf.appName, function(err, response) {
-      console.log('graph score', response);
       if (!response || response.error) {
         console.error(response);
       } else {

@@ -23,14 +23,12 @@ function showChat() {
   // $('#chat_input_label_wrapper').css('display', 'inline-block');
 
   $('#chat_input_wrapper').addClass('enable');
-  console.log('showChat');
 }
 
 function hideChat() {
   $('#chat_input').blur();
   $('#chat_input_wrapper').hide();
   $('#chat_input_wrapper').removeClass('enable');
-  console.log('hideChat');
 }
 
 function clearChatInputField() {

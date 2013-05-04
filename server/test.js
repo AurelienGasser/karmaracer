@@ -30,13 +30,11 @@ function(accessToken, refreshToken, profile, done) {
 passport.authenticate('facebook', {
   scope: 'publish_actions'
 }, function() {
-  console.log('ff');
 });
 
 
 
 // facebook.api('/797325065//scores/karmaracer_dev', function(err, data) {
-//   console.log(err, data); // => { id: ... }
 // });
 
 // var express = require('express');

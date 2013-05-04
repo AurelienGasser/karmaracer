@@ -65,12 +65,10 @@ var MapManger = function(app, callback) {
   };
 
   function createOrUpdateMap(map) {
-    console.log('update map', that.maps);
     // if (Object.keys(that.maps).length > 0){
     //   console.error('MAPS LEAVE', Object.keys(that.maps).length );
     //   return;
     // }
-    console.info('c or u map ', map.name);
     if (KLib.isUndefined(that.maps[map])) {
       addGameServer(map);
     } else {

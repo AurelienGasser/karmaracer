@@ -60,7 +60,6 @@
     addOption('toBack');
     var remove = getJOption('removeItem');
     li.append(remove);
-    // console.log(c.toString());
     // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
     // li.append('</br>pos' + JSON.stringify(item.position));
     remove.click(function(e) {

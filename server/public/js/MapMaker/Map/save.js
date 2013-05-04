@@ -1,7 +1,5 @@
 Map.prototype.saveMap = function() {
 
-
-  console.log('savemap');
   var that = this;
   var iWidth = this.realWorldSize.w;
   var iHeight = this.realWorldSize.h;
@@ -47,11 +45,9 @@ Map.prototype.saveMap = function() {
   // var $c = $('<canvas id="canvasSave"></canvas>');
   // $('body').append($c)
   // var svg = this.$map.html().replace(/>\s+/g, ">").replace(/\s+</g, "<");
-  // console.log(svg);
   // canvg('canvasSave', svg, {
   //   renderCallback: function() {
   //     var img = $c[0].toDataURL("image/png");
-  //     console.log(img);
 
   //     var img = Canvas2Image.saveAsPNG($c[0], true);
   //     $("body").append(img);

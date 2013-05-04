@@ -23,17 +23,13 @@ var GameServerSocket = function(mapManager) {
   setInterval(broadcastMapsState, 1000);
 
   this.mapManager.app.io.sockets.on('connection', function(client) {
-    console.info('client connected');
+    // console.info('client connected');
 
 
     client.graph = require('fbgraph');
     if (!KLib.isUndefined(client.handshake.session)) {
       client.graph.setAccessToken(client.handshake.session.accessToken);
       that.registerMethods(client);
-      // client.graph.get("me", function(err, res) {
-      //   console.log('graph me', res); // { id: '4', name: 'Mark Zuckerberg'... }
-
-      // });
     }
   });
 }
@@ -102,7 +98,6 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   client.on('saveMap', function(map) {
     try {
-      console.log('saveMap', map);
       var fs = require('fs');
       var path = __dirname + "/public/maps/" + map.name + '.json';
       //reload map

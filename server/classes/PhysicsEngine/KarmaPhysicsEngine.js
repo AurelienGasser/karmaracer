@@ -464,7 +464,6 @@ KarmaPhysicsEngine.prototype.step = function() {
 
     if (A.isStatic === false) {
       if (!this.positionEqualsPosition(A.moveToPosition, A.oldMoveToPosition)) {
-        console.log(A.id, A.moveToPosition, A.oldMoveToPosition);
         A.doMove();
       }
 

@@ -76,7 +76,6 @@ Map.prototype.loadMap = function(mapName, callback) {
         'type': 'warn'
       });
     }
-    console.log(map);
     that.mapBackgroundName = map.background.name;
     that.enable = map.enable;
 
@@ -89,7 +88,6 @@ Map.prototype.loadMap = function(mapName, callback) {
     }
     $enable.click(function(){
       that.enable = this.checked;
-      console.log(that.enable, this.checked);
     });
 
     that.realWorldSize.w = map.size.w * that.gScale;
