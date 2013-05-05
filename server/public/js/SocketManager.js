@@ -33,7 +33,7 @@ function SocketManager(gameInstance, onInitCallback) {
   connection.on('connect', function(data) {
     if (!_.isUndefined(G_mapName)) {
       connection.emit('enter_map', G_mapName);
-      announce('GO', 'green');
+      announce('Shoot them all !', 'blue');
     }
 
   });

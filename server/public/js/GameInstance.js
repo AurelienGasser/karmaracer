@@ -113,7 +113,8 @@ GameInstance.prototype.updateScoresHTML = function() {
         'score': car.s,
         'level': car.l,
         'name': car.playerName,
-        'highScore': car.highScore
+        'highScore': car.highScore,
+        'id' : car.id
       };
     });
     scores = _.sortBy(scores, function(c) {
@@ -125,7 +126,7 @@ GameInstance.prototype.updateScoresHTML = function() {
   var o = [];
   for (var i = 0; i < scores.length; i++) {
     var playerScore = scores[i];
-    var userCarClass = (that.mycar !== null && that.mycar.playerName === playerScore.name) ? 'userCar' : '';
+    var userCarClass = (that.mycar !== null && that.mycar.id === playerScore.id) ? 'userCar' : '';
     o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
   };
   this.scoresTable.html(o.join(''));

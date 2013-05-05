@@ -221,7 +221,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for(var i in this.players) {
     var p = this.players[i];
-    var myCar = p.playerCar.dead ? null : p.playerCar.car.getShared();
+    var myCar = p.playerCar.dead ? null : p.playerCar.getShared();
     var share = {
       myCar: myCar,
       cars: cars,
