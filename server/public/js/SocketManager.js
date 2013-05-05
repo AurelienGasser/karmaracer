@@ -33,6 +33,7 @@ function SocketManager(gameInstance, onInitCallback) {
   connection.on('connect', function(data) {
     if(!_.isUndefined(G_mapName)) {
       connection.emit('enter_map', G_mapName);
+      announce('GO', 'green');
     }
 
   });
@@ -56,7 +57,7 @@ function SocketManager(gameInstance, onInitCallback) {
 
   function announce(text, color) {
     $('#announce').remove();
-    var div = $('<div id="announce" class="announce-' + color + '">' + text + '</div>')
+    var div = $('<div id="announce" class="announce-' + color + '"><span>' + text + '</span></div>')
     div.appendTo($('body'));
     setTimeout(function() {
       $('#announce').fadeOut(function() {
@@ -69,19 +70,27 @@ function SocketManager(gameInstance, onInitCallback) {
     announce('You\' re dead !', 'red');
   });
 
-  function announceIn(msg, color, timeInSeconds) {
+  function announceIn(msg, color, timeInSeconds, callback) {
     setTimeout(function() {
       announce(msg, color);
+      if (KLib.isFunction(callback)){
+        return callback(null);
+      }
     }, timeInSeconds * 1000);
 
   }
 
   connection.on('game end', function(d) {
+
+    $('table.scores').addClass('big');
+
     announce(d.winnerName + ' wins the game !!!!', 'blue');
 
     announceIn('2', 'red', 3);
     announceIn('1', 'orange', 4);
-    announceIn('GO', 'green', 5);
+    announceIn('GO', 'green', 5, function(err){
+      $('table.scores').removeClass('big');      
+    });
 
   })
 

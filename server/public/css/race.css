@@ -38,15 +38,26 @@ height: 400px;
 }
 
 #announce {
-    font-size: 60px;
-    height: 200px;
-    left: 0px;
+    height: 100px;
+    line-height: 100px;
+    left: 20%;
     top:100px;
-    /*background-color: #999;*/
+    /*background-color: #87A585;*/
+    background-color: rgba(238, 238 ,238, 0.5);
     position: absolute;
     text-align: center;
-    width: 100%;
-    z-index: 9999;
+    width: 60%;
+    margin: 0px auto;
+    z-index: 9999;    
+    opacity: 0.5;
+    border-radius: 10px;
+}
+
+#announce span{
+    font-size: 32px;
+    margin: 10px;
+    /*opacity: 1;*/
+    /*font-weight: bold;*/
 }
 
 #botMenu {
@@ -109,11 +120,14 @@ html,body {
     right: 0px;
 }
 
+
+
 table.scores {
     background-color: rgba(255,255,255,0.3);
     color: white;
     margin: 0px;
     padding: 0.5em;
+    width: 300px;    
 }
 
 table.scores tr.userCar{
@@ -125,6 +139,13 @@ table.scores thead tr th, tbody#scores tr td {
     font-size: 10px;
     color:black;
 }
+
+
+table.scores.big{
+    background-color: white;
+}
+
+
 
 #debug {
     color: white;
