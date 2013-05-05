@@ -19,7 +19,7 @@ function SocketManager(gameInstance, onInitCallback) {
 
   function socketReceived() {
     var now = new Date().getTime();
-    if(now - that.timestamp > 1000) {
+    if (now - that.timestamp > 1000) {
       that.timestamp = now;
       $('#socketps').html('socket/ps: ' + that.socketCounter);
       that.socketCounter = 0;
@@ -31,7 +31,7 @@ function SocketManager(gameInstance, onInitCallback) {
   $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
 
   connection.on('connect', function(data) {
-    if(!_.isUndefined(G_mapName)) {
+    if (!_.isUndefined(G_mapName)) {
       connection.emit('enter_map', G_mapName);
       announce('GO', 'green');
     }
@@ -40,7 +40,7 @@ function SocketManager(gameInstance, onInitCallback) {
 
   connection.on('init', function(worldInfo) {
     onInitCallback(null, worldInfo);
-    if(!Karma.get('playerName') || Karma.get('playerName').length === 0) {
+    if (!Karma.get('playerName') || Karma.get('playerName').length === 0) {
       Karma.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
     }
     connection.emit('init_done', {
@@ -55,25 +55,33 @@ function SocketManager(gameInstance, onInitCallback) {
     ++that.msg_id;
   });
 
-  function announce(text, color) {
+  function announce(text, color, extraClass) {
+    if (KLib.isUndefined(extraClass)) {
+      extraClass = '';
+    }
     $('#announce').remove();
-    var div = $('<div id="announce" class="announce-' + color + '"><span>' + text + '</span></div>')
+    var div = $('<div id="announce" class=" ' + extraClass + ' announce-' + color + '"><span>' + text + '</span></div>');
+    // div.hide();
     div.appendTo($('body'));
+    
+    // div.fadeIn(function() {
     setTimeout(function() {
       $('#announce').fadeOut(function() {
         $('#announce').remove();
       });
     }, 4000);
+    // });
+
   }
 
   connection.on('dead', function() {
     announce('You\' re dead !', 'red');
   });
 
-  function announceIn(msg, color, timeInSeconds, callback) {
+  function announceIn(msg, color, timeInSeconds, extraClass, callback) {
     setTimeout(function() {
-      announce(msg, color);
-      if (KLib.isFunction(callback)){
+      announce(msg, color, extraClass);
+      if (KLib.isFunction(callback)) {
         return callback(null);
       }
     }, timeInSeconds * 1000);
@@ -82,14 +90,13 @@ function SocketManager(gameInstance, onInitCallback) {
 
   connection.on('game end', function(d) {
 
-    $('table.scores').addClass('big');
+    $('table.scores').addClass('big').removeClass('default');
 
-    announce(d.winnerName + ' wins the game !!!!', 'blue');
-
-    announceIn('2', 'red', 3);
-    announceIn('1', 'orange', 4);
-    announceIn('GO', 'green', 5, function(err){
-      $('table.scores').removeClass('big');      
+    announce(d.winnerName + ' wins the game !!!!', 'black', 'freeze');
+    announceIn('2', 'red', 3, 'freeze');
+    announceIn('1', 'orange', 4, 'freeze');
+    announceIn('GO', 'green', 5, '', function(err) {
+      $('table.scores').removeClass('big').addClass('default');
     });
 
   })

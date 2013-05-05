@@ -13,7 +13,6 @@ var graph = require('fbgraph');
 
 var fbConf = require('./classes/FBConf');
 
-
 console.info(fbConf);
 
 passport.use(new FacebookStrategy({

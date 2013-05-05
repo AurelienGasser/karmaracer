@@ -49,13 +49,21 @@ height: 400px;
     width: 60%;
     margin: 0px auto;
     z-index: 9999;    
-    opacity: 0.5;
+    /*opacity: 0.5;*/
     border-radius: 10px;
+}
+
+#announce.freeze{
+    background-color: #eee;
+/*    height: 300px;
+    line-height: 300px;*/
+
 }
 
 #announce span{
     font-size: 32px;
     margin: 10px;
+    /*color:white;*/
     /*opacity: 1;*/
     /*font-weight: bold;*/
 }
@@ -113,21 +121,28 @@ html,body {
     margin-left: -100px;    
 }
 
-#left_panel {
+/*#left_panel {
     bottom: 0px;
     padding: 5px;
     position: fixed;
     right: 0px;
 }
+*/
 
 
-
-table.scores {
-    background-color: rgba(255,255,255,0.3);
+#score-table {
     color: white;
-    margin: 0px;
+
     padding: 0.5em;
-    width: 300px;    
+    position: fixed;
+
+    /*position: inherit;*/
+/*    left: 0px;
+    top:0px;*/
+  /*-webkit-transition: 0.25s ease-in-out;*/
+  /*-moz-transition: 5.25s ease-in-out;*/
+  /*-o-transition: 0.25s ease-in-out;*/
+  transition: width 1s linear 1s;    
 }
 
 table.scores tr.userCar{
@@ -141,8 +156,30 @@ table.scores thead tr th, tbody#scores tr td {
 }
 
 
-table.scores.big{
+
+#score-table.default{
+    width: 300px; 
+    right: 0px;
+    bottom: 0px;
+    margin: 5px;
+    background-color: rgba(255,255,255,0.3);
+    transition: 0.25s ease-in-out;    
+}
+
+
+#score-table.big{
+    width: 500px; 
     background-color: white;
+    transition: 0.5s linear;    
+    bottom:100px;
+    right: 50%;
+    margin-right: -250px;
+    border-radius: 20px;
+}
+
+#score-table.big td, #score-table.big th{
+    font-size: 12px;
+    transition: 0.5s linear;    
 }
 
 
