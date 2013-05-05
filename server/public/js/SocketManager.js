@@ -92,12 +92,14 @@ function SocketManager(gameInstance, onInitCallback) {
 
     $('table.scores').addClass('big').removeClass('default');
 
+    var removeBigScore = function(err) {
+      $('table.scores').removeClass('big').addClass('default');
+    };
+
     announce(d.winnerName + ' wins the game !!!!', 'black', 'freeze');
     announceIn('2', 'red', 3, 'freeze');
-    announceIn('1', 'orange', 4, 'freeze');
-    announceIn('GO', 'green', 5, '', function(err) {
-      $('table.scores').removeClass('big').addClass('default');
-    });
+    announceIn('1', 'orange', 4, 'freeze', removeBigScore);
+    announceIn('GO', 'green', 5, '');
 
   })
 
