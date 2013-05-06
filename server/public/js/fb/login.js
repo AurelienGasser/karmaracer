@@ -67,7 +67,6 @@ var kFB = {};
           }
           $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
           TopBar.show();
-          $('#mainContent').fadeIn(2000);
         }
       });
     } catch (err) {

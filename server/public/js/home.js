@@ -14,6 +14,8 @@ $(function() {
 
     connection.emit('get_maps', function(err, maps) {
       addMaps(maps);
+      $('#loadingImage').fadeOut();
+      $('#mapsContainer').fadeIn(2000);
     });
 
     connection.on('maps_state', function(mapStates) {

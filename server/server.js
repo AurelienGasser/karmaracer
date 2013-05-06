@@ -22,9 +22,11 @@ passport.use(new FacebookStrategy({
 },
 
 function(accessToken, refreshToken, profile, done) {
+
   // asynchronous verification, for effect...
   process.nextTick(function() {
 
+    // console.log('PASSPORT AUTH', accessToken);
     graph.setAccessToken(accessToken);
     // To keep the example simple, the user's Facebook profile is returned to
     // represent the logged-in user. In a typical application, you would want
@@ -167,11 +169,65 @@ app.get('/game\.:map', function(req, res) {
 });
 
 app.get('/', ensureAuthenticated, function(req, res) {
+  // console.log(req.headers);
   index(req, res, "index.jade", "CANVAS");
 });
 
+
+function parse_signed_request(signed_request) {
+  var list = signed_request.split('.');
+  var encoded_sig = list[0];
+  var payload = list[1];
+  // decode the data
+  var sig = base64_url_decode(encoded_sig);
+  var data = JSON.parse(base64_url_decode(payload), true);
+
+  return data;
+}
+
+function base64_url_decode(input) {
+  return new Buffer(input, 'base64').toString('ascii')
+}
+
+app.post('/game\.:map', function(req, res) {
+  authFB(req);
+  index(req, res, "game.jade", "CANVAS");
+});
+
+
+function authFB(req) {
+  var fbReq = parse_signed_request(req.body.signed_request);
+  req.session.fbsid = fbReq.user_id;
+  req.session.accessToken = fbReq.oauth_token;
+  graph.setAccessToken(fbReq.oauth_token);
+}
+
+// passport.authenticate('facebook', {failureRedirect: '/login'}),
 app.post('/', function(req, res) {
-  res.redirect('/auth/facebook');
+  authFB(req);
+  index(req, res, "index.jade", "CANVAS");
+
+  // req.login(fbReq, function(err){
+
+  //   ensureAuthenticated(req, res, function(req, res) {
+  //     
+  //   });
+  // });
+
+  // req.session.passport = {
+  //   user: {
+  //     provider: 'facebook',
+  //     accessToken: fbReq.oauth_token,
+  //     id : fbReq.user_id
+  //   }
+  // };
+
+
+  // req.session.passport.user.accessToken = user.oauth_token;
+  // setupFBUser(req, res);
+  // ensureAuthenticated(req, res, function(req, res) {
+  //   index(req, res, "index.jade", "CANVAS");
+  // });
 });
 
 
@@ -186,6 +242,16 @@ app.get('/login', function(req, res) {
 
 
 
+var setupFBUser = function(req, res) {
+
+  var uid = req.session.passport.user.id;
+  // req.session.cookie.fbid = uid;
+  req.session.fbsid = uid;
+  // req.session.accessToken = req.session.passport.user.accessToken;
+  res.redirect('/');
+  // }
+}
+
 app.get('/auth/facebook',
 passport.authenticate('facebook', {
   scope: 'publish_actions'
@@ -194,16 +260,9 @@ passport.authenticate('facebook', {
   // function will not be called.
 });
 
-app.get('/auth/facebook/callback',
-passport.authenticate('facebook', {
+app.get('/auth/facebook/callback', passport.authenticate('facebook', {
   failureRedirect: '/login'
-}), function(req, res) {
-  var uid = req.session.passport.user.id;
-  req.session.cookie.fbid = uid;
-  req.session.fbsid = uid;
-  req.session.accessToken = req.session.passport.user.accessToken;
-  res.redirect('/');
-});
+}), setupFBUser);
 
 function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {

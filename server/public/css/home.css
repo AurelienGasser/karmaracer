@@ -11,13 +11,21 @@ body, input{
 }
 
 
+#loadingImage{
+  position: fixed;
+  left: 50%;
+  top:50%;
+  margin-left: -16px;
+  margin-top: -16px;
+}
+
 #mainContent {
   width: 100%;
   display: block;
   margin: 0px auto;
   text-align: center;
   vertical-align: top;
-  display: none;
+  /*display: none;*/
 }
 
 h1 {
@@ -66,7 +74,7 @@ h1 {
 #mapsContainer {
   /*float: left;*/
   /*width: 700px;*/
-  display: inline-block;
+  display: none;
   vertical-align: top;
 }
 
