@@ -27,7 +27,7 @@ BotManager.prototype.initBots = function() {
   if(numBots > 10) {
     numBots = 10;
   }
-  numBots = config.BOTS_PER_MAP;
+  numBots = config.botsPerMap;
   for(var i = 0; i < numBots; ++i) {
     setTimeout(function() {
       this.addBot();

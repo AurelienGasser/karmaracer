@@ -4,7 +4,7 @@ var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 var KLib = require('./KLib');
-var FBConf = require('./FBConf')
+var CONFIG = require('./../config');
 
 
 var WeaponsByClass = {
@@ -19,7 +19,7 @@ var WeaponsByClass = {
   9: MachineGun,
 };
 
-if (FBConf.env === 'dev') {
+if (CONFIG.env === 'dev') {
   WeaponsByClass = {
     1: SuperMachineGun,
     2: SuperMachineGun,
@@ -78,7 +78,7 @@ PlayerCar.prototype.FBSetHighScore = function() {
 PlayerCar.prototype.FBGetHighScore = function(callback) {
   try {
     var that = this;
-    this.client.graph.get("/" + that.fbid + "/scores/" + FBConf.appName, function(err, response) {
+    this.client.graph.get("/" + that.fbid + "/scores/" + CONFIG.appName, function(err, response) {
       if (!response || response.error) {
         console.error(response);
       } else {
@@ -159,7 +159,7 @@ PlayerCar.prototype.updateWeapon = function() {
 }
 
 PlayerCar.prototype.levelUp = function() {
-  if (this.level >= FBConf.gameMaxLevel) {
+  if (this.level >= CONFIG.gameMaxLevel) {
     this.gameServer.gameEnd(this);
   } else {
     this.level += 1;
