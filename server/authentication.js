@@ -70,6 +70,7 @@ var setup = function(app, io, renderMethod) {
       // to associate the Facebook account with a user record in your database,
       // and return that user instead.
       profile.accessToken = accessToken;
+
       return done(null, profile);
     });
   }));
@@ -98,11 +99,13 @@ var setup = function(app, io, renderMethod) {
     return new Buffer(input, 'base64').toString('ascii')
   }
 
-  app.post('/game\.:map', function(req, res) {
-    authFB(req);
-    renderMethod(req, res, "game.jade", "CANVAS");
-  });
-
+  // app.post('/game\.:map', function(req, res) {
+  //   authFB(req);
+  //   renderMethod(req, res, "game.jade", "CANVAS");
+  // });
+  app.post('/game\.:map', passport.authenticate('facebook', {
+    failureRedirect: '/login',
+  }), function(req, res) {});
 
   function authFB(req) {
     var fbReq = parse_signed_request(req.body.signed_request);
@@ -111,10 +114,9 @@ var setup = function(app, io, renderMethod) {
     graph.setAccessToken(fbReq.oauth_token);
   }
 
-  app.post('/', function(req, res) {
-    authFB(req);
-    renderMethod(req, res, "index.jade", "CANVAS");
-  });
+  app.post('/', passport.authenticate('facebook', {
+    failureRedirect: '/login',
+  }), function(req, res) {});
 
 
   app.get('/login', function(req, res) {
@@ -122,11 +124,17 @@ var setup = function(app, io, renderMethod) {
   });
 
 
-
   var setupFBUser = function(req, res) {
+    var referer = req.headers.referer;
+    var list = referer.split('/');
+    var path = list[list.length - 1];
+    var route = '/' + path;
+
     var uid = req.session.passport.user.id;
     req.session.fbsid = uid;
-    res.redirect('/');
+    req.session.accessToken = req.session.passport.user.accessToken;
+    res.redirect(route);
+
   }
 
   app.get('/auth/facebook',
@@ -155,5 +163,5 @@ var setup = function(app, io, renderMethod) {
 module.exports = {
   setup: setup,
   ensureAuthenticated: ensureAuthenticated,
-  sessionOptions : sessionOptions
+  sessionOptions: sessionOptions
 }

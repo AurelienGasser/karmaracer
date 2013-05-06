@@ -80,7 +80,7 @@ PlayerCar.prototype.FBGetHighScore = function(callback) {
     var that = this;
     this.client.graph.get("/" + that.fbid + "/scores/" + CONFIG.appName, function(err, response) {
       if (!response || response.error) {
-        console.error(response);
+        console.error('FBGetHighScore', response);
       } else {
         var score = 0;
         if (response.data.length > 0) {

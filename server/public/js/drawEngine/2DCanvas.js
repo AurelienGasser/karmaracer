@@ -234,6 +234,7 @@ Engine2DCanvas.prototype.drawCars = function(ctx) {
       var textPad = 25;
       ctx.save();
       ctx.translate(c.x, c.y);
+      ctx.font = "10px Trebuchet MS";
       ctx.fillStyle = 'white'
       ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
       this.drawLifeBar(ctx, c);
