@@ -6,19 +6,26 @@ $(function() {
   KarmaHome.start = function() {
 
 
+    var miniMap = new MiniMap($('body'));
+
     TopBar.setTopBar();
 
     var host = window.location.hostname;
-    var connection = io.connect(host, {secure: true});
+    var connection = io.connect(host, {
+      secure: true
+    });
 
 
     connection.emit('get_maps', function(err, maps) {
+      console.log('getmaps', maps);
       addMaps(maps);
       $('#loadingImage').fadeOut();
       $('#mapsContainer').fadeIn(2000);
     });
 
     connection.on('maps_state', function(mapStates) {
+
+      console.log(mapStates);
 
       for (var i in mapStates) {
         var m = mapStates[i];
@@ -72,11 +79,9 @@ $(function() {
     }
 
 
-  
-
 
   }
 
 
-  KarmaHome.start();  
+  KarmaHome.start();
 });
