@@ -2,10 +2,27 @@ var TopBar = {};
 
 (function() {
 
+
+  function getPageName(){
+    var url = document.URL;
+    var list = url.split('/');
+    var page = list[list.length - 1];
+    if (page.indexOf('#') !== -1){
+      page = page.split('#')[0];
+    }
+    return page;
+  }
+
+
   function setTopBar() {
     var o = [];
     o.push('<div id="topBar" class="init"><ul id="topBarBoxes">');
 
+    var page = getPageName();
+    if (page !== ''){
+      o.push('<li id="topHelp"><a href="/"><img src="/images/iconHome.png" id="iconHome"/></a></li>');
+    }
+    
     o.push('<li><form id="playerNameForm" href="#">');
     o.push('Welcome to Karma Racer, <input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
     o.push('<input type="submit" style="display:none"/>');
@@ -13,7 +30,7 @@ var TopBar = {};
 
     o.push('<li id="fbHighScore"/>');
 
-    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp"/>');
+    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="Home"/>');
     o.push('<div id="keys"></div>');
     o.push('</li>')
 

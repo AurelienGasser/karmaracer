@@ -118,10 +118,15 @@ var setup = function(app, io, renderMethod) {
     failureRedirect: '/login',
   }), function(req, res) {});
 
+  // authFB(req);
+  // renderMethod(req, res, "index.jade", "CANVAS");
+
+
 
   app.get('/login', function(req, res) {
     renderMethod(req, res, "login.jade", "CANVAS");
   });
+
 
 
   var setupFBUser = function(req, res) {
@@ -129,7 +134,9 @@ var setup = function(app, io, renderMethod) {
     var list = referer.split('/');
     var path = list[list.length - 1];
     var route = '/' + path;
-
+    if (path === 'login'){
+      route = '/';
+    }
     var uid = req.session.passport.user.id;
     req.session.fbsid = uid;
     req.session.accessToken = req.session.passport.user.accessToken;
