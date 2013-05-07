@@ -6,7 +6,7 @@ $(function() {
   KarmaHome.start = function() {
 
 
-    var miniMap = new MiniMap($('body'));
+    // var miniMap = new MiniMap($('body'));
 
     TopBar.setTopBar();
 
