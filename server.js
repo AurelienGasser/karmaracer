@@ -1,5 +1,5 @@
 var express = require('express');
-var KLib = require('./classes/KLib');
+var KLib = require('./libs/classes/KLib');
 var fs = require('fs');
 var sys = require("util");
 var memwatch = require('memwatch');
@@ -46,7 +46,7 @@ var io = require('socket.io').listen(server);
 io.set('log level', 0);
 
 var passport = require('passport');
-var auth = require('./authentication');
+var auth = require('./libs/authentication');
 
 app.configure(function(callback) {
 
@@ -108,6 +108,6 @@ app.get('/', auth.ensureAuthenticated, function(req, res) {
 
 app.io = io;
 
-var mapManager = require('./MapManager')(app);
+var mapManager = require('./libs/MapManager')(app);
 
 module.exports = app;

@@ -4,7 +4,7 @@ var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');
 var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 var KLib = require('./KLib');
-var CONFIG = require('./../config');
+var CONFIG = require('./../../config');
 
 
 var WeaponsByClass = {

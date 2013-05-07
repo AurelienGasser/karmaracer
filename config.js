@@ -30,6 +30,7 @@ var config = function() {
 
   register('botsPerMap', 5);
   register('stepByStepMode', false);
+  register('serverPath', __dirname);
 
   if (host === 'ks3096106.kimsufi.com') {
     console.info('fb host is prod', host);

@@ -3,7 +3,7 @@ var passport = require('passport');
 var KLib = require('./classes/KLib');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var graph = require('fbgraph');
-var CONFIG = require('./config');
+var CONFIG = require('./../config');
 
 
 var MemoryStore = express.session.MemoryStore,

@@ -1,6 +1,6 @@
 var fs = require('fs');
 var KLib = require('./classes/KLib');
-
+var CONFIG = require('./../config');
 
 var MapManger = function(app, callback) {
   this.app = app;
@@ -21,7 +21,7 @@ var MapManger = function(app, callback) {
   };
 
   function loadItems(callback) {
-    var path = __dirname + '/public/items';
+    var path = CONFIG.serverPath + '/public/items';
     getJSONSForDirectory(path, function(item) {
       that.itemsByName[item.name] = item;
     }, callback);
@@ -79,7 +79,7 @@ var MapManger = function(app, callback) {
   }
 
   function loadMaps(callback) {
-    var mapsPath = __dirname + '/public/maps';
+    var mapsPath = CONFIG.serverPath + '/public/maps';
     brosweFilesRec(mapsPath, function(err, maps) {
       for (var i = 0; i < maps.length; i++) {
         var mName = maps[i];

@@ -1,9 +1,9 @@
 var fs = require('fs');
-var PhysicalBody = require('./PhysicalBody');
+var KarmaPhysicalBody = require('./KarmaPhysicalBody');
 var KLib = require('./../KLib');
 
 var G_bodyID = 0;
-var PhysicsEngine = function(size, map) {
+var KarmaPhysicsEngine = function(size, map) {
   this.shareCollisionInfo = false;
   this.itemsToDestroy = [];
   this.gScale = 32;
@@ -14,7 +14,7 @@ var PhysicsEngine = function(size, map) {
   this.loadStaticItems();
 }
 
-PhysicsEngine.prototype.destroyBodies = function() {
+KarmaPhysicsEngine.prototype.destroyBodies = function() {
   for (var i in this.itemsToDestroy) {
     var item = this.itemsToDestroy[i];
     item.destroy();
@@ -24,23 +24,22 @@ PhysicsEngine.prototype.destroyBodies = function() {
 };
 
 
-PhysicsEngine.prototype.setupWorld = function(size) {
+KarmaPhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
 };
 
-PhysicsEngine.prototype.projection = function(a, b, name) {
-  var res = (a.x * b.x + a.y * b.y) / (b.x * b.x + b.y * b.y);
+KarmaPhysicsEngine.prototype.projection = function(corner, axis, name) {
+  var res = (corner.x * axis.x + corner.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
   var p = {
-    x: res * b.x,
-    y: res * b.y
+    x: res * axis.x,
+    y: res * axis.y
   };
-  if (!KLib.isUndefined(name)) {
-    p.name = name;
-  }
+
+  p.name = name;
   return p;
 };
 
-PhysicsEngine.prototype.projectionWithTranslate = function(base_vector, corner, axis, name) {
+KarmaPhysicsEngine.prototype.projectionWithTranslate = function(base_vector, corner, axis, name) {
   var pointTranslated = {
     x: corner.x - base_vector.x,
     y: corner.y - base_vector.y
@@ -55,7 +54,7 @@ PhysicsEngine.prototype.projectionWithTranslate = function(base_vector, corner, 
   return p;
 };
 
-PhysicsEngine.prototype.scalarValue = function(v1, v2) {
+KarmaPhysicsEngine.prototype.scalarValue = function(v1, v2) {
   return v1.x * v2.x + v1.y * v2.y;
 };
 
@@ -71,7 +70,7 @@ function compareScalar(c1, c2) {
   return c1.scalar - c2.scalar;
 }
 
-PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
+KarmaPhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
   var deltaBA = {
     x: B.x - A.x,
     y: B.y - A.y
@@ -165,7 +164,7 @@ function myRotate(p, r) {
   }
 }
 
-PhysicsEngine.prototype.collideTest = function(A, B) {
+KarmaPhysicsEngine.prototype.collideTest = function(A, B) {
   if (A.id === B.id) {
     return false;
   }
@@ -186,14 +185,14 @@ PhysicsEngine.prototype.collideTest = function(A, B) {
   return collides;
 };
 
-PhysicsEngine.prototype.outOfWalls = function(point) {
+KarmaPhysicsEngine.prototype.outOfWalls = function(point) {
   var res = point.x < 0 || point.y < 0 || point.x > this.map.size.w || point.y > this.map.size.h
   return res;
 }
 
 
 
-PhysicsEngine.prototype.getWorldInfo = function() {
+KarmaPhysicsEngine.prototype.getWorldInfo = function() {
   return {
     "size": {
       w: this.map.size.w * this.gScale,
@@ -204,7 +203,7 @@ PhysicsEngine.prototype.getWorldInfo = function() {
     "background": this.map.background
   };
 }
-PhysicsEngine.prototype.getShareStaticItems = function() {
+KarmaPhysicsEngine.prototype.getShareStaticItems = function() {
   var shareStaticItems = [];
   var items = this.staticBodies;
   // return shareStaticItems;
@@ -215,7 +214,7 @@ PhysicsEngine.prototype.getShareStaticItems = function() {
   return shareStaticItems;
 }
 
-PhysicsEngine.prototype.getLine = function(p1, p2) {
+KarmaPhysicsEngine.prototype.getLine = function(p1, p2) {
   var l = {};
   l.A = p2.y - p1.y;
   l.B = p1.x - p2.x;
@@ -224,7 +223,7 @@ PhysicsEngine.prototype.getLine = function(p1, p2) {
 };
 
 //http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=geometry2
-PhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
+KarmaPhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
   var det = line1.A * line2.B - line2.A * line1.B
   if (det == 0) {
     //Lines are parallel
@@ -240,19 +239,19 @@ PhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
 };
 
 
-PhysicsEngine.prototype.getVector = function(p1, p2) {
+KarmaPhysicsEngine.prototype.getVector = function(p1, p2) {
   return {
     x: p2.x - p1.x,
     y: p2.y - p1.y
   };
 }
 
-PhysicsEngine.prototype.vectorCrossProduct = function(v, w) {
+KarmaPhysicsEngine.prototype.vectorCrossProduct = function(v, w) {
   return v.x * w.y - v.y * w.x
 }
 
 // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
+KarmaPhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   var r_times_s = this.vectorCrossProduct(r, s);
   if (r_times_s === 0) {
     // segments are parallel
@@ -284,7 +283,7 @@ PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   // }
 };
 
-PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
+KarmaPhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
@@ -317,7 +316,7 @@ PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   return res
 };
 
-PhysicsEngine.prototype.bulletCollideWall = function(projectile) {
+KarmaPhysicsEngine.prototype.bulletCollideWall = function(projectile) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
@@ -350,7 +349,7 @@ PhysicsEngine.prototype.bulletCollideWall = function(projectile) {
   return null;
 }
 
-PhysicsEngine.prototype.bulletCollision = function(projectile) {
+KarmaPhysicsEngine.prototype.bulletCollision = function(projectile) {
   var pointsAndBullets = [];
   for (var bID in this.bodies) {
     var B = this.bodies[bID];
@@ -379,7 +378,7 @@ PhysicsEngine.prototype.bulletCollision = function(projectile) {
 };
 
 
-PhysicsEngine.prototype.getClosestPoint = function(source, points) {
+KarmaPhysicsEngine.prototype.getClosestPoint = function(source, points) {
 
   function getScore(source, p) {
     return Math.abs(source.x - p.x) * Math.abs(source.y - p.y);
@@ -407,7 +406,8 @@ PhysicsEngine.prototype.getClosestPoint = function(source, points) {
   return sorted[0];
 }
 
-PhysicsEngine.prototype.checkCollisions = function(body) {
+
+KarmaPhysicsEngine.prototype.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
     return true;
   }
@@ -437,7 +437,7 @@ PhysicsEngine.prototype.checkCollisions = function(body) {
 }
 
 
-PhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
+KarmaPhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
   if (p1.x !== p2.x) {
     return false;
   }
@@ -450,7 +450,7 @@ PhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
   return true;
 };
 
-PhysicsEngine.prototype.step = function() {
+KarmaPhysicsEngine.prototype.step = function() {
 
   var A, AID;
   for (AID in this.bodies) {
@@ -473,7 +473,7 @@ PhysicsEngine.prototype.step = function() {
 };
 
 
-PhysicsEngine.prototype.getShared = function() {
+KarmaPhysicsEngine.prototype.getShared = function() {
   var bodies = [];
   for (var bID in this.bodies) {
     var body = this.bodies[bID];
@@ -483,18 +483,18 @@ PhysicsEngine.prototype.getShared = function() {
 }
 
 
-PhysicsEngine.prototype.destroy = function() {
+KarmaPhysicsEngine.prototype.destroy = function() {
   this.bodies = null;
   this.size = null;
 };
 
-PhysicsEngine.prototype.addBody = function(body) {
+KarmaPhysicsEngine.prototype.addBody = function(body) {
   this.bodies[body.id] = body;
 }
 
-PhysicsEngine.prototype.createBody = function(position, size, name) {
+KarmaPhysicsEngine.prototype.createBody = function(position, size, name) {
   var b, id;
-  b = new PhysicalBody();
+  b = new KarmaPhysicalBody();
   b.initialize(this, position, size);
   if (!KLib.isUndefined(name)) {
     b.name = name;
@@ -505,38 +505,19 @@ PhysicsEngine.prototype.createBody = function(position, size, name) {
   return id;
 };
 
-PhysicsEngine.prototype.loadStaticItems = function() {
+KarmaPhysicsEngine.prototype.loadStaticItems = function() {
   var b;
   var staticItems = this.map.staticItems.concat([{
     name: 'outsideWall'
   }]);
   this.staticBodies = [];
-  var itemsDir = __dirname + '/../../public/items/';
+  var itemsDir = __dirname + '/public/items/';
   for (var i = 0; i < staticItems.length; i++) {
     var item = staticItems[i];
     var itemJSONPath = itemsDir + item.name + '.json';
     var itemJSONString = fs.readFileSync(itemJSONPath);
     var itemJSON = JSON.parse(itemJSONString);
-    if (item.name === 'outsideWall') {
-      var wallThickness = 1;
-      var id;
-      id = this.createBody({ x: this.map.size.w / 2, y: this.map.size.h + wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallTop');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-      id = this.createBody({ x: -wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallLeft');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-      id = this.createBody({ x: this.map.size.w  + wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallRight');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-      id = this.createBody({ x: this.map.size.w / 2, y: -wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallBottom');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-    } else {
+    if (item.name !== 'outsideWall') {
       var id = this.createBody(item.position, item.size, item.name);
       b = this.bodies[id];
       b.isStatic = true;
@@ -548,6 +529,6 @@ PhysicsEngine.prototype.loadStaticItems = function() {
   };
 }
 
-module.exports = PhysicsEngine;
+module.exports = KarmaPhysicsEngine;
 
-// PhysicsEngine = null;
+// KarmaPhysicsEngine = null;

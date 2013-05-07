@@ -1,4 +1,4 @@
-var config = require('./config');
+var config = require('./../config');
 var botNames = require('./botNames');
 var Bot = require('./classes/Bot/Bot');
 var DummyBot = require('./classes/Bot/DummyBot');
