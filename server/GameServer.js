@@ -124,7 +124,7 @@ GameServer.prototype.handleClientKeyboard = function() {
             break;
           }
         }
-        if (config.STEP_BY_STEP_MODE === true) {
+        if (config.stepByStepMode === true) {
           delete client.keyboard[event];
         }
       }
