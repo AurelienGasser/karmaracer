@@ -73,12 +73,6 @@ function start() {
     });
   })
 
-
-  $("#save-canvas").click(function() {
-    var img = Canvas2Image.saveAsPNG(map.canvas, true);
-    $("body").append(img);
-  });
-
   $("#save-map-node").click(function() {
     map.saveMap();
   });

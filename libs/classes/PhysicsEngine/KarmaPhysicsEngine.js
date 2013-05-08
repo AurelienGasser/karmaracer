@@ -511,7 +511,7 @@ KarmaPhysicsEngine.prototype.loadStaticItems = function() {
     name: 'outsideWall'
   }]);
   this.staticBodies = [];
-  var itemsDir = __dirname + '/public/items/';
+  var itemsDir = CONFIG.serverPath + '/public/items/';
   for (var i = 0; i < staticItems.length; i++) {
     var item = staticItems[i];
     var itemJSONPath = itemsDir + item.name + '.json';

@@ -15,8 +15,6 @@ memwatch.on('stats', function(stats) {
 });
 
 var app = express();
-var port = 8080;
-
 var os = require("os");
 var hostname = os.hostname();
 
@@ -25,7 +23,7 @@ app.configure('local', function() {});
 var http = require('http');
 
 
-// FOR SSL IF REQUIRED
+// REQUIRED FOR SSL 
 var sslServer = CONFIG.env;
 var ssl_options = {
   key: fs.readFileSync(__dirname + '/keys/' + sslServer + '.key'),

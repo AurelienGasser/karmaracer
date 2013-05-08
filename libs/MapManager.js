@@ -1,6 +1,7 @@
 var fs = require('fs');
 var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
+var filesLib = require('./PackageManager/files');
 
 var MapManger = function(app, callback) {
   this.app = app;
@@ -29,7 +30,7 @@ var MapManger = function(app, callback) {
 
 
   function getJSONSForDirectory(path, action, callback) {
-    brosweFilesRec(path, function(err, files) {
+    filesLib.brosweFilesRec(path, function(err, files) {
       for (var i = 0; i < files.length; i++) {
         var fName = files[i];
         var filePath = fName;
@@ -44,25 +45,7 @@ var MapManger = function(app, callback) {
   }
 
 
-  function brosweFilesRec(path, callback) {
-    var walk = require('walk');
-    var files = [];
 
-    // Walker options
-    var walker = walk.walk(path, {
-      followLinks: false
-    });
-
-    walker.on('file', function(root, stat, next) {
-      // Add this file to the list of files
-      files.push(root + '/' + stat.name);
-      next();
-    });
-
-    walker.on('end', function() {
-      return callback(null, files);
-    });
-  };
 
   function createOrUpdateMap(map) {
     // if (Object.keys(that.maps).length > 0){
@@ -80,7 +63,7 @@ var MapManger = function(app, callback) {
 
   function loadMaps(callback) {
     var mapsPath = CONFIG.serverPath + '/public/maps';
-    brosweFilesRec(mapsPath, function(err, maps) {
+    filesLib.brosweFilesRec(mapsPath, function(err, maps) {
       for (var i = 0; i < maps.length; i++) {
         var mName = maps[i];
         var content = fs.readFileSync(mName);
