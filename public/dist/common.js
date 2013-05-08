@@ -29,7 +29,7 @@ KLib.extend = function(Parent, child) {
     }
   };
 
-;
+
 
 var Karma = function() {
   if (_.isUndefined(localStorage.karma)) {
@@ -66,23 +66,26 @@ var Karma = function() {
     'exists' : exists
   };
 }();
-;
 
 
-var MiniMap;
-(function() {
+function setGoogleAnalytics() {
+  // Google Analytics
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-27170619-1']);
+  _gaq.push(['_trackPageview']);
 
-  MiniMap = function($container) {
-    this.$container = $container;
+  (function() {
+    var ga = document.createElement('script');
+    ga.type = 'text/javascript';
+    ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(ga, s);
+  })();
+}
 
-    this.$container.append('<canvas class="miniMap"></canvas>');
-  };
+setGoogleAnalytics();
 
-
-
-
-}());
-;
 
 function sendMsg() {
   if ($('#chat_input').val().trim() !== '') {
@@ -120,302 +123,7 @@ function hideChat() {
 function clearChatInputField() {
   $('#chat_input').val('');
 }
-;
 
-function setGoogleAnalytics() {
-  // Google Analytics
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-27170619-1']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script');
-    ga.type = 'text/javascript';
-    ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0];
-    s.parentNode.insertBefore(ga, s);
-  })();
-}
-
-setGoogleAnalytics();
-;
-
-function MobileTerminalHandler(gameInstance) {
-  this.gameInstance = gameInstance;
-  this.gameInstance.isMobile = true;
-  // alert('mobile');
-  // return this;
-}
-
-MobileTerminalHandler.prototype.init = function() {
-  // this.gameInstance.isMobile = true;
-  $('#addBot').remove();
-  $('#removeBot').remove();
-  $('#left_panel').remove();
-  $('#player_name_div').remove();
-
-  // $("head").append('<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0.0"');
-  // $("head").append('<meta name="apple-mobile-web-app-capable" content="yes"');
-  $('head').append('<link rel="apple-touch-icon" href="/images/karmaracer-logo.png"/>');
-  $('body').attr('onorientationchange', 'updateOrientation(G_gameInstance)');
-  // $("body").append('<div id="camera-debug"/>');
-  // this.touch = {
-  //   forward: false,
-  //   backward: false,
-  //   left: false,
-  //   right: false
-  // }
-  // this.addTouchScreenAreas();
-  // this.initTouchScreenEvents();
-  // $('#debug').remove();
-};
-
-MobileTerminalHandler.prototype.addTouchScreenAreas = function() {
-  $('body').append('<div id="touch-debug">toto</div>');
-  // $("body").append('<div id="pad-turn" class="pad">TURN</div>');
-  // $("body").append('<div id="pad-accelerate" class="pad">ACCELERATE</div>');
-  // $("body").append('<div id="pad-zoom" class="pad">ZOOM</div>');
-};
-
-
-// Turn left, stop turning or turn right depending on the event position
-MobileTerminalHandler.prototype.touchEventTurn = function(event) {
-  if (
-  event.originalEvent.targetTouches[0].pageY < event.target.offsetTop || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth) {
-    this.userTurn('stop');
-  } else if (event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft + event.target.clientWidth / 2) {
-    this.userTurn('left');
-  } else {
-    this.userTurn('right');
-  }
-};
-
-// Accelerate, stop or descelerate depending on the event position
-MobileTerminalHandler.prototype.touchEventAccelerate = function(event) {
-  if (
-  event.originalEvent.targetTouches[0].pageY < event.target.offsetTop || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth) {
-    this.userAccelerate('stop');
-  } else if (event.originalEvent.targetTouches[0].pageY < event.target.offsetTop + event.target.clientHeight / 2) {
-    this.userAccelerate('forward');
-  } else {
-    this.userAccelerate('backward');
-  }
-};
-
-// Send a turn instruction to the server if necessary
-MobileTerminalHandler.prototype.userTurn = function(direction) {
-  switch (direction) {
-    case 'stop':
-      if (this.touch.left) this.gameInstance.keyboardHandler.event('left', 'end');
-      if (this.touch.right) this.gameInstance.keyboardHandler.event('right', 'end');
-      break;
-    case 'left':
-      if (this.touch.right) this.gameInstance.keyboardHandler.event('right', 'end');
-      if (!this.touch.left) this.gameInstance.keyboardHandler.event('left', 'start');
-      break;
-    case 'right':
-      if (this.touch.left) this.gameInstance.keyboardHandler.event('left', 'end');
-      if (!this.touch.right) this.gameInstance.keyboardHandler.event('right', 'start');
-      break;
-  }
-  this.touch.left = false;
-  this.touch.right = false;
-  if (direction != 'stop') this.touch[direction] = true;
-};
-
-// Send an accelerate instruction to the server if necessary
-MobileTerminalHandler.prototype.userAccelerate = function(direction) {
-  switch (direction) {
-    case 'stop':
-      if (this.touch.forward) this.gameInstance.keyboardHandler.event('forward', 'end');
-      if (this.touch.backward) this.gameInstance.keyboardHandler.event('backward', 'end');
-      break;
-    case 'forward':
-      if (this.touch.backward) this.gameInstance.keyboardHandler.event('backward', 'end');
-      if (!this.touch.forward) this.gameInstance.keyboardHandler.event('forward', 'start');
-      break;
-    case 'backward':
-      if (this.touch.forward) this.gameInstance.keyboardHandler.event('forward', 'end');
-      if (!this.touch.backward) this.gameInstance.keyboardHandler.event('backward', 'start');
-      break;
-  }
-  this.touch.forward = false;
-  this.touch.backward = false;
-  if (direction != 'stop') this.touch[direction] = true;
-};
-
-MobileTerminalHandler.prototype.initTouchScreenEvents = function() {
-  window.ontouchmove = function(e) {
-    e.preventDefault();
-  };
-  window.touchstart = function(e) {
-    e.preventDefault();
-  };
-  $('#pad-accelerate').bind('touchstart', function(event) {
-    this.touchEventAccelerate(event);
-  }.bind(this));
-  $('#pad-accelerate').bind('touchend', function() {
-    this.userAccelerate('stop');
-  }.bind(this));
-  $('#pad-accelerate').bind('touchmove', function(event) {
-    this.touchEventAccelerate(event);
-  }.bind(this));
-  $('#pad-turn').bind('touchstart', function(event) {
-    this.touchEventTurn(event);
-  }.bind(this));
-  $('#pad-turn').bind('touchend', function() {
-    this.userTurn('stop');
-  }.bind(this));
-  $('#pad-turn').bind('touchmove', function(event) {
-    this.touchEventTurn(event);
-  }.bind(this));
-  $('#pad-zoom').bind('touchstart', function(event) {
-    this.zoomLevel = event.pageX;
-  });
-  $('#pad-zoom').bind('touchmove', function(event) {
-    var zoomFactor;
-    if (this.zoomLevel - event.pageX < 0) {
-      zoomFactor = 1.05;
-    } else {
-      zoomFactor = 0.95;
-    }
-    this.gameInstance.drawEngine.camera.scale *= zoomFactor;
-  });
-};
-
-function updateOrientation(gameInstance) {
-  window.scrollTo(0, 0);
-  gameInstance.steeringWheel.resize();
-  if (gameInstance.drawEngine.camera !== null) {
-    gameInstance.drawEngine.camera.resizeCanvas({
-      w: $(window).width(),
-      h: $(window).height()
-    });
-  }
-};
-
-
-if (!Function.prototype.bind) {
-  Function.prototype.bind = function(oThis) {
-    if (typeof this !== 'function') {
-      // closest thing possible to the ECMAScript 5 internal IsCallable function
-      throw new TypeError('Function.prototype.bind - what is trying to be bound is not callable');
-    }
-    var fSlice = Array.prototype.slice,
-    aArgs = fSlice.call(arguments, 1),
-    fToBind = this,
-    fNOP = function() {},
-    fBound = function() {
-      return fToBind.apply(this instanceof fNOP ? this : oThis || window,
-      aArgs.concat(fSlice.call(arguments)));
-    };
-    fNOP.prototype = this.prototype;
-    fBound.prototype = new fNOP();
-    return fBound;
-  };
-}
-;
-
-var TopBar = {};
-
-(function() {
-
-
-  function getPageName() {
-    var url = document.URL;
-    var list = url.split('/');
-    var page = list[list.length - 1];
-    if (page.indexOf('#') !== -1) {
-      page = page.split('#')[0];
-    }
-    return page;
-  }
-
-
-  function setTopBar() {
-    var o = [];
-    o.push('<div id="topBar" class="init"><ul id="topBarBoxes">');
-
-    var page = getPageName();
-    if (page !== '') {
-      o.push('<li id="topHelp"><a href="/"><img src="/images/iconHome.png" id="iconHome"/></a></li>');
-    }
-
-    o.push('<li><form id="playerNameForm" href="#">');
-    o.push('Welcome to Karma Racer, <input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
-    o.push('<input type="submit" style="display:none"/>');
-    o.push('</form></li>');
-
-    o.push('<li id="fbHighScore"/>');
-
-    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="Home"/>');
-    o.push('<div id="keys"></div>');
-    o.push('</li>');
-
-    o.push('<li id="fbLoginImage"/>');
-
-    o.push('</ul>');
-    var loginZone = $(o.join(''));
-    loginZone.hide();
-    $('body').append(loginZone);
-
-    var $keys = $('#keys');
-    $('#iconHelp').hover(function() {
-      $keys.show();
-    }, function() {
-      $keys.hide();
-    });
-    $('#keys').html(getHelps());
-    $playerName = $('#playerName');
-
-    $playerName.keyup(function() {
-      Karma.set('playerName', $playerName.val());
-    });
-
-    loginZone.children().hide();
-
-
-  }
-
-  function createHelp(k, text) {
-    return {
-      'key': k,
-      'text': text
-    };
-  }
-
-  function getHelps() {
-    var helps = [];
-    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / go backward'));
-    helps.push(createHelp('&#8592;&nbsp;&#8594;', 'turn left / right'));
-    helps.push(createHelp('&#60;space&#62;', 'shoot'));
-    helps.push(createHelp('L/P', 'zoom / unzoom'));
-    helps.push(createHelp('B', 'break'));
-    helps.push(createHelp('Mouse Click', 'drive'));
-
-    var o = [];
-    for (var i = 0; i < helps.length; i++) {
-      var h = helps[i];
-      o.push('<td class="help_keys">' + h.key + '</td><td class="help_keys_text">' + h.text + '</td>');
-    }
-    var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
-    return html;
-  }
-  TopBar.show = function() {
-    $bar = $('#topBar');
-    $bar.slideDown(function() {
-      $bar.children().fadeIn();
-    });
-    setTimeout(function() {
-      $bar.removeClass('init');
-    }, 2500);
-  };
-
-  TopBar.setTopBar = setTopBar;
-
-}());
-;
 
 function Engine2DCanvas(gameInstance, canvas, canvasID) {
   this.canvas = canvas;
@@ -837,7 +545,7 @@ function drawPoint(ctx, p, color) {
   }
   ctx.restore();
 }
-;
+
 
 function Camera(ctx, _canvasSelector){
   this.ctx = ctx;
@@ -915,7 +623,7 @@ Camera.prototype.update = function(center) {
   this.ctx.translate(this.translate.x, this.translate.y);
   //this.drawDebug();
 };
-;
+
 
 /**
 * Provides requestAnimationFrame in a cross browser way.
@@ -964,7 +672,7 @@ function DrawEngineFactory(gameInstance, canvasID, defaultDrawEngineType){
   return factory(gameInstance, drawEngineType, canvasID, canvas, gl);
 }
 
-;
+
 
 // function degToRad(degrees) {
 //   return degrees * Math.PI / 180;
@@ -1344,7 +1052,7 @@ function DrawEngineFactory(gameInstance, canvasID, defaultDrawEngineType){
 //   }.bind(this))
 // }
 
-;
+
 
 var kFB = {};
 
@@ -1514,5 +1222,120 @@ var kFB = {};
 
   kFB.setup();
 
+
+}());
+
+
+var MiniMap;
+(function() {
+
+  MiniMap = function($container) {
+    this.$container = $container;
+
+    this.$container.append('<canvas class="miniMap"></canvas>');
+  };
+
+
+
+
+}());
+
+
+var TopBar = {};
+
+(function() {
+
+
+  function getPageName() {
+    var url = document.URL;
+    var list = url.split('/');
+    var page = list[list.length - 1];
+    if (page.indexOf('#') !== -1) {
+      page = page.split('#')[0];
+    }
+    return page;
+  }
+
+
+  function setTopBar() {
+    var o = [];
+    o.push('<div id="topBar" class="init"><ul id="topBarBoxes">');
+
+    var page = getPageName();
+    if (page !== '') {
+      o.push('<li id="topHelp"><a href="/"><img src="/images/iconHome.png" id="iconHome"/></a></li>');
+    }
+
+    o.push('<li><form id="playerNameForm" href="#">');
+    o.push('Welcome to Karma Racer, <input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
+    o.push('<input type="submit" style="display:none"/>');
+    o.push('</form></li>');
+
+    o.push('<li id="fbHighScore"/>');
+
+    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="Home"/>');
+    o.push('<div id="keys"></div>');
+    o.push('</li>');
+
+    o.push('<li id="fbLoginImage"/>');
+
+    o.push('</ul>');
+    var loginZone = $(o.join(''));
+    loginZone.hide();
+    $('body').append(loginZone);
+
+    var $keys = $('#keys');
+    $('#iconHelp').hover(function() {
+      $keys.show();
+    }, function() {
+      $keys.hide();
+    });
+    $('#keys').html(getHelps());
+    $playerName = $('#playerName');
+
+    $playerName.keyup(function() {
+      Karma.set('playerName', $playerName.val());
+    });
+
+    loginZone.children().hide();
+
+
+  }
+
+  function createHelp(k, text) {
+    return {
+      'key': k,
+      'text': text
+    };
+  }
+
+  function getHelps() {
+    var helps = [];
+    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / go backward'));
+    helps.push(createHelp('&#8592;&nbsp;&#8594;', 'turn left / right'));
+    helps.push(createHelp('&#60;space&#62;', 'shoot'));
+    helps.push(createHelp('L/P', 'zoom / unzoom'));
+    helps.push(createHelp('B', 'break'));
+    helps.push(createHelp('Mouse Click', 'drive'));
+
+    var o = [];
+    for (var i = 0; i < helps.length; i++) {
+      var h = helps[i];
+      o.push('<td class="help_keys">' + h.key + '</td><td class="help_keys_text">' + h.text + '</td>');
+    }
+    var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
+    return html;
+  }
+  TopBar.show = function() {
+    $bar = $('#topBar');
+    $bar.slideDown(function() {
+      $bar.children().fadeIn();
+    });
+    setTimeout(function() {
+      $bar.removeClass('init');
+    }, 2500);
+  };
+
+  TopBar.setTopBar = setTopBar;
 
 }());

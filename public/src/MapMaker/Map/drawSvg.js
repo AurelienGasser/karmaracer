@@ -155,7 +155,7 @@
 
       e.preventDefault();
       return false;
-    })
+    });
     c.drag(move, start, up);
     c.sizer = s;
     s.drag(rmove, rstart);

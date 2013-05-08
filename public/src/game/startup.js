@@ -5,12 +5,11 @@ document.ontouchstart = function(e){
 var G_gameInstance;
 
 Modernizr.load([{
-  load: '/js/libs/jquery-1.6.4.min.js',
   complete: function() {
     Modernizr.load([{
       test: $("html.touch").length,
-      yep: ['/js/mobile.js', '/js/mobile_compatibility.js', '/css/mobile.css'],
-      nope: ['css/no-touch.css'],
+      yep: ['/dist/mobile.js', '/dist/mobile.css'],
+      nope: ['src/mobile/no-touch.css'],
       complete: function() {
         G_gameInstance = new GameInstance();
         if(typeof(MobileTerminalHandler) === 'function') {

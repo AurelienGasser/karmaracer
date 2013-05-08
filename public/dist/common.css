@@ -1,0 +1,211 @@
+#chat {
+  position: fixed;
+  bottom: 0px;
+  left:0px;
+  width: 100%;
+  text-align: center;
+  vertical-align: bottom;
+  z-index: 500;
+}
+
+#chat_msgs {
+  text-align: left;
+}
+
+#chat_msgs li {
+  font-size: 14px;
+  padding: 5px;
+  color:white;
+}
+
+#chat_msgs {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#chat_input_wrapper {  
+  display: none;
+  /*bottom:-40px;  */
+}
+#chat_input_wrapper * {
+  display: inline-block;
+  font-size: 14px;
+  line-height: 40px;
+  height: 40px;
+}
+
+#chat_input_label{
+  margin-right: 5px;
+}
+
+#chat_input_wrapper.enable{
+  background-color: #eee;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;
+  /*bottom:0px;  */
+}
+
+
+
+#chat_input {
+  width: 500px;
+  vertical-align: bottom;
+  background-color: transparent;
+  border: none;
+  outline: none;
+}
+
+
+canvas.miniMap{
+  width: 200px;
+  height: 100px;
+  border: 1px solid blue;
+  position: fixed;
+  left: 0px;
+  bottom: 200px;
+}
+
+#topBarBoxes {
+  margin: 0px;
+  padding: 0px;
+  width:100%;
+  display: table;
+}
+#topBarBoxes li {
+  display: table-cell;
+  overflow: hidden;
+  vertical-align: top;
+  list-style: none;
+  
+}
+#topBarBoxes li > *{
+margin: 5px;
+}
+
+#topBar li a img{
+margin: 5px;
+}
+
+#topBar{
+  position: fixed;
+  right: 0px;
+  top:-30px;
+  height: 50px;
+  width: 100%;
+  vertical-align: top;
+  text-align: right;
+  z-index: 6000;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;
+  background-color: white;
+  opacity: 0.5;
+  border-bottom: 1px solid #eee;
+}
+
+#topBar:hover, #topBar.init{
+  top:0px;
+  background-color: #eee;
+  opacity: 1;
+  border-bottom: none;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;  
+}
+
+#topBar input{
+  background-color: white;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;  
+
+}
+
+#topBar:hover input, #topBar.init input{
+  background-color: #eee;
+  -webkit-transition: 0.25s ease-in-out;
+  -moz-transition: 0.25s ease-in-out;
+  -o-transition: 0.25s ease-in-out;
+  transition: 0.25s ease-in-out;  
+}
+
+
+#fbHighScore{
+  line-height: 40px;
+  height: 40px;
+}
+
+#fbHighScore div{
+  cursor: help;
+}
+
+#playerName{
+  /*cursor: help;*/
+  height: 40px;
+  line-height: 40px;
+  width: 300px;
+  /*background-color: white;*/
+  border: none;
+  padding-right: 5px;
+}
+
+#playerName:focus{
+  background-color: white;
+}
+
+#fbLoginImage{
+  width: 40px;
+}
+
+.fb-picture{
+  width: 40px;
+  height: 40px;
+}
+
+
+#topHelp{
+  position: relative;
+  left: 0px;
+  text-align: left;
+  width: 40px;
+}
+
+#keys{
+  position: fixed;
+  background-color: #eee;
+  display: none;
+  right: 0px;
+  top:40px;
+  margin: 0px;
+}
+
+#iconHelp{
+  width: 40px;
+  height: 40px;  
+  cursor: help;
+}
+
+
+#help {
+  /*float: right;*/
+  display: inline-block;
+  vertical-align: top;
+}
+
+ul#keys li{
+  list-style: none;
+}
+
+.help_keys {
+  text-align: left;
+}
+
+.help_keys_text {
+  padding-left: 1em;
+}

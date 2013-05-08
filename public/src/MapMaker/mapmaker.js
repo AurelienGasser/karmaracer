@@ -41,7 +41,7 @@ function setBackgroundItemsEvents(map) {
     var bg = map.backgroundItems[i];
     o.push('<option value="', bg.name, '">');
     o.push(bg.name, '</option>');
-  };
+  }
   o.push('</datalist>');
 
   inputName.after(o.join(''));
@@ -71,7 +71,7 @@ function start() {
         map.svgInit(mapID);
       });
     });
-  })
+  });
 
   $("#save-map-node").click(function() {
     map.saveMap();

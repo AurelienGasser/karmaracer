@@ -57,7 +57,7 @@ Map.prototype.canvasDraw = function() {
   this.ctx.restore();
 
 
-  if(this.zoomBox != null) {
+  if(this.zoomBox !== null) {
     this.scale = this.realWorldSize.w * this.scale / this.zoomBox.w;
     this.translate.x = -this.zoomBox.x * this.scale;
     this.translate.y = -this.zoomBox.y * this.scale;
@@ -92,7 +92,7 @@ Map.prototype.canvasDrawItem = function(item) {
     this.ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
     this.ctx.fillRect(item.position.x + item.size.w * 0.8, item.position.y + item.size.h * 0.8, item.size.w * 0.2, item.size.h * 0.2);
   }
-}
+};
 
 Map.prototype.canvasDrawSelectedZone = function() {
   this.selectedZone.x = this.mouseDownPosition.x;
@@ -109,4 +109,4 @@ Map.prototype.canvasDrawSelectedZone = function() {
   }
   this.ctx.strokeStyle = 'f00';
   this.ctx.strokeRect(this.selectedZone.x, this.selectedZone.y, this.selectedZone.w, this.selectedZone.h);
-}
+};

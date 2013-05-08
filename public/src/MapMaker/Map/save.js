@@ -21,7 +21,7 @@ Map.prototype.saveMap = function() {
   }
 
   if (!KLib.isUndefined(path)) {
-    map['background'] = {
+    map.background = {
       'path': path,
       'name': this.mapBackgroundName
     };
@@ -35,8 +35,8 @@ Map.prototype.saveMap = function() {
       y: (item.position.y + item.size.h / 2) / that.gScale
     };
     jsonItem.size = {
-      w: parseInt(item.size.w / that.gScale),
-      h: parseInt(item.size.h / that.gScale)
+      w: parseInt(item.size.w / that.gScale, 10),
+      h: parseInt(item.size.h / that.gScale, 10)
     };
     map.staticItems.push(jsonItem);
   });
@@ -59,4 +59,4 @@ Map.prototype.saveMap = function() {
 
 
   this.connection.emit('saveMap', map);
-}
+};

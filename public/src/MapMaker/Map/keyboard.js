@@ -2,7 +2,7 @@ function KeyboardHandlerMap(_canvasMap) {
   this.canvasMap = _canvasMap;
   document.onkeydown = this.handleKeyDown.bind(this);
   document.onkeyup = this.handleKeyUp.bind(this);
-};
+}
 
 KeyboardHandlerMap.prototype.handleKey = function(key, down) {
   switch (key) {
@@ -48,17 +48,17 @@ KeyboardHandlerMap.prototype.handleKey = function(key, down) {
       break;
     case 16: // Shift
       this.canvasMap.keyPress.shift = down;
-
+      break;
     default :
       //console.info(key);
   }
-}
+};
 
 KeyboardHandlerMap.prototype.handleKeyDown = function(event) {
   this.handleKey(event.keyCode, true);
-}
+};
 
 KeyboardHandlerMap.prototype.handleKeyUp = function(event) {
   this.handleKey(event.keyCode, false);
-}
+};
 

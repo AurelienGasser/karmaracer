@@ -1,77 +1,85 @@
 module.exports = function(grunt) {
 
-  var files = {
-    common: ['public/js/common/*.js', 'public/js/common/**/*.js'],
-    vendor_common: ['public/js/vendor/common/*.js'],
-    vendor_webgl: ['public/js/vendor/webgl/*.js'],
-    vendor_mapmaker: ['public/js/vendor/mapmaker/*.js'],
-    game: ['public/js/game/*.js'],
-    home: ['public/js/home/*.js']
-  };
-  var JSHintFiles = files.common.concat(files.game, files.home);
 
-  var options = {
-    pkg: grunt.file.readJSON('package.json'),
-    concat: {
-      options: {
-        separator: ';\n\n'
-      }
-    },
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      common: {
-        src: 'public/dist/common.js',
-        dest: 'public/dist/common.min.js'
-      },
-      game: {
-        src: 'public/dist/game.js',
-        dest: 'public/dist/game.min.js'
-      },
-      home: {
-        src: 'public/dist/home.js',
-        dest: 'public/dist/home.min.js'
-      }
-    },
-    jshint: {
-      // define the files to lint
-      files: JSHintFiles, //['public/js/common/*.js', 'public/js/vendor/*.js', 'public/js/game/*.js'],
-      // configure JSHint (documented at http://www.jshint.com/docs/)
-      options: {
-        onecase: true,
-        // more options here if you want to override JSHint defaults
-        globals: {
-          jQuery: true,
-          console: true,
-          module: true
-        }
-      }
-    },
-    watch: {
-      files: ['<%= jshint.files %>'],
-      tasks: ['jshint', 'concat']
-    }
-  };
+  var G_options = {};
+  var G_files = {};
+  var G_JSHintFiles = [];
 
 
-  function addConcatModule(name) {
-    options.concat[name] = {
-      src: files[name],
-      dest: 'public/dist/' + name + '.js'
+  G_options.concat = {};
+  G_options.uglify = {};
+
+  function addConcatModule(name, mimeType) {
+    var moduleName = mimeType + '_' + name;
+    G_options.concat[moduleName] = {
+      src: G_files[moduleName],
+      dest: 'public/dist/' + name + '.' + mimeType
+    };
+  }
+
+  function addUglifyModule(name, mimeType) {
+    var moduleName = mimeType + '_' + name;
+    G_options.uglify[moduleName] = {
+      src: 'public/dist/' + name + '.' + mimeType,
+      dest: 'public/dist/' + name + '.min.' + mimeType
     };
   }
 
 
-  addConcatModule('common');
-  addConcatModule('game');
-  addConcatModule('home');
-  addConcatModule('vendor_common');
-  addConcatModule('vendor_mapmaker');
-  addConcatModule('vendor_webgl');
+  function addModule(name) {
+    G_files['js_' + name] = ['public/src/' + name + '/*.js', 'public/src/' + name + '/**/*.js'];
+    G_files['css_' + name] = ['public/src/' + name + '/*.css', 'public/src/' + name + '/**/*.css'];
+    addConcatModule(name, 'js');
+    addConcatModule(name, 'css');
+    addUglifyModule(name, 'js');
+    G_JSHintFiles = G_JSHintFiles.concat(G_files['js_' + name]);
+  }
+
+
+  addModule('game');
+  addModule('home');
+  addModule('mapmaker');
+  addModule('common');
+
+
+  G_files.js_vendor_common = ['public/src/vendor/common/*.js'];
+  G_files.js_vendor_webgl = ['public/src/vendor/webgl/*.js'];
+  G_files.js_vendor_mapmaker = ['public/src/vendor/mapmaker/*.js'];
+  addConcatModule('vendor_common', 'js');
+  addConcatModule('vendor_mapmaker', 'js');
+  addConcatModule('vendor_webgl', 'js');
+
+
+
+  G_options.jshint = {
+    // define the files to lint
+    files: G_JSHintFiles, //['public/js/common/*.js', 'public/js/vendor/*.js', 'public/js/game/*.js'],
+    // configure JSHint (documented at http://www.jshint.com/docs/)
+    options: {
+      onecase: true,
+      // more options here if you want to override JSHint defaults
+      globals: {
+        jQuery: true,
+        console: true,
+        module: true
+      }
+    }
+  };
+
+  G_options.pkg = grunt.file.readJSON('package.json');
+  G_options.concat.options = {
+    separator: '\n\n'
+  };
+  G_options.uglify.options = {
+    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+  };
+  G_options.watch = {
+    files: ['<%= jshint.files %>'],
+    tasks: ['jshint', 'concat']
+  };
 
   // Project configuration.
-  grunt.initConfig(options);
+  grunt.initConfig(G_options);
 
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-jshint');

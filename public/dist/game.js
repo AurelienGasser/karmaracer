@@ -217,7 +217,7 @@ GameInstance.prototype.addExplosion = function(explosion) {
     r: 3.14 / 6 * Math.random() - 3.14,
     alpha: 0.4 * Math.random() - 0.2 + 0.25
   };
-};;
+};
 
 $(window).on('beforeunload', function() {
   connection.emit('disconnect');
@@ -359,7 +359,7 @@ $(function() {
     connection.emit('remove bot');
   });
 });
-;
+
 
 var SteeringWheelController = function(gameInstance) {
 
@@ -554,7 +554,7 @@ SteeringWheelController.prototype.resize = function() {
   });
   // this.setMSize(this.m.width(), this.m.height());
   // this.setMPosition(window.innerWidth / 2, window.innerHeight / 2);
-};;
+};
 
 KEY_ENTER = 13;
 KEY_SPACE = 32;
@@ -651,7 +651,7 @@ KeyboardHandler.prototype.handleKeyDown = function(event) {
 
 KeyboardHandler.prototype.handleKeyUp = function(event) {
   this.handleKey(event.keyCode, 'end');
-};;
+};
 
 document.ontouchstart = function(e){ 
     e.preventDefault(); 
@@ -660,12 +660,11 @@ document.ontouchstart = function(e){
 var G_gameInstance;
 
 Modernizr.load([{
-  load: '/js/libs/jquery-1.6.4.min.js',
   complete: function() {
     Modernizr.load([{
       test: $("html.touch").length,
-      yep: ['/js/mobile.js', '/js/mobile_compatibility.js', '/css/mobile.css'],
-      nope: ['css/no-touch.css'],
+      yep: ['/dist/mobile.js', '/dist/mobile.css'],
+      nope: ['src/mobile/no-touch.css'],
       complete: function() {
         G_gameInstance = new GameInstance();
         if(typeof(MobileTerminalHandler) === 'function') {

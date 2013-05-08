@@ -82,18 +82,18 @@ Map.prototype.loadMap = function(mapName, callback) {
     $('#map-width').val(map.size.w);
     $('#map-height').val(map.size.h);
     $enable = $('#map-enable');
-    
-    if (map.enable === true){      
+
+    if (map.enable === true) {
       $enable.prop('checked', true);
     }
-    $enable.click(function(){
+    $enable.click(function() {
       that.enable = this.checked;
     });
 
     that.realWorldSize.w = map.size.w * that.gScale;
     that.realWorldSize.h = map.size.h * that.gScale;
 
-    
+
     that.resize();
     for (var i = 0; i < map.staticItems.length; i++) {
       var sItem = map.staticItems[i];
@@ -104,7 +104,7 @@ Map.prototype.loadMap = function(mapName, callback) {
       mapItem.position.y = sItem.position.y * that.gScale;
       mapItem.size.w = sItem.size.w * that.gScale;
       mapItem.size.h = sItem.size.h * that.gScale;
-    };
+    }
 
     // if (!KLib.isUndefined(that.svgTag)){
     //   that.svgLoad();
@@ -182,7 +182,7 @@ function Step(items, action, callback) {
   for (var i = 0; i < items.length; i++) {
     var item = items[i];
     action(item, end);
-  };
+  }
 }
 
 Map.prototype.loadItems = function(items, callback) {
@@ -206,6 +206,12 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
   var UL = $('<ul class="item-properties"/>');
   itemLi.append(UL);
   var demoDiv = $('<li class="kr-mm-demo"/>');
+
+
+  function setBackground() {
+    demoDiv.css('background-image', 'url("' + item.image.src + '")');
+  }
+
   switch (item.patternType) {
     case 'both':
       var bgItem = {
@@ -213,10 +219,13 @@ Map.prototype.addMapItemInDoForSelection = function(items, item) {
         'path': item.image.src
       };
       that.backgroundItems.push(bgItem);
-
+      setBackground();
+      break;
     case 'horizontal':
+      setBackground();
+      break;
     case 'vertical':
-      demoDiv.css('background-image', 'url("' + item.image.src + '")');
+      setBackground();
       break;
     default:
       demoDiv.append('<img class="kr-item-demo" src="' + item.image.src + '"/>');

@@ -1,0 +1,46 @@
+
+#score-table {
+    color: white;
+    padding: 0.5em;
+    position: fixed;
+  transition: width 1s linear 1s;    
+}
+
+table.scores tr.userCar{
+    font-weight: bold;
+}
+
+table.scores thead tr th, tbody#scores tr td {
+    padding: 0.5em 0.3em;
+    font-size: 10px;
+    color:black;
+}
+
+
+
+#score-table.default{
+    width: 300px; 
+    right: 0px;
+    bottom: 0px;
+    margin: 5px;
+    background-color: rgba(255,255,255,0.3);
+    transition: 0.25s ease-in-out;    
+}
+
+
+#score-table.big{
+    width: 500px; 
+    background-color: white;
+    transition: 0.5s linear;    
+    bottom:100px;
+    right: 50%;
+    margin-right: -250px;
+    border-radius: 20px;
+}
+
+#score-table.big td, #score-table.big th{
+    font-size: 12px;
+    transition: 0.5s linear;    
+}
+
+

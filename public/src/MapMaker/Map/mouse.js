@@ -17,7 +17,7 @@ Map.prototype.mouseDown = function(e) {
       if (this.isMousePositionInItem(item)) {        
         if (!this.isItemSelected(item.id)) {
           this.deselectAllItems();
-          this.selectItem(item.id)  
+          this.selectItem(item.id); 
         }
         this.mouseDownOnItem = item;        
         if (this.mouseDownInItemScaleZone(item, 0.8)) {
@@ -62,7 +62,7 @@ Map.prototype.mouseMove = function(e) {
     }
   }
   // left click is pressed
-  if (e.button == 0 && e.which == 1) {
+  if (e.button === 0 && e.which === 1) {
     switch (this.action) {
       case 'translate':
         this.translateSelectedItemsUsingMousePosition();
@@ -86,4 +86,4 @@ Map.prototype.mouseUp = function(e) {
       break;
   }
   this.action = '';
-}
+};

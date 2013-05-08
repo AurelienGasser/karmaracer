@@ -11,8 +11,6 @@ $(function() {
     var connection = io.connect(host, {
       secure: true
     });
-
-
     connection.emit('get_maps', function(err, maps) {
       // console.log('getmaps', maps);
       addMaps(maps);
@@ -21,23 +19,17 @@ $(function() {
     });
 
     connection.on('maps_state', function(mapStates) {
-
-      // console.log(mapStates);
-
       var getName = function(p) {
         return p.name;
       };
-
       for (var i in mapStates) {
         var m = mapStates[i];
-        // console.info(m);
         var players = _.map(m.players, getName).join(', ');
         if (players.length > 0) {
           players = 'Players : ' + players;
         }
         $('#map-' + m.map + ' .players').html(players);
       }
-
     });
 
 

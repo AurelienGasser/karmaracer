@@ -1,0 +1,27 @@
+
+#SteeringWheelController.enable {
+    border-color: blue;
+}
+
+#SteeringWheelController.enable div {
+    background-color: blue;
+}
+
+#SteeringWheelController {
+    border: 1px solid white;
+    height: 100%;
+    left: 0px;
+    margin: auto;
+    position: fixed;
+    top: 0px;
+    width: 100%;
+}
+
+#SteeringWheelControllerAcc {
+    background-color: white;
+    border-radius: 8px;
+    height: 16px;
+    opacity: 0.5;
+    position: absolute;
+    width: 16px;
+}

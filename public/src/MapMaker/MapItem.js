@@ -11,7 +11,7 @@ function MapItem(_jsonItem, _ctx, _id) {
   };
   this.name = this.jsonItem.name;
   this.patternType = this.jsonItem.patternType;
-  this.pattern;
+  this.pattern = undefined;
   this.zIndex = 0;
   this.path = this.jsonItem.image.path;
 
@@ -29,7 +29,7 @@ MapItem.prototype.initImage = function(callback) {
 
   that.image.onerror = function() {
     console.error('error on load image', this.src);
-  }
+  };
 
   that.image.onload = function() {
 
@@ -51,12 +51,12 @@ MapItem.prototype.scale = function(canvasMousePosition, scaleMousePosition, keyP
     var min = Math.min(diffx, diffy);
     translateVector = {
       "x": min,
-      "y": min,
+      "y": min
     };
   } else {
     translateVector = {
       "x": diffx,
-      "y": diffy,
+      "y": diffy
     };
   }
   if(this.patternType == 'vertical') {
