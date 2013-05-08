@@ -1,24 +1,22 @@
-document.ontouchstart = function(e){ 
-    e.preventDefault(); 
-};
+/*global Modernizr*/
 
-var G_gameInstance;
-
-Modernizr.load([{
-  complete: function() {
-    Modernizr.load([{
-      test: $("html.touch").length,
-      yep: ['/dist/mobile.js', '/dist/mobile.css'],
-      nope: ['src/mobile/no-touch.css'],
-      complete: function() {
-        G_gameInstance = new GameInstance();
-        if(typeof(MobileTerminalHandler) === 'function') {
-          var mobileHandler = new MobileTerminalHandler(G_gameInstance);
-          mobileHandler.init();
+(function() {
+  "use strict";
+  Modernizr.load([{
+    complete: function() {
+      Modernizr.load([{
+        test: $("html.touch").length,
+        yep: ['/dist/mobile.js', '/dist/mobile.css'],
+        nope: ['src/mobile/no-touch.css'],
+        complete: function() {
+          Karma.gameInstance = new Karma.GameInstance();
+          if (typeof(Karma.MobileTerminalHandler) === 'function') {
+            var mobileHandler = new Karma.MobileTerminalHandler(Karma.gameInstance);
+            mobileHandler.init();
+          }
+          new Karma.SteeringWheelController(Karma.gameInstance);
         }
-        var steeringWheel  = new SteeringWheelController(G_gameInstance);
-      }
-    }]);
-  }
-}]);
-
+      }]);
+    }
+  }]);
+}());

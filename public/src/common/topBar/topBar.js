@@ -1,7 +1,5 @@
-var TopBar = {};
-
 (function() {
-
+  "use strict";
 
   function getPageName() {
     var url = document.URL;
@@ -48,10 +46,10 @@ var TopBar = {};
       $keys.hide();
     });
     $('#keys').html(getHelps());
-    $playerName = $('#playerName');
+    var $playerName = $('#playerName');
 
     $playerName.keyup(function() {
-      Karma.set('playerName', $playerName.val());
+      Karma.LocalStorage.set('playerName', $playerName.val());
     });
 
     loginZone.children().hide();
@@ -83,16 +81,20 @@ var TopBar = {};
     var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
     return html;
   }
-  TopBar.show = function() {
-    $bar = $('#topBar');
+
+  function show() {
+    var $bar = $('#topBar');
     $bar.slideDown(function() {
       $bar.children().fadeIn();
     });
     setTimeout(function() {
       $bar.removeClass('init');
     }, 2500);
-  };
+  }
 
-  TopBar.setTopBar = setTopBar;
+  Karma.TopBar = {
+    setTopBar: setTopBar,
+    show: show
+  };
 
 }());

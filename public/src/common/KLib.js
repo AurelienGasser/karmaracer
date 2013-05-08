@@ -1,15 +1,16 @@
-var KLib = {};
+(function() {
+  'use strict';
 
-KLib.isFunction = function(obj) {
-  return typeof obj === 'function';
-};
+  KLib.isFunction = function(obj) {
+    return typeof obj === 'function';
+  };
 
-//http://jsperf.com/tests-for-undefined/2
-KLib.isUndefined = function(obj) {
-  return obj === void 0;
-};
+  //http://jsperf.com/tests-for-undefined/2
+  KLib.isUndefined = function(obj) {
+    return obj === void 0;
+  };
 
-KLib.extend = function(Parent, child) {
+  KLib.extend = function(Parent, child) {
     function construct(constructor, args) {
       function F() {
         return constructor.apply(this, args);
@@ -29,3 +30,4 @@ KLib.extend = function(Parent, child) {
     }
   };
 
+}());

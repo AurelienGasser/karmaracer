@@ -64,7 +64,7 @@ var kFB = {};
             score = response.data[0].score;
           }
           $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
-          TopBar.show();
+          Karma.TopBar.show();
         }
       });
     } catch (err) {
@@ -148,10 +148,10 @@ var kFB = {};
   function updateName() {
     FB.api('/me', function(user) {
       setProfileImage($('#fbLoginImage'), function() {});
-      var exists = Karma.exists('playerName');
-      var savedName = Karma.get('playerName');
+      var exists = Karma.LocalStorage.exists('playerName');
+      var savedName = Karma.LocalStorage.get('playerName');
       if (!exists || savedName === '') {
-        Karma.set('playerName', user.name);
+        Karma.LocalStorage.set('playerName', user.name);
         $('#playerName').val(user.name);
       } else {
         $('#playerName').val(savedName);

@@ -94,12 +94,20 @@ app.get('/mm\.:map', function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
 
-app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
-  index(req, res, "game.jade", "CANVAS");
+// app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
+//   index(req, res, "game.jade", "CANVAS");
+// });
+
+// app.get('/', auth.ensureAuthenticated, function(req, res) {
+//   index(req, res, "index.jade", "CANVAS");
+// });
+
+app.get('/', function(req, res) {
+  index(req, res, "index.jade", "CANVAS");
 });
 
-app.get('/', auth.ensureAuthenticated, function(req, res) {
-  index(req, res, "index.jade", "CANVAS");
+app.get('/game\.:map',function(req, res) {
+  index(req, res, "game.jade", "CANVAS");
 });
 
 

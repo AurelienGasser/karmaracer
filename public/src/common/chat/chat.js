@@ -1,36 +1,52 @@
-function sendMsg() {
-  if ($('#chat_input').val().trim() !== '') {
-    var msg = (Karma.get('playerName')) + ': ' + $('#chat_input').val();
-    G_gameInstance.socketManager.emit('chat', msg);
-  }
-  $('#chat_input').val('');
-  hideChat();
-}
+(function() {
+  "use strict";
 
-function onChatMsgReceived(msg, key) {
-  $('#chat_msgs').append('<li id="' + key + '">' + msg + '</li>');
-  setTimeout(function() {
-    $('li#' + key).fadeOut(500, function() {
-      $('li#' + key).remove();
-    });
-  }, 20000);
-}
+  var Chat = {};
 
-function showChat() {
-  $('#chat_input_label').html((Karma.get('playerName')) + ' :');
-  $('#chat_input_wrapper').show();
-  $('#chat_input').focus();
-  // $('#chat_input_label_wrapper').css('display', 'inline-block');
 
-  $('#chat_input_wrapper').addClass('enable');
-}
+  var j = {
+    input: $('#chat_input'),
+    messages: $('#chat_msgs'),
+    label: $('#chat_input_label'),
+    input_wrapper: $('#chat_input_wrapper')
+  };
 
-function hideChat() {
-  $('#chat_input').blur();
-  $('#chat_input_wrapper').hide();
-  $('#chat_input_wrapper').removeClass('enable');
-}
 
-function clearChatInputField() {
-  $('#chat_input').val('');
-}
+  Chat.sendMsg = function() {
+    if (j.input.val().trim() !== '') {
+      var msg = (Karma.LocalStorage.get('playerName')) + ': ' + $('#chat_input').val();
+      Karma.gameInstance.socketManager.emit('chat', msg);
+    }
+    j.input.val('');
+    Chat.hideChat();
+  };
+
+  Chat.onChatMsgReceived = function(msg, key) {
+    j.messages.append('<li id="' + key + '">' + msg + '</li>');
+    setTimeout(function() {
+      $('li#' + key).fadeOut(500, function() {
+        $('li#' + key).remove();
+      });
+    }, 20000);
+  };
+
+  Chat.showChat = function() {
+    j.label.html((Karma.LocalStorage.get('playerName')) + ' :');
+    j.input_wrapper.show();
+    j.input.focus();
+    j.input_wrapper.addClass('enable');
+  };
+
+  Chat.hideChat = function() {
+    j.input.blur();
+    j.input_wrapper.hide();
+    j.input_wrapper.removeClass('enable');
+  };
+
+  Chat.clearChatInputField = function() {
+    j.input.val('');
+  };
+
+  Karma.Chat = Chat;
+
+}());

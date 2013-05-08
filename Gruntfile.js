@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 
 
   function addModule(name) {
-    G_files['js_' + name] = ['public/src/' + name + '/*.js', 'public/src/' + name + '/**/*.js'];
+    G_files['js_' + name] = ['public/src/' + name + '/startup.js', 'public/src/' + name + '/*.js', 'public/src/' + name + '/**/*.js'];
     G_files['css_' + name] = ['public/src/' + name + '/*.css', 'public/src/' + name + '/**/*.css'];
     addConcatModule(name, 'js');
     addConcatModule(name, 'css');
@@ -39,7 +39,7 @@ module.exports = function(grunt) {
 
   addModule('game');
   addModule('home');
-  addModule('mapmaker');
+  // addModule('mapmaker');
   addModule('common');
 
 
@@ -58,11 +58,17 @@ module.exports = function(grunt) {
     // configure JSHint (documented at http://www.jshint.com/docs/)
     options: {
       onecase: true,
+      // strict: true,
+      browser: true,
       // more options here if you want to override JSHint defaults
       globals: {
         jQuery: true,
+        $: true,
+        _: true,
         console: true,
-        module: true
+        Karma: true,
+        KLib :true,
+        requestAnimFrame : true
       }
     }
   };
@@ -72,11 +78,12 @@ module.exports = function(grunt) {
     separator: '\n\n'
   };
   G_options.uglify.options = {
-    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
+    report: 'min'
   };
   G_options.watch = {
     files: G_watchFiles,
-    tasks: ['jshint', 'concat']
+    tasks: ['jshint', 'concat', 'uglify']
   };
 
   // Project configuration.

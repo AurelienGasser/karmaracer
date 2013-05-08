@@ -1,18 +1,21 @@
-var KarmaHome = {};
+(function(io) {
+  "use strict";
 
-$(function() {
+  console.log(Karma);
 
-  KarmaHome.start = function() {
-    // var miniMap = new MiniMap($('body'));
+  $(function() {
+    Karma.Home.start();
+  });
 
-    TopBar.setTopBar();
+  var start = function() {
+
+    Karma.TopBar.setTopBar();
 
     var host = window.location.hostname;
     var connection = io.connect(host, {
       secure: true
     });
     connection.emit('get_maps', function(err, maps) {
-      // console.log('getmaps', maps);
       addMaps(maps);
       $('#loadingImage').fadeOut();
       $('#mapsContainer').fadeIn(2000);
@@ -44,8 +47,8 @@ $(function() {
           e.preventDefault();
           return false;
         }
-        Karma.set('playerName', $('#playerName').val());
-        Karma.set('map', $(this).text());
+        Karma.LocalStorage.set('playerName', $('#playerName').val());
+        Karma.LocalStorage.set('map', $(this).text());
         return true;
       });
     }
@@ -54,12 +57,11 @@ $(function() {
       return false;
     });
 
-    $('#playerName').keyup(function(e) {
-      Karma.set('playerName', $(this).val());
+    $('#playerName').keyup(function() {
+      Karma.LocalStorage.set('playerName', $(this).val());
     });
 
     function addMaps(maps) {
-
 
       var o = [];
       //maps = ['map1'];
@@ -72,5 +74,9 @@ $(function() {
       registerMaps();
     }
   };
-  KarmaHome.start();
-});
+
+  Karma.Home = {
+    start: start
+  };
+
+}(io));
