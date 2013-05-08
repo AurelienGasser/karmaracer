@@ -1,0 +1,12 @@
+
+#botMenu {
+    left: 0px;
+    position: absolute;
+    top: 100px;
+    z-index: 9999;
+}
+
+#botMenu input {
+    text-align: center;
+    width: 100px;
+}

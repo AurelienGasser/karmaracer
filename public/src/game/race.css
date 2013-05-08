@@ -1,6 +1,6 @@
 body {
     font-family: 'Trebuchet MS';
-    font-size  :12px;
+    font-size: 12px;
 }
 
 /*body,html {
@@ -10,19 +10,6 @@ height: 400px;
 */
 .hide {
     display: none;
-}
-
-
-#botMenu {
-    left: 0px;
-    position: absolute;
-    top: 100px;
-    z-index: 9999;
-}
-
-#botMenu input {
-    text-align: center;
-    width: 100px;
 }
 
 html,body {
@@ -36,7 +23,7 @@ html,body {
     position: absolute;
     top: 50%;
     width: 200px;
-    margin-left: -100px;    
+    margin-left: -100px;
 }
 
 /*#left_panel {

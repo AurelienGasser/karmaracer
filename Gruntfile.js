@@ -1,9 +1,9 @@
 module.exports = function(grunt) {
 
-
   var G_options = {};
   var G_files = {};
   var G_JSHintFiles = [];
+  var G_watchFiles = [];
 
 
   G_options.concat = {};
@@ -33,6 +33,7 @@ module.exports = function(grunt) {
     addConcatModule(name, 'css');
     addUglifyModule(name, 'js');
     G_JSHintFiles = G_JSHintFiles.concat(G_files['js_' + name]);
+    G_watchFiles = G_watchFiles.concat(G_files['js_' + name], G_files['css_' + name]);
   }
 
 
@@ -74,7 +75,7 @@ module.exports = function(grunt) {
     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
   };
   G_options.watch = {
-    files: ['<%= jshint.files %>'],
+    files: G_watchFiles,
     tasks: ['jshint', 'concat']
   };
 

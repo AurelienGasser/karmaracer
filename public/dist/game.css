@@ -1,84 +1,3 @@
-body {
-    font-family: 'Trebuchet MS';
-    font-size  :12px;
-}
-
-#topBar{
-opacity: 0.5;
-}
-
-
-#topBar:hover{
-opacity: 1;
-}
-
-/*body,html {
-width: 500px;
-height: 400px;
-}
-*/
-.hide {
-    display: none;
-}
-
-.announce-red{
-  color:red;
-}
-
-.announce-orange{
-  color:orange;
-}
-
-.announce-green{
-  color:green;
-}
-
-.announce-blue{
-  color:blue;
-}
-
-#announce {
-    height: 100px;
-    line-height: 100px;
-    left: 20%;
-    top:100px;
-    /*background-color: #87A585;*/
-    background-color: rgba(238, 238 ,238, 0.5);
-    position: absolute;
-    text-align: center;
-    width: 60%;
-    margin: 0px auto;
-    z-index: 9999;    
-    /*opacity: 0.5;*/
-    border-radius: 10px;
-}
-
-#announce.freeze{
-    background-color: #eee;
-/*    height: 300px;
-    line-height: 300px;*/
-
-}
-
-#announce span{
-    font-size: 32px;
-    margin: 10px;
-    /*color:white;*/
-    /*opacity: 1;*/
-    /*font-weight: bold;*/
-}
-
-#botMenu {
-    left: 0px;
-    position: absolute;
-    top: 100px;
-    z-index: 9999;
-}
-
-#botMenu input {
-    text-align: center;
-    width: 100px;
-}
 
 #SteeringWheelController.enable {
     border-color: blue;
@@ -107,6 +26,34 @@ height: 400px;
     width: 16px;
 }
 
+
+
+#botMenu {
+    left: 0px;
+    position: absolute;
+    top: 100px;
+    z-index: 9999;
+}
+
+#botMenu input {
+    text-align: center;
+    width: 100px;
+}
+
+body {
+    font-family: 'Trebuchet MS';
+    font-size: 12px;
+}
+
+/*body,html {
+width: 500px;
+height: 400px;
+}
+*/
+.hide {
+    display: none;
+}
+
 html,body {
     height: 100%;
 }
@@ -118,7 +65,7 @@ html,body {
     position: absolute;
     top: 50%;
     width: 200px;
-    margin-left: -100px;    
+    margin-left: -100px;
 }
 
 /*#left_panel {
@@ -128,61 +75,6 @@ html,body {
     right: 0px;
 }
 */
-
-
-#score-table {
-    color: white;
-
-    padding: 0.5em;
-    position: fixed;
-
-    /*position: inherit;*/
-/*    left: 0px;
-    top:0px;*/
-  /*-webkit-transition: 0.25s ease-in-out;*/
-  /*-moz-transition: 5.25s ease-in-out;*/
-  /*-o-transition: 0.25s ease-in-out;*/
-  transition: width 1s linear 1s;    
-}
-
-table.scores tr.userCar{
-    font-weight: bold;
-}
-
-table.scores thead tr th, tbody#scores tr td {
-    padding: 0.5em 0.3em;
-    font-size: 10px;
-    color:black;
-}
-
-
-
-#score-table.default{
-    width: 300px; 
-    right: 0px;
-    bottom: 0px;
-    margin: 5px;
-    background-color: rgba(255,255,255,0.3);
-    transition: 0.25s ease-in-out;    
-}
-
-
-#score-table.big{
-    width: 500px; 
-    background-color: white;
-    transition: 0.5s linear;    
-    bottom:100px;
-    right: 50%;
-    margin-right: -250px;
-    border-radius: 20px;
-}
-
-#score-table.big td, #score-table.big th{
-    font-size: 12px;
-    transition: 0.5s linear;    
-}
-
-
 
 #debug {
     color: white;
@@ -238,4 +130,88 @@ body {
 
 #camera-debug li {
     list-style: none;
+}
+
+
+
+#score-table {
+    color: white;
+    padding: 0.5em;
+    position: fixed;
+    transition: width 1s linear 1s;
+}
+
+table.scores tr.userCar {
+    font-weight: bold;
+}
+
+table.scores thead tr th, tbody#scores tr td {
+    padding: 0.5em 0.3em;
+    font-size: 10px;
+    color: black;
+}
+
+#score-table.default {
+    width: 300px;
+    right: 0px;
+    bottom: 10px;
+    margin: 5px;
+    background-color: rgba(255,255,255,0.3);
+    transition: 0.25s ease-in-out;
+}
+
+#score-table.big {
+    width: 500px;
+    background-color: white;
+    transition: 0.5s linear;
+    bottom: 0%;
+    right: 50%;
+    margin-right: -250px;
+    border-radius: 20px;
+}
+
+#score-table.big td, #score-table.big th {
+    font-size: 12px;
+    transition: 0.5s linear;
+}
+
+
+
+.announce-red{
+  color:red;
+}
+
+.announce-orange{
+  color:orange;
+}
+
+.announce-green{
+  color:green;
+}
+
+.announce-blue{
+  color:blue;
+}
+
+#announce {
+    height: 100px;
+    line-height: 100px;
+    left: 20%;
+    top:100px;
+    background-color: rgba(238, 238 ,238, 0.5);
+    position: absolute;
+    text-align: center;
+    width: 60%;
+    margin: 0px auto;
+    z-index: 9999;    
+    border-radius: 10px;
+}
+
+#announce.freeze{
+    background-color: #eee;
+}
+
+#announce span{
+    font-size: 32px;
+    margin: 10px;
 }
