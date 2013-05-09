@@ -6,14 +6,20 @@
     Karma.Home.start();
   });
 
+
   var start = function() {
 
     Karma.TopBar.setTopBar();
+
+
 
     var host = window.location.hostname;
     var connection = io.connect(host, {
       secure: true
     });
+
+    var mm = new Karma.MiniMap($('body'), 'nmap', connection);
+
     connection.emit('get_maps', function(err, maps) {
       addMaps(maps);
       $('#loadingImage').fadeOut();

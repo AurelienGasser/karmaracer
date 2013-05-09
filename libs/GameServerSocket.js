@@ -25,11 +25,12 @@ var GameServerSocket = function(mapManager) {
   this.mapManager.app.io.sockets.on('connection', function(client) {
     // console.info('client connected');
 
-
+    //TODOFIX
+    that.registerMethods(client);
     client.graph = require('fbgraph');
     if (!KLib.isUndefined(client.handshake.session)) {
       client.graph.setAccessToken(client.handshake.session.accessToken);
-      that.registerMethods(client);
+
     }
   });
 }
@@ -52,7 +53,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
   var that = this;
   client.keyboard = {};
 
-  // if ()
+
+  require('./Sockets/miniMap')(this, client);
 
   client.on('get_maps', function(callback) {
     that.addHomeClient(client);

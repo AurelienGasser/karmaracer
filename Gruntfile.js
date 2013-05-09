@@ -111,8 +111,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
+  // grunt.loadNpmTasks('grunt-contrib-less');
 
   // Default task(s).
   grunt.registerTask('default', ['jshint', 'concat', 'uglify']);
+  // grunt.registerTask('default', ['less']);
 
 };

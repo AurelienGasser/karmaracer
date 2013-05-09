@@ -90,26 +90,21 @@ function index(req, res, view, draw_engine) {
 
 auth.setup(app, io, index);
 
-app.get('/mm\.:map', function(req, res) {
-  index(req, res, "mapmaker.jade", "CANVAS");
-});
+auth.ensureAuthenticated = function(req, res, next){
+  return next();
+}
 
-// app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
-//   index(req, res, "game.jade", "CANVAS");
-// });
-
-// app.get('/', auth.ensureAuthenticated, function(req, res) {
-//   index(req, res, "index.jade", "CANVAS");
-// });
-
-app.get('/', function(req, res) {
+app.get('/', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
 
-app.get('/game\.:map',function(req, res) {
+app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
   index(req, res, "game.jade", "CANVAS");
 });
 
+app.get('/mm\.:map', auth.ensureAuthenticated, function(req, res) {
+  index(req, res, "mapmaker.jade", "CANVAS");
+});
 
 
 app.io = io;

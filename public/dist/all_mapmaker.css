@@ -60,14 +60,8 @@
 }
 
 /* public/src/common/miniMap/MiniMap.css */
-canvas.miniMap{
-  width: 200px;
-  height: 100px;
-  border: 1px solid blue;
-  position: fixed;
-  left: 0px;
-  bottom: 200px;
-}
+canvas.miniMap{width:200px;height:100px;border:1px solid blue;position:fixed;left:0px;bottom:200px;}
+
 /* public/src/common/topBar/topBar.css */
 #topBarBoxes {
   margin: 0px;
