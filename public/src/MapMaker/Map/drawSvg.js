@@ -1,8 +1,6 @@
-  function createSVGElement(name) {
-    var NS = "http://www.w3.org/2000/svg";
-    var SVGObj = document.createElementNS(NS, name);
-    return SVGObj;
-  }
+(function(Map) {
+  /*global Raphael*/
+  "use strict";
 
 
   Map.prototype.svgRaphaelAddItem = function(item) {
@@ -62,7 +60,7 @@
     li.append(remove);
     // li.append('size' + JSON.stringify(c.sizer) + c.sizer.attr('x'));
     // li.append('</br>pos' + JSON.stringify(item.position));
-    remove.click(function(e) {
+    remove.click(function() {
       that.removeMapItem(item.id);
       $(c.node).remove();
       $(s.node).remove();
@@ -166,8 +164,7 @@
 
   Map.prototype.svgInit = function(containerID) {
 
-    var that = this;
-    this.R = Raphael(containerID, this.realWorldSize.w, this.realWorldSize.h);
+    this.R = new Raphael(containerID, this.realWorldSize.w, this.realWorldSize.h);
     $(this.R.canvas).click(function(e) {
       $('#canvas-debug').children().hide();
       e.preventDefault();
@@ -207,3 +204,5 @@
       }
     }
   };
+
+}(Karma.Map || {}));

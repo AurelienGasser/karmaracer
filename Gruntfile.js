@@ -57,7 +57,7 @@ module.exports = function(grunt) {
     // configure JSHint (documented at http://www.jshint.com/docs/)
     options: {
       onecase: true,
-      // strict: true,
+      strict: true,
       browser: true,
       // more options here if you want to override JSHint defaults
       globals: {

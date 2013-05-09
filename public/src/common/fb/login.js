@@ -1,7 +1,9 @@
 var kFB = {};
 
 (function() {
+  /*global FB*/
 
+ "use strict";
   kFB.host = function(){
     var host = window.location.hostname + ':' + window.location.port;
     return host;
@@ -57,7 +59,7 @@ var kFB = {};
     try {
       FB.api("/" + user.id + "/scores/" + kFB.conf.appName, function(response) {
         if (!response || response.error) {
-          console.error(response);
+          Karma.Log.error(response);
         } else {
           var score = 0;
           if (response.data.length > 0) {
@@ -68,7 +70,7 @@ var kFB = {};
         }
       });
     } catch (err) {
-      console.error(err);
+      Karma.Log.error(err);
 
     }
   }
@@ -81,7 +83,7 @@ var kFB = {};
 
 
   function initFB() {
-    FB.Event.subscribe('auth.login', function(response) {
+    FB.Event.subscribe('auth.login', function() {
       afterLogin();
     });
     loginIfAuthorized();

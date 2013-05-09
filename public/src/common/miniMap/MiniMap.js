@@ -1,12 +1,14 @@
 
-var MiniMap;
 (function() {
+  "use strict";
 
-  MiniMap = function($container) {
+  var MiniMap = function($container) {
     this.$container = $container;
 
     this.$container.append('<canvas class="miniMap"></canvas>');
   };
+
+  Karma.MiniMap = MiniMap;
 
 
 

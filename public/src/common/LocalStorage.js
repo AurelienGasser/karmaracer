@@ -1,5 +1,5 @@
 (function() {
-
+"use strict";
 
   var LocalStorage = function() {
     if (_.isUndefined(localStorage.karma)) {
