@@ -13,7 +13,7 @@
     this.items = items;
     this.worldInfo = worldInfo;
 
-
+    this.setGScale(32);
     this.$canvas = $(canvas);
 
     this.init();
@@ -21,6 +21,13 @@
     this.loadImages(callback);
   }
 
+
+  Engine2DCanvas.prototype.setGScale = function(gScaleValue) {
+    this.gScaleValue = gScaleValue;
+    this.gScaleDynamicsRequired = true;
+    this.gScaleList(this.worldInfo.staticItems);
+    this.gScale(this.worldInfo.size);
+  };
 
 
   Engine2DCanvas.prototype.loadImages = function(callback) {
@@ -73,6 +80,38 @@
       that.backgroundPattern = bgPattern;
       return callback();
     };
+  };
+
+  Engine2DCanvas.prototype.gScaleList = function(list) {
+    for (var i = list.length - 1; i >= 0; i--) {
+      this.gScale(list[i]);
+    }
+  };
+
+  Engine2DCanvas.prototype.gScaleIfRequired = function() {
+    if (this.gScaleDynamicsRequired === true) {
+      this.gScaleList(this.items.cars);
+      this.gScale(this.items.mycar);
+      this.gScaleDynamicsRequired = false;
+    }
+  };
+
+  Engine2DCanvas.prototype.gScale = function(e) {
+    if (e === null){
+      return;
+    }
+    if (e.x) {
+      e.x *= this.gScaleValue;
+    }
+    if (e.y) {
+      e.y *= this.gScaleValue;
+    }
+    if (e.w) {
+      e.w *= this.gScaleValue;
+    }
+    if (e.h) {
+      e.h *= this.gScaleValue;
+    }
   };
 
   Engine2DCanvas.prototype.init = function() {
@@ -252,7 +291,7 @@
   };
 
   Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
-    var wThickness = 50;
+    var wThickness = this.gScaleValue;
     var s = this.camera.realWorldSize;
     if (this.debugDraw) {
       ctx.fillStyle = '#00FF00';
@@ -310,6 +349,7 @@
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
+    this.gScaleIfRequired();
     this.draw();
 
     this.frames++;

@@ -37,17 +37,49 @@ h1 {
   margin: 0px;
   padding:0px;
   background-color: #fefefe;
-   li{
-    width: 240px;
-    height: 120px;
+   li {
+    // width: 240px;
+    // height: 120px;
     list-style: none;
     display: inline-block;
-    vertical-align: top;
-    border: 1px solid #eee;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 5px;
-    box-shadow: #eee 2px 2px 2px;
+    margin: 10px;
+
+    div.info{
+      position: absolute;
+      display: none;
+      z-index: 5000;
+      background-color: rgba(238, 238, 238, 0.5);
+      margin: 5px;
+      padding: 5px;
+      text-align: left;
+      border-radius: 5px;
+    }
+
+    a {
+    text-decoration: none;  
+
+      div{
+      padding: 5px;
+      text-align: right;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      box-shadow: #eee 2px 2px 2px;
+      }
+      canvas{
+        margin: 5px;
+      }
+      div:hover{
+        border-color: #999;
+        background: #eee;
+      }
+    }
+  }
+  li:hover{
+    div.info{
+      display: block;
+
+    }
+
   }
 } 
 
@@ -74,7 +106,7 @@ h1 {
 #mapsContainer {
   /*float: left;*/
   /*width: 700px;*/
-  display: none;
+  // display: none;
   vertical-align: top;
 }
 

@@ -7,8 +7,8 @@ var G_bodyID = 0;
 var PhysicsEngine = function(size, map) {
   this.shareCollisionInfo = false;
   this.itemsToDestroy = [];
-  this.gScale = 32;
   this.bodies = {};
+  this.gScale = 1;
   this.staticItemTypes = {};
   this.map = map;
   this.setupWorld(size);

@@ -1,7 +1,5 @@
 var KLib = require('./classes/KLib');
 var fs = require('fs');
-// var PhysicsItem = require('./classes/PhysicsEngine/PhysicsItem');
-// var PhysicsEngine = require('./classes/PhysicsEngine/PhysicsEngine');
 var config = require('./../config');
 var BotManager = require('./BotManager');
 var CarManager = require('./CarManager');
@@ -23,7 +21,6 @@ GameServer.prototype.initGameServer = function(map) {
     'h': map.size.h
   }, map);
 
-  // this.physicsEngine = new PhysicsEngine(map, this);
   this.carManager = new CarManager(this);
   this.botManager = new BotManager(this);
   this.weaponsManager = new WeaponsManager(this);
@@ -174,7 +171,6 @@ GameServer.prototype.step = function() {
   try {
 
     var start = new Date();
-    // that.physicsEngine.step();
     start = registerDateDiff(timer, 'physics', start);
     if(this.tickCounter % 2 === 0) {
       start = new Date();

@@ -60,7 +60,7 @@
 }
 
 /* public/src/common/miniMap/MiniMap.css */
-
+canvas.miniMap{border-radius:15px;}
 
 /* public/src/common/topBar/topBar.css */
 #topBarBoxes {

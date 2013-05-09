@@ -9,29 +9,28 @@
     this.$container.append(this.$canvas);
     this.canvas = this.$canvas[0];
 
-    this.getMap(mapName, function(err, map){      
-    });
+    this.getMap(mapName, function(err, map) {});
   };
 
   MiniMap.prototype.getMap = function(mapName, callback) {
 
     var that = this;
     var getMiniMap = function(err, worldInfo) {
-      that.$canvas.css('width', worldInfo.size.w / 5);
-      that.$canvas.css('height', worldInfo.size.h / 5);
-      console.log('minimap info', worldInfo);
+      // that.$canvas.width(worldInfo.size.w);
+      // that.$canvas.height(worldInfo.size.h);
       var items = {
-        cars : [],
-        mycar : null,
-        projectiles : [],
-        explosions : []
+        cars: [],
+        mycar: null,
+        projectiles: [],
+        explosions: []
       };
-      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', items, worldInfo, function(drawEngine){
-        that.drawEngine.canvasSize = worldInfo.size;      
-        console.log('loaded');
+      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', items, worldInfo, function(drawEngine) {
+        that.drawEngine.setGScale(1 / 6); // set to default size
+        // that.drawEngine.setGScale(5);
+        that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
+        that.drawEngine.resize();
         that.drawEngine.tick();
       });
-
 
 
 

@@ -101,7 +101,7 @@ module.exports = function(grunt) {
   };
   G_options.watch = {
     files: G_watchFiles,
-    tasks: ['jshint', 'concat']
+    tasks: ['concat']
   };
 
   // Project configuration.

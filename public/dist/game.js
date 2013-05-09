@@ -138,16 +138,20 @@
 
     });
 
+
     that.connection.on('objects', function(objects) {
       gameInstance.items.cars = objects.cars;
       gameInstance.items.mycar = objects.myCar;
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
+
+      gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
       })));
       socketReceived();
+
     });
 
     that.connection.on('explosion', function(explosion) {

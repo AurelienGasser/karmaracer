@@ -149,7 +149,7 @@ var KLib = KLib || {};
     this.items = items;
     this.worldInfo = worldInfo;
 
-
+    this.setGScale(32);
     this.$canvas = $(canvas);
 
     this.init();
@@ -157,6 +157,13 @@ var KLib = KLib || {};
     this.loadImages(callback);
   }
 
+
+  Engine2DCanvas.prototype.setGScale = function(gScaleValue) {
+    this.gScaleValue = gScaleValue;
+    this.gScaleDynamicsRequired = true;
+    this.gScaleList(this.worldInfo.staticItems);
+    this.gScale(this.worldInfo.size);
+  };
 
 
   Engine2DCanvas.prototype.loadImages = function(callback) {
@@ -209,6 +216,38 @@ var KLib = KLib || {};
       that.backgroundPattern = bgPattern;
       return callback();
     };
+  };
+
+  Engine2DCanvas.prototype.gScaleList = function(list) {
+    for (var i = list.length - 1; i >= 0; i--) {
+      this.gScale(list[i]);
+    }
+  };
+
+  Engine2DCanvas.prototype.gScaleIfRequired = function() {
+    if (this.gScaleDynamicsRequired === true) {
+      this.gScaleList(this.items.cars);
+      this.gScale(this.items.mycar);
+      this.gScaleDynamicsRequired = false;
+    }
+  };
+
+  Engine2DCanvas.prototype.gScale = function(e) {
+    if (e === null){
+      return;
+    }
+    if (e.x) {
+      e.x *= this.gScaleValue;
+    }
+    if (e.y) {
+      e.y *= this.gScaleValue;
+    }
+    if (e.w) {
+      e.w *= this.gScaleValue;
+    }
+    if (e.h) {
+      e.h *= this.gScaleValue;
+    }
   };
 
   Engine2DCanvas.prototype.init = function() {
@@ -388,7 +427,7 @@ var KLib = KLib || {};
   };
 
   Engine2DCanvas.prototype.drawOutsideWalls = function(ctx) {
-    var wThickness = 50;
+    var wThickness = this.gScaleValue;
     var s = this.camera.realWorldSize;
     if (this.debugDraw) {
       ctx.fillStyle = '#00FF00';
@@ -446,6 +485,7 @@ var KLib = KLib || {};
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
+    this.gScaleIfRequired();
     this.draw();
 
     this.frames++;
@@ -1390,29 +1430,28 @@ var KLib = KLib || {};
     this.$container.append(this.$canvas);
     this.canvas = this.$canvas[0];
 
-    this.getMap(mapName, function(err, map){      
-    });
+    this.getMap(mapName, function(err, map) {});
   };
 
   MiniMap.prototype.getMap = function(mapName, callback) {
 
     var that = this;
     var getMiniMap = function(err, worldInfo) {
-      that.$canvas.css('width', worldInfo.size.w / 5);
-      that.$canvas.css('height', worldInfo.size.h / 5);
-      console.log('minimap info', worldInfo);
+      // that.$canvas.width(worldInfo.size.w);
+      // that.$canvas.height(worldInfo.size.h);
       var items = {
-        cars : [],
-        mycar : null,
-        projectiles : [],
-        explosions : []
+        cars: [],
+        mycar: null,
+        projectiles: [],
+        explosions: []
       };
-      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', items, worldInfo, function(drawEngine){
-        that.drawEngine.canvasSize = worldInfo.size;      
-        console.log('loaded');
+      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', items, worldInfo, function(drawEngine) {
+        that.drawEngine.setGScale(1 / 6); // set to default size
+        // that.drawEngine.setGScale(5);
+        that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
+        that.drawEngine.resize();
         that.drawEngine.tick();
       });
-
 
 
 
@@ -1674,16 +1713,20 @@ var KLib = KLib || {};
 
     });
 
+
     that.connection.on('objects', function(objects) {
       gameInstance.items.cars = objects.cars;
       gameInstance.items.mycar = objects.myCar;
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
+
+      gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
       })));
       socketReceived();
+
     });
 
     that.connection.on('explosion', function(explosion) {

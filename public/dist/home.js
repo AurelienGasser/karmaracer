@@ -21,7 +21,7 @@
     connection.emit('get_maps', function(err, maps) {
       addMaps(maps);
       $('#loadingImage').fadeOut();
-      $('#mapsContainer').fadeIn(2000);
+      // $('#mapsContainer').fadeIn(2000);
     });
 
     connection.on('maps_state', function(mapStates) {
@@ -32,7 +32,7 @@
         var m = mapStates[i];
         var players = _.map(m.players, getName).join(', ');
         if (players.length > 0) {
-          players = 'Players : ' + players;
+          players = 'Playing Now : ' + players;
         }
         $('#map-' + m.map + ' .players').html(players);
       }
@@ -66,15 +66,19 @@
 
     function addMaps(maps) {
       var $ul = $('ul#maps');
-
       for (var i = 0; i < maps.length; i++) {
         var o = [];
         var m = maps[i];
-        o.push('<li id="map-', m, '"><a class="mapLink" href="game.' + m + '" >' + m);
-        o.push('</a></br><a class="editLink" href="mm.' + m + '" >edit</a></br><span class="players"/></li>');
+        o.push('<li id="map-', m, '">');
+        //<a class="editLink" href="mm.' + m + '" >edit</a></br>
+        o.push('<div class="info"><span class="players"/></div>');
+        o.push('<a class="mapLink" href="game.', m, '" ><div>', m, '</br></div></a>');
+        o.push('</li>');
         var $li = $(o.join(''));
+        $li.hide();
         $ul.append($li);
-        new Karma.MiniMap($li, m, connection);
+        $li.fadeIn(1000);
+        new Karma.MiniMap($li.find('a div'), m, connection);
       }
       registerMaps();
     }
