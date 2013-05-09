@@ -211,7 +211,7 @@ body,input{font-size:12px;}
 #loadingImage{position:fixed;left:50%;top:50%;margin-left:-16px;margin-top:-16px;}
 #mainContent{width:100%;display:block;margin:0px auto;text-align:center;vertical-align:top;}
 h1{text-align:center;}
-#maps{margin:0px;padding:0px;background-color:#fefefe;}#maps li{list-style:none;display:inline-block;margin:10px;}#maps li div.info{position:absolute;display:none;z-index:5000;background-color:rgba(238, 238, 238, 0.5);margin:5px;padding:5px;text-align:left;border-radius:5px;}
+#maps{margin:0px;padding:0px;background-color:#fefefe;vertical-align:top;}#maps li{vertical-align:middle;list-style:none;display:inline-block;margin:10px;}#maps li div.info{position:absolute;display:none;z-index:5000;background-color:rgba(238, 238, 238, 0.5);margin:5px;padding:5px;text-align:left;border-radius:5px;}
 #maps li a{text-decoration:none;}#maps li a div{padding:5px;text-align:right;border:1px solid #eee;border-radius:5px;box-shadow:#eee 2px 2px 2px;}
 #maps li a canvas{margin:5px;}
 #maps li a div:hover{border-color:#999;background:#eee;}
