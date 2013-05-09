@@ -31,7 +31,6 @@ if (CONFIG.env === 'dev') {
     8: SuperMachineGun,
     9: RocketLauncher,
   };
-
 }
 
 
@@ -52,8 +51,10 @@ var PlayerCar = function(gameServer, client, playerName, player) {
 }
 
 PlayerCar.prototype.FBInit = function(callback) {
-  this.fbid = this.client.handshake.session.fbsid;
-  return this.FBGetHighScore(callback);
+  if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.fbsid)) {
+    this.fbid = this.client.handshake.session.fbsid;
+    return this.FBGetHighScore(callback);
+  }
 };
 
 

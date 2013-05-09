@@ -217,7 +217,6 @@ GameServer.prototype.getPlayersForShare = function() {
 
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();
-  // var bodies = this.engine.getShared();
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for(var i in this.players) {
     var p = this.players[i];
@@ -227,7 +226,6 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       cars: cars,
       projectiles: projectiles,
       collisionPoints: p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null
-      // bodies : bodies
     };
     p.client.emit('objects', share);
   }

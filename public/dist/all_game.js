@@ -137,36 +137,78 @@ var KLib = KLib || {};
 (function() {
   "use strict";
 
-  var scale2 = 32 * 6;
 
-  function Engine2DCanvas(gameInstance, canvas, canvasID) {
+  function Engine2DCanvas(gameInstance, canvas, canvasID, items, worldInfo, callback) {
+
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.gameInstance = gameInstance;
-    this.init();
-    this.loaded();
     this.timer = new Date().getTime();
     this.frames = 0;
     this.debugDraw = false;
     this.carFlameTicks = {};
-    return this;
+
+    this.items = items;
+    this.worldInfo = worldInfo;
+
+    this.gameCarsImages = this.gameInstance.carsImages;
+
+    this.init();
+    this.loaded();
+    this.loadImages(callback);
   }
 
-  Engine2DCanvas.prototype.initBackgroundCanvas = function() {
-    this.backgroundCanvas = document.createElement('canvas');
+  Engine2DCanvas.prototype.loadImages = function(callback) {
 
-    var wSize = this.camera.realWorldSize;
+    var that = this;
 
-    var scale = 1;
-    this.backgroundCanvas.width = wSize.w * scale;
-    this.backgroundCanvas.height = wSize.h * scale;
+    var imagesNumToLoad = Object.keys(this.worldInfo.itemsInMap).length + 1;
+    var imageNumLoaded = 0;
 
-    this.backgroundContext = this.backgroundCanvas.getContext('2d');
-    this.backgroundContext.save();
-    this.drawBackground(this.backgroundContext);
-    this.drawOutsideWalls(this.backgroundContext);
-    this.drawStaticItems(this.backgroundContext);
-    this.backgroundContext.restore();
+    function imageLoaded() {
+      if (imageNumLoaded === imagesNumToLoad - 1) {
+        if (KLib.isFunction(callback)) {
+          return callback();
+        }
+      }
+      imageNumLoaded += 1;
+    }
+
+    that.createBGPattern(imageLoaded);
+    // enhance items with patterns
+
+    var onLoadImage = function() {
+      if (this.patternType !== 'none') {
+        var _pattern = that.ctx.createPattern(img, 'repeat');
+        that.worldInfo.itemsInMap[this.name].pattern = _pattern;
+      } else {
+        that.worldInfo.itemsInMap[this.name].pattern = null;
+        that.worldInfo.itemsInMap[this.name].img = img;
+      }
+      imageLoaded();
+    };
+
+    for (var itemName in this.worldInfo.itemsInMap) {
+      var item = this.worldInfo.itemsInMap[itemName];
+
+      var img = new Image();
+      img.src = item.image.path;
+      img.onload = onLoadImage.bind(item);
+    }
+
+  };
+
+  Engine2DCanvas.prototype.createBGPattern = function(callback) {
+    var that = this;
+    // create background pattern
+    var bgImage = new Image();
+    bgImage.src = that.worldInfo.background.path;
+    var game = this;
+    bgImage.onload = function() {
+      var bgPattern = that.ctx.createPattern(this, 'repeat');
+      that.backgroundPattern = bgPattern;
+      return callback();
+    };
   };
 
   Engine2DCanvas.prototype.init = function() {
@@ -174,7 +216,7 @@ var KLib = KLib || {};
     this.canvas.width = $('#' + this.canvasID).width();
     this.canvas.height = $('#' + this.canvasID).height();
     this.camera = new Karma.Camera(this.ctx, '#' + this.canvasID);
-    this.camera.setWorldSize(this.gameInstance.world.size);
+    this.camera.setWorldSize(this.worldInfo.size);
     this.loadCarsImages();
     this.explosionImage = new Image();
     this.explosionImage.src = '/sprites/explosion.png';
@@ -186,8 +228,8 @@ var KLib = KLib || {};
 
   Engine2DCanvas.prototype.loadCarsImages = function() {
     this.carImages = {};
-    for (var carName in this.gameInstance.carsImages) {
-      var car = this.gameInstance.carsImages[carName];
+    for (var carName in this.gameCarsImages) {
+      var car = this.gameCarsImages[carName];
       var i = new Image();
       i.src = car.path;
       this.carImages[car.name] = i;
@@ -199,105 +241,15 @@ var KLib = KLib || {};
   };
 
   Engine2DCanvas.prototype.draw = function() {
-    if (this.gameInstance.walls.length > 0) {
+    if (this.worldInfo.staticItems.length > 0) {
       this.camera.ctx.canvas.width = $('#' + this.canvasID).width();
       this.camera.ctx.canvas.height = $('#' + this.canvasID).height();
-      var newCenter = this.gameInstance.mycar || this.oldCenter;
+      var newCenter = this.items.mycar || this.oldCenter;
       this.camera.update(newCenter);
       if (newCenter && newCenter != this.oldCenter) {
         this.oldCenter = newCenter;
       }
       this.drawItems();
-    }
-  };
-
-  function drawAxis(ctx, a) {
-    ctx.strokeStyle = '#000000';
-    ctx.beginPath();
-    ctx.moveTo(-a.x * scale2, -a.y * scale2);
-    // ctx.lineTo(coord.x, coord.y);
-    ctx.lineTo(a.x * scale2, a.y * scale2);
-    ctx.closePath();
-    ctx.stroke();
-  }
-
-  // 'drawLine' is defined but never used.
-  // function drawLine(ctx, p1, p2, r) {
-  //   drawPoint(ctx, p2);
-  //   ctx.save();
-  //   ctx.strokeStyle = '#0000FF';
-  //   ctx.fillStyle = '#0000FF';
-  //   ctx.translate(p2.x, p2.y);
-  //   ctx.rotate(r);
-  //   var w = 5;
-  //   ctx.fillRect(-w / 2, -w / 2, w, w);
-  //   ctx.restore();
-  //   ctx.beginPath();
-  //   ctx.moveTo(p1.x, p1.y);
-  //   // ctx.moveTo(0, 0);
-  //   ctx.lineTo(p2.x, p2.y);
-  //   ctx.closePath();
-  //   ctx.stroke();
-  // }
-
-  Engine2DCanvas.prototype.drawBodies = function(ctx) {
-    var c, i;
-
-    if (this.debugDraw && this.gameInstance.bodies !== null) {
-      for (i = 0; i < this.gameInstance.bodies.length; i++) {
-        c = this.gameInstance.bodies[i];
-
-        ctx.save();
-        ctx.fillStyle = c.color;
-        ctx.translate(c.x, c.y);
-        ctx.beginPath();
-        ctx.moveTo(c.ul.x, c.ul.y);
-        ctx.lineTo(c.ur.x, c.ur.y);
-        ctx.lineTo(c.br.x, c.br.y);
-        ctx.lineTo(c.bl.x, c.bl.y);
-        ctx.closePath();
-        ctx.fill();
-        ctx.restore();
-
-        ctx.save();
-        var textSize = ctx.measureText(c.playerName);
-        var textPad = 25;
-        ctx.translate(c.x, c.y);
-        ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
-        ctx.restore();
-      }
-
-
-
-      for (i = 0; i < this.gameInstance.bodies.length; i++) {
-        c = this.gameInstance.bodies[i];
-        // var scale = 32;
-
-
-        ctx.save();
-        ctx.translate(c.x, c.y);
-
-        // drawPoint(ctx, c.ur)
-        // drawPoint(ctx, c.ul)
-        // drawPoint(ctx, c.br)
-        // drawPoint(ctx, c.bl)
-        var debug_collisions = false;
-        if (debug_collisions) {
-          if (!_.isUndefined(c.collision)) {
-            drawAxis(ctx, c.collision.a1);
-            drawAxis(ctx, c.collision.a2);
-            drawAxis(ctx, c.collision.a3);
-            drawAxis(ctx, c.collision.a4);
-            for (i = 1; i <= 4; ++i) {
-              drawPoint(ctx, c.collision.axesMinMax[i].minA, '#000');
-              drawPoint(ctx, c.collision.axesMinMax[i].maxA, '#F00');
-              drawPoint(ctx, c.collision.axesMinMax[i].minB, '#0F0');
-              drawPoint(ctx, c.collision.axesMinMax[i].maxB, '#00F');
-            }
-          }
-        }
-        ctx.restore();
-      }
     }
   };
 
@@ -355,50 +307,15 @@ var KLib = KLib || {};
     this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
   };
 
-  Engine2DCanvas.prototype.drawCars = function(ctx) {
-    if (this.gameInstance.cars !== null) {
-      for (var i = 0; i < this.gameInstance.cars.length; i++) {
-        var c = this.gameInstance.cars[i];
-        ctx.save();
-        ctx.translate(c.x, c.y);
-        ctx.rotate(c.r);
-        var carImage = this.gameInstance.carsImages[c.carImageName];
-        ctx.drawImage(this.carImages[carImage.name], 0, 0, carImage.w, carImage.h, -c.w / 2, -c.h / 2, c.w, c.h);
-
-        if (c.shootingWithWeapon) {
-          this.drawGunFlame(ctx, c);
-        }
-
-        // if(this.debugDraw) {
-        //   ctx.fillStyle = '#FFFFFF';
-        //   ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
-        // }
-        ctx.restore();
-
-
-        var textSize = ctx.measureText(c.playerName);
-        var textPad = 25;
-        ctx.save();
-        ctx.translate(c.x, c.y);
-        ctx.font = '10px Trebuchet MS';
-        ctx.fillStyle = 'white';
-        ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
-        this.drawLifeBar(ctx, c);
-        ctx.restore();
-
-        this.drawBullet(c, ctx);
-      }
-    }
-  };
 
   var explosionWidth = 56;
   var explosionHeight = 51;
 
   Engine2DCanvas.prototype.drawExplosions = function(ctx) {
-    if (this.gameInstance.explosions !== null) {
+    if (this.items.explosions !== null) {
       ctx.fillStyle = '#FFFFFF';
-      for (var i in this.gameInstance.explosions) {
-        var c = this.gameInstance.explosions[i];
+      for (var i in this.items.explosions) {
+        var c = this.items.explosions[i];
         ctx.save();
         ctx.translate(c.x, c.y);
         ctx.rotate(c.r);
@@ -413,9 +330,9 @@ var KLib = KLib || {};
 
 
   Engine2DCanvas.prototype.drawProjectiles = function(ctx) {
-    if (this.gameInstance.projectiles !== null) {
-      for (var i = 0; i < this.gameInstance.projectiles.length; i++) {
-        var c = this.gameInstance.projectiles[i];
+    if (this.items.projectiles !== null) {
+      for (var i = 0; i < this.items.projectiles.length; i++) {
+        var c = this.items.projectiles[i];
         switch (c.name) {
           case 'rocket launcher':
             this.drawRocket(c, ctx);
@@ -425,17 +342,6 @@ var KLib = KLib || {};
             break;
         }
       }
-    }
-  };
-
-  Engine2DCanvas.prototype.drawCollisionPoints = function() {
-    if (!this.gameInstance.collisionPoints) {
-      return;
-    }
-    var ctx = this.ctx;
-    for (var i in this.gameInstance.collisionPoints) {
-      var a = this.gameInstance.collisionPoints[i];
-      drawPoint(ctx, a, '#F00');
     }
   };
 
@@ -480,7 +386,7 @@ var KLib = KLib || {};
     if (this.debugDraw) {
       ctx.fillStyle = '#00FF00';
     } else {
-      ctx.fillStyle = this.gameInstance.itemsInMap.outsideWall.pattern;
+      ctx.fillStyle = this.worldInfo.itemsInMap.outsideWall.pattern;
     }
 
     // bot
@@ -495,9 +401,9 @@ var KLib = KLib || {};
 
   Engine2DCanvas.prototype.drawStaticItems = function(ctx) {
     var that = this;
-    if (that.gameInstance.walls !== null) {
-      _.each(that.gameInstance.walls, function(c) {
-        var staticItem = that.gameInstance.itemsInMap[c.name];
+    if (that.worldInfo.staticItems !== null) {
+      _.each(that.worldInfo.staticItems, function(c) {
+        var staticItem = that.worldInfo.itemsInMap[c.name];
         if (!KLib.isUndefined(staticItem) && !KLib.isUndefined(staticItem.pattern)) {
           if (staticItem.pattern === null) {
             ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
@@ -511,10 +417,10 @@ var KLib = KLib || {};
   };
 
   Engine2DCanvas.prototype.drawBackground = function(ctx) {
-    if (KLib.isUndefined(this.gameInstance.backgroundPattern)) {
+    if (KLib.isUndefined(this.backgroundPattern)) {
       return;
     }
-    ctx.fillStyle = this.gameInstance.backgroundPattern;
+    ctx.fillStyle = this.backgroundPattern;
     ctx.fillRect(0, 0, this.camera.realWorldSize.w, this.camera.realWorldSize.h);
   };
 
@@ -528,12 +434,12 @@ var KLib = KLib || {};
     // this.drawBullets(this.ctx);
     // this.drawRockets(this.ctx);
     this.drawProjectiles(this.ctx);
-    this.drawCollisionPoints();
+    // this.drawCollisionPoints();
   };
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
-    this.gameInstance.drawEngine.draw();
+    this.draw();
 
     this.frames++;
     var now = new Date().getTime();
@@ -542,22 +448,7 @@ var KLib = KLib || {};
       $('#fps').html('fps: ' + this.frames);
       this.frames = 0;
     }
-
   };
-
-  function drawPoint(ctx, p, color) {
-    ctx.save();
-    ctx.beginPath();
-    ctx.fillStyle = color || '#FF0000';
-    ctx.arc(p.x, p.y, 10, 0, 2 * Math.PI, false);
-    ctx.fill();
-    ctx.closePath();
-    ctx.fillStyle = color || '#00FF00';
-    if (p.name) {
-      ctx.fillText(p.name, p.x, p.y);
-    }
-    ctx.restore();
-  }
 
   Karma.Engine2DCanvas = Engine2DCanvas;
 }());
@@ -665,6 +556,169 @@ var KLib = KLib || {};
   Karma.Camera = Camera;
 
 } ());
+/* public/src/common/drawEngine/canvas/2DBodies.js */
+(function(Engine2DCanvas) {
+  "use strict";
+
+  var scale2 = 32 * 6;
+
+  function drawPoint(ctx, p, color) {
+    ctx.save();
+    ctx.beginPath();
+    ctx.fillStyle = color || '#FF0000';
+    ctx.arc(p.x, p.y, 10, 0, 2 * Math.PI, false);
+    ctx.fill();
+    ctx.closePath();
+    ctx.fillStyle = color || '#00FF00';
+    if (p.name) {
+      ctx.fillText(p.name, p.x, p.y);
+    }
+    ctx.restore();
+  }
+
+
+  function drawAxis(ctx, a) {
+    ctx.strokeStyle = '#000000';
+    ctx.beginPath();
+    ctx.moveTo(-a.x * scale2, -a.y * scale2);
+    // ctx.lineTo(coord.x, coord.y);
+    ctx.lineTo(a.x * scale2, a.y * scale2);
+    ctx.closePath();
+    ctx.stroke();
+  }
+
+  // 'drawLine' is defined but never used.
+  // function drawLine(ctx, p1, p2, r) {
+  //   drawPoint(ctx, p2);
+  //   ctx.save();
+  //   ctx.strokeStyle = '#0000FF';
+  //   ctx.fillStyle = '#0000FF';
+  //   ctx.translate(p2.x, p2.y);
+  //   ctx.rotate(r);
+  //   var w = 5;
+  //   ctx.fillRect(-w / 2, -w / 2, w, w);
+  //   ctx.restore();
+  //   ctx.beginPath();
+  //   ctx.moveTo(p1.x, p1.y);
+  //   // ctx.moveTo(0, 0);
+  //   ctx.lineTo(p2.x, p2.y);
+  //   ctx.closePath();
+  //   ctx.stroke();
+  // }
+
+  Engine2DCanvas.prototype.drawBodies = function(ctx) {
+    var c, i;
+
+    if (this.debugDraw && this.bodies !== null) {
+      for (i = 0; i < this.bodies.length; i++) {
+        c = this.bodies[i];
+
+        ctx.save();
+        ctx.fillStyle = c.color;
+        ctx.translate(c.x, c.y);
+        ctx.beginPath();
+        ctx.moveTo(c.ul.x, c.ul.y);
+        ctx.lineTo(c.ur.x, c.ur.y);
+        ctx.lineTo(c.br.x, c.br.y);
+        ctx.lineTo(c.bl.x, c.bl.y);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.save();
+        var textSize = ctx.measureText(c.playerName);
+        var textPad = 25;
+        ctx.translate(c.x, c.y);
+        ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+        ctx.restore();
+      }
+
+
+
+      for (i = 0; i < this.bodies.length; i++) {
+        c = this.bodies[i];
+        // var scale = 32;
+
+
+        ctx.save();
+        ctx.translate(c.x, c.y);
+
+        // drawPoint(ctx, c.ur)
+        // drawPoint(ctx, c.ul)
+        // drawPoint(ctx, c.br)
+        // drawPoint(ctx, c.bl)
+        var debug_collisions = false;
+        if (debug_collisions) {
+          if (!_.isUndefined(c.collision)) {
+            drawAxis(ctx, c.collision.a1);
+            drawAxis(ctx, c.collision.a2);
+            drawAxis(ctx, c.collision.a3);
+            drawAxis(ctx, c.collision.a4);
+            for (i = 1; i <= 4; ++i) {
+              drawPoint(ctx, c.collision.axesMinMax[i].minA, '#000');
+              drawPoint(ctx, c.collision.axesMinMax[i].maxA, '#F00');
+              drawPoint(ctx, c.collision.axesMinMax[i].minB, '#0F0');
+              drawPoint(ctx, c.collision.axesMinMax[i].maxB, '#00F');
+            }
+          }
+        }
+        ctx.restore();
+      }
+    }
+  };
+
+  Engine2DCanvas.prototype.drawCollisionPoints = function() {
+    if (!this.items.collisionPoints) {
+      return;
+    }
+    var ctx = this.ctx;
+    for (var i in this.items.collisionPoints) {
+      var a = this.items.collisionPoints[i];
+      drawPoint(ctx, a, '#F00');
+    }
+  };
+}(Karma.Engine2DCanvas));
+/* public/src/common/drawEngine/canvas/2DCars.js */
+
+(function(Engine2DCanvas) {
+  "use strict";
+
+  Engine2DCanvas.prototype.drawCars = function(ctx) {
+    if (this.items.cars !== null) {
+      for (var i = 0; i < this.items.cars.length; i++) {
+        var c = this.items.cars[i];
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.rotate(c.r);
+        var carImage = this.gameCarsImages[c.carImageName];
+        ctx.drawImage(this.carImages[carImage.name], 0, 0, carImage.w, carImage.h, -c.w / 2, -c.h / 2, c.w, c.h);
+
+        if (c.shootingWithWeapon) {
+          this.drawGunFlame(ctx, c);
+        }
+
+        // if(this.debugDraw) {
+        //   ctx.fillStyle = '#FFFFFF';
+        //   ctx.fillRect(-c.w / 2, -c.h / 2, c.w, c.h);
+        // }
+        ctx.restore();
+
+
+        var textSize = ctx.measureText(c.playerName);
+        var textPad = 25;
+        ctx.save();
+        ctx.translate(c.x, c.y);
+        ctx.font = '10px Trebuchet MS';
+        ctx.fillStyle = 'white';
+        ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+        this.drawLifeBar(ctx, c);
+        ctx.restore();
+
+        this.drawBullet(c, ctx);
+      }
+    }
+  };
+}(Karma.Engine2DCanvas));
 /* public/src/common/drawEngine/drawEngineFactory.js */
 (function() {
 "use strict";
@@ -680,7 +734,7 @@ var KLib = KLib || {};
     });
   })();
 
-  function drawEngineFactory(gameInstance, canvasID, defaultDrawEngineType) {
+  function drawEngineFactory(gameInstance, canvasID, defaultDrawEngineType, items, worldInfo, callback) {
     var canvas = document.getElementById(canvasID);
     var drawEngineType = defaultDrawEngineType;
     var gl;
@@ -688,7 +742,7 @@ var KLib = KLib || {};
     var factory = function(gameInstance, drawEngineType, canvasID, canvas) {
       switch (drawEngineType) {
         case 'CANVAS':
-          return new Karma.Engine2DCanvas(gameInstance, canvas, canvasID);
+          return new Karma.Engine2DCanvas(gameInstance, canvas, canvasID, items, worldInfo, callback);
       }
     };
     // 'getWebGL' is defined but never used.
@@ -1304,11 +1358,9 @@ var KLib = KLib || {};
     this.$canvas = $('<canvas class="miniMap"></canvas>');
     this.$container.append(this.$canvas);
     this.canvas = this.$canvas[0];
-    console.log(this.canvas);
     this.ctx = this.canvas.getContext("2d");
 
-    this.getMap(mapName, function(err, map){
-      console.log(err, map);
+    this.getMap(mapName, function(err, map){      
     });
   };
 
@@ -1316,13 +1368,8 @@ var KLib = KLib || {};
 
     var that = this;
     var getMiniMap = function(err, map) {
-      console.log('get map callback', err, map);
-
       that.ctx.canvas.width = map.size.w;
       that.ctx.canvas.height = map.size.h;
-
-
-
 
       if (KLib.isFunction(callback)) {
         return callback(null);
@@ -1583,10 +1630,10 @@ var KLib = KLib || {};
     });
 
     that.connection.on('objects', function(objects) {
-      gameInstance.cars = objects.cars;
-      gameInstance.mycar = objects.myCar;
-      gameInstance.projectiles = objects.projectiles;
-      gameInstance.collisionPoints = objects.collisionPoints;
+      gameInstance.items.cars = objects.cars;
+      gameInstance.items.mycar = objects.myCar;
+      gameInstance.items.projectiles = objects.projectiles;
+      gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
@@ -1911,34 +1958,38 @@ var KLib = KLib || {};
   Karma.KeyboardHandler = KeyboardHandler;
 }());
 /* public/src/game/GameInstance/GameInstance.js */
-
 (function() {
   "use strict";
 
   function GameInstance() {
     Karma.TopBar.setTopBar();
-    this.cars = [];
-    this.explosions = {};
-    this.mycar = undefined;
-    this.walls = [];
-    this.drawEngine = undefined;
+
+
+    this.items = {};
+    this.items.cars = [];
+    this.items.explosions = {};
+    this.items.mycar = null;
+    this.items.projectiles = [];
+
+    this.worldInfo = {};
+
+    this.drawEngine = null;
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
     this.setUIEvents();
 
     this.isMobile = false;
 
     this.scoresTable = $('tbody#scores');
-    this.projectiles = [];
 
     this.loadCars();
     // this.setupSound();
     var that = this;
 
     function reduceExplosionsAlpha() {
-      for (var explosionId in that.explosions) {
-        that.explosions[explosionId].alpha -= 0.1;
-        if (that.explosions[explosionId].alpha < 0) {
-          delete that.explosions[explosionId];
+      for (var explosionId in that.items.explosions) {
+        that.items.explosions[explosionId].alpha -= 0.1;
+        if (that.items.explosions[explosionId].alpha < 0) {
+          delete that.items.explosions[explosionId];
         }
       }
     }
@@ -1974,7 +2025,7 @@ var KLib = KLib || {};
     var that = this;
 
     function getScores() {
-      var scores = _.map(that.cars, function(car) {
+      var scores = _.map(that.items.cars, function(car) {
         return {
           'score': car.s,
           'level': car.l,
@@ -1992,7 +2043,7 @@ var KLib = KLib || {};
     var o = [];
     for (var i = 0; i < scores.length; i++) {
       var playerScore = scores[i];
-      var userCarClass = (that.mycar !== null && that.mycar.id === playerScore.id) ? 'userCar' : '';
+      var userCarClass = (that.items.mycar !== null && that.items.mycar.id === playerScore.id) ? 'userCar' : '';
       o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
     }
     this.scoresTable.html(o.join(''));
@@ -2011,73 +2062,34 @@ var KLib = KLib || {};
     });
   };
 
-  GameInstance.prototype.loadImages = function(callback) {
 
-    var that = this;
-
-    var imagesNumToLoad = Object.keys(this.itemsInMap).length + 1;
-    var imageNumLoaded = 0;
-
-    function imageLoaded() {
-      if (imageNumLoaded === imagesNumToLoad - 1) {
-        return callback();
-      }
-      imageNumLoaded += 1;
-    }
-
-    // create background pattern
-    var bgImage = new Image();
-    bgImage.src = that.worldInfo.background.path;
-    var game = this;
-    bgImage.onload = function() {
-      var bgPattern = game.drawEngine.ctx.createPattern(this, 'repeat');
-      game.backgroundPattern = bgPattern;
-      imageLoaded();
-    };
-
-    // enhance items with patterns
-    _.each(this.itemsInMap, function(i, item) {
-      var img = new Image();
-      img.src = i.image.path;
-      img.onload = function() {
-        if (i.patternType !== 'none') {
-          var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
-          this.itemsInMap[item].pattern = _pattern;
-        } else {
-          this.itemsInMap[item].pattern = null;
-          this.itemsInMap[item].img = img;
-        }
-        imageLoaded();
-      }.bind(this);
-    }.bind(this));
-  };
 
   GameInstance.prototype.onInitReceived = function(err, worldInfo) {
     var that = this;
 
-    this.world = {};
+    // this.world = {};
     this.worldInfo = worldInfo;
-    this.world.size = worldInfo.size;
-    this.walls = worldInfo.staticItems;
-    this.itemsInMap = worldInfo.itemsInMap;
     this.bullets = [];
     this.rockets = [];
 
     var defaultDrawEngineType = 'CANVAS';
-    that.drawEngine = Karma.getDrawEngine(that, "game-canvas", defaultDrawEngineType);
 
-    that.loadImages(function() {
+    var canvasReady = function() {
       that.keyboardHandler = new Karma.KeyboardHandler(that);
       document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);
       document.onkeyup = that.keyboardHandler.handleKeyUp.bind(that.keyboardHandler);
       that.drawEngine.tick();
-    });
+    };
+
+    that.drawEngine = Karma.getDrawEngine(that, "game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
+
+
   };
 
   GameInstance.prototype.addExplosion = function(explosion) {
     // this.play_sound("/sounds/prou.mp3");
     var explosionId = Math.random();
-    this.explosions[explosionId] = {
+    this.items.explosions[explosionId] = {
       x: explosion.x,
       y: explosion.y,
       r: 3.14 / 6 * Math.random() - 3.14,

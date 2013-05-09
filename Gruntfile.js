@@ -26,8 +26,8 @@ module.exports = function(grunt) {
   }
 
   function addModule(name) {
-    G_files['js_' + name] = ['public/src/' + name + '/startup.js', 'public/src/' + name + '/*.js', 'public/src/' + name + '/**/*.js'];
-    G_files['css_' + name] = ['public/src/' + name + '/*.css', 'public/src/' + name + '/**/*.css'];
+    G_files['js_' + name] = ['public/src/' + name + '/startup.js', 'public/src/' + name + '/*.js', 'public/src/' + name + '/**/*.js', 'public/src/' + name + '/**/**/*.js'];
+    G_files['css_' + name] = ['public/src/' + name + '/*.css', 'public/src/' + name + '/**/*.css', 'public/src/' + name + '/**/**/*.css'];
     addConcatModule(name, 'js');
     addConcatModule(name, 'css');
     addUglifyModule(name, 'js');

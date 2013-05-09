@@ -142,7 +142,6 @@
     var mapID = "map-canvas";
 
     var map = new Karma.Map('#' + mapID);
-    // console.log(Map, map);
     //var items = ['wall', 'stone', 'grass', 'grass3', 'stone_l', 'stone_r', 'stone_t', 'stone_b', 'tree1'];
     map.connection.emit('get_items', function(err, itemsByName) {
       var items = [];
@@ -164,9 +163,7 @@
   }
 
   $(function() {
-
     start();
-
   });
 
 }());

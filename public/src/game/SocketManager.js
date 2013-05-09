@@ -114,10 +114,10 @@
     });
 
     that.connection.on('objects', function(objects) {
-      gameInstance.cars = objects.cars;
-      gameInstance.mycar = objects.myCar;
-      gameInstance.projectiles = objects.projectiles;
-      gameInstance.collisionPoints = objects.collisionPoints;
+      gameInstance.items.cars = objects.cars;
+      gameInstance.items.mycar = objects.myCar;
+      gameInstance.items.projectiles = objects.projectiles;
+      gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;

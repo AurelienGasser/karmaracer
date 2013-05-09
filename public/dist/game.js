@@ -139,10 +139,10 @@
     });
 
     that.connection.on('objects', function(objects) {
-      gameInstance.cars = objects.cars;
-      gameInstance.mycar = objects.myCar;
-      gameInstance.projectiles = objects.projectiles;
-      gameInstance.collisionPoints = objects.collisionPoints;
+      gameInstance.items.cars = objects.cars;
+      gameInstance.items.mycar = objects.myCar;
+      gameInstance.items.projectiles = objects.projectiles;
+      gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
@@ -467,34 +467,38 @@
   Karma.KeyboardHandler = KeyboardHandler;
 }());
 /* public/src/game/GameInstance/GameInstance.js */
-
 (function() {
   "use strict";
 
   function GameInstance() {
     Karma.TopBar.setTopBar();
-    this.cars = [];
-    this.explosions = {};
-    this.mycar = undefined;
-    this.walls = [];
-    this.drawEngine = undefined;
+
+
+    this.items = {};
+    this.items.cars = [];
+    this.items.explosions = {};
+    this.items.mycar = null;
+    this.items.projectiles = [];
+
+    this.worldInfo = {};
+
+    this.drawEngine = null;
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
     this.setUIEvents();
 
     this.isMobile = false;
 
     this.scoresTable = $('tbody#scores');
-    this.projectiles = [];
 
     this.loadCars();
     // this.setupSound();
     var that = this;
 
     function reduceExplosionsAlpha() {
-      for (var explosionId in that.explosions) {
-        that.explosions[explosionId].alpha -= 0.1;
-        if (that.explosions[explosionId].alpha < 0) {
-          delete that.explosions[explosionId];
+      for (var explosionId in that.items.explosions) {
+        that.items.explosions[explosionId].alpha -= 0.1;
+        if (that.items.explosions[explosionId].alpha < 0) {
+          delete that.items.explosions[explosionId];
         }
       }
     }
@@ -530,7 +534,7 @@
     var that = this;
 
     function getScores() {
-      var scores = _.map(that.cars, function(car) {
+      var scores = _.map(that.items.cars, function(car) {
         return {
           'score': car.s,
           'level': car.l,
@@ -548,7 +552,7 @@
     var o = [];
     for (var i = 0; i < scores.length; i++) {
       var playerScore = scores[i];
-      var userCarClass = (that.mycar !== null && that.mycar.id === playerScore.id) ? 'userCar' : '';
+      var userCarClass = (that.items.mycar !== null && that.items.mycar.id === playerScore.id) ? 'userCar' : '';
       o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
     }
     this.scoresTable.html(o.join(''));
@@ -567,73 +571,34 @@
     });
   };
 
-  GameInstance.prototype.loadImages = function(callback) {
 
-    var that = this;
-
-    var imagesNumToLoad = Object.keys(this.itemsInMap).length + 1;
-    var imageNumLoaded = 0;
-
-    function imageLoaded() {
-      if (imageNumLoaded === imagesNumToLoad - 1) {
-        return callback();
-      }
-      imageNumLoaded += 1;
-    }
-
-    // create background pattern
-    var bgImage = new Image();
-    bgImage.src = that.worldInfo.background.path;
-    var game = this;
-    bgImage.onload = function() {
-      var bgPattern = game.drawEngine.ctx.createPattern(this, 'repeat');
-      game.backgroundPattern = bgPattern;
-      imageLoaded();
-    };
-
-    // enhance items with patterns
-    _.each(this.itemsInMap, function(i, item) {
-      var img = new Image();
-      img.src = i.image.path;
-      img.onload = function() {
-        if (i.patternType !== 'none') {
-          var _pattern = this.drawEngine.ctx.createPattern(img, 'repeat');
-          this.itemsInMap[item].pattern = _pattern;
-        } else {
-          this.itemsInMap[item].pattern = null;
-          this.itemsInMap[item].img = img;
-        }
-        imageLoaded();
-      }.bind(this);
-    }.bind(this));
-  };
 
   GameInstance.prototype.onInitReceived = function(err, worldInfo) {
     var that = this;
 
-    this.world = {};
+    // this.world = {};
     this.worldInfo = worldInfo;
-    this.world.size = worldInfo.size;
-    this.walls = worldInfo.staticItems;
-    this.itemsInMap = worldInfo.itemsInMap;
     this.bullets = [];
     this.rockets = [];
 
     var defaultDrawEngineType = 'CANVAS';
-    that.drawEngine = Karma.getDrawEngine(that, "game-canvas", defaultDrawEngineType);
 
-    that.loadImages(function() {
+    var canvasReady = function() {
       that.keyboardHandler = new Karma.KeyboardHandler(that);
       document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);
       document.onkeyup = that.keyboardHandler.handleKeyUp.bind(that.keyboardHandler);
       that.drawEngine.tick();
-    });
+    };
+
+    that.drawEngine = Karma.getDrawEngine(that, "game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
+
+
   };
 
   GameInstance.prototype.addExplosion = function(explosion) {
     // this.play_sound("/sounds/prou.mp3");
     var explosionId = Math.random();
-    this.explosions[explosionId] = {
+    this.items.explosions[explosionId] = {
       x: explosion.x,
       y: explosion.y,
       r: 3.14 / 6 * Math.random() - 3.14,
