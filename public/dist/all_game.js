@@ -2075,7 +2075,7 @@ var KLib = KLib || {};
 
     function reduceExplosionsAlpha() {
       for (var explosionId in that.items.explosions) {
-        that.items.explosions[explosionId].alpha -= 0.1;
+        that.items.explosions[explosionId].alpha -= 0.05;
         if (that.items.explosions[explosionId].alpha < 0) {
           delete that.items.explosions[explosionId];
         }
@@ -2153,6 +2153,7 @@ var KLib = KLib || {};
   GameInstance.prototype.addExplosion = function(explosion) {
     // this.play_sound("/sounds/prou.mp3");
     var explosionId = Math.random();
+    this.drawEngine.gScale(explosion);
     this.items.explosions[explosionId] = {
       x: explosion.x,
       y: explosion.y,

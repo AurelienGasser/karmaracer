@@ -153,6 +153,7 @@ var setup = function(app, io, renderMethod) {
   });
 
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    successRedirect : '/',
     failureRedirect: '/login'
   }), setupFBUser);
 
