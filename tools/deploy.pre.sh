@@ -1,2 +1,2 @@
 #!/bin/sh
-forever stop server/server.js
+forever stop server.js
