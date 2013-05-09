@@ -1,12 +1,10 @@
 (function() {
   "use strict";
 
-
-  function Engine2DCanvas(gameInstance, canvas, canvasID, items, worldInfo, callback) {
+  function Engine2DCanvas(canvas, canvasID, items, worldInfo, callback) {
 
     this.canvas = canvas;
     this.canvasID = canvasID;
-    this.gameInstance = gameInstance;
     this.timer = new Date().getTime();
     this.frames = 0;
     this.debugDraw = false;
@@ -15,12 +13,15 @@
     this.items = items;
     this.worldInfo = worldInfo;
 
-    this.gameCarsImages = this.gameInstance.carsImages;
+
+    this.$canvas = $(canvas);
 
     this.init();
     this.loaded();
     this.loadImages(callback);
   }
+
+
 
   Engine2DCanvas.prototype.loadImages = function(callback) {
 
@@ -67,7 +68,6 @@
     // create background pattern
     var bgImage = new Image();
     bgImage.src = that.worldInfo.background.path;
-    var game = this;
     bgImage.onload = function() {
       var bgPattern = that.ctx.createPattern(this, 'repeat');
       that.backgroundPattern = bgPattern;
@@ -81,7 +81,7 @@
     this.canvas.height = $('#' + this.canvasID).height();
     this.camera = new Karma.Camera(this.ctx, '#' + this.canvasID);
     this.camera.setWorldSize(this.worldInfo.size);
-    this.loadCarsImages();
+    this.loadCars();
     this.explosionImage = new Image();
     this.explosionImage.src = '/sprites/explosion.png';
     this.rocketImage = new Image();
@@ -90,26 +90,33 @@
     this.gunFlameImage.src = '/sprites/gun_flame.png';
   };
 
-  Engine2DCanvas.prototype.loadCarsImages = function() {
-    this.carImages = {};
-    for (var carName in this.gameCarsImages) {
-      var car = this.gameCarsImages[carName];
-      var i = new Image();
-      i.src = car.path;
-      this.carImages[car.name] = i;
-    }
-  };
-
   Engine2DCanvas.prototype.loaded = function() {
     $('#loadingtext').html('');
   };
 
+  Engine2DCanvas.prototype.resize = function() {
+    var size = {
+      w: this.$canvas.width(),
+      h: this.$canvas.height()
+    };
+    if (!KLib.isUndefined(this.canvasSize)) {
+      size = this.canvasSize;
+    }
+
+    this.camera.ctx.canvas.width = size.w;
+    this.camera.ctx.canvas.height = size.h;
+
+  };
+
   Engine2DCanvas.prototype.draw = function() {
     if (this.worldInfo.staticItems.length > 0) {
-      this.camera.ctx.canvas.width = $('#' + this.canvasID).width();
-      this.camera.ctx.canvas.height = $('#' + this.canvasID).height();
-      var newCenter = this.items.mycar || this.oldCenter;
-      this.camera.update(newCenter);
+      this.resize();
+
+      var newCenter = this.oldCenter;
+      if (this.items.mycar !== null) {
+        newCenter = this.items.mycar;
+        this.camera.update(newCenter);
+      }
       if (newCenter && newCenter != this.oldCenter) {
         this.oldCenter = newCenter;
       }

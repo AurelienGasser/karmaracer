@@ -1,7 +1,5 @@
 (function() {
 "use strict";
-
-
   /**
    * Provides requestAnimationFrame in a cross browser way.
    */
@@ -12,15 +10,15 @@
     });
   })();
 
-  function drawEngineFactory(gameInstance, canvasID, defaultDrawEngineType, items, worldInfo, callback) {
+  function drawEngineFactory(canvasID, defaultDrawEngineType, items, worldInfo, callback) {
     var canvas = document.getElementById(canvasID);
     var drawEngineType = defaultDrawEngineType;
     var gl;
 
-    var factory = function(gameInstance, drawEngineType, canvasID, canvas) {
+    var factory = function(drawEngineType, canvasID, canvas) {
       switch (drawEngineType) {
         case 'CANVAS':
-          return new Karma.Engine2DCanvas(gameInstance, canvas, canvasID, items, worldInfo, callback);
+          return new Karma.Engine2DCanvas(canvas, canvasID, items, worldInfo, callback);
       }
     };
     // 'getWebGL' is defined but never used.
@@ -41,7 +39,7 @@
 
     drawEngineType = "CANVAS";
 
-    return factory(gameInstance, drawEngineType, canvasID, canvas, gl);
+    return factory(drawEngineType, canvasID, canvas);
   }
 
   Karma.getDrawEngine = drawEngineFactory;

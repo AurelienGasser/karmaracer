@@ -21,7 +21,7 @@
 
     this.scoresTable = $('tbody#scores');
 
-    this.loadCars();
+    // this.loadCars();
     // this.setupSound();
     var that = this;
 
@@ -36,30 +36,6 @@
 
     setInterval(reduceExplosionsAlpha, 60);
   }
-
-
-  GameInstance.prototype.loadCars = function() {
-    var that = this;
-    var getCar = function(name, imageName, w, h) {
-      return {
-        name: name,
-        path: '/sprites/' + imageName,
-        w: w,
-        h: h
-      };
-    };
-    var registerCar = function(car) {
-      that.carsImages[car.name] = car;
-    };
-
-    this.carsImages = {};
-    registerCar(getCar('c1', 'car.png', 128, 64));
-    registerCar(getCar('c2', 'car2.png', 82, 36));
-    registerCar(getCar('c3', 'car3.png', 72, 32));
-    registerCar(getCar('c4', 'car4.png', 74, 34));
-    registerCar(getCar('c5', 'car5.png', 81, 35));
-  };
-
 
   GameInstance.prototype.updateScoresHTML = function() {
     var that = this;
@@ -121,7 +97,7 @@
       that.drawEngine.tick();
     };
 
-    that.drawEngine = Karma.getDrawEngine(that, "game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
+    that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
 
 
   };

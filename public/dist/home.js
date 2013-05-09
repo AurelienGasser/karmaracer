@@ -18,8 +18,6 @@
       secure: true
     });
 
-    var mm = new Karma.MiniMap($('body'), 'nmap', connection);
-
     connection.emit('get_maps', function(err, maps) {
       addMaps(maps);
       $('#loadingImage').fadeOut();
@@ -67,15 +65,17 @@
     });
 
     function addMaps(maps) {
+      var $ul = $('ul#maps');
 
-      var o = [];
-      //maps = ['map1'];
       for (var i = 0; i < maps.length; i++) {
+        var o = [];
         var m = maps[i];
         o.push('<li id="map-', m, '"><a class="mapLink" href="game.' + m + '" >' + m);
         o.push('</a></br><a class="editLink" href="mm.' + m + '" >edit</a></br><span class="players"/></li>');
+        var $li = $(o.join(''));
+        $ul.append($li);
+        new Karma.MiniMap($li, m, connection);
       }
-      $('ul#maps').html(o.join(''));
       registerMaps();
     }
   };
