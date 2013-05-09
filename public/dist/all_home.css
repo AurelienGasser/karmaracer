@@ -205,8 +205,8 @@ ul#keys li{
   padding-left: 1em;
 }
 /* public/src/home/home.css */
-body{font-family:'Trebuchet MS';margin-top:60px;}
-body,input{font-size:12px;}
+body{margin-top:60px;}
+body,input{font-family:'Trebuchet MS';font-size:12px;}
 .header{text-align:center;}
 #loadingImage{position:fixed;left:50%;top:50%;margin-left:-16px;margin-top:-16px;}
 #mainContent{width:100%;display:block;margin:0px auto;text-align:center;vertical-align:top;}

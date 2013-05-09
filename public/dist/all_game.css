@@ -247,7 +247,7 @@ ul#keys li{
     width: 100px;
 }
 /* public/src/game/race.css */
-body {
+body, input {
     font-family: 'Trebuchet MS';
     font-size: 12px;
 }
