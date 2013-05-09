@@ -64,4 +64,4 @@
 
     this.connection.emit('saveMap', map);
   };
-}(Karma.Map || {}));
+}(Karma.Map));

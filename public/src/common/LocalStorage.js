@@ -1,7 +1,7 @@
 (function() {
 "use strict";
 
-  var LocalStorage = function() {
+  var KLocalStorage = function() {
     if (_.isUndefined(localStorage.karma)) {
       this.karma = {};
     } else {
@@ -35,9 +35,9 @@
       'set': set,
       'exists': exists
     };
-  }();
+  };
 
-  Karma.LocalStorage = LocalStorage;
+  Karma.LocalStorage = new KLocalStorage();
 
 
 }());

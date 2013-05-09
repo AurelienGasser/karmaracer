@@ -1,3 +1,4 @@
+/* public/src/game/startup.js */
 /*global Modernizr*/
 
 (function() {
@@ -21,7 +22,7 @@
   }]);
 }());
 
-
+/* public/src/game/SocketManager.js */
 /*global prompt,io, G_mapName*/
 (function(io) {
   "use strict";
@@ -166,7 +167,7 @@
 
   Karma.SocketManager = SocketManager;
 }(io));
-
+/* public/src/game/SteeringWheelController.js */
 (function() {
   "use strict";
   var SteeringWheelController = function() {
@@ -365,7 +366,7 @@
   Karma.SteeringWheelController = SteeringWheelController;
 
 }());
-
+/* public/src/game/keyboard.js */
 (function() {
   "use strict";
 
@@ -465,7 +466,7 @@
 
   Karma.KeyboardHandler = KeyboardHandler;
 }());
-
+/* public/src/game/GameInstance/GameInstance.js */
 
 (function() {
   "use strict";
@@ -643,7 +644,7 @@
   Karma.GameInstance = GameInstance;
 
 }());
-
+/* public/src/game/GameInstance/sound.js */
 (function() {
   "use strict";
 

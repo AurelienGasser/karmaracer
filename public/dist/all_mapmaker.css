@@ -210,3 +210,160 @@ ul#keys li{
 .help_keys_text {
   padding-left: 1em;
 }
+/* public/src/mapmaker/mapmaker.css */
+#map-canvas{
+  margin: auto;
+  /*position:absolute;*/
+  width:1000px;
+  height:800px;
+  border:1px solid blue;
+/*  right:50px;
+  top:0px;*/
+  /*border:1px solid blue;*/
+  text-align: left;
+  vertical-align: top;
+
+}
+
+#map-canvas svg{
+  width: 100%;
+  height:100%;
+  text-align: left;
+  vertical-align: top;
+  /*background:url('/sprites/bg_grass1.png');*/
+}
+
+
+
+body{
+  /*text-align: center;*/
+}
+
+#fps{
+  position: fixed;
+  top:120px;
+  left: 0px;
+}
+
+
+#actions{
+  margin: 0px;
+  padding: 0px;
+}
+#actions li{
+  list-style: none;
+}
+
+#properties{
+  margin: 0px;
+  padding: 0px;
+  position: fixed;
+  left: 0px;
+  top: 0px;
+}
+
+#properties li{
+  list-style: none;
+}
+
+#properties li input{
+  width: 120px;
+}
+
+#map-enable{
+  width: 32px !important;
+}
+
+body{
+  margin:0px;
+  padding:0px;
+  font-family: 'Armata';
+  font-size: 12px;
+}
+
+.item{
+  margin:2px;
+  /*border:1px solid green;*/
+  /*width:300px;*/
+  cursor:pointer;
+  list-style: none;
+  vertical-align: top;
+  text-align: right;
+}
+
+#canvas-debug{
+  margin:0px;
+  padding:0px;
+  position: fixed;
+  top:200px;
+  left: 0px;
+  padding-right: 20px;
+}
+
+#canvas-debug{
+  text-align: left;
+  margin-left: 2px;
+}
+
+#canvas-debug li{
+  list-style: none;
+}
+
+#save-canvas, #save-map-node{
+  cursor:pointer;
+}
+
+ #save-map-node:hover{
+   text-decoration:underline;
+ }
+ #items{
+  margin: 0px;
+  padding: 0px;
+  position: absolute;
+  right: 0px;
+  top: 0px;
+ }
+
+ .kr-item-demo{
+  max-width: 80px;
+ }
+
+ .kr-mm-demo-both{
+  width: 80px;
+  height: 80px;
+ }
+
+.kr-mm-demo{
+  /*display: inline-block;*/
+  min-height: 40px;    
+}
+
+.item-properties{
+  /*text-align: right;*/
+  margin: 0px;
+  padding: 0px;
+}
+
+.item-properties li{
+  list-style: none;
+  display: inline-block;
+  vertical-align: top;
+  overflow: hidden;
+}
+  .kr-mm-demo-vertical{
+  width: 40px;
+  height: 80px;
+ }
+
+  .kr-mm-demo-horizontal{
+  width: 80px;
+  height: 40px;
+margin-top: 20px;  
+ }
+ .kr-pp-item-name{
+  margin: 5px;
+  line-height: 70px;
+  height: 70px;
+  /*vertical-align: middle;*/
+  font-size: 1.4em;
+ }

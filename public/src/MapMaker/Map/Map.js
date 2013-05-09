@@ -8,7 +8,6 @@
     var host = window.location.hostname;
     this.connection = io.connect(host);
 
-
     this.MapItems = {};
     this.selectedItems = [];
     this.canvasMousePosition = {

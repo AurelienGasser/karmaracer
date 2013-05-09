@@ -29,7 +29,7 @@ table.scores thead tr th, tbody#scores tr td {
     width: 500px;
     background-color: white;
     transition: 0.5s linear;
-    bottom: 0%;
+    bottom: 10%;
     right: 50%;
     margin-right: -250px;
     border-radius: 20px;

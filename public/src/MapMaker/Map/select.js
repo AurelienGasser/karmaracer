@@ -98,4 +98,4 @@
     }
   };
 
-}(Karma.Map || {}));
+}(Karma.Map));

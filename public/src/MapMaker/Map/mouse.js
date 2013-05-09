@@ -90,4 +90,4 @@
     this.action = '';
   };
 
-}(Karma.Map || {}));
+}(Karma.Map));

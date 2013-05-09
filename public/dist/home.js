@@ -1,7 +1,6 @@
+/* public/src/home/home.js */
 (function(io) {
   "use strict";
-
-  console.log(Karma);
 
   $(function() {
     Karma.Home.start();

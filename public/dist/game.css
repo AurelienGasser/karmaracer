@@ -1,3 +1,4 @@
+/* public/src/game/SteeringWheelController.css */
 
 #SteeringWheelController.enable {
     border-color: blue;
@@ -26,7 +27,7 @@
     width: 16px;
 }
 
-
+/* public/src/game/botMenu.css */
 
 #botMenu {
     left: 0px;
@@ -39,7 +40,7 @@
     text-align: center;
     width: 100px;
 }
-
+/* public/src/game/race.css */
 body {
     font-family: 'Trebuchet MS';
     font-size: 12px;
@@ -132,7 +133,7 @@ body {
     list-style: none;
 }
 
-
+/* public/src/game/scoreTable.css */
 
 #score-table {
     color: white;
@@ -164,7 +165,7 @@ table.scores thead tr th, tbody#scores tr td {
     width: 500px;
     background-color: white;
     transition: 0.5s linear;
-    bottom: 0%;
+    bottom: 10%;
     right: 50%;
     margin-right: -250px;
     border-radius: 20px;
@@ -175,7 +176,7 @@ table.scores thead tr th, tbody#scores tr td {
     transition: 0.5s linear;
 }
 
-
+/* public/src/game/announce/announce.css */
 
 .announce-red{
   color:red;

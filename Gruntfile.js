@@ -35,12 +35,30 @@ module.exports = function(grunt) {
     G_watchFiles = G_watchFiles.concat(G_files['js_' + name], G_files['css_' + name]);
   }
 
+  function addMainModule(name, modules) {
+    var jsFiles = [];
+    var cssFiles = [];
+    for (var i = 0; i < modules.length; i++) {
+      var modName = modules[i];
+      jsFiles = jsFiles.concat(G_files['js_' + modName]);
+      cssFiles = cssFiles.concat(G_files['css_' + modName]);
+    };
+    var allName = 'all_' + name;
+    G_files['js_' + allName] = jsFiles;
+    G_files['css_' + allName] = cssFiles;
+    addConcatModule(allName, 'js');
+    addConcatModule(allName, 'css');
+    addUglifyModule(allName, 'js');
+  }
 
   addModule('game');
   addModule('home');
   addModule('mapmaker');
   addModule('common');
 
+  addMainModule('home', ['common', 'home']);
+  addMainModule('game', ['common', 'game']);
+  addMainModule('mapmaker', ['common', 'mapmaker']);
 
   G_files.js_vendor_common = ['public/src/vendor/common/*.js'];
   G_files.js_vendor_webgl = ['public/src/vendor/webgl/*.js'];
@@ -48,8 +66,6 @@ module.exports = function(grunt) {
   addConcatModule('vendor_common', 'js');
   addConcatModule('vendor_mapmaker', 'js');
   addConcatModule('vendor_webgl', 'js');
-
-
 
   G_options.jshint = {
     // define the files to lint
@@ -66,23 +82,26 @@ module.exports = function(grunt) {
         _: true,
         console: true,
         Karma: true,
-        KLib :true,
-        requestAnimFrame : true
+        KLib: true,
+        requestAnimFrame: true
       }
     }
   };
 
   G_options.pkg = grunt.file.readJSON('package.json');
   G_options.concat.options = {
-    separator: '\n\n'
+    // banner: "'use strict';\n",
+    process: function(src, filepath) {
+      return '/* ' + filepath + ' */\n' + src;
+    }
   };
   G_options.uglify.options = {
-    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
-    report: 'min'
+    banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+    // report: 'gzip'
   };
   G_options.watch = {
     files: G_watchFiles,
-    tasks: ['jshint', 'concat', 'uglify']
+    tasks: ['jshint', 'concat']
   };
 
   // Project configuration.

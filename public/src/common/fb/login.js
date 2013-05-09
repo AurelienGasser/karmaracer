@@ -1,10 +1,12 @@
-var kFB = {};
+// var kFB = {};
 
 (function() {
   /*global FB*/
+  "use strict";
 
- "use strict";
-  kFB.host = function(){
+  var kFB = {};
+
+  kFB.host = function() {
     var host = window.location.hostname + ':' + window.location.port;
     return host;
   }();
@@ -167,6 +169,8 @@ var kFB = {};
   kFB.afterLogin = afterLogin;
 
   kFB.setup();
+
+  Karma.FB = kFB;
 
 
 }());

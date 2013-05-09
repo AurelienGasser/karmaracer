@@ -1,5 +1,6 @@
+/* public/src/mapmaker/startup.js */
 (function(){}());
-
+/* public/src/mapmaker/MapItem.js */
 (function() {
   "use strict";
 
@@ -77,7 +78,7 @@
   };
   Karma.MapItem = MapItem;
 }());
-
+/* public/src/mapmaker/mapmaker.js */
 (function() {
   "use strict";
 
@@ -139,8 +140,9 @@
   function start() {
 
     var mapID = "map-canvas";
-    var map = new Map('#' + mapID);
 
+    var map = new Karma.Map('#' + mapID);
+    // console.log(Map, map);
     //var items = ['wall', 'stone', 'grass', 'grass3', 'stone_l', 'stone_r', 'stone_t', 'stone_b', 'tree1'];
     map.connection.emit('get_items', function(err, itemsByName) {
       var items = [];
@@ -168,7 +170,7 @@
   });
 
 }());
-
+/* public/src/mapmaker/Map/Map.js */
 /*global G_mapName, io*/
 
 (function(io) {
@@ -178,7 +180,6 @@
 
     var host = window.location.hostname;
     this.connection = io.connect(host);
-
 
     this.MapItems = {};
     this.selectedItems = [];
@@ -452,7 +453,7 @@
   Karma.Map = Map;
 
 }(io));
-
+/* public/src/mapmaker/Map/actions.js */
 (function(Map) {
   "use strict";
   
@@ -489,8 +490,8 @@
     this.scaleMousePosition = this.canvasMousePosition;
   };
 
-}(Karma.Map || {}));
-
+}(Karma.Map));
+/* public/src/mapmaker/Map/drawCanvas.js */
 (function(Map) {
   "use strict";
 
@@ -608,7 +609,7 @@
   };
 
 }(Karma.Map || {}));
-
+/* public/src/mapmaker/Map/drawSvg.js */
 (function(Map) {
   /*global Raphael*/
   "use strict";
@@ -817,7 +818,7 @@
   };
 
 }(Karma.Map || {}));
-
+/* public/src/mapmaker/Map/keyboard.js */
 (function() {
   "use strict";
 
@@ -902,7 +903,7 @@
   Karma.KeyboardHandlerMap = KeyboardHandlerMap;
 
 }());
-
+/* public/src/mapmaker/Map/mouse.js */
 (function(Map) {
   "use strict";
 
@@ -995,8 +996,8 @@
     this.action = '';
   };
 
-}(Karma.Map || {}));
-
+}(Karma.Map));
+/* public/src/mapmaker/Map/save.js */
 (function(Map) {
   "use strict";
 
@@ -1063,8 +1064,8 @@
 
     this.connection.emit('saveMap', map);
   };
-}(Karma.Map || {}));
-
+}(Karma.Map));
+/* public/src/mapmaker/Map/select.js */
 (function(Map) {
   "use strict";
 
@@ -1165,4 +1166,4 @@
     }
   };
 
-}(Karma.Map || {}));
+}(Karma.Map));

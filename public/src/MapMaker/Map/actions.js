@@ -34,4 +34,4 @@
     this.scaleMousePosition = this.canvasMousePosition;
   };
 
-}(Karma.Map || {}));
+}(Karma.Map));
