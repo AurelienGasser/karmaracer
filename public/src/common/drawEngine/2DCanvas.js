@@ -50,7 +50,6 @@
     // enhance items with patterns
 
     var onLoadImage = function() {
-      console.log('loaded', this);
       if (this.patternType !== 'none') {
         var _pattern = that.ctx.createPattern(img, 'repeat');
         that.worldInfo.itemsInMap[this.name].pattern = _pattern;
@@ -99,7 +98,7 @@
   };
 
   Engine2DCanvas.prototype.gScale = function(e) {
-    if (e === null){
+    if (e === null) {
       return;
     }
     if (e.x) {
@@ -323,10 +322,7 @@
             ctx.fillStyle = staticItem.pattern;
             ctx.fillRect(c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
           }
-        }else{
-          // console.log('fail on ', c.name);  
         }
-        
       });
     }
   };

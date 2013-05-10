@@ -19,6 +19,10 @@
     this.setUIEvents();
 
     this.isMobile = false;
+    this.mycarPosition = {
+      x: 0,
+      y: 0
+    };
 
     this.scoresTable = $('tbody#scores');
 
@@ -100,7 +104,7 @@
 
     that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
 
-    new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection);
+    new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that.mycarPosition);
   };
 
   GameInstance.prototype.addExplosion = function(explosion) {

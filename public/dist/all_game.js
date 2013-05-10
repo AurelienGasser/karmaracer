@@ -186,7 +186,6 @@ var KLib = KLib || {};
     // enhance items with patterns
 
     var onLoadImage = function() {
-      console.log('loaded', this);
       if (this.patternType !== 'none') {
         var _pattern = that.ctx.createPattern(img, 'repeat');
         that.worldInfo.itemsInMap[this.name].pattern = _pattern;
@@ -235,7 +234,7 @@ var KLib = KLib || {};
   };
 
   Engine2DCanvas.prototype.gScale = function(e) {
-    if (e === null){
+    if (e === null) {
       return;
     }
     if (e.x) {
@@ -459,10 +458,7 @@ var KLib = KLib || {};
             ctx.fillStyle = staticItem.pattern;
             ctx.fillRect(c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
           }
-        }else{
-          // console.log('fail on ', c.name);  
         }
-        
       });
     }
   };
@@ -1427,7 +1423,7 @@ var KLib = KLib || {};
 (function() {
   "use strict";
 
-  var MiniMap = function($container, mapName, connection) {
+  var MiniMap = function($container, mapName, connection, items, mycarPosition) {
     this.$container = $container;
     this.connection = connection;
     this.canvasID = 'minimap-' + mapName;
@@ -1435,30 +1431,47 @@ var KLib = KLib || {};
     this.$container.append(this.$canvas);
     this.canvas = this.$canvas[0];
 
+    this.items = items;
+    if (!KLib.isUndefined(mycarPosition)) {
+      this.playerPositionID = 'player-position-on-minimap-' + mapName;
+      this.$playerPosition = $('<div class="miniMapPlayerPosition" id="' + this.playerPositionID + '"></div>');
+      this.$container.append(this.$playerPosition);
+      this.mycarPosition = mycarPosition;
+    }
+
+
     this.getMap(mapName, function(err, map) {});
   };
 
   MiniMap.prototype.getMap = function(mapName, callback) {
 
     var that = this;
+
+    var items = {
+      cars: [],
+      mycar: null,
+      projectiles: [],
+      explosions: []
+    };
+
+
     var getMiniMap = function(err, worldInfo) {
       // that.$canvas.width(worldInfo.size.w);
       // that.$canvas.height(worldInfo.size.h);
-      var items = {
-        cars: [],
-        mycar: null,
-        projectiles: [],
-        explosions: []
-      };
       that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', items, worldInfo, function(drawEngine) {
-        that.drawEngine.setGScale(1 / 6); // set to default size
-        // that.drawEngine.setGScale(5);
+        that.drawEngine.setGScale(1 / 8); // set to default size
         that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
         that.drawEngine.resize();
         that.drawEngine.tick();
       });
 
 
+      setInterval(function() {
+        if (!KLib.isUndefined(that.mycarPosition)) {
+          that.$playerPosition.css('left', (that.$canvas.position().left + that.mycarPosition.x * 4) + 'px');
+          that.$playerPosition.css('top', (that.$canvas.position().top + that.mycarPosition.y * 4) + 'px');
+        }
+      }, 1000 / 20);
 
       if (KLib.isFunction(callback)) {
         return callback(null);
@@ -1725,6 +1738,9 @@ var KLib = KLib || {};
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
+      //for minimap
+      gameInstance.mycarPosition.x = objects.myCar.x;
+      gameInstance.mycarPosition.y = objects.myCar.y;
 
       gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
@@ -2072,6 +2088,10 @@ var KLib = KLib || {};
     this.setUIEvents();
 
     this.isMobile = false;
+    this.mycarPosition = {
+      x: 0,
+      y: 0
+    };
 
     this.scoresTable = $('tbody#scores');
 
@@ -2153,7 +2173,7 @@ var KLib = KLib || {};
 
     that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
 
-    new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection);
+    new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that.mycarPosition);
   };
 
   GameInstance.prototype.addExplosion = function(explosion) {

@@ -120,6 +120,9 @@
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
+      //for minimap
+      gameInstance.mycarPosition.x = objects.myCar.x;
+      gameInstance.mycarPosition.y = objects.myCar.y;
 
       gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
