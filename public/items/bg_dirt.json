@@ -1,0 +1,14 @@
+{
+  "name" : "bg_dirt",
+  "image" : {
+    "path" : "/sprites/bg_dirt.png",
+    "size" : 256,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 256,
+      "h" : 256
+    }
+  },
+  "patternType" : "both"
+}

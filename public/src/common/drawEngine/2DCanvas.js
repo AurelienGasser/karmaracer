@@ -50,12 +50,13 @@
     // enhance items with patterns
 
     var onLoadImage = function() {
+      console.log('loaded', this);
       if (this.patternType !== 'none') {
         var _pattern = that.ctx.createPattern(img, 'repeat');
         that.worldInfo.itemsInMap[this.name].pattern = _pattern;
+        that.worldInfo.itemsInMap[this.name].img = img;
       } else {
         that.worldInfo.itemsInMap[this.name].pattern = null;
-        that.worldInfo.itemsInMap[this.name].img = img;
       }
       imageLoaded();
     };
@@ -66,6 +67,7 @@
       var img = new Image();
       img.src = item.image.path;
       img.onload = onLoadImage.bind(item);
+      item.img = img;
     }
 
   };
@@ -321,7 +323,10 @@
             ctx.fillStyle = staticItem.pattern;
             ctx.fillRect(c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
           }
+        }else{
+          // console.log('fail on ', c.name);  
         }
+        
       });
     }
   };
