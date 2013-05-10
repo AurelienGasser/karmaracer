@@ -1,0 +1,14 @@
+{
+  "name" : "asphalt1",
+  "image" : {
+    "path" : "/sprites/asphalt1.png",
+    "size" : 128,
+    "crop" : {
+      "x" : 0,
+      "y" : 0,
+      "w" : 128,
+      "h" : 128
+    }
+  },
+  "patternType" : "both"
+}

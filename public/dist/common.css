@@ -1,3 +1,6 @@
+/* public/src/common/common.css */
+a img{border:none;}
+
 /* public/src/common/chat/chat.css */
 #chat {
   position: fixed;

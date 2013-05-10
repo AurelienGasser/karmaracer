@@ -1,5 +1,6 @@
 var KLib = require('./classes/KLib');
 var Player = require('./classes/Player');
+var CONFIG = require('./../config');
 
 var GameServerSocket = function(mapManager) {
 

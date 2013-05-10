@@ -472,6 +472,7 @@
 }());
 /* public/src/game/GameInstance/GameInstance.js */
 (function() {
+  /*global G_mapName*/
   "use strict";
 
   function GameInstance() {
@@ -493,6 +494,8 @@
     this.isMobile = false;
 
     this.scoresTable = $('tbody#scores');
+
+
 
     // this.loadCars();
     // this.setupSound();
@@ -555,8 +558,6 @@
 
   GameInstance.prototype.onInitReceived = function(err, worldInfo) {
     var that = this;
-
-    // this.world = {};
     this.worldInfo = worldInfo;
     this.bullets = [];
     this.rockets = [];
@@ -572,7 +573,7 @@
 
     that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
 
-
+    new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection);
   };
 
   GameInstance.prototype.addExplosion = function(explosion) {

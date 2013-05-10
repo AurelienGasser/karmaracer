@@ -89,3 +89,13 @@ body {
 #camera-debug li {
     list-style: none;
 }
+
+
+canvas.miniMap{
+    position: fixed;
+    right: 0px;
+    top:50px;
+    border-radius: 0px;
+    border:1px solid white;
+}
+
