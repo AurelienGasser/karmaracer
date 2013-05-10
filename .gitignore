@@ -9,4 +9,3 @@ out.log
 err.log
 server/config.js
 public/dist/*
-public/dist/*.js
