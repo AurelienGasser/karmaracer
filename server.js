@@ -85,6 +85,7 @@ function index(req, res, view, draw_engine) {
   if (!KLib.isUndefined(map)) {
     options['map'] = map;
   }
+  // res.setHeader('X-Frame-Options', 'GOFORIT');  
   res.render(view, options);
 }
 

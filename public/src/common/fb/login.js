@@ -14,7 +14,7 @@
   kFB.conf = function() {
     var dev = {
       appID: '156724717828757',
-      appName: 'karmaracer_dev'
+      appName: 'karmaracer_dev',
     };
 
     var prod = {
@@ -73,26 +73,25 @@
       });
     } catch (err) {
       Karma.Log.error(err);
-
     }
   }
 
-
-
   function afterLogin() {
+    // console.log(FB.getAccessToken());
     updateName();
   }
 
 
   function initFB() {
-    FB.Event.subscribe('auth.login', function() {
+
+     FB.Event.subscribe('auth.login', function() {
       afterLogin();
     });
     loginIfAuthorized();
-    $('#fb-login').on('click', function() {
-      getLoginStatus();
-      $(this).off('click');
-    });
+    // $('#fb-login').on('click', function() {
+    //   getLoginStatus();
+    //   $(this).off('click');
+    // });
 
   }
 
@@ -116,10 +115,11 @@
       var channelFile = 'http://' + kFB.host + '/channel.html';
       var options = {
         appId: kFB.conf.appID, // App ID
-        channelUrl: channelFile, // Channel File
-        status: true, // check login status
+        // channelUrl: channelFile, // Channel File
+        // status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session
-        xfbml: true // parse XFBML
+        xfbml: true, // parse XFBML
+        oauth:true
       };
       FB.init(options);
       // Additional init code here

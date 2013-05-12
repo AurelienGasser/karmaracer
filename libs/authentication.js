@@ -104,7 +104,8 @@ var setup = function(app, io, renderMethod) {
   //   renderMethod(req, res, "game.jade", "CANVAS");
   // });
   app.post('/game\.:map', passport.authenticate('facebook', {
-    failureRedirect: '/login',
+    successRedirect : '/gameok',
+    failureRedirect: '/login'
   }), function(req, res) {});
 
   function authFB(req) {
@@ -115,13 +116,11 @@ var setup = function(app, io, renderMethod) {
   }
 
   app.post('/', passport.authenticate('facebook', {
+    successRedirect : '/homeok',
     failureRedirect: '/login',
   }), function(req, res) {});
 
-  // authFB(req);
-  // renderMethod(req, res, "index.jade", "CANVAS");
-
-
+  
 
   app.get('/login', function(req, res) {
     renderMethod(req, res, "login.jade", "CANVAS");
@@ -141,11 +140,19 @@ var setup = function(app, io, renderMethod) {
     req.session.fbsid = uid;
     req.session.accessToken = req.session.passport.user.accessToken;
     res.redirect(route);
-
   }
 
   app.get('/auth/facebook',
   passport.authenticate('facebook', {
+    scope: 'publish_actions'
+  }), function(req, res) {
+    // The request will be redirected to Facebook for authentication, so this
+    // function will not be called.
+  });
+
+  app.post('/auth/facebook',
+  passport.authenticate('facebook', {
+    successRedirect : '/ok',
     scope: 'publish_actions'
   }), function(req, res) {
     // The request will be redirected to Facebook for authentication, so this
