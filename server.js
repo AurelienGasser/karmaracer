@@ -90,6 +90,7 @@ function index(req, res, view, draw_engine) {
 
 auth.setup(app, io, index);
 
+// for dev purpose uncomment
 // auth.ensureAuthenticated = function(req, res, next){
 //   return next();
 // }
@@ -105,6 +106,16 @@ app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
 app.get('/mm\.:map', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
+
+
+app.get('/privacy', function(req, res) {
+  index(req, res, "privacy.jade", "CANVAS");
+});
+
+app.get('/tos', function(req, res) {
+  index(req, res, "tos.jade", "CANVAS");
+});
+
 
 
 app.io = io;
