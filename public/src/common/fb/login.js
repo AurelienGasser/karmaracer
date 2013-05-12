@@ -14,7 +14,7 @@
   kFB.conf = function() {
     var dev = {
       appID: '156724717828757',
-      appName: 'karmaracer_dev',
+      appName: 'karmaracer_dev'
     };
 
     var prod = {
@@ -115,7 +115,7 @@
       var channelFile = 'http://' + kFB.host + '/channel.html';
       var options = {
         appId: kFB.conf.appID, // App ID
-        // channelUrl: channelFile, // Channel File
+        channelUrl: channelFile, // Channel File
         // status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session
         xfbml: true, // parse XFBML
