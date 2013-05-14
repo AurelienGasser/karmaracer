@@ -5,7 +5,6 @@ var FacebookStrategy = require('passport-facebook').Strategy;
 var graph = require('fbgraph');
 var CONFIG = require('./../config');
 
-
 var MemoryStore = express.session.MemoryStore,
   sessionStore = new MemoryStore();
 var sessionSecret = 'grand mere',
@@ -22,7 +21,6 @@ var setup = function(app, io, renderMethod) {
 
   io.configure(function() {
     io.set('authorization', function(data, accept) {
-
       accept(null, true);
       var parseCookie = express.cookieParser();
       if (data.headers.cookie) {
@@ -103,24 +101,50 @@ var setup = function(app, io, renderMethod) {
   //   authFB(req);
   //   renderMethod(req, res, "game.jade", "CANVAS");
   // });
-  app.post('/game\.:map', passport.authenticate('facebook', {
-    successRedirect : '/gameok',
-    failureRedirect: '/login'
-  }), function(req, res) {});
+  // 
+  app.post('/game\.:map', function(req, res) {
+    authFB(req);
+    // not authorized
+    if (KLib.isUndefined(req.session.accessToken)) {
 
-  function authFB(req) {
+      var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName + 'game.' + req.params.map);
+      renderMethod(req, res, "auth.jade", "CANVAS", {
+        'FB_KARMA_ID': CONFIG.appID,
+        'redirect_uri': FBcallbackURL,
+        'scope': CONFIG.FBScope
+      });
+    } else {
+      renderMethod(req, res, "game.jade", "CANVAS");
+    }
+  });
+
+  function authFB(req, res) {
     var fbReq = parse_signed_request(req.body.signed_request);
     req.session.fbsid = fbReq.user_id;
     req.session.accessToken = fbReq.oauth_token;
     graph.setAccessToken(fbReq.oauth_token);
   }
 
-  app.post('/', passport.authenticate('facebook', {
-    successRedirect : '/homeok',
-    failureRedirect: '/login',
-  }), function(req, res) {});
+  var callbackURL = escape(CONFIG.callbackURL);
+  var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName );
 
-  
+  app.post('/', function(req, res) {
+    authFB(req);
+    // not authorized
+    if (KLib.isUndefined(req.session.accessToken)) {
+      renderMethod(req, res, "auth.jade", "CANVAS", {
+        'FB_KARMA_ID': CONFIG.appID,
+        'redirect_uri': FBcallbackURL,
+        'scope': CONFIG.FBScope
+      });
+    } else {
+      res.redirect('/auth/facebook');
+    }
+  });
+
+  app.get('/gotoapp', function(req, res) {
+    renderMethod(req, res, "login.jade", "CANVAS");
+  });
 
   app.get('/login', function(req, res) {
     renderMethod(req, res, "login.jade", "CANVAS");
@@ -133,7 +157,7 @@ var setup = function(app, io, renderMethod) {
     var list = referer.split('/');
     var path = list[list.length - 1];
     var route = '/' + path;
-    if (path === 'login'){
+    if (path === 'login') {
       route = '/';
     }
     var uid = req.session.passport.user.id;
@@ -142,37 +166,37 @@ var setup = function(app, io, renderMethod) {
     res.redirect(route);
   }
 
-  app.get('/auth/facebook',
-  passport.authenticate('facebook', {
-    scope: 'publish_actions'
+  app.get('/auth/facebook', passport.authenticate('facebook', {
+    scope: CONFIG.FBScope
   }), function(req, res) {
     // The request will be redirected to Facebook for authentication, so this
     // function will not be called.
   });
 
-  app.post('/auth/facebook',
-  passport.authenticate('facebook', {
-    successRedirect : '/ok',
-    scope: 'publish_actions'
-  }), function(req, res) {
-    // The request will be redirected to Facebook for authentication, so this
-    // function will not be called.
-  });
+  // app.post('/auth/facebook',
+  // passport.authenticate('facebook', {
+  //   successRedirect : '/ok',
+  //   scope: 'publish_actions',
+  //   display:'popup'
+  // }), function(req, res) {
+  //   // The request will be redirected to Facebook for authentication, so this
+  //   // function will not be called.
+  // });
 
+  // var FBAppURL = 'https://apps.facebook.com/' + CONFIG.appName;
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    successRedirect : '/',
+    successRedirect: '/',
     failureRedirect: '/login'
   }), setupFBUser);
 
-
-
+  // app.post('/auth/facebook/callback', passport.authenticate('facebook', {}), setupFBUser);
 }
 
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
     }
-    res.redirect('/login');
+    res.redirect('/auth/facebook');
   }
 
 module.exports = {

@@ -74,13 +74,20 @@ app.configure(function(callback) {
 
 
 
-function index(req, res, view, draw_engine) {
+function index(req, res, view, draw_engine, opts) {
   var options = {
     layout: false,
     'title': 'Karma Racer',
     default_draw_engine: draw_engine,
     fbid: req.session.fbsid
   };
+
+  if (!KLib.isUndefined(opts)){
+    for (var o in opts){
+      options[o] = opts[o];
+    }
+  }
+
   var map = req.params.map;
   if (!KLib.isUndefined(map)) {
     options['map'] = map;
@@ -99,6 +106,7 @@ auth.setup(app, io, index);
 app.get('/', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
+
 
 app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
   index(req, res, "game.jade", "CANVAS");

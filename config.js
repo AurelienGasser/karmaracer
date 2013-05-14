@@ -32,6 +32,10 @@ var config = function() {
   register('stepByStepMode', false);
   register('serverPath', __dirname);
 
+  register('FBScope', 'publish_actions');
+  // register('FBAppPath', 'https://apps.facebook.com/' + );
+  
+
   if (host === 'ks3096106.kimsufi.com') {
     console.info('fb host is prod', host);
     return prod;

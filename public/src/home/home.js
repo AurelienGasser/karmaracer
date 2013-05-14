@@ -71,7 +71,11 @@
         o.push('<li id="map-', m, '">');
         //<a class="editLink" href="mm.' + m + '" >edit</a></br>
         o.push('<div class="info"><span class="players"/></div>');
-        o.push('<a class="mapLink" href="game.', m, '" ><div>', m, '</br></div></a>');
+        var link = 'game.' + m;
+        // if (!KLib.isUndefined(parent)){
+          // link = 'https://apps.facebook.com/karmaracer_dev/' + link;
+        // }
+        o.push('<a class="mapLink" href="', link, '" ><div>', m, '</br></div></a>');
         o.push('</li>');
         var $li = $(o.join(''));
         $li.hide();

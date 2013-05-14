@@ -77,7 +77,6 @@
   }
 
   function afterLogin() {
-    // console.log(FB.getAccessToken());
     updateName();
   }
 
