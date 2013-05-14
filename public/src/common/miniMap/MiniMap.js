@@ -46,10 +46,13 @@
 
       setInterval(function() {
         if (!KLib.isUndefined(that.mycarPosition)) {
-          that.$playerPosition.css('left', (that.$canvas.position().left + that.mycarPosition.x * 4) + 'px');
-          that.$playerPosition.css('top', (that.$canvas.position().top + that.mycarPosition.y * 4) + 'px');
+          var pos = that.$canvas.position();
+          var left = (pos.left + that.mycarPosition.x * 4);
+          var top = (pos.top + that.mycarPosition.y * 4);
+          that.$playerPosition[0].style.left = left + 'px';
+          that.$playerPosition[0].style.top = top + 'px';
         }
-      }, 1000 / 20);
+      }, 1000 / 15);
 
       if (KLib.isFunction(callback)) {
         return callback(null);

@@ -92,9 +92,7 @@
     this.worldInfo = worldInfo;
     this.bullets = [];
     this.rockets = [];
-
     var defaultDrawEngineType = 'CANVAS';
-
     var canvasReady = function() {
       that.keyboardHandler = new Karma.KeyboardHandler(that);
       document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);
