@@ -3,7 +3,8 @@ html
   head
     title Karma Racer, baby!
     script(type='text/javascript')
-      var G_fbid = '#{fbid}'
+      var G_fbid = '#{fbid}';
+      var G_locale = '#{locale}';
     script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type='text/javascript', src='/dist/vendor_common.js')
     script(type='text/javascript', src='/dist/all_home.js')
@@ -13,6 +14,4 @@ html
       div#fb-root
     div#mainContent      
       div#mapsContainer
-        h2 Click on a map to play
-        ul#maps
     img#loadingImage(src='/images/loading.gif')

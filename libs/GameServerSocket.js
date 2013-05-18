@@ -119,11 +119,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   client.on('disconnect', function(socket) {
     try {
+      console.info('client left:', client.id);
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
       }
-      console.info('client left:', client.playerName);
+
     } catch (e) {
       console.error(e, e.stack);
     }

@@ -57,6 +57,33 @@
     });
   }
 
+  function setScore(gScore) {
+    FB.api('/me/scores/', 'post', {
+      score: gScore
+    }, function(response) {
+      console.log("Score posted to Facebook");
+    });
+  }
+
+  function takeSoul() {
+    // var gFriendID =  655129182;
+
+    // FB.api('/me/karmaracer_dev:take_a_soul?profile=' + gFriendID, 'post', {}, function(response) {
+    //   console.log(response);
+    // });
+
+    // FB.api(
+    //   'karmaracer_dev:take_a_soul',
+    //   'post', {
+    //   profile: "http://samples.ogp.me/390580850990722"
+    // },
+
+    // function(response) {
+    //   console.log('takeSoul', response);
+    //   // handle the response
+    // });
+  }
+
   function getScore(user) {
     try {
       FB.api("/" + user.id + "/scores/" + kFB.conf.appName, function(response) {
@@ -67,7 +94,7 @@
           if (response.data.length > 0) {
             score = response.data[0].score;
           }
-          $('#fbHighScore').html('<div title="High Score">High Score : ' + score + '</div>');
+          $('#fbHighScore').html('<div title="' + $.i18n.prop('topbar_highscore') + '">' + $.i18n.prop('topbar_highscore') + ' : ' + score + '</div>');
           Karma.TopBar.show();
         }
       });
@@ -78,12 +105,14 @@
 
   function afterLogin() {
     updateName();
+    // setScore(5000);
+    // takeSoul();
   }
 
 
   function initFB() {
 
-     FB.Event.subscribe('auth.login', function() {
+    FB.Event.subscribe('auth.login', function() {
       afterLogin();
     });
     loginIfAuthorized();
@@ -118,7 +147,7 @@
         // status: true, // check login status
         cookie: true, // enable cookies to allow the server to access the session
         xfbml: true, // parse XFBML
-        oauth:true
+        oauth: true
       };
       FB.init(options);
       // Additional init code here
@@ -136,7 +165,7 @@
       js = d.createElement('script');
       js.id = id;
       js.async = true;
-      js.src = "//connect.facebook.net/en_US/all.js";
+      js.src = "//connect.facebook.net/fr_FR/all.js";
       ref.parentNode.insertBefore(js, ref);
     }(document));
   }

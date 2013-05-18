@@ -49,7 +49,12 @@ margin: 5px;
 }
 
 #topBar input{
-  background-color: white;
+  font-size: 1.2em;
+  text-align: center;
+  font-weight: bold;
+  background-color: #eee;
+  border:1px solid #ddd;
+  margin-left: 10px;
   -webkit-transition: 0.25s ease-in-out;
   -moz-transition: 0.25s ease-in-out;
   -o-transition: 0.25s ease-in-out;
@@ -58,7 +63,8 @@ margin: 5px;
 }
 
 #topBar:hover input, #topBar.init input{
-  background-color: #eee;
+  background-color: #ddd;
+  border-color: #eee;
   -webkit-transition: 0.25s ease-in-out;
   -moz-transition: 0.25s ease-in-out;
   -o-transition: 0.25s ease-in-out;
@@ -77,16 +83,16 @@ margin: 5px;
 
 #playerName{
   /*cursor: help;*/
-  height: 40px;
-  line-height: 40px;
+  height: 35px;
+  line-height: 35px;
   width: 300px;
   /*background-color: white;*/
-  border: none;
-  padding-right: 5px;
+  /*border: none;*/
+  /*padding-right: 5px;*/
 }
 
 #playerName:focus{
-  background-color: white;
+  background-color: #ccc;
 }
 
 #fbLoginImage{

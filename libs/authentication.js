@@ -18,10 +18,9 @@ var sessionSecret = 'grand mere',
 
 var setup = function(app, io, renderMethod) {
 
-
   io.configure(function() {
     io.set('authorization', function(data, accept) {
-      accept(null, true);
+      // accept(null, true);
       var parseCookie = express.cookieParser();
       if (data.headers.cookie) {
         // if there is, parse the cookie
@@ -38,6 +37,7 @@ var setup = function(app, io, renderMethod) {
           } else {
             // save the session data and accept the connection
             data.session = session;
+            console.log('data.session.fbsid', data.session.fbsid);
             if (KLib.isUndefined(data.session.fbsid)) {
               return accept('No FB Id', false);
             }
@@ -68,7 +68,6 @@ var setup = function(app, io, renderMethod) {
       // to associate the Facebook account with a user record in your database,
       // and return that user instead.
       profile.accessToken = accessToken;
-
       return done(null, profile);
     });
   }));
@@ -89,7 +88,6 @@ var setup = function(app, io, renderMethod) {
     // decode the data
     var sig = base64_url_decode(encoded_sig);
     var data = JSON.parse(base64_url_decode(payload), true);
-
     return data;
   }
 
@@ -122,11 +120,13 @@ var setup = function(app, io, renderMethod) {
     var fbReq = parse_signed_request(req.body.signed_request);
     req.session.fbsid = fbReq.user_id;
     req.session.accessToken = fbReq.oauth_token;
+    req.session.locale = fbReq.user.locale;
+    console.log('fbReq', fbReq);
     graph.setAccessToken(fbReq.oauth_token);
   }
 
-  var callbackURL = escape(CONFIG.callbackURL);
-  var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName );
+  // var callbackURL = escape(CONFIG.callbackURL);
+  var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName);
 
   app.post('/', function(req, res) {
     authFB(req);
@@ -142,20 +142,24 @@ var setup = function(app, io, renderMethod) {
     }
   });
 
-  app.get('/gotoapp', function(req, res) {
-    renderMethod(req, res, "login.jade", "CANVAS");
-  });
+  // app.get('/gotoapp', function(req, res) {
+  //   renderMethod(req, res, "login.jade", "CANVAS");
+  // });
 
   app.get('/login', function(req, res) {
     renderMethod(req, res, "login.jade", "CANVAS");
   });
 
 
-
   var setupFBUser = function(req, res) {
+    var path = '';
     var referer = req.headers.referer;
-    var list = referer.split('/');
-    var path = list[list.length - 1];
+
+    if (!KLib.isUndefined(referer)) {
+      var list = referer.split('/');
+      path = list[list.length - 1];
+    }
+
     var route = '/' + path;
     if (path === 'login') {
       route = '/';
@@ -163,6 +167,7 @@ var setup = function(app, io, renderMethod) {
     var uid = req.session.passport.user.id;
     req.session.fbsid = uid;
     req.session.accessToken = req.session.passport.user.accessToken;
+    req.session.locale = req.session.passport.user._json.locale;
     res.redirect(route);
   }
 
@@ -185,7 +190,7 @@ var setup = function(app, io, renderMethod) {
 
   // var FBAppURL = 'https://apps.facebook.com/' + CONFIG.appName;
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    successRedirect: '/',
+    // successRedirect: '/',
     failureRedirect: '/login'
   }), setupFBUser);
 

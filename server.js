@@ -79,8 +79,15 @@ function index(req, res, view, draw_engine, opts) {
     layout: false,
     'title': 'Karma Racer',
     default_draw_engine: draw_engine,
-    fbid: req.session.fbsid
+    fbid: req.session.fbsid,
+    locale : req.session.locale
   };
+
+  if (KLib.isUndefined(options.locale)){
+    options.locale = 'en_GB';
+  }
+
+  options.locale = options.locale.substring(0, 2);
 
   if (!KLib.isUndefined(opts)){
     for (var o in opts){

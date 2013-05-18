@@ -22,7 +22,7 @@
     }
 
     o.push('<li><form id="playerNameForm" href="#">');
-    o.push('Welcome to Karma Racer, <input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
+    o.push($.i18n.prop('topbar_welcome'),'<input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
     o.push('<input type="submit" style="display:none"/>');
     o.push('</form></li>');
 

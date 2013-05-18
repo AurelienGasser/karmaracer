@@ -1,8 +1,11 @@
 (function(io) {
   "use strict";
+  /*global G_locale*/
 
   $(function() {
-    Karma.Home.start();
+    Karma.i18n(G_locale, function() {
+      Karma.Home.start();
+    });
   });
 
 
@@ -10,7 +13,11 @@
 
     Karma.TopBar.setTopBar();
 
-
+    var $mapsContainer = $('#mapsContainer');
+    var o = [];
+    o.push('<h2>',$.i18n.prop('home_clickonmap') , '</h2>');
+    o.push('<ul id="maps"></ul>');
+    $mapsContainer.append(o.join(''));
 
     var host = window.location.hostname;
     var connection = io.connect(host, {
@@ -31,7 +38,7 @@
         var m = mapStates[i];
         var players = _.map(m.players, getName).join(', ');
         if (players.length > 0) {
-          players = 'Playing Now : ' + players;
+          players = $.i18n.prop('home_playingnow') + ' : ' + players;
         }
         $('#map-' + m.map + ' .players').html(players);
       }
@@ -73,7 +80,7 @@
         o.push('<div class="info"><span class="players"/></div>');
         var link = 'game.' + m;
         // if (!KLib.isUndefined(parent)){
-          // link = 'https://apps.facebook.com/karmaracer_dev/' + link;
+        // link = 'https://apps.facebook.com/karmaracer_dev/' + link;
         // }
         o.push('<a class="mapLink" href="', link, '" ><div>', m, '</br></div></a>');
         o.push('</li>');

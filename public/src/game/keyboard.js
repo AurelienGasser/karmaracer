@@ -55,7 +55,7 @@
         }
         break;
       default:
-        //console.info(key);
+        e.preventDefault();
     }
   };
 
@@ -89,6 +89,8 @@
       default:
         this.handleKey(event.keyCode, 'start');
     }
+    event.preventDefault();
+    return false;
   };
 
   KeyboardHandler.prototype.handleKeyUp = function(event) {
