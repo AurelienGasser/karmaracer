@@ -37,7 +37,6 @@ var setup = function(app, io, renderMethod) {
           } else {
             // save the session data and accept the connection
             data.session = session;
-            console.log('data.session.fbsid', data.session.fbsid);
             if (KLib.isUndefined(data.session.fbsid)) {
               return accept('No FB Id', false);
             }
@@ -121,7 +120,6 @@ var setup = function(app, io, renderMethod) {
     req.session.fbsid = fbReq.user_id;
     req.session.accessToken = fbReq.oauth_token;
     req.session.locale = fbReq.user.locale;
-    console.log('fbReq', fbReq);
     graph.setAccessToken(fbReq.oauth_token);
   }
 
@@ -164,6 +162,10 @@ var setup = function(app, io, renderMethod) {
     if (path === 'login') {
       route = '/';
     }
+    // check if the session should be redirected somewhere special
+    if (!KLib.isUndefined(req.session.initialURL)){
+      route = req.session.initialURL;
+    }
     var uid = req.session.passport.user.id;
     req.session.fbsid = uid;
     req.session.accessToken = req.session.passport.user.accessToken;
@@ -200,6 +202,8 @@ var setup = function(app, io, renderMethod) {
   function ensureAuthenticated(req, res, next) {
     if (req.isAuthenticated()) {
       return next();
+    } else {
+      req.session.initialURL = req.url;
     }
     res.redirect('/auth/facebook');
   }

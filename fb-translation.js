@@ -48,8 +48,6 @@ var callbackURL = 'https://localhost/';
 var graph = require('fbgraph');
 
 app.get('/', function(req, res) {
-  // console.log('code', req.query.code);
-
   if (!req.query.code) {
     var authUrl = graph.getOauthUrl({
       "client_id": CONFIG.appID,

@@ -131,7 +131,7 @@
   };
 
   Engine2DCanvas.prototype.loaded = function() {
-    $('#loadingtext').html('');
+    $('#loadingImage').fadeOut();
   };
 
   Engine2DCanvas.prototype.resize = function() {

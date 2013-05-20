@@ -4,7 +4,7 @@
 
   function GameInstance() {
     Karma.TopBar.setTopBar();
-
+    this.scoresTable = $('tbody#scores');
 
     this.items = {};
     this.items.cars = [];
@@ -15,16 +15,17 @@
     this.worldInfo = {};
 
     this.drawEngine = null;
-    this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
-    this.setUIEvents();
 
+    this.explosionManager = new Karma.ExplosionsManager(this);
+    this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
+
+
+    this.setUIEvents();
     this.isMobile = false;
     this.mycarPosition = {
       x: 0,
       y: 0
     };
-
-    this.scoresTable = $('tbody#scores');
 
 
 
@@ -32,16 +33,6 @@
     // this.setupSound();
     var that = this;
 
-    function reduceExplosionsAlpha() {
-      for (var explosionId in that.items.explosions) {
-        that.items.explosions[explosionId].alpha -= 0.05;
-        if (that.items.explosions[explosionId].alpha < 0) {
-          delete that.items.explosions[explosionId];
-        }
-      }
-    }
-
-    setInterval(reduceExplosionsAlpha, 60);
   }
 
   GameInstance.prototype.updateScoresHTML = function() {
@@ -101,21 +92,11 @@
     };
 
     that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
+    // that.explosionManager.start();
 
     new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that.mycarPosition);
   };
 
-  GameInstance.prototype.addExplosion = function(explosion) {
-    // this.play_sound("/sounds/prou.mp3");
-    var explosionId = Math.random();
-    this.drawEngine.gScale(explosion);
-    this.items.explosions[explosionId] = {
-      x: explosion.x,
-      y: explosion.y,
-      r: 3.14 / 6 * Math.random() - 3.14,
-      alpha: 0.4 * Math.random() - 0.2 + 0.25
-    };
-  };
 
   Karma.GameInstance = GameInstance;
 

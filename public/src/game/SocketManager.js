@@ -11,6 +11,7 @@
     this.timestamp = new Date().getTime();
     this.msg_id = 0;
     this.gameInstance.bodies = [];
+    this.$socketps = $('#socketps');
 
     var that = this;
 
@@ -31,7 +32,7 @@
       var now = new Date().getTime();
       if (now - that.timestamp > 1000) {
         that.timestamp = now;
-        $('#socketps').html('socket/ps: ' + that.socketCounter);
+        that.$socketps.html('socket/ps: ' + that.socketCounter);
         that.socketCounter = 0;
       }
       that.socketCounter += 1;
@@ -129,11 +130,12 @@
         return list ? list.length : 0;
       })));
       socketReceived();
-
     });
 
     that.connection.on('explosion', function(explosion) {
-      gameInstance.addExplosion(explosion);
+      // if (gameInstance.explosionManager !== null){
+      //   gameInstance.explosionManager.addExplosion(explosion);  
+      // }      
     });
 
   }
