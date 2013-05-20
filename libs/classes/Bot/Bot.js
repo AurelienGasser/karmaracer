@@ -5,9 +5,7 @@ var Bot = function(gameServer, name) {
     this.gameServer = gameServer;
     this.name = name + ' (bot)';
     this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
-    // this.playerCar.car.name = 'bot';
     this.playerCar.car.collide = this.collide;
-
     var maxCar = 4;
     var r = parseInt((Math.random() * 1e5) % maxCar, 10);
     r += 2;
@@ -27,6 +25,7 @@ Bot.prototype.tick = function() {
       var turnLeft = (Math.random() - 0.5 > 0 ? 1 : -1);
       var angle = turnLeft * Math.PI / 4
       car.accelerateAndTurn(0.5, angle);
+      car.playerCar.shoot();
     } else {
       car.accelerate(0.5);
     }
