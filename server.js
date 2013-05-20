@@ -72,7 +72,7 @@ app.configure(function(callback) {
 });
 
 
-var supportedLanguages = ['fr', 'en'];
+var supportedLanguages = ['fr', 'en', 'fa'];
 
 function index(req, res, view, draw_engine, opts) {
   var options = {

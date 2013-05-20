@@ -60,7 +60,6 @@
 
 
 
-
   KeyboardHandler.prototype.handleKeyDownGame = function(event) {
     switch (event.keyCode) {
       case KEY_ESCAPE:
@@ -110,13 +109,16 @@
   };
 
   KeyboardHandler.prototype.handleKeyDown = function(event) {
-    // console.log(this.gameInstance.chat.isOpen)
     if (this.gameInstance.chat.isOpen === true) {
       return this.handleKeyDownChat(event);
     } else {
-      return this.handleKeyDownGame(event);
+      var $pn = $('#playerName');
+      if ($pn.is(':focus')) {
+        return;
+      } else {
+        return this.handleKeyDownGame(event);
+      }
     }
-
   };
 
   KeyboardHandler.prototype.handleKeyUp = function(event) {
