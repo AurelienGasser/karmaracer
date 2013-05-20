@@ -19,14 +19,25 @@
       that.connection.emit('disconnect');
     });
 
-    $(function() {
-      $('#addBot').click(function() {
+
+    function setupBotMenu() {
+      var $botmenu = $('#botMenu');
+      var $addBot = $('<input id="#addBot" type="button" value="' + $.i18n.prop('bots_add') + '"/>');
+      var $removeBot = $('<input id="#removeBot" type="button" value="' + $.i18n.prop('bots_remove') + '"/>');
+
+      $botmenu.append($addBot);
+      $botmenu.append($removeBot);
+
+      // $(function() {
+      $addBot.click(function() {
         that.connection.emit('add bot');
       });
-      $('#removeBot').click(function() {
+      $removeBot.click(function() {
         that.connection.emit('remove bot');
       });
-    });
+    }
+
+    setupBotMenu();
 
     function socketReceived() {
       var now = new Date().getTime();
@@ -38,7 +49,7 @@
       that.socketCounter += 1;
     }
 
-    
+
     $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
     this.$socketps = $('<div id="socketps" class="info"></div>');
     $('#debug').append(this.$socketps);
@@ -64,7 +75,7 @@
 
     this.connection.on('chat_msg', function(msg) {
       var key = 'msg_' + that.msg_id;
-      that.gameInstance.chat.onChatMsgReceived(msg);      
+      that.gameInstance.chat.onChatMsgReceived(msg);
     });
 
     this.connection.on('car_killed', function(data) {
@@ -72,7 +83,7 @@
       that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
     });
 
-    
+
 
     function announce(text, color, extraClass) {
       if (KLib.isUndefined(extraClass)) {
@@ -94,7 +105,7 @@
     }
 
     this.connection.on('dead', function() {
-      announce('You\' re dead !', 'red');
+      announce($.i18n.prop('game_playerdie'), 'red');
     });
 
     function announceIn(msg, color, timeInSeconds, extraClass, callback) {
@@ -114,10 +125,11 @@
         $('table.scores').removeClass('big').addClass('default');
       };
 
-      announce(d.winnerName + ' wins the game !!!!', 'black', 'freeze');
+      var msg = $.i18n.prop('game_winsthegame', d.winnerName);
+      announce(msg, 'black', 'freeze');
       announceIn('2', 'red', 3, 'freeze');
       announceIn('1', 'orange', 4, 'freeze', removeBigScore);
-      announceIn('GO', 'green', 5, '');
+      announceIn($.i18n.prop('game_go'), 'green', 5, '');
 
     });
 
@@ -129,9 +141,9 @@
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
       //for minimap
-      if (objects.myCar !== null){
+      if (objects.myCar !== null) {
         gameInstance.mycarPosition.x = objects.myCar.x;
-        gameInstance.mycarPosition.y = objects.myCar.y;        
+        gameInstance.mycarPosition.y = objects.myCar.y;
       }
 
       gameInstance.drawEngine.gScaleDynamicsRequired = true;
