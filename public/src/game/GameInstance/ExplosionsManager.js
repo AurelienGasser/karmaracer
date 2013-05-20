@@ -14,7 +14,7 @@
   ExplosionsManager.prototype.reduceExplosionsAlpha = function() {
     var that = this;
     for (var explosionId in that.gameInstance.items.explosions) {
-      that.items.explosions[explosionId].alpha -= 0.05;
+      that.gameInstance.items.explosions[explosionId].alpha -= 0.05;
       if (that.gameInstance.items.explosions[explosionId].alpha < 0) {
         delete that.gameInstance.items.explosions[explosionId];
       }

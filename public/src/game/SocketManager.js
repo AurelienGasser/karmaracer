@@ -133,9 +133,7 @@
     });
 
     that.connection.on('explosion', function(explosion) {
-      // if (gameInstance.explosionManager !== null){
-      //   gameInstance.explosionManager.addExplosion(explosion);  
-      // }      
+      gameInstance.explosionManager.addExplosion(explosion);
     });
 
   }

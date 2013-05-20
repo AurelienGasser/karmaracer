@@ -71,7 +71,6 @@ app.get('/', function(req, res) {
     "code": req.query.code
   }, function(err, facebookRes) {
     if (err) {
-      console.log('res fb', err);
     }
 
     res.redirect('/ok');
@@ -93,7 +92,6 @@ function getName(res) {
 
   // query = escape(query);
   graph.fql(query, function(err, fbres) {
-    console.log(fbres); // { data: [ { name: 'Ricky Bobby' } ] }
     res.json(fbres);
   });
 
