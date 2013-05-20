@@ -37,7 +37,7 @@
         var carImage = this.carsImages[c.carImageName];
         ctx.drawImage(carImage.image, 0, 0, carImage.w, carImage.h, -c.w / 2, -c.h / 2, c.w, c.h);
 
-        if (c.shootingWithWeapon) {
+        if (c.shootingWithWeapon !== null) {
           this.drawGunFlame(ctx, c);
         }
 

@@ -123,13 +123,14 @@ PlayerCar.prototype.getShared = function() {
   if (!KLib.isUndefined(this.car.carImageName)) {
     share.carImageName = this.car.carImageName;
   }
+  this.weaponShootOff();
   return share;
 }
 
 PlayerCar.prototype.updatePos = function() {
   if (!this.dead && this.car !== null) {
     return this.car.updatePos();
-  }
+  }  
 }
 
 PlayerCar.prototype.receiveHit = function(damage) {
@@ -155,7 +156,7 @@ PlayerCar.prototype.updateWeapon = function() {
   this.weapon = new WeaponClass(this.gameServer);
   if (this.shootingWithWeapon) {
     // when level up while shooting, directly update the current shooting weapon
-    this.shootingWithWeapon = this.weapon.name;
+    this.weaponShootOn();
   }
 }
 
@@ -179,8 +180,18 @@ PlayerCar.prototype.levelDown = function() {
 }
 
 PlayerCar.prototype.shoot = function() {
+  this.weaponShootOn();
   this.weapon.shoot(this);
 }
+
+PlayerCar.prototype.weaponShootOn = function() {
+  this.shootingWithWeapon = this.weapon.name;
+};
+
+PlayerCar.prototype.weaponShootOff = function() {
+  this.shootingWithWeapon = null;
+};
+
 
 PlayerCar.prototype.rebornIn = function(seconds) {
   setTimeout(function() {

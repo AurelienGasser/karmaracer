@@ -58,6 +58,12 @@
     }
   };
 
+
+  var chatInput = $('#chat_input');
+  var chatIsFocus = function() {
+    return chatInput.is(':focus');
+  };
+
   KeyboardHandler.prototype.handleKeyDown = function(event) {
     switch (event.keyCode) {
       case KEY_ESCAPE:
@@ -66,13 +72,14 @@
         break;
       case KEY_UP:
       case KEY_DOWN:
-        if ($('#chat_input').is(':focus')) {
+        if (chatIsFocus()) {
           Karma.Chat.hideChat();
         }
         this.handleKey(event.keyCode, 'start');
         break;
       case KEY_ENTER:
-        if ($('#chat_input').is(':focus')) {
+      cons
+        if (chatIsFocus()) {
           Karma.Chat.sendMsg();
         } else {
           Karma.Chat.showChat();
@@ -81,7 +88,7 @@
       case KEY_L:
       case KEY_P:
       case KEY_SPACE:
-        if (!$('#chat_input').is(':focus')) {
+        if (!chatIsFocus()) {
           this.handleKey(event.keyCode, 'start');
         }
         break;

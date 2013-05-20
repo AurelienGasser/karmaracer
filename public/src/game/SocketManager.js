@@ -11,7 +11,7 @@
     this.timestamp = new Date().getTime();
     this.msg_id = 0;
     this.gameInstance.bodies = [];
-    this.$socketps = $('#socketps');
+
 
     var that = this;
 
@@ -38,8 +38,10 @@
       that.socketCounter += 1;
     }
 
-    $('#debug').append('<div id="socketps" class="info"></div>');
+    
     $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
+    this.$socketps = $('<div id="socketps" class="info"></div>');
+    $('#debug').append(this.$socketps);
 
     that.connection.on('connect', function() {
       if (!_.isUndefined(G_mapName)) {
@@ -101,6 +103,7 @@
 
     this.connection.on('game end', function(d) {
 
+      console.log('game end', d);
       $('table.scores').addClass('big').removeClass('default');
 
       var removeBigScore = function() {

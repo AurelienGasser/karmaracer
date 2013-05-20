@@ -137,18 +137,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
     try {
       if (state === 'start') {
         client.keyboard[event] = true;
-        if (event === 'shoot') {
-          if (client.player.playerCar) {
-            client.player.playerCar.shootingWithWeapon = client.player.playerCar.weapon.name;
-          }
-        }
       } else {
         client.keyboard[event] = false;
-        if (event === 'shoot') {
-          if (client.player.playerCar) {
-            client.player.playerCar.shootingWithWeapon = null;
-          }
-        }
       }
     } catch (e) {
       console.error(e.stack);
