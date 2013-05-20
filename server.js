@@ -72,7 +72,7 @@ app.configure(function(callback) {
 });
 
 
-
+var supportedLanguages = ['fr', 'en'];
 
 function index(req, res, view, draw_engine, opts) {
   var options = {
@@ -88,6 +88,9 @@ function index(req, res, view, draw_engine, opts) {
   }
 
   options.locale = options.locale.substring(0, 2);
+  if (supportedLanguages.indexOf(options.locale) === -1){
+    options.locale = 'en';
+  }
 
   if (!KLib.isUndefined(opts)){
     for (var o in opts){
