@@ -21,8 +21,9 @@
       o.push('<li id="topHelp"><a href="/"><img src="/images/iconHome.png" id="iconHome"/></a></li>');
     }
 
-    o.push('<li><form id="playerNameForm" href="#">');
-    o.push($.i18n.prop('topbar_welcome'),'<input title="change your name here" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
+    o.push('<li class="topBarMainZone"><form id="playerNameForm" href="#">');
+    
+    o.push($.i18n.prop('topbar_welcome'), '<input title="', $.i18n.prop('topbar_changename'), '" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
     o.push('<input type="submit" style="display:none"/>');
     o.push('</form></li>');
 
