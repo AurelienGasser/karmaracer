@@ -59,43 +59,64 @@
   };
 
 
-  var chatInput = $('#chat_input');
-  var chatIsFocus = function() {
-    return chatInput.is(':focus');
-  };
 
-  KeyboardHandler.prototype.handleKeyDown = function(event) {
+
+  KeyboardHandler.prototype.handleKeyDownGame = function(event) {
     switch (event.keyCode) {
       case KEY_ESCAPE:
-        Karma.Chat.clearChatInputField();
-        Karma.Chat.hideChat();
         break;
       case KEY_UP:
       case KEY_DOWN:
-        if (chatIsFocus()) {
-          Karma.Chat.hideChat();
-        }
         this.handleKey(event.keyCode, 'start');
         break;
       case KEY_ENTER:
-        if (chatIsFocus()) {
-          Karma.Chat.sendMsg();
-        } else {
-          Karma.Chat.showChat();
+        if (this.gameInstance.chat.isOpen === false) {
+          this.gameInstance.chat.showChat();
         }
         break;
       case KEY_L:
       case KEY_P:
       case KEY_SPACE:
-        if (!chatIsFocus()) {
-          this.handleKey(event.keyCode, 'start');
-        }
+        this.handleKey(event.keyCode, 'start');
         break;
       default:
         this.handleKey(event.keyCode, 'start');
     }
     event.preventDefault();
     return false;
+
+  };
+
+  KeyboardHandler.prototype.handleKeyDownChat = function(event) {
+    switch (event.keyCode) {
+      case KEY_UP:
+        this.gameInstance.chat.hideChat();
+        break;
+      case KEY_DOWN:
+        this.gameInstance.chat.hideChat();
+        break;
+      case KEY_ESCAPE:
+        this.gameInstance.chat.clearChatInputField();
+        this.gameInstance.chat.hideChat();
+        break;
+      case KEY_ENTER:
+        if (this.gameInstance.chat.isOpen === true) {
+          this.gameInstance.chat.sendMsg();
+        } else {
+          this.gameInstance.chat.showChat();
+        }
+        break;
+    }
+  };
+
+  KeyboardHandler.prototype.handleKeyDown = function(event) {
+    // console.log(this.gameInstance.chat.isOpen)
+    if (this.gameInstance.chat.isOpen === true) {
+      return this.handleKeyDownChat(event);
+    } else {
+      return this.handleKeyDownGame(event);
+    }
+
   };
 
   KeyboardHandler.prototype.handleKeyUp = function(event) {

@@ -15,7 +15,7 @@
 
     this.setGScale(32);
     this.$canvas = $(canvas);
-
+    this.$canvas.focus();
     this.init();
     this.loaded();
     this.loadImages(callback);

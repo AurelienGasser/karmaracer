@@ -61,7 +61,7 @@
     FB.api('/me/scores/', 'post', {
       score: gScore
     }, function(response) {
-      console.log("Score posted to Facebook");
+      // console.log("Score posted to Facebook");
     });
   }
 

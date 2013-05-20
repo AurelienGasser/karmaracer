@@ -64,9 +64,15 @@
 
     this.connection.on('chat_msg', function(msg) {
       var key = 'msg_' + that.msg_id;
-      Karma.Chat.onChatMsgReceived(msg, key);
-      ++that.msg_id;
+      that.gameInstance.chat.onChatMsgReceived(msg);      
     });
+
+    this.connection.on('car_killed', function(data) {
+      var msg = $.i18n.prop('game_take_soul_broadcast', data.attacker, data.victim);
+      that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
+    });
+
+    
 
     function announce(text, color, extraClass) {
       if (KLib.isUndefined(extraClass)) {
@@ -102,8 +108,6 @@
     }
 
     this.connection.on('game end', function(d) {
-
-      console.log('game end', d);
       $('table.scores').addClass('big').removeClass('default');
 
       var removeBigScore = function() {

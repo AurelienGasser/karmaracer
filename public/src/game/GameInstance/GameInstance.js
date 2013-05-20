@@ -27,6 +27,8 @@
       y: 0
     };
 
+    this.chat = new Karma.ChatController();
+
 
 
     // this.loadCars();
