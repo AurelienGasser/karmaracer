@@ -250,7 +250,7 @@ GameServer.prototype.updateHighScores = function() {
 
 GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', {
-    winnerName: winnerCar.player.playerName
+    winnerName: winnerCar.playerName
   });
   this.updateHighScores();
   this.resetGame();

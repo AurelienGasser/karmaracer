@@ -6,11 +6,14 @@ var Bot = function(gameServer, name) {
     this.name = name + ' (bot)';
     this.playerCar = new PlayerCar(this.gameServer, null, this.name, this);
     this.playerCar.car.collide = this.collide;
+    this.playerCar.playerName = this.name;
     var maxCar = 4;
     var r = parseInt((Math.random() * 1e5) % maxCar, 10);
     r += 2;
     this.playerCar.car.carImageName = 'c' + r;
     this.id = this.playerCar.id;
+
+
     return this;
   }
 

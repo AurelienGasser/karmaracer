@@ -11,7 +11,7 @@ var config = function() {
     callbackURL: 'https://localhost/auth/facebook/callback',
     appName : 'karmaracer_dev',
     env : 'dev',
-    gameMaxLevel : 3
+    gameMaxLevel : 1
   };
 
   var prod = {

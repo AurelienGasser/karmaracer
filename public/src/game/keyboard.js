@@ -78,7 +78,6 @@
         this.handleKey(event.keyCode, 'start');
         break;
       case KEY_ENTER:
-      cons
         if (chatIsFocus()) {
           Karma.Chat.sendMsg();
         } else {

@@ -1,1 +1,1 @@
-{"name":"mini","enable":false,"size":{"w":16,"h":16},"background":{"path":"/sprites/asphalt1.png","name":"asphalt1"},"staticItems":[]}
+{"name":"mini","enable":true,"size":{"w":16,"h":16},"background":{"path":"/sprites/asphalt1.png","name":"asphalt1"},"staticItems":[]}
