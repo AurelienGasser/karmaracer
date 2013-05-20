@@ -29,7 +29,7 @@
 
     o.push('<li id="fbHighScore"/>');
 
-    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="Home"/>');
+    o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="', $.i18n.prop('topbar_help'), '"/>');
     o.push('<div id="keys"></div>');
     o.push('</li>');
 
@@ -67,12 +67,12 @@
 
   function getHelps() {
     var helps = [];
-    helps.push(createHelp('&#8593;&nbsp;&#8595;', 'accelerate / go backward'));
-    helps.push(createHelp('&#8592;&nbsp;&#8594;', 'turn left / right'));
-    helps.push(createHelp('&#60;space&#62;', 'shoot'));
-    helps.push(createHelp('L/P', 'zoom / unzoom'));
-    helps.push(createHelp('B', 'break'));
-    helps.push(createHelp('Mouse Click', 'drive'));
+    helps.push(createHelp('&#8593;&nbsp;&#8595;', $.i18n.prop('topbar_help_arrows_updown')));
+    helps.push(createHelp('&#8592;&nbsp;&#8594;', $.i18n.prop('topbar_help_arrows_leftright')));
+    helps.push(createHelp('&#60;space&#62;', $.i18n.prop('topbar_help_space_shoot')));
+    helps.push(createHelp('L/P', $.i18n.prop('topbar_help_zoomdezoom')));
+    // helps.push(createHelp('B', 'break'));
+    // helps.push(createHelp('Mouse Click', 'drive'));
 
     var o = [];
     for (var i = 0; i < helps.length; i++) {

@@ -58,7 +58,6 @@ var setup = function(app, io, renderMethod) {
   },
 
   function(accessToken, refreshToken, profile, done) {
-
     // asynchronous verification, for effect...
     process.nextTick(function() {
       graph.setAccessToken(accessToken);
@@ -150,27 +149,32 @@ var setup = function(app, io, renderMethod) {
 
 
   var setupFBUser = function(req, res) {
-    var path = '';
-    var referer = req.headers.referer;
+    try {
+      var path = '';
+      var referer = req.headers.referer;
 
-    if (!KLib.isUndefined(referer)) {
-      var list = referer.split('/');
-      path = list[list.length - 1];
+      if (!KLib.isUndefined(referer)) {
+        var list = referer.split('/');
+        path = list[list.length - 1];
+      }
+
+      var route = '/' + path;
+      if (path === 'login') {
+        route = '/';
+      }
+      // check if the session should be redirected somewhere special
+      if (!KLib.isUndefined(req.session.initialURL)) {
+        route = req.session.initialURL;
+      }
+      var uid = req.session.passport.user.id;
+      req.session.fbsid = uid;
+      req.session.accessToken = req.session.passport.user.accessToken;
+      req.session.locale = req.session.passport.user._json.locale;
+      res.redirect(route);
+    } catch (error) {
+      console.error('setupFBUser error', error);
     }
 
-    var route = '/' + path;
-    if (path === 'login') {
-      route = '/';
-    }
-    // check if the session should be redirected somewhere special
-    if (!KLib.isUndefined(req.session.initialURL)){
-      route = req.session.initialURL;
-    }
-    var uid = req.session.passport.user.id;
-    req.session.fbsid = uid;
-    req.session.accessToken = req.session.passport.user.accessToken;
-    req.session.locale = req.session.passport.user._json.locale;
-    res.redirect(route);
   }
 
   app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -180,32 +184,22 @@ var setup = function(app, io, renderMethod) {
     // function will not be called.
   });
 
-  // app.post('/auth/facebook',
-  // passport.authenticate('facebook', {
-  //   successRedirect : '/ok',
-  //   scope: 'publish_actions',
-  //   display:'popup'
-  // }), function(req, res) {
-  //   // The request will be redirected to Facebook for authentication, so this
-  //   // function will not be called.
-  // });
-
-  // var FBAppURL = 'https://apps.facebook.com/' + CONFIG.appName;
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
-    // successRedirect: '/',
     failureRedirect: '/login'
   }), setupFBUser);
-
-  // app.post('/auth/facebook/callback', passport.authenticate('facebook', {}), setupFBUser);
 }
 
   function ensureAuthenticated(req, res, next) {
-    if (req.isAuthenticated()) {
-      return next();
-    } else {
-      req.session.initialURL = req.url;
+    try {
+      if (req.isAuthenticated()) {
+        return next();
+      } else {
+        req.session.initialURL = req.url;
+      }
+      res.redirect('/auth/facebook');
+    } catch (error) {
+      console.error('auth error', error);
     }
-    res.redirect('/auth/facebook');
   }
 
 module.exports = {

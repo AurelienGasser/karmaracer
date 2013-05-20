@@ -4,6 +4,23 @@
 
   function GameInstance() {
     Karma.TopBar.setTopBar();
+
+
+    var o = [];
+    o.push('<table class="scores default" id="score-table">');
+    o.push('<thead><tr>');
+
+    o.push('<td>', $.i18n.prop('scoretable_name'), '</td>');
+    o.push('<td>', $.i18n.prop('scoretable_score'), '</td>');
+    o.push('<td>', $.i18n.prop('scoretable_level'), '</td>');
+    o.push('<td>', $.i18n.prop('scoretable_highscore'), '</td>');
+
+    o.push('</tr></thead>');
+    o.push('<tbody id="scores"/>');
+    o.push('</table>');
+    $('body').append(o.join(''));
+
+
     this.scoresTable = $('tbody#scores');
 
     this.items = {};
@@ -28,13 +45,6 @@
     };
 
     this.chat = new Karma.ChatController();
-
-
-
-    // this.loadCars();
-    // this.setupSound();
-    var that = this;
-
   }
 
   GameInstance.prototype.updateScoresHTML = function() {
