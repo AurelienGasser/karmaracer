@@ -55,7 +55,6 @@
         }
         break;
       default:
-        e.preventDefault();
     }
   };
 

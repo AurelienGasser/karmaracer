@@ -1,4 +1,4 @@
-/*global Modernizr*/
+/*global Modernizr, G_locale*/
 
 (function() {
   "use strict";
