@@ -9,22 +9,26 @@ var Player = function(client, playerName) {
 }
 
 Player.prototype.initCar = function(gameServer) {
-  if (KLib.isUndefined(this.playerCar)){
+  if (KLib.isUndefined(this.playerCar)) {
     this.playerCar = new PlayerCar(gameServer, this.client, this.playerName, this);
-  }else{
+  } else {
     this.playerCar.resetPlayer();
   }
 }
 
 Player.prototype.saveVictory = function() {
-  this.client.gameServer.mapManager.collectionVictories.findAndModify(
-      { playerName: this.playerName }
-    , []
-    , { $inc: { numVictories: 1 }  }
-    , { upsert: true, 'new': true }
-    , function(err, res) {
-      }
-  );
+  this.client.gameServer.mapManager.collectionVictories.findAndModify({
+    playerName: this.playerName
+  }, [], {
+    $inc: {
+      numVictories: 1
+    }
+  }, {
+    upsert: true,
+    'new': true
+  }, function(err, res) {
+    console.log('mongo save victory callback', err);
+  });
   console.log(this.playerName, 'victory')
 }
 
