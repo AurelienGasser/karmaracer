@@ -1,3 +1,3 @@
-कर्मKarma कर्म
+कर्म Karma कर्म
 
 Hi, this is karma racer.
