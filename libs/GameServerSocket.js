@@ -61,6 +61,13 @@ GameServerSocket.prototype.registerMethods = function(client) {
     that.addHomeClient(client);
     return callback(null, Object.keys(that.mapManager.maps));
   });
+  client.on('get_victories', function(callback) {
+    that.mapManager.getVictories(function(err, victories) {
+      if (!err) {
+        callback(null, victories);
+      }
+    })
+  });
   client.on('get_items', function(callback) {
     return callback(null, that.mapManager.itemsByName);
   });

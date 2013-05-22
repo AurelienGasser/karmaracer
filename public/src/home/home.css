@@ -14,3 +14,9 @@ h1{text-align:center;}
 .mapLink:hover{text-decoration:underline;}
 .editLink{font-size:11px;}
 #mapsContainer{vertical-align:top;}
+#victories {
+  width: 300px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 14px;
+}

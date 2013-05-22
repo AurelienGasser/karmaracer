@@ -133,4 +133,15 @@ MapManager.prototype.load = function(callback) {
   });
 }
 
+MapManager.prototype.getVictories = function(callback) {
+  this.collectionVictories.find({ numVictories: { $gt: 0 }}).sort({ numVictories: - 1}).limit(10).toArray(function(err, res) {
+    if (err) {
+      console.log('Could not get victories', err)
+      callback(err)
+    } else {
+      callback(null, res)
+    }
+  });
+}
+
 module.exports = MapManager;
