@@ -23,7 +23,7 @@ app.configure('local', function() {});
 var http = require('http');
 
 
-// REQUIRED FOR SSL 
+// REQUIRED FOR SSL
 var sslServer = CONFIG.env;
 var ssl_options = {
   key: fs.readFileSync(__dirname + '/keys/' + sslServer + '.key'),
@@ -102,7 +102,7 @@ function index(req, res, view, draw_engine, opts) {
   if (!KLib.isUndefined(map)) {
     options['map'] = map;
   }
-  // res.setHeader('X-Frame-Options', 'GOFORIT');  
+  // res.setHeader('X-Frame-Options', 'GOFORIT');
   res.render(view, options);
 }
 
@@ -139,6 +139,7 @@ app.get('/tos', function(req, res) {
 
 app.io = io;
 
-var mapManager = require('./libs/MapManager')(app);
+var MapManager = require('./libs/MapManager');
+var mapManager = new MapManager(app);
 
 module.exports = app;

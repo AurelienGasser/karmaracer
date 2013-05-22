@@ -6,8 +6,9 @@ var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
 var MemLeakLog = require('./MemLeakLog');
 
-var GameServer = function(app, map) {
+var GameServer = function(app, map, mapManager) {
     this.app = app;
+    this.mapManager = mapManager;
     this.initGameServer(map);
     return this;
   }
@@ -252,6 +253,7 @@ GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', {
     winnerName: winnerCar.playerName
   });
+  winnerCar.saveVictory();
   this.updateHighScores();
   this.resetGame();
   this.doStep = false;

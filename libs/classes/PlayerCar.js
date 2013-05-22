@@ -100,6 +100,12 @@ PlayerCar.prototype.FBGetHighScore = function(callback) {
   }
 };
 
+PlayerCar.prototype.saveVictory = function() {
+  if (!this.isBot) {
+    this.player.saveVictory()
+  }
+}
+
 PlayerCar.prototype.resetPlayer = function() {
   this.score = 0;
   this.experience = 0;
@@ -130,7 +136,7 @@ PlayerCar.prototype.getShared = function() {
 PlayerCar.prototype.updatePos = function() {
   if (!this.dead && this.car !== null) {
     return this.car.updatePos();
-  }  
+  }
 }
 
 PlayerCar.prototype.receiveHit = function(damage) {
