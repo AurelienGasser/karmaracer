@@ -29,8 +29,8 @@
       $('#loadingImage').fadeOut();
       $('#victoriesTitle').html($.i18n.prop('home_high_scores_table'));
       connection.emit('get_victories', function(err, victories) {
-        var html_start = '<table style="width: 100%"><thead><tr><th>' + $.i18n.prop('home_high_scores_title_player')
-          + '</th><th>' + $.i18n.prop('home_high_scores_title_victories') + '</th></tr></thead><tbody>';
+        var html_start = '<table style="width: 100%"><thead><tr><th>' + $.i18n.prop('home_high_scores_title_player') +
+          '</th><th>' + $.i18n.prop('home_high_scores_title_victories') + '</th></tr></thead><tbody>';
         var html_end = '</tbody></table>';
         var html = '';
         for (var i = 0; i < victories.length; i++) {
