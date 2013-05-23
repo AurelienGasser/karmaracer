@@ -126,6 +126,7 @@ PlayerCar.prototype.getShared = function() {
   share.playerName = this.playerName;
   share.s = this.score;
   share.l = this.level;
+  share.dead = this.dead;
   if (!KLib.isUndefined(this.car.carImageName)) {
     share.carImageName = this.car.carImageName;
   }

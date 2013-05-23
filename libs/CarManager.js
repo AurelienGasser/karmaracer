@@ -11,10 +11,8 @@ CarManager.prototype.getShared = function() {
     for (var id in list) {
       var c = list[id];
       if (c.playerCar !== null && c.playerCar.car !== null) {
-        if (!c.playerCar.dead) {
-          var share = c.playerCar.getShared();
-          cars.push(share);
-        }
+        var share = c.playerCar.getShared();
+        cars.push(share);
       }
     }
   }

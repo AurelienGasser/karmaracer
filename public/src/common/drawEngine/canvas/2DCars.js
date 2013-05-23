@@ -31,6 +31,9 @@
     if (this.items.cars !== null) {
       for (var i = 0; i < this.items.cars.length; i++) {
         var c = this.items.cars[i];
+        if (c.dead) {
+          continue;
+        }
         ctx.save();
         ctx.translate(c.x, c.y);
         ctx.rotate(c.r);
