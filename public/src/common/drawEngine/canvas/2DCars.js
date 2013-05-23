@@ -26,7 +26,6 @@
     registerCar(getCar('c5', 'car5.png', 81, 35));
   };
 
-
   Engine2DCanvas.prototype.drawCars = function(ctx) {
     if (this.items.cars !== null) {
       for (var i = 0; i < this.items.cars.length; i++) {
