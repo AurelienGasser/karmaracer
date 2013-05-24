@@ -9,13 +9,13 @@
       var fSlice = Array.prototype.slice,
       aArgs = fSlice.call(arguments, 1),
       fToBind = this,
-      fNOP = function() {},
+      FNOP = function() {},
       fBound = function() {
-        return fToBind.apply(this instanceof fNOP ? this : oThis || window,
+        return fToBind.apply(this instanceof FNOP ? this : oThis || window,
         aArgs.concat(fSlice.call(arguments)));
       };
-      fNOP.prototype = this.prototype;
-      fBound.prototype = new fNOP();
+      FNOP.prototype = this.prototype;
+      fBound.prototype = new FNOP();
       return fBound;
     };
   }
