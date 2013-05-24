@@ -13,7 +13,7 @@
     o.push('<td>', $.i18n.prop('scoretable_name'), '</td>');
     o.push('<td>', $.i18n.prop('scoretable_score'), '</td>');
     o.push('<td>', $.i18n.prop('scoretable_level'), '</td>');
-    o.push('<td>', $.i18n.prop('scoretable_highscore'), '</td>');
+    o.push('<td class="large_col">', $.i18n.prop('scoretable_highscore'), '</td>');
 
     o.push('</tr></thead>');
     o.push('<tbody id="scores"/>');

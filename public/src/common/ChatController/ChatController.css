@@ -1,8 +1,0 @@
-#chat{position:fixed;bottom:0px;left:0px;width:100%;text-align:center;vertical-align:bottom;z-index:500;}
-#chat_msgs{list-style-type:none;padding:0;margin:0;text-align:left;}#chat_msgs li{font-size:14px;padding:2px;color:white;}
-#chat_msgs li.gameMessage{font-style:italic;font-size:0.95em;}
-#chat_input_wrapper{display:none;}
-#chat_input_wrapper *{display:inline-block;font-size:14px;line-height:40px;height:40px;}
-#chat_input_label{margin-right:5px;}
-#chat_input_wrapper.enable{background-color:#eee;-webkit-transition:0.25s ease-in-out;-moz-transition:0.25s ease-in-out;-o-transition:0.25s ease-in-out;transition:0.25s ease-in-out;}
-#chat_input{width:500px;vertical-align:bottom;background-color:transparent;border:none;outline:none;}
