@@ -67,11 +67,13 @@ module.exports = function(grunt) {
   addModule('mapmaker');
   addModule('common');
   addModule('mobile');
+  addModule('desktop');
 
   addMainModule('home', ['common', 'home']);
   addMainModule('game', ['common', 'game']);
   addMainModule('mapmaker', ['common', 'mapmaker']);
   addMainModule('mobile', ['mobile']);
+  addMainModule('desktop', ['desktop']);
 
   G_files.js_vendor_common = ['public/src/vendor/common/*.js'];
   G_files.js_vendor_webgl = ['public/src/vendor/webgl/*.js'];
