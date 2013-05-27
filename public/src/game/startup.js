@@ -7,7 +7,7 @@
       Modernizr.load([{
         test: $("html.touch").length,
         yep: ['/dist/all_mobile.js', '/dist/all_mobile.css'],
-        nope: ['dist/no-touch.css'],
+        nope: ['src/no-touch.css'],
         complete: function() {
           Karma.i18n(G_locale, function() {
             Karma.gameInstance = new Karma.GameInstance();
