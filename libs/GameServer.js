@@ -66,9 +66,14 @@ GameServer.prototype.initGameServer = function(map) {
       }
     }, time);
   };
-  that.mem.save();
-  stepGame(0);
-  setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
+
+  if (config.performanceTest) {
+    require('./GameServerPerfTest')(this);
+  } else {
+    that.mem.save();
+    stepGame(0);
+    setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
+  }
   this.postInit();
 };
 

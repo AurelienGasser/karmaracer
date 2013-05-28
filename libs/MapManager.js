@@ -66,17 +66,21 @@ MapManager.prototype.createOrUpdateMap = function(map) {
 
 }
 
+MapManager.prototype.loadMap = function(mapName) {
+  var content = fs.readFileSync(mapName);
+  var map = JSON.parse(content);
+  if (map.enable === true) {
+    this.createOrUpdateMap(map);
+  }
+}
+
 MapManager.prototype.loadMaps = function(callback) {
   var that = this;
   var mapsPath = CONFIG.serverPath + '/public/maps';
   filesLib.brosweFilesRec(mapsPath, function(err, maps) {
     for (var i = 0; i < maps.length; i++) {
       var mName = maps[i];
-      var content = fs.readFileSync(mName);
-      var map = JSON.parse(content);
-      if (map.enable === true) {
-        that.createOrUpdateMap(map);
-      }
+      that.loadMap(mName);
     };
     if (KLib.isFunction(callback)) {
       return callback(null);
@@ -122,15 +126,20 @@ MapManager.prototype.load = function(callback) {
   var that = this;
   this.connectToDb(function(err) {
   })
-  this.loadMaps(function(err) {
-    console.info('maps loaded')
-    that.gameServerSocket = new(require('./GameServerSocket'))(that);
-    that.loadItems(function(err) {
-      if (KLib.isFunction(callback)) {
-        return callback(null, that);
-      }
-    })
-  });
+  if (CONFIG.performanceTest) {
+    console.log('loading performance test map')
+    this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')
+  } else {
+    this.loadMaps(function(err) {
+      console.info('maps loaded')
+      that.gameServerSocket = new(require('./GameServerSocket'))(that);
+      that.loadItems(function(err) {
+        if (KLib.isFunction(callback)) {
+          return callback(null, that);
+        }
+      })
+    });
+  }
 }
 
 MapManager.prototype.getVictories = function(callback) {
