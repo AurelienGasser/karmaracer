@@ -35,11 +35,4 @@ Bot.prototype.tick = function() {
   }
 }
 
-Bot.prototype.performCollideAction = function(oldPosition) {
-  this.x = oldPosition.x;
-  this.y = oldPosition.y;
-  this.r = oldPosition.r + Math.PI / 8;
-  return true;
-}
-
 module.exports = Bot;
