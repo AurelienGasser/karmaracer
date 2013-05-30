@@ -13,7 +13,7 @@ PhysicalBody.prototype.initialize = function(engine, position, size) {
   this.y = position.y;
   this.w = size.w;
   this.h = size.h;
-  this.r = 0;
+  this.r = position.r || 0;
   this.radius = size.radius || Math.sqrt(size.w * size.w + size.h * size.h);
   this.playerName = 'b' + this.id;
   this.name = 'body';
@@ -151,29 +151,6 @@ function getDistance(from, to) {
   return res;
 }
 
-var COLLISION_DISTANCE_TRESHOLD = 0.0000001;
-
-PhysicalBody.prototype.moveToDichotomie = function(from, to) {
-  if (this.tryPosition(to) === false) {
-    while (this.tryPosition(from) || this.tryPosition(to)) {
-      var distance = getDistance(from, to);
-      if (distance < COLLISION_DISTANCE_TRESHOLD) {
-        return from;
-      } else {
-        var mid = getMiddle(from, to);
-        if (this.tryPosition(mid)) {
-          from = mid;
-        } else {
-          to = mid;
-        }
-      }
-    }
-    return false; // should never happen
-  } else {
-    return to;
-  }
-}
-
 PhysicalBody.prototype.getNumCollisions = function() {
   var res = 0;
   for (var i in this.collidesWith) {
@@ -211,24 +188,72 @@ PhysicalBody.prototype.getPositionAndAngle = function(first_argument) {
   return pos;
 };
 
+function dup(pos) {
+  return {
+    x: pos.x,
+    y: pos.y,
+    r: pos.r
+  }
+}
+
+var COLLISION_DISTANCE_TRESHOLD = 5e-10;
+
 PhysicalBody.prototype.doMove = function() {
-  var pos;
+  if (!this.moveToPosition) {
+    return;
+  }
   this.oldMoveToPosition = this.getPositionAndAngle();
-  pos = this.moveToPosition;
+  var pos;
+  pos = dup(this.moveToPosition);
   this.setPosition(pos);
   this.updateCornerCache();
-  var res = this.engine.checkCollisions(this);
-  if (res) {
-    if (!this.performCollideAction(this.oldMoveToPosition)) {
+  var collision = this.engine.checkCollisions(this);
+  if (collision) {
+    this.moveToDichotomie(dup(this.oldMoveToPosition), pos);
+    var before = this.oldMoveToPosition;
+    var after = this.getPositionAndAngle();
+    var dist = getDistance(before, after);
+    collision = dist < COLLISION_DISTANCE_TRESHOLD
+    if (collision) {
       this.x = this.oldMoveToPosition.x;
       this.y = this.oldMoveToPosition.y;
-      this.oldMoveToPosition.r = this.r;
-      this.updateCornerCache();
+      if (this.moveToPosition.r) {
+        this.r = this.moveToPosition.r;
+      }
     }
+    this.updateCornerCache();
   }
+  this.moveToPosition = null;
 };
 
+PhysicalBody.prototype.moveToDichotomie = function(from, to) {
+  var maxIterations = 12;
+  var it = 0;
+  while (true) {
+    var distance = getDistance(from, to);
+    if (it > maxIterations) {
+      this.setPosition(from);
+      return true;
+    } else {
+      var mid = getMiddle(from, to);
+      this.setPosition(mid);
+      this.updateCornerCache();
+      this.collidesWith = null;
+      var res = this.engine.checkCollisions(this);
+      if (res === false) {
+        from = mid;
+      } else {
+        to = mid;
+      }
+    }
+    ++it;
+  }
+}
+
 PhysicalBody.prototype.moveTo = function(pos) {
+  if (this.moveToPosition === null) {
+    this.moveToPosition = {};
+  }
   if (!KLib.isUndefined(pos.x)) {
     // pos.x = this.x;
     this.moveToPosition.x = pos.x;

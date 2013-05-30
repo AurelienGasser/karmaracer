@@ -437,20 +437,6 @@ PhysicsEngine.prototype.checkCollisions = function(body) {
   return false;
 }
 
-
-PhysicsEngine.prototype.positionEqualsPosition = function(p1, p2) {
-  if (p1.x !== p2.x) {
-    return false;
-  }
-  if (p1.y !== p2.y) {
-    return false;
-  }
-  if (p1.r !== p2.r) {
-    return false;
-  }
-  return true;
-};
-
 PhysicsEngine.prototype.step = function() {
 
   var A, AID;
@@ -464,7 +450,7 @@ PhysicsEngine.prototype.step = function() {
     A = this.bodies[AID];
 
     if (A.isStatic === false) {
-      if (!this.positionEqualsPosition(A.moveToPosition, A.oldMoveToPosition)) {
+      if (this.moveToPosition !== null) {
         A.doMove();
       }
 
