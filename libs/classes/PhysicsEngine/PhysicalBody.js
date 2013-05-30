@@ -1,5 +1,6 @@
 var KLib = require('./../KLib');
 var G_bodyID = 0;
+var CONFIG = require('./../../../config');
 
 var PhysicalBody = function() {
   return this;
@@ -209,12 +210,15 @@ PhysicalBody.prototype.doMove = function() {
   this.updateCornerCache();
   var collision = this.engine.checkCollisions(this);
   if (collision) {
-    this.moveToDichotomie(dup(this.oldMoveToPosition), pos);
-    var before = this.oldMoveToPosition;
-    var after = this.getPositionAndAngle();
-    var dist = getDistance(before, after);
-    collision = dist < COLLISION_DISTANCE_TRESHOLD
-    if (collision) {
+    var movedDicho = false;
+    if (CONFIG.useDichotomy) {
+      this.moveToDichotomie(dup(this.oldMoveToPosition), pos);
+      var before = this.oldMoveToPosition;
+      var after = this.getPositionAndAngle();
+      var dist = getDistance(before, after);
+      movedDicho = dist > COLLISION_DISTANCE_TRESHOLD
+    }
+    if (!movedDicho) {
       this.x = this.oldMoveToPosition.x;
       this.y = this.oldMoveToPosition.y;
       if (this.moveToPosition.r) {
