@@ -74,7 +74,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('move_car', function(info) {
     if (!KLib.isUndefined(client.player) && !client.player.playerCar.dead) {
       client.player.playerCar.car.accelerate(info.force);
-      client.player.playerCar.car.base.r = info.angle % 2 * Math.PI;
+      client.player.playerCar.car.r = info.angle;// % 2 * Math.PI;
     }
   });
 

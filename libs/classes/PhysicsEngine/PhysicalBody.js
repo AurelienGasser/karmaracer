@@ -38,6 +38,15 @@ PhysicalBody.prototype.resetCollisions = function(ac) {
   // this.moveToPosition = this.getPositionAndAngle();
 }
 
+PhysicalBody.prototype.accelerateVector = function(vector) {
+  var newpos = {
+    x: this.x + vector.x * Math.cos(this.r),
+    y: this.y + vector.y * Math.sin(this.r)
+  };
+  this.moveTo(newpos);
+}
+
+
 PhysicalBody.prototype.accelerate = function(ac) {
   var newpos = {
     x: this.x + ac * Math.cos(this.r),

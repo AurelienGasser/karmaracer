@@ -1,19 +1,17 @@
 (function() {
   "use strict";
-  var SteeringWheelController = function() {
-    //gameInstance
-    // this.init(gameInstance);
+  var SteeringWheelController = function(gameInstance) {    
+    this.init(gameInstance);
 
   };
 
   SteeringWheelController.prototype.init = function(gameInstance) {
     this.m = $('<div id="SteeringWheelController"/>');
     this.acc = $('<div id="SteeringWheelControllerAcc"/>');
-
     this.m.append(this.acc);
-
-    this.enable = false;
     $('body').append(this.m);
+    this.enable = false;
+
     this.gameInstance = gameInstance;
     this.gameInstance.steeringWheel = this;
     this.resize();
@@ -63,7 +61,7 @@
       }
       that.gameInstance.socketManager.emit('move_car', {
         'force': that.force,
-        'angle': angle(that.force)
+        'angle': that.angle
       });
     };
 
@@ -98,7 +96,6 @@
 
     var hover = function(e) {
 
-
       var mousePosition = {
         x: e.pageX,
         y: e.pageY
@@ -116,16 +113,17 @@
       that.acc.css('top', mousePosition.y - that.m.position().top - (that.accSize.h / 2));
 
       var force = {
-        'x': (x / (that.mSize.w / 2)),
-        'y': (y / (that.mSize.h / 2))
+        'x': x,
+        'y': y
       };
-      var accHelper = 10;
+      var max = (that.mSize.w * that.mSize.w + that.mSize.h * that.mSize.h);
+      var distancePercentage = (x * x + y * y) / max;
+      var accHelper = 4;
       if (that.gameInstance.isMobile) {
-        accHelper = 5;
+        // accHelper = 2;
       }
-      force.x *= accHelper;
-      force.y *= accHelper;
-      that.force = force;
+      that.force = 0.25 + accHelper * distancePercentage;
+      that.angle = angle(force);
     };
     if (that.gameInstance.isMobile) {
       that.m.bind('touchstart', startAcceleration);
