@@ -1,0 +1,3 @@
+.gunZone{width:64px;height:64px;border-radius:5px;position:relative;border:1px solid black;}.gunZone .common{width:64px;height:64px;border-radius:5px;position:relative;}
+.gunZone img{width:64px;height:64px;border-radius:5px;position:relative;z-index:5;}
+.gunZone .gunLoaderZone{width:64px;height:64px;border-radius:5px;position:relative;background-color:#333;top:0px;right:0px;border-top-left-radius:0px;border-bottom-left-radius:0px;z-index:10;opacity:0.5;}

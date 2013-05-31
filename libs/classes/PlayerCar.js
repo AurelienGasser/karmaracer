@@ -21,7 +21,7 @@ var WeaponsByClass = {
 
 if (CONFIG.env === 'dev') {
   WeaponsByClass = {
-    1: SuperMachineGun,
+    1: MachineGun,
     2: SuperMachineGun,
     3: SuperMachineGun,
     4: SuperMachineGun,
@@ -130,7 +130,9 @@ PlayerCar.prototype.getShared = function() {
   if (!KLib.isUndefined(this.car.carImageName)) {
     share.carImageName = this.car.carImageName;
   }
+  share.gunLife = this.weapon.weaponEnergy;
   this.weaponShootOff();
+  share.weaponName = this.weapon.name;
   return share;
 }
 
@@ -187,7 +189,6 @@ PlayerCar.prototype.levelDown = function() {
 }
 
 PlayerCar.prototype.shoot = function() {
-  this.weaponShootOn();
   this.weapon.shoot(this);
 }
 

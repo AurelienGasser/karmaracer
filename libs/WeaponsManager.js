@@ -23,9 +23,6 @@ WeaponsManager.prototype.step = function() {
 }
 
 
-//   case '90 angle machine gun':
-//   case 'machine gun':
-//   case 'super machine gun':
 WeaponsManager.prototype.getGraphicProjectiles = function() {
   function appendProjectilesShared(inputList, projectiles) {
     var p = [];

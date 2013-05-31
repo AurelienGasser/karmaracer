@@ -1,21 +1,28 @@
 var Bullet = require('../PhysicsEngine/Bullet');
 var KLib = require('./../KLib');
 
+
+var WeaponMinLife = -2;
+
 var Weapon = function(gameServer) {
-    this.gameServer = gameServer;
-    this.engine = this.gameServer.engine;
-    this.name = 'anonymous';
-    this.projectiles = {};
-    this.accelerate = 500;
-    this.lastShot = new Date();
-    this.lastShotInterval = 0;
-    this.startAcceleration = 1;
-    this.ProjectileClass = Bullet;
-  }
+  this.gameServer = gameServer;
+  this.engine = this.gameServer.engine;
+  this.name = 'anonymous';
+  this.projectiles = {};
+  this.accelerate = 500;
+  this.lastShot = new Date();
+  this.lastShotInterval = 0;
+  this.startAcceleration = 1;
+  this.ProjectileClass = Bullet;
+  this.weaponEnergy = {
+    cur: 50,
+    max: 50
+  };
+}
 
 
 Weapon.prototype.deleteDeads = function(deads) {
-  for(var i = 0; i < deads.length; i++) {
+  for (var i = 0; i < deads.length; i++) {
     var id = deads[i];
     delete this.projectiles[id];
   };
@@ -33,7 +40,10 @@ Weapon.prototype.getProjectileVector = function(playerCar, angle) {
 
 Weapon.prototype.canShoot = function() {
   var now = (new Date()).getTime();
-  if(now - this.lastShot > this.lastShotInterval) {
+  if (this.weaponEnergy.cur <= 0) {
+    return false;
+  }
+  if (now - this.lastShot > this.lastShotInterval) {
     this.lastShot = now;
     return true;
   } else {
@@ -42,8 +52,17 @@ Weapon.prototype.canShoot = function() {
 };
 
 Weapon.prototype.shoot = function(playerCar) {
-  if(!KLib.isUndefined(playerCar) && this.canShoot()) {
+  var canShoot = this.canShoot();
+  if (!KLib.isUndefined(playerCar) && canShoot === true) {
+    if (this.weaponEnergy.cur > WeaponMinLife) {
+      this.weaponEnergy.cur -= 1;
+    }
+    playerCar.weaponShootOn();
     this.customShoot(playerCar);
+  } else {
+    if (this.weaponEnergy.cur > WeaponMinLife) {
+      this.weaponEnergy.cur -= 0.25;
+    }
   }
 };
 Weapon.prototype.customShoot = function(playerCar) {
@@ -51,7 +70,7 @@ Weapon.prototype.customShoot = function(playerCar) {
 };
 
 Weapon.prototype.addProjectile = function(playerCar, angle) {
-  if(KLib.isUndefined(angle)) {
+  if (KLib.isUndefined(angle)) {
     angle = 0;
   }
   var pos = {
@@ -59,13 +78,12 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
     y: playerCar.car.y
   };
   var b = new this.ProjectileClass(playerCar, pos, playerCar.car.r + angle);
-
   var collision = this.engine.bulletCollision(b);
 
   var gScale = this.engine.gScale;
-  if(collision !== null) {
+  if (collision !== null) {
     b.explode(collision.point);
-    if(collision.body.name === 'car') {
+    if (collision.body.name === 'car') {
       this.gameServer.carManager.projectileHitCar(b.playerCar, collision.body.playerCar, b)
     }
   }
@@ -73,14 +91,19 @@ Weapon.prototype.addProjectile = function(playerCar, angle) {
 
 Weapon.prototype.step = function() {
   var deads = [];
-  for(var id in this.projectiles) {
-    if(this.projectiles.hasOwnProperty(id)) {
+
+  if (this.weaponEnergy.cur <= this.weaponEnergy.max) {
+    this.weaponEnergy.cur += 0.5;
+  }
+
+  for (var id in this.projectiles) {
+    if (this.projectiles.hasOwnProperty(id)) {
       var projectile = this.projectiles[id];
-      if(projectile.body === null) {
+      if (projectile.body === null) {
         deads.push(id);
       } else {
         projectile.life -= 1;
-        if(projectile.life <= 0) {
+        if (projectile.life <= 0) {
           projectile.scheduleForDestroy();
           deads.push(id);
         }
@@ -93,8 +116,8 @@ Weapon.prototype.step = function() {
 Weapon.prototype.getGraphics = function() {
   var that = this;
   var graphics = [];
-  for(var id in this.projectiles) {
-    if(this.projectiles.hasOwnProperty(id)) {
+  for (var id in this.projectiles) {
+    if (this.projectiles.hasOwnProperty(id)) {
       var projectile = this.projectiles[id];
       var pShared = projectile.getShared();
       pShared.name = that.name;

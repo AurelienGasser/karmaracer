@@ -50,9 +50,13 @@
     }
 
 
-    $('#debug').append('<div id="debug-sockets" class="info">sockets</div>');
+    var $debug = $('#debug');
+    $debug.append('<div id="debug-sockets" class="info">sockets</div>');
     this.$socketps = $('<div id="socketps" class="info"></div>');
-    $('#debug').append(this.$socketps);
+    $debug.append(this.$socketps);
+
+    this.gv = new Karma.GunViewer($debug);
+
 
     that.connection.on('connect', function() {
       if (!_.isUndefined(G_mapName)) {
@@ -144,6 +148,7 @@
       if (objects.myCar !== null) {
         gameInstance.mycarPosition.x = objects.myCar.x;
         gameInstance.mycarPosition.y = objects.myCar.y;
+        that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);
       }
 
       gameInstance.drawEngine.gScaleDynamicsRequired = true;

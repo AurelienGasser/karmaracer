@@ -105,16 +105,16 @@ MapManager.prototype.connectToDb = function(callback) {
   var client = new mongodb.Db('test', new mongodb.Server("127.0.0.1", 27017, {}), {w: 1});
   client.open(function(err, p_client) {
     if (err) {
-      console.log('ERROR connecting to DB', err)
+      console.error('ERROR connecting to DB', err)
       callback(err);
     } else {
       that.db = p_client;
       client.collection('victories', function(err, victories) {
         if (err) {
-          console.log('ERROR connecting to DB collection', err)
+          console.error('ERROR connecting to DB collection', err)
         } else {
           that.collectionVictories = victories;
-          console.log('connected to db');
+          console.info('connected to db');
         }
         callback(err);
       });
@@ -127,7 +127,7 @@ MapManager.prototype.load = function(callback) {
   this.connectToDb(function(err) {
   })
   if (CONFIG.performanceTest) {
-    console.log('loading performance test map')
+    console.info('loading performance test map')
     this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')
   } else {
     this.loadMaps(function(err) {
@@ -145,7 +145,7 @@ MapManager.prototype.load = function(callback) {
 MapManager.prototype.getVictories = function(callback) {
   this.collectionVictories.find({ numVictories: { $gt: 0 }}).sort({ numVictories: - 1}).limit(10).toArray(function(err, res) {
     if (err) {
-      console.log('Could not get victories', err)
+      console.error('ERROR: Could not get victories', err)
       callback(err)
     } else {
       callback(null, res)

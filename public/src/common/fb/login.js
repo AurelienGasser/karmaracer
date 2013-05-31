@@ -61,7 +61,6 @@
     FB.api('/me/scores/', 'post', {
       score: gScore
     }, function(response) {
-      // console.log("Score posted to Facebook");
     });
   }
 
@@ -69,7 +68,6 @@
     // var gFriendID =  655129182;
 
     // FB.api('/me/karmaracer_dev:take_a_soul?profile=' + gFriendID, 'post', {}, function(response) {
-    //   console.log(response);
     // });
 
     // FB.api(
@@ -79,7 +77,6 @@
     // },
 
     // function(response) {
-    //   console.log('takeSoul', response);
     //   // handle the response
     // });
   }
@@ -183,8 +180,8 @@
       var exists = Karma.LocalStorage.exists('playerName');
       var savedName = Karma.LocalStorage.get('playerName');
       if (!exists || savedName === '') {
-        Karma.LocalStorage.set('playerName', user.name);
-        $('#playerName').val(user.name);
+        Karma.LocalStorage.set('playerName', user.first_name);
+        $('#playerName').val(user.first_name);
       } else {
         $('#playerName').val(savedName);
       }

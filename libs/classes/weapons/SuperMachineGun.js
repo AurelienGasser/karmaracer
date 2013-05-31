@@ -8,7 +8,7 @@ var SuperMachineGun = function(gameServer) {
     this.lastShotInterval = 32;
     this.ProjectileClass = Bullet;
     this.startAcceleration = 1;
-    this.name = 'super machine gun';
+    this.name = 'SuperMachineGun';
   }
 
 SuperMachineGun.prototype.customShoot = function(playerCar) {

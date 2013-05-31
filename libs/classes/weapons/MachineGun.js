@@ -4,7 +4,7 @@ var Weapon = require('./Weapon');
 
 var MachineGun = function(gameServer) {
     KLib.extend(Weapon, this, gameServer);
-    this.name = 'machine gun';
+    this.name = 'MachineGun';
     this.lastShotInterval = 32;
     this.ProjectileClass = Bullet;
     this.startAcceleration = 2;

@@ -15,7 +15,7 @@
 
     function exists(key) {
       var v = get(key);
-      if (v === void 0) {
+      if (KLib.isUndefined(v) || v === null) {
         return false;
       } else {
         return true;

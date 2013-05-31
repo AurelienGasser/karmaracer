@@ -130,8 +130,8 @@
     this.gunFlameImage.src = '/sprites/gun_flame.png';
   };
 
-  Engine2DCanvas.prototype.loaded = function() {
-    $('#loadingImage').fadeOut();
+  Engine2DCanvas.prototype.loaded = function() {    
+    Karma.Loading.remove();
   };
 
   Engine2DCanvas.prototype.resize = function() {
@@ -198,17 +198,17 @@
     }
     car.flame = this.carFlameTicks[car.id];
     switch (car.shootingWithWeapon) {
-      case '90 angle machine gun':
+      case '90AngleMachineGun':
         this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
         this.drawSingleGunFlame(ctx, car, Math.PI / 2, car.w / 4);
         this.drawSingleGunFlame(ctx, car, -Math.PI / 2, car.w / 4);
         break;
-      case 'super machine gun':
+      case 'SuperMachineGun':
         this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
         this.drawSingleGunFlame(ctx, car, Math.PI / 4, car.w / 4);
         this.drawSingleGunFlame(ctx, car, -Math.PI / 4, car.w / 4);
         break;
-      case 'machine gun':
+      case 'MachineGun':
         this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
         break;
       default:

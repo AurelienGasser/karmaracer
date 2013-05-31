@@ -8,7 +8,7 @@ var Angle90MachineGun = function(gameServer) {
     this.lastShotInterval = 32;
     this.ProjectileClass = Bullet;
     this.startAcceleration = 1;
-    this.name = '90 angle machine gun';
+    this.name = '90AngleMachineGun';
   }
 
 Angle90MachineGun.prototype.customShoot = function(playerCar) {

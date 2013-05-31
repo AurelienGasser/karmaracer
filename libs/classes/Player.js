@@ -27,9 +27,7 @@ Player.prototype.saveVictory = function() {
     upsert: true,
     'new': true
   }, function(err, res) {
-    console.log('mongo save victory callback', err);
-  });
-  console.log(this.playerName, 'victory')
+  });  
 }
 
 module.exports = Player;
