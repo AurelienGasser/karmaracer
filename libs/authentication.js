@@ -20,7 +20,7 @@ var setup = function(app, io, renderMethod) {
 
   io.configure(function() {
     io.set('authorization', function(data, accept) {
-      // accept(null, true);
+      accept(null, true);
       var parseCookie = express.cookieParser();
       if (data.headers.cookie) {
         // if there is, parse the cookie
@@ -138,10 +138,6 @@ var setup = function(app, io, renderMethod) {
       res.redirect('/auth/facebook');
     }
   });
-
-  // app.get('/gotoapp', function(req, res) {
-  //   renderMethod(req, res, "login.jade", "CANVAS");
-  // });
 
   app.get('/login', function(req, res) {
     renderMethod(req, res, "login.jade", "CANVAS");

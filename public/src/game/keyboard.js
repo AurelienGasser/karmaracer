@@ -10,7 +10,8 @@
     KEY_ESCAPE = 27,
     KEY_L = 76,
     KEY_P = 80,
-    KEY_B = 66;
+    KEY_B = 66,
+    KEY_S = 83;
 
   function KeyboardHandler(gameInstance) {
     this.gameInstance = gameInstance;
@@ -30,6 +31,7 @@
         this.sendKeyboardEvent('break', state);
         break;
       case KEY_SPACE:
+      case KEY_S:
         this.sendKeyboardEvent('shoot', state);
         break;
       case KEY_LEFT:
@@ -109,6 +111,8 @@
   };
 
   KeyboardHandler.prototype.handleKeyDown = function(event) {
+    
+
     if (this.gameInstance.chat.isOpen === true) {
       return this.handleKeyDownChat(event);
     } else {
