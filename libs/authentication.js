@@ -20,7 +20,7 @@ var setup = function(app, io, renderMethod) {
 
   io.configure(function() {
     io.set('authorization', function(data, accept) {
-      // accept(null, true);
+      accept(null, true);
       var parseCookie = express.cookieParser();
       if (data.headers.cookie) {
         // if there is, parse the cookie

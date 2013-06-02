@@ -9,7 +9,7 @@
   function MobileTerminalHandler(gameInstance) {
     this.gameInstance = gameInstance;
     this.gameInstance.isMobile = true;
-    // alert('mobile');
+
     // return this;
   }
 
@@ -20,9 +20,13 @@
     $('#left_panel').remove();
     $('#player_name_div').remove();
 
+    // 
+    // link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
+
+    
     // $("head").append('<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0.0"');
     // $("head").append('<meta name="apple-mobile-web-app-capable" content="yes"');
-    $('head').append('<link rel="apple-touch-icon" href="/images/karmaracer-logo.png"/>');
+    // $('head').append('<link rel="apple-touch-icon" href="/images/logos/logo-114.png"/>');
     $('body').attr('onorientationchange', 'updateOrientation(Karma.gameInstance)');
     // $("body").append('<div id="camera-debug"/>');
     // this.touch = {

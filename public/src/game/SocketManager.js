@@ -94,7 +94,7 @@
         extraClass = '';
       }
       $('#announce').remove();
-      var div = $('<div id="announce" class=" ' + extraClass + ' announce-' + color + '"><span>' + text + '</span></div>');
+      var div = $('<div id="announce" class="announce ' + extraClass + ' announce-' + color + '"><span>' + text + '</span></div>');
       // div.hide();
       div.appendTo($('body'));
 
@@ -145,7 +145,7 @@
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
       //for minimap
-      if (objects.myCar !== null) {
+      if (objects.myCar !== null) {        
         gameInstance.mycarPosition.x = objects.myCar.x;
         gameInstance.mycarPosition.y = objects.myCar.y;
         that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);

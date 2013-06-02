@@ -2,7 +2,6 @@
   "use strict";
   var SteeringWheelController = function(gameInstance) {    
     this.init(gameInstance);
-
   };
 
   SteeringWheelController.prototype.init = function(gameInstance) {
@@ -20,10 +19,8 @@
       h: this.acc.height()
     };
 
-    this.force = {
-      x: 0,
-      y: 0
-    };
+    this.force = 0;
+    this.angle = 0;
 
     this.updateCenter();
 
@@ -43,12 +40,10 @@
     });
 
     window.onorientationchange = function() {
-      // alert('update');
       that.resize();
     };
 
     window.webkitfullscreenchange = function() {
-      // alert('o??');
     };
 
     var interval = null;
@@ -67,9 +62,8 @@
 
     var startAcceleration = function() {
       if (interval === null) {
-        interval = setInterval(send, 1000 / 16);
+        interval = setInterval(send.bind(this), 1000 / 16);
       }
-
     };
     var stopAcceleration = function() {
       clearInterval(interval);
@@ -101,7 +95,8 @@
         y: e.pageY
       };
 
-      if (that.gameInstance.isMobile) {
+      // alert(that.gameInstance.isMobile);
+      if (that.gameInstance.isMobile) {        
         mousePosition.x = e.originalEvent.touches[0].pageX;
         mousePosition.y = e.originalEvent.touches[0].pageY;
       }
@@ -120,8 +115,9 @@
       var distancePercentage = (x * x + y * y) / max;
       var accHelper = 4;
       if (that.gameInstance.isMobile) {
-        // accHelper = 2;
+        accHelper = 2;
       }
+
       that.force = 0.25 + accHelper * distancePercentage;
       that.angle = angle(force);
     };

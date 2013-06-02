@@ -109,9 +109,9 @@ function index(req, res, view, draw_engine, opts) {
 auth.setup(app, io, index);
 
 // for dev purpose uncomment
-// auth.ensureAuthenticated = function(req, res, next){
-//   return next();
-// }
+auth.ensureAuthenticated = function(req, res, next){
+  return next();
+}
 
 app.get('/', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");

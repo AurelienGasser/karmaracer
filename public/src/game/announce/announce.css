@@ -1,0 +1,7 @@
+.announce-red{color:red;}
+.announce-orange{color:orange;}
+.announce-green{color:green;}
+.announce-blue{color:blue;}
+#announce{height:100px;line-height:100px;left:20%;top:100px;background-color:rgba(238, 238, 238, 0.5);position:absolute;text-align:center;width:60%;margin:0px auto;z-index:9999;border-radius:10px;}
+#announce.freeze{background-color:#eee;}
+.announce span{font-size:32px;margin:10px;}
