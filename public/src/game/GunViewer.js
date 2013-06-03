@@ -1,8 +1,9 @@
 (function() {
   "use strict";
 
-  var GunViewer = function($container) {
+  var GunViewer = function($container, connection) {
     this.$container = $container;
+    this.connection = connection;
   };
 
   GunViewer.prototype.addGun = function(name) {
@@ -15,15 +16,31 @@
     this.$container.append(this.$gunZone);
     this.$gunLoaderZone = this.$gunZone.find('.gunLoaderZone');
     this.gunName = name;
+
+    var that = this;
+    this.$gunZone.click(function(e) {
+      that.connection.emit('shoot');
+      // that.connection.emit('drive', 'shoot', 'start');
+      // that.connection.emit('drive', 'shoot', 'end');
+    });
+
+    this.$gunZone.on('touchstart', function(e) {
+      that.connection.emit('drive', 'shoot', 'start');
+    });
+
+    this.$gunZone.on('touchend', function(e) {
+      that.connection.emit('drive', 'shoot', 'end');
+    });
+
   };
 
   GunViewer.prototype.setBackground = function(name) {
-    this.$gunZone.css('background', 'url(\'/images/guns/'+ name+ '.png\')');
+    this.$gunZone.css('background', 'url(\'/images/guns/' + name + '.png\')');
   };
 
 
   GunViewer.prototype.setEnergyMask = function(energy) {
-    var imgSize = 64;
+    var imgSize = this.$gunZone.width();
     var size = (energy.cur / energy.max) * imgSize;
     if (size > imgSize) {
       size = imgSize;
@@ -35,10 +52,10 @@
 
   GunViewer.prototype.updateEnergy = function(gunName, energy) {
 
-    if (KLib.isUndefined(this.$gunZone)){
+    if (KLib.isUndefined(this.$gunZone)) {
       this.addGun(gunName);
     } else {
-      if (this.gunName !== gunName){
+      if (this.gunName !== gunName) {
         this.setBackground(gunName);
         this.gunName = gunName;
       }

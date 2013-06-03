@@ -117,8 +117,8 @@
 
   Engine2DCanvas.prototype.init = function() {
     this.ctx = this.canvas.getContext('2d');
-    this.canvas.width = $('#' + this.canvasID).width();
-    this.canvas.height = $('#' + this.canvasID).height();
+    this.canvas.width = this.$canvas.width();
+    this.canvas.height = this.$canvas.height();
     this.camera = new Karma.Camera(this.ctx, '#' + this.canvasID);
     this.camera.setWorldSize(this.worldInfo.size);
     this.loadCars();
@@ -128,6 +128,7 @@
     this.rocketImage.src = '/sprites/rocket.png';
     this.gunFlameImage = new Image();
     this.gunFlameImage.src = '/sprites/gun_flame.png';
+    this.$window = $(window);
   };
 
   Engine2DCanvas.prototype.loaded = function() {    

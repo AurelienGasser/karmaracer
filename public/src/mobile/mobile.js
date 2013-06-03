@@ -1,6 +1,19 @@
 (function() {
   "use strict";
 
+  function doOnOrientationChange() {
+    var gameInstance = Karma.gameInstance;
+    // window.scrollTo(0, 0);
+    var w = $(window);
+    gameInstance.drawEngine.$canvas.width(w.width());
+    gameInstance.drawEngine.$canvas.height(w.height());
+    gameInstance.steeringWheel.resize();
+    gameInstance.drawEngine.resize();
+  }
+
+  window.addEventListener('orientationchange', doOnOrientationChange);
+  window.addEventListener('webkitfullscreenchange', doOnOrientationChange);
+
   document.ontouchstart = function(e) {
     e.preventDefault();
   };
@@ -23,11 +36,10 @@
     // 
     // link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
 
-    
+
     // $("head").append('<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=0.0"');
     // $("head").append('<meta name="apple-mobile-web-app-capable" content="yes"');
     // $('head').append('<link rel="apple-touch-icon" href="/images/logos/logo-114.png"/>');
-    $('body').attr('onorientationchange', 'updateOrientation(Karma.gameInstance)');
     // $("body").append('<div id="camera-debug"/>');
     // this.touch = {
     //   forward: false,
@@ -38,6 +50,8 @@
     // this.addTouchScreenAreas();
     // this.initTouchScreenEvents();
     // $('#debug').remove();
+    // 
+
   };
 
   MobileTerminalHandler.prototype.addTouchScreenAreas = function() {
@@ -51,7 +65,7 @@
   // Turn left, stop turning or turn right depending on the event position
   MobileTerminalHandler.prototype.touchEventTurn = function(event) {
     if (
-    event.originalEvent.targetTouches[0].pageY < event.target.offsetTop || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth) {
+      event.originalEvent.targetTouches[0].pageY < event.target.offsetTop || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth) {
       this.userTurn('stop');
     } else if (event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft + event.target.clientWidth / 2) {
       this.userTurn('left');
@@ -63,7 +77,7 @@
   // Accelerate, stop or descelerate depending on the event position
   MobileTerminalHandler.prototype.touchEventAccelerate = function(event) {
     if (
-    event.originalEvent.targetTouches[0].pageY < event.target.offsetTop || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth) {
+      event.originalEvent.targetTouches[0].pageY < event.target.offsetTop || event.originalEvent.targetTouches[0].pageY > event.target.offsetTop + event.target.clientHeight || event.originalEvent.targetTouches[0].pageX < event.target.offsetLeft || event.originalEvent.targetTouches[0].pageX > event.target.offsetLeft + event.target.clientWidth) {
       this.userAccelerate('stop');
     } else if (event.originalEvent.targetTouches[0].pageY < event.target.offsetTop + event.target.clientHeight / 2) {
       this.userAccelerate('forward');
@@ -151,17 +165,6 @@
       }
       this.gameInstance.drawEngine.camera.scale *= zoomFactor;
     });
-  };
-
-  Karma.updateOrientation = function(gameInstance) {
-    window.scrollTo(0, 0);
-    gameInstance.steeringWheel.resize();
-    if (gameInstance.drawEngine.camera !== null) {
-      gameInstance.drawEngine.camera.resizeCanvas({
-        w: $(window).width(),
-        h: $(window).height()
-      });
-    }
   };
 
   Karma.MobileTerminalHandler = MobileTerminalHandler;

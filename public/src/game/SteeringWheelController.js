@@ -35,16 +35,7 @@
 
     that.m.click(toogleEnable);
 
-    $(window).resize(function() {
-      that.resize();
-    });
 
-    window.onorientationchange = function() {
-      that.resize();
-    };
-
-    window.webkitfullscreenchange = function() {
-    };
 
     var interval = null;
 
@@ -115,7 +106,7 @@
       var distancePercentage = (x * x + y * y) / max;
       var accHelper = 4;
       if (that.gameInstance.isMobile) {
-        accHelper = 2;
+        // accHelper = 2;
       }
 
       that.force = 0.25 + accHelper * distancePercentage;

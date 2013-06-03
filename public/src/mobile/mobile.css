@@ -6,5 +6,8 @@
 #touch-debug{position:absolute;top:0px;right:0px;}
 #game-canvas{width:100%;height:100%;}
 body{-webkit-user-select:none;}
-.miniMap,.miniMapPlayerPosition,#score-table,#debug{display:none;}
+.miniMap,.miniMapPlayerPosition,#score-table,#botMenu{display:none;}
 .announce span{font-size:1em !important;}
+#gunZone{background-size:100%;width:128px;height:128px;}#gunZone .size{width:128px;height:128px;}
+#gunZone div{width:128px;height:128px;}
+#chat{bottom:132px;}

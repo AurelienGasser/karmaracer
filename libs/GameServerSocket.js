@@ -31,7 +31,6 @@ var GameServerSocket = function(mapManager) {
     client.graph = require('fbgraph');
     if (!KLib.isUndefined(client.handshake.session)) {
       client.graph.setAccessToken(client.handshake.session.accessToken);
-
     }
   });
 }
@@ -151,6 +150,15 @@ GameServerSocket.prototype.registerMethods = function(client) {
       console.error(e.stack);
     }
   });
+
+  client.on('shoot', function() {
+    try {
+      client.player.playerCar.shoot();
+    } catch (e) {
+      console.error(e, e.stack);
+    }
+  });
+
 
   client.on('updatePlayerName', function(name) {
     try {

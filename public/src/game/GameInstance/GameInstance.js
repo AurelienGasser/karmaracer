@@ -106,7 +106,9 @@
     that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
     that.explosionManager.start();
 
-    new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that.mycarPosition);
+    if (that.isMobile === false) {
+      new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that.mycarPosition);
+    }
   };
 
 
