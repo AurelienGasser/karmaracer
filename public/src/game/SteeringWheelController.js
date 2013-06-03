@@ -53,7 +53,7 @@
 
     var startAcceleration = function() {
       if (interval === null) {
-        interval = setInterval(send.bind(this), 1000 / 16);
+        interval = setInterval(send.bind(this), 1000 / 50);
       }
     };
     var stopAcceleration = function() {

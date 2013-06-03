@@ -35,7 +35,7 @@
   };
 
   GunViewer.prototype.setBackground = function(name) {
-    this.$gunZone.css('background', 'url(\'/images/guns/' + name + '.png\')');
+    this.$gunZone.css('background-image', 'url(\'/images/guns/' + name + '.png\')');
   };
 
 
