@@ -3,12 +3,13 @@
     // border-color: blue;
 }
 
-#SteeringWheelController.enable div {
+.SteeringWheelController.enable div {
     background-color: green;
     border:white 1px solid;
 }
 
-#SteeringWheelController {
+
+#SteeringWheelController-main {
     // border: 1px solid white;
     height: 100%;
     left: 0px;
@@ -18,7 +19,30 @@
     width: 100%;
 }
 
-#SteeringWheelControllerAcc {
+
+#SteeringWheelControllerAcc-main {
+    background-color: white;
+    border-radius: 8px;
+    height: 16px;
+    opacity: 0.5;
+    position: absolute;
+    width: 16px;
+}
+
+@size : 200px;
+#SteeringWheelController-pad {
+    border: 1px solid white;
+    height: @size;
+    width: @size;
+    border-radius: @size / 2;
+    margin: auto;
+    position: fixed;
+    bottom: 2px;
+    right: 2px;
+
+}
+
+#SteeringWheelControllerAcc-pad {
     background-color: white;
     border-radius: 8px;
     height: 16px;

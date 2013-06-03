@@ -1,14 +1,17 @@
 (function() {
   "use strict";
-  var SteeringWheelController = function(gameInstance) {    
+  var SteeringWheelController = function(gameInstance, name) {
+    this.name = name;
     this.init(gameInstance);
   };
 
   SteeringWheelController.prototype.init = function(gameInstance) {
-    this.m = $('<div id="SteeringWheelController"/>');
-    this.acc = $('<div id="SteeringWheelControllerAcc"/>');
+    this.m = $('<div id="SteeringWheelController-' + this.name + '" class="SteeringWheelController"/>');
+    this.acc = $('<div id="SteeringWheelControllerAcc-' + this.name + '" class="SteeringWheelControllerAcc"/>');
     this.m.append(this.acc);
     $('body').append(this.m);
+    
+
     this.enable = false;
 
     this.gameInstance = gameInstance;
@@ -26,6 +29,10 @@
 
     var that = this;
 
+
+    window.onresize = function(e){
+      that.resize();
+    };
 
     var toogleEnable = function() {
       var jWheel = $(this);
@@ -87,7 +94,7 @@
       };
 
       // alert(that.gameInstance.isMobile);
-      if (that.gameInstance.isMobile) {        
+      if (that.gameInstance.isMobile) {
         mousePosition.x = e.originalEvent.touches[0].pageX;
         mousePosition.y = e.originalEvent.touches[0].pageY;
       }
@@ -108,7 +115,6 @@
       if (that.gameInstance.isMobile) {
         // accHelper = 2;
       }
-
       that.force = 0.25 + accHelper * distancePercentage;
       that.angle = angle(force);
     };
@@ -122,8 +128,8 @@
       that.m.hover(startAcceleration, stopAcceleration);
     }
     that.acc.mousemove(function(e) {
-      e.preventDefault();
-      return false;
+      // e.preventDefault();
+      // return false;
     });
 
   };
@@ -170,12 +176,14 @@
 
 
   SteeringWheelController.prototype.resize = function() {
-    this.m.css({
-      'width': '100%',
-      'height': '100%'
-    });
+    // this.m.attr('style', '');
+    // this.m.css({
+    //   'width': this.initialSize.w,
+    //   'height': this.initialSize.h
+    // });
     // this.setMSize(this.m.width(), this.m.height());
     // this.setMPosition(window.innerWidth / 2, window.innerHeight / 2);
+    this.updateCenter();
   };
 
   Karma.SteeringWheelController = SteeringWheelController;

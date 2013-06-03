@@ -55,7 +55,6 @@
     this.$socketps = $('<div id="socketps" class="info"></div>');
     $debug.append(this.$socketps);
 
-    // console.log(that.connection);
     this.gv = new Karma.GunViewer($('body'), that.connection);
 
 

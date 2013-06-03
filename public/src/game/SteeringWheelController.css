@@ -1,4 +1,6 @@
 
-#SteeringWheelController.enable div{background-color:green;border:white 1px solid;}
-#SteeringWheelController{height:100%;left:0px;margin:auto;position:fixed;top:0px;width:100%;}
-#SteeringWheelControllerAcc{background-color:white;border-radius:8px;height:16px;opacity:0.5;position:absolute;width:16px;}
+.SteeringWheelController.enable div{background-color:green;border:white 1px solid;}
+#SteeringWheelController-main{height:100%;left:0px;margin:auto;position:fixed;top:0px;width:100%;}
+#SteeringWheelControllerAcc-main{background-color:white;border-radius:8px;height:16px;opacity:0.5;position:absolute;width:16px;}
+#SteeringWheelController-pad{border:1px solid white;height:200px;width:200px;border-radius:100px;margin:auto;position:fixed;bottom:2px;right:2px;}
+#SteeringWheelControllerAcc-pad{background-color:white;border-radius:8px;height:16px;opacity:0.5;position:absolute;width:16px;}
