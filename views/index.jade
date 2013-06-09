@@ -1,5 +1,5 @@
 !!! strict
-html
+html(prefix="og: http://ogp.me/ns#")
   head
     title Karma Racer Race for your Soul !
     script(type='text/javascript')
@@ -11,6 +11,10 @@ html
     script(type='text/javascript', src='/dist/vendor_common.js')
     script(type='text/javascript', src='/dist/all_home.js')
     link(rel='stylesheet', href='/dist/all_home.css')
+    meta(property="og:type", content="website")
+    meta(property="og:url", content="https://karma.origamix.fr/")
+    meta(property="og:image", content="https://karma.origamix.fr/images/logo-128.png")
+    meta(property="og:title", content="Karma Racer Race for your Sould !")
   body
     .header
       #fb-root
