@@ -3,7 +3,7 @@
   "description": "Race for you Soul",
   "launch_path": "/",
   "icons": {
-    "128": "https://karma.origamix.fr/images/logos/logo-128.png"
+    "128": "/images/logos/logo-128.png"
   },
   "developer": {
     "name": "Origamix",
