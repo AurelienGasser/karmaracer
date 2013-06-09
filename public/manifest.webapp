@@ -1,7 +1,7 @@
 {
   "name": "Karma Racer",
   "description": "Race for you Soul",
-  "launch_path": "https://karma.origamix.fr/",
+  "launch_path": "/",
   "icons": {
     "128": "https://karma.origamix.fr/images/logos/logo-128.png"
   },
