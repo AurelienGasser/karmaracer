@@ -11,18 +11,21 @@
 
 (function() {
   "use strict";
-  var UserVoice = window.UserVoice || [];
-  UserVoice.push(['showTab', 'classic_widget', {
-      mode: 'full',
-      primary_color: '#cc6d00',
-      link_color: '#007dbf',
-      default_mode: 'support',
-      forum_id: 210335,
-      tab_label: 'Commentaires et support',
-      tab_color: '#cc6d00',
-      tab_position: 'middle-right',
-      tab_inverted: false
-    }
-  ]);
+
+  Karma.UserVoice = function() {
+    var UserVoice = window.UserVoice || [];
+    UserVoice.push(['showTab', 'classic_widget', {
+        mode: 'full',
+        primary_color: '#cc6d00',
+        link_color: '#007dbf',
+        default_mode: 'support',
+        forum_id: 210335,
+        tab_label: 'Commentaires et support',
+        tab_color: '#cc6d00',
+        tab_position: 'middle-right',
+        tab_inverted: false
+      }
+    ]);
+  };
 
 }());

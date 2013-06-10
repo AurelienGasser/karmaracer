@@ -13,6 +13,7 @@
 
   var start = function() {
 
+    Karma.UserVoice();
     Karma.TopBar.setTopBar();
 
     var $mapsContainer = $('#mapsContainer');
