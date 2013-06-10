@@ -69,18 +69,12 @@
     var gFriendID = targetID;
     var url = '/me/' + kFB.conf.appName + ':take_the_soul_of?profile=' + gFriendID;
     FB.api(url, 'post', {}, function(response) {
+      console.log(response);
     });
-
-    // FB.api(
-    //   'karmaracer_dev:take_a_soul',
-    //   'post', {
-    //   profile: "http://samples.ogp.me/390580850990722"
-    // },
-
-    // function(response) {
-    //   // handle the response
-    // });
   }
+  Karma.Facebook = {};
+  Karma.Facebook.takeSoul = takeSoul;
+
 
   function getScore(user) {
     try {
