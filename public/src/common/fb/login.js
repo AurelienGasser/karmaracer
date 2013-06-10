@@ -64,12 +64,9 @@
   }
 
   function takeSoul(targetID) {
-    // var gFriendID =  655129182;
-    //100005805850062;
     var gFriendID = targetID;
     var url = '/me/' + kFB.conf.appName + ':take_the_soul_of?profile=' + gFriendID;
     FB.api(url, 'post', {}, function(response) {
-      console.log(response);
     });
   }
   Karma.Facebook = {};
