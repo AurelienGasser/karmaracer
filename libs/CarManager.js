@@ -41,6 +41,7 @@ CarManager.prototype.updateHighScores = function() {
 
 };
 
+
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
   attacker.highScore += 1;
@@ -51,8 +52,8 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
     }
     victim.die();
     this.gameServer.broadcast('car_killed', {
-      victim: victim.playerName,
-      attacker: attacker.playerName
+      victim: victim.getMiniInfo(),
+      attacker: attacker.getMiniInfo()
     });
     attacker.getExperience(100);
   }

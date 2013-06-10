@@ -60,15 +60,16 @@
   function setScore(gScore) {
     FB.api('/me/scores/', 'post', {
       score: gScore
-    }, function(response) {
-    });
+    }, function(response) {});
   }
 
-  function takeSoul() {
+  function takeSoul(targetID) {
     // var gFriendID =  655129182;
-
-    // FB.api('/me/karmaracer_dev:take_a_soul?profile=' + gFriendID, 'post', {}, function(response) {
-    // });
+    //100005805850062;
+    var gFriendID = targetID;
+    var url = '/me/' + kFB.conf.appName + ':take_the_soul_of?profile=' + gFriendID;
+    FB.api(url, 'post', {}, function(response) {
+    });
 
     // FB.api(
     //   'karmaracer_dev:take_a_soul',
@@ -102,8 +103,7 @@
 
   function afterLogin() {
     updateName();
-    // setScore(5000);
-    // takeSoul();
+    // setScore(5000);    
   }
 
 

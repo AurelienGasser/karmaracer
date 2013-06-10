@@ -1,3 +1,4 @@
+/*global io*/
 (function(io) {
   "use strict";
   /*global G_locale*/
@@ -9,13 +10,14 @@
   });
 
 
+
   var start = function() {
 
     Karma.TopBar.setTopBar();
 
     var $mapsContainer = $('#mapsContainer');
     var o = [];
-    o.push('<h2>',$.i18n.prop('home_clickonmap') , '</h2>');
+    o.push('<h2>', $.i18n.prop('home_clickonmap'), '</h2>');
     o.push('<ul id="maps"></ul>');
     $mapsContainer.append(o.join(''));
 

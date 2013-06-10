@@ -83,7 +83,8 @@
     });
 
     this.connection.on('car_killed', function(data) {
-      var msg = $.i18n.prop('game_take_soul_broadcast', data.attacker, data.victim);
+      var msg = $.i18n.prop('game_take_soul_broadcast', data.attacker.name, data.victim.name);
+      // takeSoul();
       that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
     });
 

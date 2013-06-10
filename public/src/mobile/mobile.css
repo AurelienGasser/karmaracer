@@ -8,6 +8,6 @@
 body{-webkit-user-select:none;}
 .miniMap,.miniMapPlayerPosition,#score-table,#botMenu{display:none;}
 .announce span{font-size:1em !important;}
-#gunZone{background-size:128px;margin-left:64px;width:128px;height:128px;}#gunZone .size{width:128px;height:128px;}
+#gunZone{background-size:128pxp;margin-left:64px;width:128px;height:128px;}#gunZone .size{width:128px;height:128px;}
 #gunZone div{width:128px;height:128px;}
 #chat{bottom:132px;}

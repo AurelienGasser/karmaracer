@@ -45,14 +45,23 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.id = this.car.id;
   this.resetPlayer();
   this.highScore = 0;
+  this.fbId = 0;
   if (this.client !== null) {
     this.FBInit();
   }
 }
 
+PlayerCar.prototype.getMiniInfo = function() {
+  return {
+    fbId : this.fbId,
+    name : this.playerName
+  }
+};
+
+
 PlayerCar.prototype.FBInit = function(callback) {
   if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.fbsid)) {
-    this.fbid = this.client.handshake.session.fbsid;
+    this.fbId = this.client.handshake.session.fbsid;
     return this.FBGetHighScore(callback);
   }
 };
