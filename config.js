@@ -22,7 +22,7 @@ var configSingleton = function() {
       break;
     case "dev":
       config.appID = '156724717828757';
-      config.appSecret = 'ffaa699130856b56f56c6d2b04afd2d8';
+      config.appSecret = 'b154448258775abf1cebc39eaa8df713';
       config.callbackURL = 'https://localhost/auth/facebook/callback';
       config.appName = 'karmaracer_dev';
       config.gameMaxLevel = 3;
