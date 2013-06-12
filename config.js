@@ -32,6 +32,8 @@ var config = function() {
   register('stepByStepMode', false);
   register('serverPath', __dirname);
   register('useDichotomy', false);
+  register('botDensity', 1 / 2300);
+  register('noBots', process.env.NO_BOTS);
 
   register('FBScope', 'publish_actions');
   // register('FBAppPath', 'https://apps.facebook.com/' + );

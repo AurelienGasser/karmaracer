@@ -6,9 +6,9 @@ var DummyBot = require('./classes/Bot/DummyBot');
 var BotManager = function(gameServer) {
     this.gameServer = gameServer;
     this.bots = {};
-    if(!process.env.NO_BOTS) {
       this.initBots();
     }
+  if(!config.noBots) {
   }
 
 BotManager.prototype.resetBots = function() {
@@ -21,7 +21,7 @@ BotManager.prototype.resetBots = function() {
 BotManager.prototype.initBots = function() {
   // return;
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
-  var botDensity = 1 / 2300;
+  var botDensity = config.botDensity;
   var numBots = Math.ceil(mapSize * botDensity) + 3;
   var interval = 0;
   if(numBots > 10) {
