@@ -4,12 +4,12 @@ var Bot = require('./classes/Bot/Bot');
 var DummyBot = require('./classes/Bot/DummyBot');
 
 var BotManager = function(gameServer) {
-    this.gameServer = gameServer;
-    this.bots = {};
-      this.initBots();
-    }
+  this.gameServer = gameServer;
+  this.bots = {};
   if(!config.noBots) {
+    this.initBots();
   }
+}
 
 BotManager.prototype.resetBots = function() {
   for(var i in this.bots) {
