@@ -14,12 +14,11 @@ var BotManager = function(gameServer) {
 BotManager.prototype.resetBots = function() {
   for(var i in this.bots) {
     var bot = this.bots[i];
-    bot.playerCar.resetPlayer();
+    bot.playerCar.reset();
   }
 };
 
 BotManager.prototype.initBots = function() {
-  // return;
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
   var botDensity = config.botDensity;
   var numBots = Math.ceil(mapSize * botDensity) + 3;
