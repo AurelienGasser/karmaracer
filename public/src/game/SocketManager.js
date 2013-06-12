@@ -154,7 +154,7 @@
         that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);
       }
 
-      gameInstance.drawEngine.gScaleDynamicsRequired = true;
+      // gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
       })));

@@ -103,7 +103,7 @@
       that.drawEngine.tick();
     };
 
-    that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, canvasReady);
+    that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, 32, canvasReady);
     that.explosionManager.start();
 
     if (that.isMobile === false) {

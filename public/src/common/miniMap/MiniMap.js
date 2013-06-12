@@ -10,50 +10,28 @@
     this.canvas = this.$canvas[0];
 
     this.items = items;
-    if (!KLib.isUndefined(mycarPosition)) {
-      this.playerPositionID = 'player-position-on-minimap-' + mapName;
-      this.$playerPosition = $('<div class="miniMapPlayerPosition" id="' + this.playerPositionID + '"></div>');
-      this.$container.append(this.$playerPosition);
-      this.mycarPosition = mycarPosition;
+    if (KLib.isUndefined(this.items)) {
+      this.items = {
+        mycar: null,
+        cars: [],
+        projectiles: [],
+        explosions: []
+      };
     }
-
 
     this.getMap(mapName, function(err, map) {});
   };
 
   MiniMap.prototype.getMap = function(mapName, callback) {
-
     var that = this;
 
-    var items = {
-      cars: [],
-      mycar: null,
-      projectiles: [],
-      explosions: []
-    };
-
-
     var getMiniMap = function(err, worldInfo) {
-      // that.$canvas.width(worldInfo.size.w);
-      // that.$canvas.height(worldInfo.size.h);
-      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', items, worldInfo, function(drawEngine) {
-        that.drawEngine.setGScale(1 / 8); // set to default size
+      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', that.items, worldInfo, 4, function(drawEngine) {
         that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
         that.drawEngine.resize();
         that.drawEngine.tick();
+        that.drawEngine.isMiniMap = true;
       });
-
-
-      setInterval(function() {
-        if (!KLib.isUndefined(that.mycarPosition)) {
-          var pos = that.$canvas.position();
-          var left = (pos.left + that.mycarPosition.x * 4);
-          var top = (pos.top + that.mycarPosition.y * 4);
-          that.$playerPosition[0].style.left = left + 'px';
-          that.$playerPosition[0].style.top = top + 'px';
-        }
-      }, 1000 / 15);
-
       if (KLib.isFunction(callback)) {
         return callback(null);
       }

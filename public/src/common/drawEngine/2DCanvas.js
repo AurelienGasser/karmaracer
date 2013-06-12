@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  function Engine2DCanvas(canvas, canvasID, items, worldInfo, callback) {
+  function Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, callback) {
 
     this.canvas = canvas;
     this.canvasID = canvasID;
@@ -9,11 +9,12 @@
     this.frames = 0;
     this.debugDraw = false;
     this.carFlameTicks = {};
+    this.isMiniMap = false;
 
     this.items = items;
     this.worldInfo = worldInfo;
 
-    this.setGScale(32);
+    this.setGScale(gScale);
     this.$canvas = $(canvas);
     this.$canvas.focus();
     this.init();
@@ -24,7 +25,6 @@
 
   Engine2DCanvas.prototype.setGScale = function(gScaleValue) {
     this.gScaleValue = gScaleValue;
-    this.gScaleDynamicsRequired = true;
     this.gScaleList(this.worldInfo.staticItems);
     this.gScale(this.worldInfo.size);
   };
@@ -89,13 +89,6 @@
     }
   };
 
-  Engine2DCanvas.prototype.gScaleIfRequired = function() {
-    if (this.gScaleDynamicsRequired === true) {
-      this.gScaleList(this.items.cars);
-      this.gScale(this.items.mycar);
-      this.gScaleDynamicsRequired = false;
-    }
-  };
 
   Engine2DCanvas.prototype.gScale = function(e) {
     if (e === null) {
@@ -117,6 +110,7 @@
 
   Engine2DCanvas.prototype.init = function() {
     this.ctx = this.canvas.getContext('2d');
+    this.ctx.font = '10px Trebuchet MS';
     this.canvas.width = this.$canvas.width();
     this.canvas.height = this.$canvas.height();
     this.camera = new Karma.Camera(this.ctx, '#' + this.canvasID);
@@ -129,9 +123,10 @@
     this.gunFlameImage = new Image();
     this.gunFlameImage.src = '/sprites/gun_flame.png';
     this.$window = $(window);
+
   };
 
-  Engine2DCanvas.prototype.loaded = function() {    
+  Engine2DCanvas.prototype.loaded = function() {
     Karma.Loading.remove();
   };
 
@@ -152,72 +147,24 @@
   Engine2DCanvas.prototype.draw = function() {
     if (this.worldInfo.staticItems.length > 0) {
       this.resize();
+      if (this.isMiniMap === false) {
+        var newCenter = this.oldCenter;
+        if (this.items.mycar !== null) {
+          newCenter = {
+            x: this.items.mycar.x * this.gScaleValue,
+            y: this.items.mycar.y * this.gScaleValue
+          };
+          this.camera.update(newCenter);
+        }
+        if (newCenter && newCenter != this.oldCenter) {
+          this.oldCenter = newCenter;
+        }
+      }
 
-      var newCenter = this.oldCenter;
-      if (this.items.mycar !== null) {
-        newCenter = this.items.mycar;
-        this.camera.update(newCenter);
-      }
-      if (newCenter && newCenter != this.oldCenter) {
-        this.oldCenter = newCenter;
-      }
       this.drawItems();
     }
   };
 
-
-  Engine2DCanvas.prototype.drawLifeBar = function(ctx, c) {
-    ctx.save();
-    ctx.translate(-c.w / 2, -40);
-    var maxLifeSize = c.w;
-    ctx.fillStyle = '#0F0';
-    ctx.fillRect(0, 0, maxLifeSize, 5);
-    ctx.fillStyle = '#F00';
-    var ratioSize = maxLifeSize * (c.life / c.maxLife);
-    ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
-    ctx.restore();
-  };
-
-  var maxFlameTick = 12;
-
-  Engine2DCanvas.prototype.drawSingleGunFlame = function(ctx, car, angle, distance) {
-    var ratio = 1.5;
-    ctx.rotate(angle);
-    var w = car.w / 2;
-    var h = car.h / 2;
-    if (car.flame > maxFlameTick / 2) {
-      ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2, w, h);
-    } else {
-      ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2 / ratio, w / ratio, h / ratio);
-    }
-    ctx.rotate(-angle);
-  };
-
-  Engine2DCanvas.prototype.drawGunFlame = function(ctx, car) {
-    if (KLib.isUndefined(this.carFlameTicks[car.id])) {
-      this.carFlameTicks[car.id] = 0;
-    }
-    car.flame = this.carFlameTicks[car.id];
-    switch (car.shootingWithWeapon) {
-      case '90AngleMachineGun':
-        this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
-        this.drawSingleGunFlame(ctx, car, Math.PI / 2, car.w / 4);
-        this.drawSingleGunFlame(ctx, car, -Math.PI / 2, car.w / 4);
-        break;
-      case 'SuperMachineGun':
-        this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
-        this.drawSingleGunFlame(ctx, car, Math.PI / 4, car.w / 4);
-        this.drawSingleGunFlame(ctx, car, -Math.PI / 4, car.w / 4);
-        break;
-      case 'MachineGun':
-        this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
-        break;
-      default:
-        this.drawSingleGunFlame(ctx, car, 0, car.w / 2);
-        break;
-    }
-    this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
-  };
 
 
   var explosionWidth = 56;
@@ -228,6 +175,10 @@
       ctx.fillStyle = '#FFFFFF';
       for (var i in this.items.explosions) {
         var c = this.items.explosions[i];
+        var pos = {
+          x: this.gScaleValue * c.x,
+          y: this.gScaleValue * c.y
+        };
         ctx.save();
         ctx.translate(c.x, c.y);
         ctx.rotate(c.r);
@@ -245,30 +196,29 @@
     if (this.items.projectiles !== null) {
       for (var i = 0; i < this.items.projectiles.length; i++) {
         var c = this.items.projectiles[i];
+        var pos = {
+          x: c.x * this.gScaleValue,
+          y: c.y * this.gScaleValue
+        };
         switch (c.name) {
           case 'rocket launcher':
             this.drawRocket(c, ctx);
             break;
           default:
-            this.drawBullet(c, ctx);
+            this.drawBullet(c, ctx, pos);
             break;
         }
       }
     }
   };
 
-  Engine2DCanvas.prototype.drawBullet = function(bullet, ctx) {
+  Engine2DCanvas.prototype.drawBullet = function(bullet, ctx, pos) {
     ctx.fillStyle = '#0F0';
     var c = bullet;
     ctx.save();
     ctx.beginPath();
     var a = c;
-    ctx.translate(a.x, a.y);
-
-    // var len = 500;
-    // ctx.lineTo(a.x + Math.cos(a.r) * len, a.y + Math.sin(a.r) * len);
-    // ctx.lineTo(a.p3.x, a.p3.y);
-
+    ctx.translate(pos.x, pos.y);
     ctx.moveTo(0, 0);
     ctx.rotate(a.r);
     // ctx.moveTo(-320, 0);
@@ -351,7 +301,7 @@
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
-    this.gScaleIfRequired();
+
     this.draw();
 
     this.frames++;

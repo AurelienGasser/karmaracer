@@ -10,7 +10,7 @@
     });
   })();
 
-  function drawEngineFactory(canvasID, defaultDrawEngineType, items, worldInfo, callback) {
+  function drawEngineFactory(canvasID, defaultDrawEngineType, items, worldInfo, gScale, callback) {
     var canvas = document.getElementById(canvasID);
     var drawEngineType = defaultDrawEngineType;
     var gl;
@@ -18,7 +18,7 @@
     var factory = function(drawEngineType, canvasID, canvas) {
       switch (drawEngineType) {
         case 'CANVAS':
-          return new Karma.Engine2DCanvas(canvas, canvasID, items, worldInfo, callback);
+          return new Karma.Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, callback);
       }
     };
     // 'getWebGL' is defined but never used.
