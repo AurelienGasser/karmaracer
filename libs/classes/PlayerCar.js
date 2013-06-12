@@ -43,7 +43,7 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   gameServer.engine.addBody(this.car);
   this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
   this.id = this.car.id;
-  this.resetPlayer();
+  this.reset();
   this.highScore = 0;
   this.fbId = 0;
   if (this.client !== null) {
@@ -115,7 +115,7 @@ PlayerCar.prototype.saveVictory = function() {
   }
 }
 
-PlayerCar.prototype.resetPlayer = function() {
+PlayerCar.prototype.reset = function() {
   this.score = 0;
   this.experience = 0;
   this.level = 1;
