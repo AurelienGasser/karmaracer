@@ -2,7 +2,8 @@ var os = require("os");
 
 var configSingleton = function() {
   var config = {
-    host: os.hostname()
+    host: os.hostname(),
+    physics: {}
   }
   if (config.host === 'ks3096106.kimsufi.com') {
     config.env = 'prod';
@@ -32,7 +33,7 @@ var configSingleton = function() {
   config.botsPerMap = 5;
   config.stepByStepMode = false;
   config.serverPath = __dirname;
-  config.useDichotomy = false;
+  config.physics.dichotomyIterations = 0;
   config.botDensity = 1 / 2300;
   config.noBots = process.env.NO_BOTS;
   config.FBScope = 'publish_actions';

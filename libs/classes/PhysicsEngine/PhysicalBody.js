@@ -220,7 +220,7 @@ PhysicalBody.prototype.doMove = function() {
   var collision = this.engine.checkCollisions(this);
   if (collision) {
     var movedDicho = false;
-    if (CONFIG.useDichotomy) {
+    if (CONFIG.physics.dichotomyIterations != 0) {
       this.moveToDichotomie(dup(this.oldMoveToPosition), pos);
       var before = this.oldMoveToPosition;
       var after = this.getPositionAndAngle();
@@ -240,11 +240,10 @@ PhysicalBody.prototype.doMove = function() {
 };
 
 PhysicalBody.prototype.moveToDichotomie = function(from, to) {
-  var maxIterations = 12;
   var it = 0;
   while (true) {
     var distance = getDistance(from, to);
-    if (it > maxIterations) {
+    if (it > CONFIG.physics.dichotomyIterations) {
       this.setPosition(from);
       return true;
     } else {
