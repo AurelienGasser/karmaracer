@@ -12,7 +12,7 @@ Player.prototype.initCar = function(gameServer) {
   if (KLib.isUndefined(this.playerCar)) {
     this.playerCar = new PlayerCar(gameServer, this.client, this.playerName, this);
   } else {
-    this.playerCar.resetPlayer();
+    this.playerCar.reset();
   }
 }
 

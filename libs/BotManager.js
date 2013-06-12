@@ -4,24 +4,23 @@ var Bot = require('./classes/Bot/Bot');
 var DummyBot = require('./classes/Bot/DummyBot');
 
 var BotManager = function(gameServer) {
-    this.gameServer = gameServer;
-    this.bots = {};
-    if(!process.env.NO_BOTS) {
-      this.initBots();
-    }
+  this.gameServer = gameServer;
+  this.bots = {};
+  if(!config.noBots) {
+    this.initBots();
   }
+}
 
 BotManager.prototype.resetBots = function() {
   for(var i in this.bots) {
     var bot = this.bots[i];
-    bot.playerCar.resetPlayer();
+    bot.playerCar.reset();
   }
 };
 
 BotManager.prototype.initBots = function() {
-  // return;
   var mapSize = this.gameServer.map.size.w * this.gameServer.map.size.h;
-  var botDensity = 1 / 2300;
+  var botDensity = config.botDensity;
   var numBots = Math.ceil(mapSize * botDensity) + 3;
   var interval = 0;
   if(numBots > 10) {
@@ -29,10 +28,14 @@ BotManager.prototype.initBots = function() {
   }
   numBots = config.botsPerMap;
   for(var i = 0; i < numBots; ++i) {
-    setTimeout(function() {
+    if (config.performanceTest) {
       this.addBot();
-    }.bind(this), interval);
-    interval += 500;
+    } else {
+      setTimeout(function() {
+        this.addBot();
+      }.bind(this), interval);
+      interval += 500;
+    }
   }
 }
 

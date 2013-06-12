@@ -2,7 +2,7 @@ var config = require('./../config');
 
 module.exports = function(gameServer) {
   var perfTimes = [];
-  var numTicks = 1000;
+  var numTicks = 10000;
   for (var i = 0; i <= numTicks; ++i) {
     var start = new Date();
     gameServer.step();
@@ -17,7 +17,7 @@ module.exports = function(gameServer) {
         for (var j in perfTimes) {
           sum += perfTimes[j];
         }
-        console.log('* Performance:', (sum / numTicks).toFixed(4) + 'ms/step (' + numTicks, 'ticks)');
+        console.log('* Performance:', sum + 'ms for', numTicks, 'ticks');
         process.exit(1)
       }
     }
