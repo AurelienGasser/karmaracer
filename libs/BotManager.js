@@ -28,10 +28,14 @@ BotManager.prototype.initBots = function() {
   }
   numBots = config.botsPerMap;
   for(var i = 0; i < numBots; ++i) {
-    setTimeout(function() {
+    if (config.performanceTest) {
       this.addBot();
-    }.bind(this), interval);
-    interval += 500;
+    } else {
+      setTimeout(function() {
+        this.addBot();
+      }.bind(this), interval);
+      interval += 500;
+    }
   }
 }
 
