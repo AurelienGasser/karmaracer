@@ -1,52 +1,46 @@
-var config = function() {
+var os = require("os");
 
-  var os = require("os");
-  var host = os.hostname();
-
-  console.info('run on host', host);
-
-  var dev = {
-    appID: '156724717828757',
-    appSecret: 'ffaa699130856b56f56c6d2b04afd2d8',
-    callbackURL: 'https://localhost/auth/facebook/callback',
-    appName : 'karmaracer_dev',
-    env : 'dev',
-    gameMaxLevel : 3
-  };
-
-  var prod = {
-    appID: '512708015460560',
-    appSecret: '208a70456e24df5d25f4e136aa83a930',
-    callbackURL: 'https://karma.origamix.fr/auth/facebook/callback',
-    appName : 'karmaracer',
-    env : 'prod',
-    gameMaxLevel : 5
-  };
-
-  function register(option, value){
-    prod[option] = value;
-    dev[option] = value;
+var configSingleton = function() {
+  var config = {
+    host: os.hostname()
   }
-
-  register('botsPerMap', 5);
-  register('stepByStepMode', false);
-  register('serverPath', __dirname);
-  register('useDichotomy', false);
-  register('botDensity', 1 / 2300);
-  register('noBots', process.env.NO_BOTS);
-
-  register('FBScope', 'publish_actions');
-  // register('FBAppPath', 'https://apps.facebook.com/' + );
-
-
-  if (host === 'ks3096106.kimsufi.com') {
-    console.info('fb host is prod', host);
-    return prod;
+  if (config.host === 'ks3096106.kimsufi.com') {
+    config.env = 'prod';
   } else {
-    console.info('fb host is dev', host);
-    return dev;
+    config.env = 'dev';
   }
+
+  switch (config.env) {
+    case "prod":
+      config.appID = '512708015460560';
+      config.appSecret = '208a70456e24df5d25f4e136aa83a930';
+      config.callbackURL = 'https://karma.origamix.fr/auth/facebook/callback';
+      config.appName = 'karmaracer';
+      config.gameMaxLevel = 5;
+      console.info('fb host is prod', config.host);
+      break;
+    case "dev":
+      config.appID = '156724717828757';
+      config.appSecret = 'ffaa699130856b56f56c6d2b04afd2d8';
+      config.callbackURL = 'https://localhost/auth/facebook/callback';
+      config.appName = 'karmaracer_dev';
+      config.gameMaxLevel = 3;
+      console.info('fb host is dev', config.host);
+      break;
+  }
+
+  config.botsPerMap = 5;
+  config.stepByStepMode = false;
+  config.serverPath = __dirname;
+  config.useDichotomy = false;
+  config.botDensity = 1 / 2300;
+  config.noBots = process.env.NO_BOTS;
+  config.FBScope = 'publish_actions';
+
+  console.info('run on host', config.host);
+
+  return config;
 
 }();
 
-module.exports = config;
+module.exports = configSingleton;
