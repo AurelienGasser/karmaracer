@@ -30,7 +30,7 @@ PhysicalBody.prototype.initialize = function(engine, position, size) {
   this.isBullet = false;
   this.shareCollisionInfo = engine.shareCollisionInfo;
   this.moveToPosition = this.getPositionAndAngle();
-  this.oldMoveToPosition = this.getPositionAndAngle();
+  this.oldPosition = this.getPositionAndAngle();
 }
 
 PhysicalBody.prototype.resetCollisions = function(ac) {
@@ -212,7 +212,7 @@ PhysicalBody.prototype.doMove = function() {
   if (!this.moveToPosition) {
     return;
   }
-  this.oldMoveToPosition = this.getPositionAndAngle();
+  this.oldPosition = this.getPositionAndAngle();
   var pos;
   pos = dup(this.moveToPosition);
   this.setPosition(pos);
@@ -221,15 +221,15 @@ PhysicalBody.prototype.doMove = function() {
   if (collision) {
     var movedDicho = false;
     if (CONFIG.physics.dichotomyIterations != 0) {
-      this.moveToDichotomie(dup(this.oldMoveToPosition), pos);
-      var before = this.oldMoveToPosition;
+      this.moveToDichotomie(dup(this.oldPosition), pos);
+      var before = this.oldPosition;
       var after = this.getPositionAndAngle();
       var dist = getDistance(before, after);
       movedDicho = dist > COLLISION_DISTANCE_TRESHOLD
     }
     if (!movedDicho) {
-      this.x = this.oldMoveToPosition.x;
-      this.y = this.oldMoveToPosition.y;
+      this.x = this.oldPosition.x;
+      this.y = this.oldPosition.y;
       if (this.moveToPosition.r) {
         this.r = this.moveToPosition.r;
       }
