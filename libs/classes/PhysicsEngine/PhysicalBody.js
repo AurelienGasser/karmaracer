@@ -240,7 +240,7 @@ PhysicalBody.prototype.doMove = function() {
 };
 
 PhysicalBody.prototype.moveToDichotomie = function(from, to) {
-  var it = 0;
+  var it = 1;
   while (true) {
     var distance = getDistance(from, to);
     if (it > CONFIG.physics.dichotomyIterations) {
