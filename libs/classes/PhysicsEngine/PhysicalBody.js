@@ -323,42 +323,44 @@ var compareX = function(c1, c2) {
 
 PhysicalBody.prototype.updateCornerCache = function() {
   this.corners = this.getCorners();
+  this.getUR();
+  this.getUL();
+  this.getBR();
+  this.getBL();
   this.a1 = this.axis1();
   this.a2 = this.axis2();
   this.projections[1] = this.getAxisProjections(this.a1);
   this.projections[2] = this.getAxisProjections(this.a2);
 };
 
-PhysicalBody.prototype.UR = function() {
+PhysicalBody.prototype.getUR = function() {
   var maxY = this.corners.sort(compareY);
   var maxX = maxY.slice(0, 2).sort(compareX);
-  return maxX[0];
+  this.UR = maxX[0];
 };
 
-PhysicalBody.prototype.UL = function() {
+PhysicalBody.prototype.getUL = function() {
   var minY = this.corners.sort(compareY);
   var maxX = minY.slice(0, 2).sort(compareX);
-  return maxX[1];
+  this.UL = maxX[1];
 };
 
-PhysicalBody.prototype.BR = function() {
+PhysicalBody.prototype.getBR = function() {
   var minY = this.corners.sort(compareY).reverse();
   var maxX = minY.slice(0, 2).sort(compareX);
-  return maxX[0];
+  this.BR = maxX[0];
 };
 
-PhysicalBody.prototype.BL = function() {
+PhysicalBody.prototype.getBL = function() {
   var minY = this.corners.sort(compareY).reverse();
   var maxX = minY.slice(0, 2).sort(compareX);
-  return maxX[1];
+  this.BL = maxX[1];
 };
 
 PhysicalBody.prototype.axis1 = function() {
-  var ur = this.UR();
-  var ul = this.UL();
   var a1 = {
-    x: ur.x - ul.x,
-    y: ur.y - ul.y
+    x: this.UR.x - this.UL.x,
+    y: this.UR.y - this.UL.y
   };
   if (a1.x < 0) {
     a1 = {
@@ -370,8 +372,8 @@ PhysicalBody.prototype.axis1 = function() {
 };
 
 PhysicalBody.prototype.axis2 = function() {
-  var ur = this.translate(this.UR());
-  var br = this.translate(this.BR());
+  var ur = this.translate(this.UR);
+  var br = this.translate(this.BR);
   var a2 = {
     x: ur.x - br.x,
     y: ur.y - br.y
@@ -386,10 +388,10 @@ PhysicalBody.prototype.axis2 = function() {
 };
 
 PhysicalBody.prototype.getAxisProjections = function(axis) {
-  var aProjectionUL = this.engine.projection(this.UL(), axis, this.playerName + 'aUL');
-  var aProjectionUR = this.engine.projection(this.UR(), axis, this.playerName + 'aUR');
-  var aProjectionBL = this.engine.projection(this.BL(), axis, this.playerName + 'aBL');
-  var aProjectionBR = this.engine.projection(this.BR(), axis, this.playerName + 'aBR');
+  var aProjectionUL = this.engine.projection(this.UL, axis, this.playerName + 'aUL');
+  var aProjectionUR = this.engine.projection(this.UR, axis, this.playerName + 'aUR');
+  var aProjectionBL = this.engine.projection(this.BL, axis, this.playerName + 'aBL');
+  var aProjectionBR = this.engine.projection(this.BR, axis, this.playerName + 'aBR');
   var aULValue = this.engine.scalarValue(aProjectionUL, axis);
   var aURValue = this.engine.scalarValue(aProjectionUR, axis);
   var aBLValue = this.engine.scalarValue(aProjectionBL, axis);
@@ -489,10 +491,10 @@ PhysicalBody.prototype.getShared = function() {
   }
 
   if (this.shareCollisionInfo) {
-    var ul = this.UL();
-    var ur = this.UR();
-    var br = this.BR();
-    var bl = this.BL();
+    var ul = this.UL;
+    var ur = this.UR;
+    var br = this.BR;
+    var bl = this.BL;
     var collides = this.collidesWith !== null;
     var collision = {
       ul: this.scalePointAndAddName('ul', ul),
