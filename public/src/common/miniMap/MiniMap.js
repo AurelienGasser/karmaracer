@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  var MiniMap = function($container, mapName, connection, items, mycarPosition) {
+  var MiniMap = function($container, mapName, connection, items) {
     this.$container = $container;
     this.connection = connection;
     this.canvasID = 'minimap-' + mapName;

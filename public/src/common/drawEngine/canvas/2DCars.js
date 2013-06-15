@@ -86,7 +86,8 @@
   };
 
 
-  Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, pos, size) {
+  Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, pos) {
+    console.log(c);
     ctx.fillStyle = 'white';
     ctx.beginPath();
     ctx.arc(pos.x, pos.y, 2, 0, 2 * Math.PI, false);
@@ -106,13 +107,13 @@
         var pos = {
           x: this.gScaleValue * c.x,
           y: this.gScaleValue * c.y
-        }
+        };
         var size = {
           w: this.gScaleValue * c.w,
           h: this.gScaleValue * c.h
-        }
+        };
         if (this.isMiniMap === true) {
-          this.drawCarForMiniMap(ctx, c, pos, size);
+          this.drawCarForMiniMap(ctx, c, pos);
         } else {
           ctx.save();
           ctx.translate(pos.x, pos.y);

@@ -149,8 +149,6 @@
       gameInstance.updateScoresHTML();
       //for minimap
       if (objects.myCar !== null) {        
-        gameInstance.mycarPosition.x = objects.myCar.x;
-        gameInstance.mycarPosition.y = objects.myCar.y;
         that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);
       }
 
