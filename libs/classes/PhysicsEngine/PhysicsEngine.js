@@ -78,13 +78,13 @@ PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
     y: B.y - A.y
   };
 
-  A.bUL = translate(B.UL(), deltaBA);
+  A.bUL = translate(B.UL, deltaBA);
   A.bUL.name = A.playerName + '.bUL';
-  A.bUR = translate(B.UR(), deltaBA);
+  A.bUR = translate(B.UR, deltaBA);
   A.bUR.name = A.playerName + '.bUR';
-  A.bBL = translate(B.BL(), deltaBA);
+  A.bBL = translate(B.BL, deltaBA);
   A.bBL.name = A.playerName + '.bBL';
-  A.bBR = translate(B.BR(), deltaBA);
+  A.bBR = translate(B.BR, deltaBA);
   A.bBR.name = A.playerName + '.bBR';
 
   var bProjectionUL = this.projection(A.bUL, axis, A.playerName + 'bUL');
@@ -289,20 +289,15 @@ PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
-  var UL = B.UL();
-  var UR = B.UR();
-  var BL = B.BL();
-  var BR = B.BR();
+  var p1 = translate(B.UL, B);
+  var p2 = translate(B.UR, B);
+  var p3 = translate(B.BR, B);
+  var p4 = translate(B.BL, B);
 
-  var p1 = translate(UL, B);
-  var p2 = translate(UR, B);
-  var p3 = translate(BR, B);
-  var p4 = translate(BL, B);
-
-  var v1 = this.getVector(UL, UR);
-  var v2 = this.getVector(UR, BR);
-  var v3 = this.getVector(BR, BL);
-  var v4 = this.getVector(BL, UL);
+  var v1 = this.getVector(B.UL, B.UR);
+  var v2 = this.getVector(B.UR, B.BR);
+  var v3 = this.getVector(B.BR, B.BL);
+  var v4 = this.getVector(B.BL, B.UL);
   var i1 = this.segmentCollideSegment(pBullet, vBullet, p1, v1);
   var i2 = this.segmentCollideSegment(pBullet, vBullet, p2, v2);
   var i3 = this.segmentCollideSegment(pBullet, vBullet, p3, v3);
@@ -412,7 +407,7 @@ PhysicsEngine.prototype.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
     return true;
   }
-  if (this.outOfWalls(body.addVectors(body, body.UL())) || this.outOfWalls(body.addVectors(body, body.UR())) || this.outOfWalls(body.addVectors(body, body.BL())) || this.outOfWalls(body.addVectors(body, body.BR()))) {
+  if (this.outOfWalls(body.addVectors(body, body.UL)) || this.outOfWalls(body.addVectors(body, body.UR)) || this.outOfWalls(body.addVectors(body, body.BL)) || this.outOfWalls(body.addVectors(body, body.BR))) {
     body.collidesWith = {
       name: 'outsideWall',
       isStatic: true
