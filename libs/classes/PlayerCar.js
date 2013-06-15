@@ -143,6 +143,7 @@ PlayerCar.prototype.getShared = function() {
   share.gunLife = this.weapon.weaponEnergy;
   this.weaponShootOff();
   share.weaponName = this.weapon.name;
+  share.isBot = this.isBot;
   return share;
 }
 

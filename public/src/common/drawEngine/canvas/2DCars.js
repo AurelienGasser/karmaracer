@@ -87,11 +87,19 @@
 
 
   Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, pos) {
-    console.log(c);
-    ctx.fillStyle = 'white';
+    ctx.strokeStyle = 'white';
+    if (c.id === this.items.mycar.id) { //me
+      ctx.fillStyle = 'black';      
+    } else if (c.isBot === true) { //bots
+      ctx.fillStyle = 'white';
+    } else { //player
+      ctx.fillStyle = 'red';
+      ctx.strokeStyle = 'red';
+    }
     ctx.beginPath();
     ctx.arc(pos.x, pos.y, 2, 0, 2 * Math.PI, false);
     ctx.fill();
+    ctx.stroke();
     ctx.closePath();
   };
 
