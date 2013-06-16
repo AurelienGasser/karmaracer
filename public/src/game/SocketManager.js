@@ -27,8 +27,6 @@
 
       $botmenu.append($addBot);
       $botmenu.append($removeBot);
-
-      // $(function() {
       $addBot.click(function() {
         that.connection.emit('add bot');
       });
@@ -78,13 +76,12 @@
     });
 
     this.connection.on('chat_msg', function(msg) {
-      var key = 'msg_' + that.msg_id;
       that.gameInstance.chat.onChatMsgReceived(msg);
     });
 
     this.connection.on('car_killed', function(data) {
       var msg = $.i18n.prop('game_take_soul_broadcast', data.attacker.name, data.victim.name);
-      if (data.victim.fbId !== 0){
+      if (data.victim.fbId !== 0) {
         Karma.Facebook.takeSoul(data.victim.fbId);
       }
       that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
@@ -148,7 +145,7 @@
       gameInstance.items.collisionPoints = objects.collisionPoints;
       gameInstance.updateScoresHTML();
       //for minimap
-      if (objects.myCar !== null) {        
+      if (objects.myCar !== null) {
         that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);
       }
 
