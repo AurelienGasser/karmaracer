@@ -1,9 +1,12 @@
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-27170619-1']);
+_gaq.push(['_trackPageview']);
+
+
 (function() {
   "use strict";
+
   function setGoogleAnalytics() {
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-27170619-1']);
-    _gaq.push(['_trackPageview']);
 
     (function() {
       var ga = document.createElement('script');
