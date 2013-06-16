@@ -86,7 +86,7 @@
       var h = helps[i];
       o.push('<td class="help_keys">' + h.key + '</td><td class="help_keys_text">' + h.text + '</td>');
     }
-    var html = '<table><tr>' + o.join('</tr><tr>') + '</tr></table>';
+    var html = '<table class="keys" cellspacing="0" cellpadding="0"><tr>' + o.join('</tr><tr>') + '</tr></table>';
     return html;
   }
 
@@ -102,7 +102,8 @@
 
   Karma.TopBar = {
     setTopBar: setTopBar,
-    show: show
+    show: show,
+    getHelps : getHelps
   };
 
 }());

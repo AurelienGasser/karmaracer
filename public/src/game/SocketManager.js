@@ -59,7 +59,7 @@
     that.connection.on('connect', function() {
       if (!_.isUndefined(G_mapName)) {
         that.connection.emit('enter_map', G_mapName);
-        announce($.i18n.prop('game_startmessage'), 'blue');
+        announce($.i18n.prop('game_startmessage') + '</br>' + Karma.TopBar.getHelps(), 'blue');
       } else {}
 
     });
