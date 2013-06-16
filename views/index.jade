@@ -5,18 +5,6 @@ html(prefix="og: http://ogp.me/ns#")
     script(type='text/javascript')
       var G_fbid = '#{fbid}';
       var G_locale = '#{locale}';
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-27170619-1']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script');
-        ga.type = 'text/javascript';
-        ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0];
-        s.parentNode.insertBefore(ga, s);
-      })();      
     link(rel="icon", type="image/png", href="/favicon.png")
     link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
     script(type='text/javascript', src='/socket.io/socket.io.js')
@@ -27,6 +15,8 @@ html(prefix="og: http://ogp.me/ns#")
     meta(property="og:url", content="https://karma.origamix.fr/")
     meta(property="og:image", content="https://karma.origamix.fr/images/logos/logo-128.png")
     meta(property="og:title", content="Karma Racer Race for your Sould !")
+    script(type='text/javascript')
+      Karma.setGoogleAnalytics();
   body
     .header
       #fb-root
