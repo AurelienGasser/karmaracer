@@ -37,9 +37,9 @@ var setup = function(app, io, renderMethod) {
           } else {
             // save the session data and accept the connection
             data.session = session;
-            if (KLib.isUndefined(data.session.fbsid)) {
-              return accept('No FB Id', false);
-            }
+            // if (KLib.isUndefined(data.session.fbsid)) {
+            //   return accept('No FB Id', false);
+            // }
             accept(null, true);
           }
         });
@@ -140,7 +140,17 @@ var setup = function(app, io, renderMethod) {
   });
 
   app.get('/login', function(req, res) {
+    req.session.beforeLoginURL = req.headers.referer;
     renderMethod(req, res, "login.jade", "CANVAS");
+  });
+
+
+  app.get('/logout', function(req, res) {
+    req.logout();
+    delete req.session.fbsid;
+    delete req.session.accessToken /
+      delete req.session.locale;
+    res.redirect('/');
   });
 
 
@@ -149,14 +159,25 @@ var setup = function(app, io, renderMethod) {
       var path = '';
       var referer = req.headers.referer;
 
-      if (!KLib.isUndefined(referer)) {
-        var list = referer.split('/');
-        path = list[list.length - 1];
-      }
 
+      function getPath(url) {
+        if (!KLib.isUndefined(url)) {
+          var list = url.split('/');
+          var path = list[list.length - 1];
+          return path;
+        }
+        return null;
+      }
+      path = getPath(referer);
       var route = '/' + path;
       if (path === 'login') {
-        route = '/';
+        var bPath = getPath(req.session.beforeLoginURL);
+        if (bPath === null) {
+          route = '/';
+        } else {
+          route = '/' + bPath;
+        }
+
       }
       // check if the session should be redirected somewhere special
       if (!KLib.isUndefined(req.session.initialURL)) {

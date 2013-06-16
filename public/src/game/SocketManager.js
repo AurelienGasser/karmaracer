@@ -1,4 +1,4 @@
-/*global prompt,io, G_mapName*/
+/*global prompt,io, G_mapName, G_fbid*/
 (function(io) {
   "use strict";
 
@@ -124,14 +124,19 @@
 
     this.connection.on('game end', function(d) {
       $('table.scores').addClass('big').removeClass('default');
+      $('#topBar').toggleClass('init');
 
       var removeBigScore = function() {
         $('table.scores').removeClass('big').addClass('default');
+        $('#topBar').toggleClass('init');
+
       };
 
       var msg = $.i18n.prop('game_winsthegame', d.winnerName);
       announce(msg, 'black', 'freeze');
-      announceIn('2', 'red', 3, 'freeze');
+      announceIn('2', 'red', 3, 'freeze', function(){
+        Karma.FB.updateScoreInTopBar(G_fbid);
+      });
       announceIn('1', 'orange', 4, 'freeze', removeBigScore);
       announceIn($.i18n.prop('game_go'), 'green', 5, '');
 

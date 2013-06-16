@@ -1,8 +1,9 @@
 // var kFB = {};
 
 (function() {
-  /*global FB*/
+  /*global FB, G_fbid*/
   "use strict";
+
 
   var kFB = {};
 
@@ -57,25 +58,22 @@
     });
   }
 
-  function setScore(gScore) {
-    FB.api('/me/scores/', 'post', {
-      score: gScore
-    }, function(response) {});
-  }
 
   function takeSoul(targetID) {
     var gFriendID = targetID;
     var url = '/me/' + kFB.conf.appName + ':take_the_soul_of?profile=' + gFriendID;
-    FB.api(url, 'post', {}, function(response) {
-    });
+    FB.api(url, 'post', {}, function(response) {});
   }
   Karma.Facebook = {};
   Karma.Facebook.takeSoul = takeSoul;
 
 
-  function getScore(user) {
+  function getScore(userId) {
+    if (userId === '' || KLib.isUndefined(userId)){
+      return;
+    }
     try {
-      FB.api("/" + user.id + "/scores/" + kFB.conf.appName, function(response) {
+      FB.api("/" + userId + "/scores/" + kFB.conf.appName, function(response) {
         if (!response || response.error) {
           Karma.Log.error(response);
         } else {
@@ -84,7 +82,6 @@
             score = response.data[0].score;
           }
           $('#fbHighScore').html('<div title="' + $.i18n.prop('topbar_highscore') + '">' + $.i18n.prop('topbar_highscore') + ' : ' + score + '</div>');
-          Karma.TopBar.show();
         }
       });
     } catch (err) {
@@ -94,21 +91,16 @@
 
   function afterLogin() {
     updateName();
-    // setScore(5000);    
   }
 
 
   function initFB() {
-
     FB.Event.subscribe('auth.login', function() {
       afterLogin();
     });
-    loginIfAuthorized();
-    // $('#fb-login').on('click', function() {
-    //   getLoginStatus();
-    //   $(this).off('click');
-    // });
-
+    if (G_fbid !== '') {
+      loginIfAuthorized();
+    }
   }
 
 
@@ -158,16 +150,16 @@
     }(document));
   }
 
-  function setProfileImage(container, callback) {
+  function setProfileImage(container, user, callback) {
     FB.api("/me/picture?width=180&height=180", function(response) {
-      container.html('<img class="fb-picture" src="' + response.data.url + '">');
+      container.html('<img class="fb-picture" title="' + user.name + '" src="' + response.data.url + '">');
       return callback(null, response);
     });
   }
 
   function updateName() {
     FB.api('/me', function(user) {
-      setProfileImage($('#fbLoginImage'), function() {});
+      setProfileImage($('#fbLoginImage'), user, function() {});
       var exists = Karma.LocalStorage.exists('playerName');
       var savedName = Karma.LocalStorage.get('playerName');
       if (!exists || savedName === '') {
@@ -176,14 +168,14 @@
       } else {
         $('#playerName').val(savedName);
       }
-      getScore(user);
+      getScore(user.id);
     });
   }
 
   kFB.setup = setup;
   kFB.getLoginStatus = getLoginStatus;
   kFB.afterLogin = afterLogin;
-
+  kFB.updateScoreInTopBar = getScore;
   kFB.setup();
 
   Karma.FB = kFB;

@@ -88,7 +88,7 @@
 
   Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, pos) {
     ctx.strokeStyle = 'white';
-    if (c.id === this.items.mycar.id) { //me
+    if (this.items.mycar !== null && c.id === this.items.mycar.id) { //me
       ctx.fillStyle = 'black';      
     } else if (c.isBot === true) { //bots
       ctx.fillStyle = 'white';

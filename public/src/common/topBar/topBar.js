@@ -33,7 +33,9 @@
     o.push('<div id="keys"></div>');
     o.push('</li>');
 
-    o.push('<li id="fbLoginImage"/>');
+    o.push('<li id="fbLoginImage">');
+    o.push('<a href="/login"><img src="/images/iconLogin.png" id="iconLogin" title="', $.i18n.prop('topbar_login'), '"/></a>');
+    o.push('</li>');
 
     o.push('</ul>');
     var loginZone = $(o.join(''));
@@ -53,7 +55,12 @@
       Karma.LocalStorage.set('playerName', $playerName.val());
     });
 
+
+    $playerName.val(Karma.LocalStorage.get('playerName'));
+
     loginZone.children().hide();
+
+    Karma.TopBar.show();
 
 
   }
