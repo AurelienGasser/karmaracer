@@ -37,7 +37,7 @@
         var html_end = '</tbody></table>';
         var html = '';
         for (var i = 0; i < victories.length; i++) {
-          html += '<tr><td>' + victories[i].playerName + '</td><td>' + victories[i].numVictories + '</td></tr>';
+          html += '<tr><td>' + victories[i].playerName + '</td><td>' + victories[i].victories + '</td></tr>';
         }
         $('#victories').html(html_start + html + html_end);
       });

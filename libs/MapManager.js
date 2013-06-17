@@ -2,7 +2,7 @@ var fs = require('fs');
 var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
 var filesLib = require('./PackageManager/files');
-var mongodb = require('mongodb');
+
 
 var MapManager = function(app, callback) {
   this.app = app;
@@ -31,7 +31,7 @@ MapManager.prototype.loadItems = function(callback) {
   getJSONSForDirectory(path, function(item) {
     that.itemsByName[item.name] = item;
   }, callback);
-}
+};
 
 
 function getJSONSForDirectory(path, action, callback) {
@@ -47,24 +47,18 @@ function getJSONSForDirectory(path, action, callback) {
       return callback(null);
     }
   });
-}
-
+};
 
 
 
 MapManager.prototype.createOrUpdateMap = function(map) {
-  // if (Object.keys(that.maps).length > 0){
-  //   console.error('MAPS LEAVE', Object.keys(that.maps).length );
-  //   return;
-  // }
   if (KLib.isUndefined(this.maps[map])) {
     this.addGameServer(map);
   } else {
     this.updateGameServerMap(map);
   }
   this.maps[map.name] = map;
-
-}
+};
 
 MapManager.prototype.loadMap = function(mapName) {
   var content = fs.readFileSync(mapName);
@@ -72,7 +66,7 @@ MapManager.prototype.loadMap = function(mapName) {
   if (map.enable === true) {
     this.createOrUpdateMap(map);
   }
-}
+};
 
 MapManager.prototype.loadMaps = function(callback) {
   var that = this;
@@ -86,7 +80,7 @@ MapManager.prototype.loadMaps = function(callback) {
       return callback(null);
     }
   });
-}
+};
 
 MapManager.prototype.getMapsWithPlayers = function() {
   var maps = {};
@@ -98,34 +92,24 @@ MapManager.prototype.getMapsWithPlayers = function() {
     };
   }
   return maps;
-}
-
-MapManager.prototype.connectToDb = function(callback) {
-  var that = this;
-  var client = new mongodb.Db('test', new mongodb.Server("127.0.0.1", 27017, {}), {w: 1});
-  client.open(function(err, p_client) {
-    if (err) {
-      console.error('ERROR connecting to DB', err)
-      callback(err);
-    } else {
-      that.db = p_client;
-      client.collection('victories', function(err, victories) {
-        if (err) {
-          console.error('ERROR connecting to DB collection', err)
-        } else {
-          that.collectionVictories = victories;
-          console.info('connected to db');
-        }
-        callback(err);
-      });
-    }
-  });
-}
+};
 
 MapManager.prototype.load = function(callback) {
   var that = this;
-  this.connectToDb(function(err) {
-  })
+
+  var DBManager = require('./../db/DBManager');
+  DBManager.connect(function(err, client) {
+    if (err) {
+      return null;
+    }
+    DBManager.getCollection('users', function(err, users) {
+      if (err) {
+        return null;
+      }
+      that.collectionUsers = users;
+    })
+  });
+
   if (CONFIG.performanceTest) {
     console.info('loading performance test map')
     this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')
@@ -143,7 +127,13 @@ MapManager.prototype.load = function(callback) {
 }
 
 MapManager.prototype.getVictories = function(callback) {
-  this.collectionVictories.find({ numVictories: { $gt: 0 }}).sort({ numVictories: - 1}).limit(10).toArray(function(err, res) {
+  this.collectionUsers.find({
+    victories: {
+      $gt: 0
+    }
+  }).sort({
+    victories: -1
+  }).limit(10).toArray(function(err, res) {
     if (err) {
       console.error('ERROR: Could not get victories', err)
       callback(err)

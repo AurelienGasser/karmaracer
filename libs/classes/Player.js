@@ -17,11 +17,11 @@ Player.prototype.initCar = function(gameServer) {
 }
 
 Player.prototype.saveVictory = function() {
-  this.client.gameServer.mapManager.collectionVictories.findAndModify({
+  this.client.gameServer.mapManager.collectionUsers.findAndModify({
     playerName: this.playerName
   }, [], {
     $inc: {
-      numVictories: 1
+      victories: 1
     }
   }, {
     upsert: true,
