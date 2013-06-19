@@ -153,4 +153,12 @@ MapManager.prototype.getVictories = function(callback) {
   });
 }
 
+MapManager.prototype.getNumBots = function() {
+  var numBots = 0;
+  for (var mapName in this.maps) {
+    numBots += Object.keys(this.gameServers[mapName].botManager.bots).length;
+  }
+  return numBots;
+}
+
 module.exports = MapManager;

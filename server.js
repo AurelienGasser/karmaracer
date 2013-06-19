@@ -3,6 +3,7 @@ var KLib = require('./libs/classes/KLib');
 var fs = require('fs');
 var sys = require("util");
 var memwatch = require('memwatch');
+var os = require('os');
 
 var CONFIG = require('./config');
 
@@ -135,11 +136,18 @@ app.get('/tos', function(req, res) {
   index(req, res, "tos.jade", "CANVAS");
 });
 
-
-
 app.io = io;
 
 var MapManager = require('./libs/MapManager');
 var mapManager = new MapManager(app);
+
+app.get('/status', function(req, res) {
+  res.render('status', {
+    layout: false,
+    numServers: Object.keys(mapManager.gameServers).length,
+    numBots   : mapManager.getNumBots(),
+    loadAvg   : os.loadavg()
+  });
+})
 
 module.exports = app;
