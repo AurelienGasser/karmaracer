@@ -30,7 +30,7 @@ var configSingleton = function() {
       break;
   }
 
-  config.botsPerMap = 100;
+  config.botsPerMap = 7;
   config.stepByStepMode = false;
   config.serverPath = __dirname;
   config.physics.dichotomyIterations = 3;
