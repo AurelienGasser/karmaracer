@@ -40,3 +40,5 @@ module.exports = function() {
   }
 
 }();
+
+var UserController = require('./UserController');
