@@ -30,10 +30,10 @@ var configSingleton = function() {
       break;
   }
 
-  config.botsPerMap = 5;
+  config.botsPerMap = 7;
   config.stepByStepMode = false;
   config.serverPath = __dirname;
-  config.physics.dichotomyIterations = 0;
+  config.physics.dichotomyIterations = 3;
   config.botDensity = 1 / 2300;
   config.noBots = process.env.NO_BOTS;
   config.FBScope = 'publish_actions';

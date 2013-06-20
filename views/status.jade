@@ -1,0 +1,27 @@
+script(type="text/javascript").
+  setTimeout(function() {
+    window.location.reload()
+  }, 2000);
+
+style.
+  table tr :first-child {
+    font-weight: bold;
+  }
+
+h1 Karma racer status
+table
+  tr
+    td Number of game servers
+    td= numServers
+  tr
+    td Number of bots
+    td= numBots
+  tr
+    td Server Load Avg (1 min)
+    td= loadAvg[0].toFixed(2)
+  tr
+    td Server Load Avg (10 min)
+    td= loadAvg[1].toFixed(2)
+  tr
+    td Server Load Avg (15 min)
+    td= loadAvg[2].toFixed(2)

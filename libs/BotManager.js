@@ -23,9 +23,6 @@ BotManager.prototype.initBots = function() {
   var botDensity = config.botDensity;
   var numBots = Math.ceil(mapSize * botDensity) + 3;
   var interval = 0;
-  if(numBots > 10) {
-    numBots = 10;
-  }
   numBots = config.botsPerMap;
   for(var i = 0; i < numBots; ++i) {
     if (config.performanceTest) {
