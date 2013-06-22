@@ -2,7 +2,7 @@ var fs = require('fs');
 var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
 var filesLib = require('./PackageManager/files');
-var DBManager = require('./../db/DBManager');
+var DBManager = require('./db/DBManager');
 
 var MapManager = function(app, callback) {
   this.app = app;

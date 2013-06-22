@@ -34,7 +34,7 @@
     o.push('</li>');
 
     o.push('<li id="fbLoginImage">');
-    o.push('<a href="/login"><img src="/images/iconLogin.png" id="iconLogin" title="', $.i18n.prop('topbar_login'), '"/></a>');
+    o.push('<a href="/auth/facebook"><img src="/images/iconLogin.png" id="iconLogin" title="', $.i18n.prop('topbar_login'), '"/></a>');
     o.push('</li>');
 
     o.push('</ul>');

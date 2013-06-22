@@ -5,8 +5,6 @@ module.exports = function() {
   var that = {};
 
 
-
-
   var getCollection = function(name, callback) {
     that.client.collection(name, function(err, collection) {
       if (err) {
@@ -29,6 +27,8 @@ module.exports = function() {
         callback(err);
       } else {
         that.db = p_client;
+        var UserController = require('./UserController');
+        console.info('CONNECTED TO MONGO');
         callback(null, p_client);
       }
     });
@@ -41,4 +41,3 @@ module.exports = function() {
 
 }();
 
-var UserController = require('./UserController');

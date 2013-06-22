@@ -177,7 +177,6 @@ var setup = function(app, io, renderMethod) {
         } else {
           route = '/' + bPath;
         }
-
       }
       // check if the session should be redirected somewhere special
       if (!KLib.isUndefined(req.session.initialURL)) {
@@ -187,7 +186,15 @@ var setup = function(app, io, renderMethod) {
       req.session.fbsid = uid;
       req.session.accessToken = req.session.passport.user.accessToken;
       req.session.locale = req.session.passport.user._json.locale;
-      res.redirect(route);
+
+      var UserController = require('./db/UserController');
+      UserController.createOrGetUser(uid, "Guest",function(err, user) {
+        console.log('user', uid, err, user);
+        req.session.userId = user._id;
+        req.session.user = user;
+        res.redirect(route);
+      });
+
     } catch (error) {
       console.error('setupFBUser error', error);
     }

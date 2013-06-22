@@ -2,27 +2,29 @@ var DBManager = require('./../db/DBManager');
 
 module.exports = function() {
 
-
   var that = {};
   DBManager.getCollection('users', function(err, users) {
     that.users = users;
   });
 
-  var createOrGetUser = function(userFBId, callback) {
-    collection.find({
+  var createOrGetUser = function(userFBId, playerName, callback) {
+    that.users.find({
       'fbid': userFBId
     }).toArray(function(err, results) {
       if (err) {
         return callback(err);
       }
       if (results.length === 0) {
-        collection.insert({
-          'fbid': userFBId
+        that.users.insert({
+          'fbid': userFBId,
+          'victories' : 0,
+          'currentCar' : 'car1',
+          'highScore' : 0,
+          'playerName' : playerName
         }, function(err, results) {
           if (err) {
             return callback(err);
           }
-          console.log(users);
           return callback(null, results[0]);
         });
       } else {
@@ -31,5 +33,13 @@ module.exports = function() {
     });
   }
 
+  var getUsersCollection = function(){
+    return that.users;
+  }
+
+  return {
+    createOrGetUser : createOrGetUser,
+    users : getUsersCollection
+  };
 
 }();

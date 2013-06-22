@@ -44,7 +44,7 @@ CarManager.prototype.updateHighScores = function() {
 
 CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
   attacker.score += 1;
-  attacker.highScore += 1;
+  attacker.addHighScore(1);
   victim.receiveHit(projectile.damage);
   if (victim.life <= 0) {
     if (victim.dead) {
