@@ -124,14 +124,13 @@ MapManager.prototype.load = function(callback) {
   }
 }
 
+
 MapManager.prototype.getVictories = function(callback) {
-  this.collectionUsers.find({
-    victories: {
-      $gt: 0
-    }
-  }).sort({
+  var UserController = require('./db/UserController');
+
+  UserController.users().find().sort({
     victories: -1
-  }).limit(10).toArray(function(err, res) {
+  }).limit(15).toArray(function(err, res) {
     if (err) {
       console.error('ERROR: Could not get victories', err)
       callback(err)

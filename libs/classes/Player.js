@@ -16,7 +16,7 @@ Player.prototype.initCar = function(gameServer) {
   }
 }
 
-Player.prototype.saveVictory = function() {
+// Player.prototype.saveVictory = function() {
   // this.client.gameServer.mapManager.collectionUsers.findAndModify({
   //   playerName: this.playerName
   // }, [], {
@@ -28,6 +28,6 @@ Player.prototype.saveVictory = function() {
   //   'new': true
   // }, function(err, res) {
   // });  
-}
+// }
 
 module.exports = Player;

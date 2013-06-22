@@ -66,11 +66,10 @@ PlayerCar.prototype.getMiniInfo = function() {
 };
 
 
-PlayerCar.prototype.saveVictory = function() {
-  if (!this.isBot) {
-    this.player.saveVictory()
+PlayerCar.prototype.addVictory = function() {
+  if (!this.isBot && this.userDb !== null)  {
+    this.userDb.victories += 1;
   }
-  this.saveUserDb();
 }
 
 

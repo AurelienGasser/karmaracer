@@ -33,12 +33,11 @@ CarManager.prototype.getAliveCars = function(source) {
   return aliveCars;
 }
 
-CarManager.prototype.updateHighScores = function() {
+CarManager.prototype.savePlayersInDb = function() {
   for (var pcID in this.gameServer.players) {
     var pc = this.gameServer.players[pcID];
-    pc.playerCar.FBSetHighScore();
+    pc.playerCar.saveUserDb();
   }
-
 };
 
 

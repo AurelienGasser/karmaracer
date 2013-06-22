@@ -65,7 +65,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
       if (!err) {
         callback(null, victories);
       }
-    })
+    });
   });
   client.on('get_items', function(callback) {
     return callback(null, that.mapManager.itemsByName);

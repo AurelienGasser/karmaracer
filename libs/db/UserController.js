@@ -1,4 +1,4 @@
-var DBManager = require('./../db/DBManager');
+var DBManager = require('./DBManager');
 
 module.exports = function() {
 
@@ -35,7 +35,7 @@ module.exports = function() {
 
   var getUsersCollection = function(){
     return that.users;
-  }
+  };
 
   return {
     createOrGetUser : createOrGetUser,
