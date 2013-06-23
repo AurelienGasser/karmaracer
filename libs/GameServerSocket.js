@@ -176,14 +176,6 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  client.on('updatePlayerName', function(name) {
-    try {
-
-    } catch (e) {
-      console.error(e, e.stack);
-    }
-  });
-
   client.on('add bot', function() {
     try {
       client.gameServer.botManager.addBot();
