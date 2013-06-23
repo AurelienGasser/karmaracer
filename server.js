@@ -115,17 +115,20 @@ function index(req, res, view, draw_engine, opts) {
 
 auth.setup(app, io, index);
 
-app.get('/', auth.ensureAuthenticated, function(req, res) {
+app.get('/', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
 
-app.get('/game\.:map', auth.ensureAuthenticated, function(req, res) {
-
+app.get('/game\.:map', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
   index(req, res, "game.jade", "CANVAS");
 });
 
-app.get('/mm\.:map', auth.ensureAuthenticated, function(req, res) {
+app.get('/mm\.:map', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
+});
+
+app.get('/marketplace', auth.ensureAuthenticated, function(req, res) {
+  index(req, res, "marketplace.jade", "CANVAS");
 });
 
 app.get('/privacy', function(req, res) {

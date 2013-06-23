@@ -216,7 +216,7 @@ var setup = function(app, io, renderMethod) {
 }
 
 
-var reloadUserFromDb = function(req, res, next) {
+var reloadUserFromDbIfAuthenticated = function(req, res, next) {
   var UserController = require('./db/UserController');
   if (req.session.user) {
     UserController.createOrGetUser(req.session.user.fbid, req.session.user.playerName, function(err, user) {
@@ -230,12 +230,16 @@ var reloadUserFromDb = function(req, res, next) {
 
 
   function ensureAuthenticated(req, res, next) {
-    return reloadUserFromDb(req, res, next);
+    if (req.session.user){
+      return next();
+    } else {
+      res.redirect('/login');
+    }
   }
 
 module.exports = {
   setup: setup,
   ensureAuthenticated: ensureAuthenticated,
   sessionOptions: sessionOptions,
-  reloadUserFromDb: reloadUserFromDb
+  reloadUserFromDbIfAuthenticated: reloadUserFromDbIfAuthenticated
 }

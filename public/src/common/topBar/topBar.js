@@ -31,6 +31,10 @@
 
     o.push('<li id="fbHighScore"/>');
 
+    if (GKarmaOptions.playerName !== ''){
+    o.push('<li id="topShoping" class="topBarIcon"><a href="/marketplace"><img src="/images/iconShoping.png" id="iconShoping" title="', $.i18n.prop('topbar_shoping'), '"/></a></li>');
+    }
+
     o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="', $.i18n.prop('topbar_help'), '"/>');
     o.push('<div id="keys"></div>');
     o.push('</li>');

@@ -7,14 +7,15 @@
 .topBarMainZone{text-align:center;}
 #playerName{height:35px;line-height:35px;width:300px;}
 #playerName:focus{background-color:#ccc;}
-#fbLoginImage{width:40px;}
+#fbLoginImage{width:40px;}#fbLoginImage img{border-radius:5px;}
 .fb-picture{width:40px;height:40px;}
 #topHelp{position:relative;left:0px;text-align:left;width:40px;}
 #keys{position:fixed;background-color:#eee;display:none;right:0px;top:40px;margin:0px;}
 .iconTop{width:40px;height:40px;}
 #iconHelp{width:40px;height:40px;cursor:help;}
 #iconLogin{width:40px;height:40px;}
+li.topBarIcon{width:40px;height:40px;}li.topBarIcon img{width:40px;height:40px;border:none;}
 #help{display:inline-block;vertical-align:top;}
 ul#keys li{list-style:none;}
 .help_keys{text-align:left;}
-.help_keys_text{padding-left:1em;}
+.help_keys_text{padding-left:2em;}
