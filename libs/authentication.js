@@ -188,7 +188,10 @@ var setup = function(app, io, renderMethod) {
       req.session.locale = req.session.passport.user._json.locale;
 
       var UserController = require('./db/UserController');
-      UserController.createOrGetUser(uid, "Guest",function(err, user) {
+
+      var displayName = req.session.passport.user.displayName;
+
+      UserController.createOrGetUser(uid, displayName,function(err, user) {
         req.session.userId = user._id;
         req.session.user = user;
         res.redirect(route);

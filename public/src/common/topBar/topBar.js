@@ -1,5 +1,7 @@
+
 (function() {
   "use strict";
+  /*global GKarmaOptions*/
 
   function getPageName() {
     var url = document.URL;

@@ -3,7 +3,7 @@
   "use strict";
 
   function GameInstance() {
-    
+
 
 
     var o = [];
@@ -35,7 +35,7 @@
 
     this.explosionManager = new Karma.ExplosionsManager(this);
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
-    Karma.TopBar.setTopBar(this.socketManager.connection);
+
 
     this.setUIEvents();
     this.isMobile = false;
@@ -76,6 +76,8 @@
   };
 
   GameInstance.prototype.onInitReceived = function(err, worldInfo) {
+
+    Karma.TopBar.setTopBar(this.socketManager.connection);
     var that = this;
     this.worldInfo = worldInfo;
     this.bullets = [];

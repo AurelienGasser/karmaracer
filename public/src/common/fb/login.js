@@ -90,7 +90,7 @@
   }
 
   function afterLogin() {
-    // updateName();
+    updateTopBarProfile();
   }
 
 
@@ -157,17 +157,21 @@
     });
   }
 
-  function updateName() {
+  function updateName(user){
+    var exists = Karma.LocalStorage.exists('playerName');
+    var savedName = Karma.LocalStorage.get('playerName');
+    if (!exists || savedName === '') {
+      Karma.LocalStorage.set('playerName', user.first_name);
+      $('#playerName').val(user.first_name);
+    } else {
+      $('#playerName').val(savedName);
+    }
+  }
+
+  function updateTopBarProfile() {
     FB.api('/me', function(user) {
       setProfileImage($('#fbLoginImage'), user, function() {});
-      var exists = Karma.LocalStorage.exists('playerName');
-      var savedName = Karma.LocalStorage.get('playerName');
-      if (!exists || savedName === '') {
-        Karma.LocalStorage.set('playerName', user.first_name);
-        $('#playerName').val(user.first_name);
-      } else {
-        $('#playerName').val(savedName);
-      }
+      // updateName(user);
       getScore(user.id);
     });
   }
