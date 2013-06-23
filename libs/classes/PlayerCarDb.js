@@ -17,7 +17,7 @@ module.exports = function(PlayerCar) {
   PlayerCar.prototype.saveUserDb = function(callback) {
     if (this.userDd !== null) {
       var user = this.userDb;
-      UserController.saveUser(user);
+      UserController.save(user, callback);
     }
   };
 

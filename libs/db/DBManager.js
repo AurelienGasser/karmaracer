@@ -1,7 +1,10 @@
 var mongodb = require('mongodb');
+var KLib = require('./../classes/KLib');
 
 module.exports = function() {
   var that = {};
+
+
 
   var getCollection = function(name, callback) {
     that.client.collection(name, function(err, collection) {

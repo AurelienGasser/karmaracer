@@ -7,81 +7,40 @@
   module.exports = function() {
 
     var that = {};
-    DBManager.getCollection('users', function(err, users) {
-      that.users = users;
+    DBManager.getCollection('users', function(err, collection) {
+      that.collection = collection;
     });
 
-    var saveUser = function(userDb, callback) {
-      if (userDb && userDb !== null) {
-        var user = userDb;
-
-        //clone
-        var s = JSON.stringify(user);
-        if (s === null) {
-          return;
-        }
-        var updateUser = JSON.parse(s);
-        if (updateUser === null) {
-          return;
-        }
-
-        delete updateUser._id;
-        getUsersCollection().update({
-          'fbid': user.fbid
-        }, {
-          $set: updateUser
-        }, {
-          upsert: true
-        }, function(err) {
-          if (err) {
-            console.warn('err save user', err.message);
-            if (KLib.isFunction(callback)) {
-              return callback(err);
-            }
-          } else {
-            if (KLib.isFunction(callback)) {
-              return callback(null);
-            }
-          }
-        });
-      }
+    var save = function(item, callback) {
+      return DBManager.saveItem(getCollection(), {
+        'fbid': item.fbid
+      }, item, callback);
     };
 
+    var getInitValue = function(userFBId, playerName) {
+      return {
+        'fbid': userFBId,
+        'victories': 0,
+        'currentCar': 'car1',
+        'highScore': 0,
+        'playerName': playerName
+      };
+    };
 
-    var createOrGetUser = function(userFBId, playerName, callback) {
-      that.users.find({
+    var createOrGet = function(userFBId, playerName, callback) {
+      return DBManager.createOrGetItem(that.collection, {
         'fbid': userFBId
-      }).toArray(function(err, results) {
-        if (err) {
-          return callback(err);
-        }
-        if (results.length === 0) {
-          that.users.insert({
-            'fbid': userFBId,
-            'victories': 0,
-            'currentCar': 'car1',
-            'highScore': 0,
-            'playerName': playerName
-          }, function(err, results) {
-            if (err) {
-              return callback(err);
-            }
-            return callback(null, results[0]);
-          });
-        } else {
-          return callback(null, results[0]);
-        }
-      });
+      }, getInitValue(userFBId, playerName), callback);
     };
 
-    var getUsersCollection = function() {
-      return that.users;
+    var getCollection = function() {
+      return that.collection;
     };
 
     return {
-      createOrGetUser: createOrGetUser,
-      users: getUsersCollection,
-      saveUser: saveUser
+      createOrGet: createOrGet,
+      collection: getCollection,
+      save: save
     };
 
   }();

@@ -170,7 +170,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
           fbid : user.fbid,
           playerName : name
         }
-        UserController.saveUser(saveUser);
+        UserController.save(saveUser);
       }
       if (client.player && client.player.playerCar) {
         client.player.playerCar.updatePlayerName(name);

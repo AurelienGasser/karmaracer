@@ -96,12 +96,6 @@ MapManager.prototype.getMapsWithPlayers = function() {
 
 MapManager.prototype.load = function(callback) {
   var that = this;
-  DBManager.getCollection('users', function(err, users) {
-    if (err) {
-      return null;
-    }
-    that.collectionUsers = users;
-  })
   if (CONFIG.performanceTest) {
     console.info('loading performance test map')
     this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')
@@ -122,7 +116,7 @@ MapManager.prototype.load = function(callback) {
 MapManager.prototype.getVictories = function(callback) {
   var UserController = require('./db/UserController');
 
-  UserController.users().find().sort({
+  UserController.collection().find().sort({
     victories: -1
   }).limit(15).toArray(function(err, res) {
     if (err) {

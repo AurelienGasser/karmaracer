@@ -194,7 +194,7 @@ var setup = function(app, io, renderMethod) {
       // res.redirect(route);
       var UserController = require('./db/UserController');
 
-      UserController.createOrGetUser(fbid, displayName, function(err, user) {
+      UserController.createOrGet(fbid, displayName, function(err, user) {
         req.session.user = user;
         res.redirect(route);
       });
@@ -219,7 +219,7 @@ var setup = function(app, io, renderMethod) {
 var reloadUserFromDbIfAuthenticated = function(req, res, next) {
   var UserController = require('./db/UserController');
   if (req.session.user) {
-    UserController.createOrGetUser(req.session.user.fbid, req.session.user.playerName, function(err, user) {
+    UserController.createOrGet(req.session.user.fbid, req.session.user.playerName, function(err, user) {
       req.session.user = user;
       return next();
     });
