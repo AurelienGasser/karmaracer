@@ -37,7 +37,7 @@ var setup = function(app, io, renderMethod) {
           } else {
             // save the session data and accept the connection
             data.session = session;
-            // if (KLib.isUndefined(data.session.fbsid)) {
+            // if (KLib.isUndefined(data.session.fbid)) {
             //   return accept('No FB Id', false);
             // }
             accept(null, true);
@@ -116,7 +116,7 @@ var setup = function(app, io, renderMethod) {
 
   function authFB(req, res) {
     var fbReq = parse_signed_request(req.body.signed_request);
-    req.session.fbsid = fbReq.user_id;
+    req.session.fbid = fbReq.user_id;
     req.session.accessToken = fbReq.oauth_token;
     req.session.locale = fbReq.user.locale;
     graph.setAccessToken(fbReq.oauth_token);
@@ -147,11 +147,13 @@ var setup = function(app, io, renderMethod) {
 
   app.get('/logout', function(req, res) {
     req.logout();
-    delete req.session.fbsid;
+    delete req.session.fbid;
+    delete req.session.user;
     delete req.session.accessToken /
       delete req.session.locale;
     res.redirect('/');
   });
+
 
 
   var setupFBUser = function(req, res) {
@@ -182,25 +184,23 @@ var setup = function(app, io, renderMethod) {
       if (!KLib.isUndefined(req.session.initialURL)) {
         route = req.session.initialURL;
       }
-      var uid = req.session.passport.user.id;
-      req.session.fbsid = uid;
+      var fbid = req.session.passport.user.id;
       req.session.accessToken = req.session.passport.user.accessToken;
       req.session.locale = req.session.passport.user._json.locale;
 
-      var UserController = require('./db/UserController');
+
 
       var displayName = req.session.passport.user.displayName;
+      // res.redirect(route);
+      var UserController = require('./db/UserController');
 
-      UserController.createOrGetUser(uid, displayName,function(err, user) {
-        req.session.userId = user._id;
+      UserController.createOrGetUser(fbid, displayName, function(err, user) {
         req.session.user = user;
         res.redirect(route);
       });
-
     } catch (error) {
       console.error('setupFBUser error', error);
     }
-
   }
 
   app.get('/auth/facebook', passport.authenticate('facebook', {
@@ -215,21 +215,27 @@ var setup = function(app, io, renderMethod) {
   }), setupFBUser);
 }
 
+
+var reloadUserFromDb = function(req, res, next) {
+  var UserController = require('./db/UserController');
+  if (req.session.user) {
+    UserController.createOrGetUser(req.session.user.fbid, req.session.user.playerName, function(err, user) {
+      req.session.user = user;
+      return next();
+    });
+  } else {
+    return next();
+  }
+}
+
+
   function ensureAuthenticated(req, res, next) {
-    try {
-      if (req.isAuthenticated()) {
-        return next();
-      } else {
-        req.session.initialURL = req.url;
-      }
-      res.redirect('/auth/facebook');
-    } catch (error) {
-      console.error('auth error', error);
-    }
+    return reloadUserFromDb(req, res, next);
   }
 
 module.exports = {
   setup: setup,
   ensureAuthenticated: ensureAuthenticated,
-  sessionOptions: sessionOptions
+  sessionOptions: sessionOptions,
+  reloadUserFromDb: reloadUserFromDb
 }

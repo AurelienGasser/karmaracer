@@ -96,18 +96,12 @@ MapManager.prototype.getMapsWithPlayers = function() {
 
 MapManager.prototype.load = function(callback) {
   var that = this;
-  DBManager.connect(function(err, client) {
+  DBManager.getCollection('users', function(err, users) {
     if (err) {
       return null;
     }
-    DBManager.getCollection('users', function(err, users) {
-      if (err) {
-        return null;
-      }
-      that.collectionUsers = users;
-    })
-  });
-
+    that.collectionUsers = users;
+  })
   if (CONFIG.performanceTest) {
     console.info('loading performance test map')
     this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')

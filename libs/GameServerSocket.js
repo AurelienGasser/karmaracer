@@ -165,6 +165,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
       var user = client.handshake.session.user;
       if (!KLib.isUndefined(user)) {
         var UserController = require('./db/UserController');
+        user.playerName = name;
         var saveUser = {
           fbid : user.fbid,
           playerName : name

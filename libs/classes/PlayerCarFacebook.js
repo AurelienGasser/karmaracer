@@ -4,8 +4,8 @@ var CONFIG = require('./../../config');
 module.exports = function(PlayerCar) {
 
   PlayerCar.prototype.FBInit = function(callback) {
-    if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.fbsid)) {
-      this.fbId = this.client.handshake.session.fbsid;
+    if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.user)) {
+      this.fbId = this.client.handshake.session.user.fbid;
       return this.FBGetHighScore(callback);
     }
   };
