@@ -53,21 +53,21 @@ var PlayerCar = function(gameServer, client, playerName, player) {
 }
 
 PlayerCar.prototype.addHighScore = function(score) {
-  if (this.userDb !== null){
+  if (this.userDb !== null) {
     this.userDb.highScore += score;
   }
 };
 
 PlayerCar.prototype.getMiniInfo = function() {
   return {
-    fbId : this.fbId,
-    name : this.playerName
+    fbId: this.fbId,
+    name: this.playerName
   }
 };
 
 
 PlayerCar.prototype.addVictory = function() {
-  if (!this.isBot && this.userDb !== null)  {
+  if (!this.isBot && this.userDb !== null) {
     this.userDb.victories += 1;
   }
 }
@@ -87,7 +87,7 @@ PlayerCar.prototype.reset = function() {
 PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
   share.life = this.life;
-  share.maxLife = this.maxLife;  
+  share.maxLife = this.maxLife;
   share.shootingWithWeapon = this.shootingWithWeapon;
   share.playerName = this.playerName;
   share.s = this.score;
@@ -100,7 +100,7 @@ PlayerCar.prototype.getShared = function() {
   this.weaponShootOff();
   share.weaponName = this.weapon.name;
   share.isBot = this.isBot;
-  if (this.userDb !== null){
+  if (this.userDb !== null) {
     share.highScore = this.userDb.highScore;
   }
   return share;
@@ -118,6 +118,12 @@ PlayerCar.prototype.receiveHit = function(damage) {
 
 PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;
+  if (this.userDb !== null) {
+    this.userDb.playerName = name;
+    this.saveUserDb(function(err){
+      console.log('save user name', err);
+    });
+  }
 }
 
 PlayerCar.prototype.getExperience = function(experience) {

@@ -1,0 +1,8 @@
+#score-table{color:white;padding:0.5em;position:fixed;transition:width 1s linear 1s;}
+table#score-table thead td,table#score-table thead th{padding:0.5em 0.3em;font-size:1.2em;color:black;text-align:center;font-weight:bold;}
+table#score-table tbody td,table#score-table tbody th{padding:0.5em 0.3em;font-size:10px;color:black;text-align:center;}
+table#score-table tbody tr.userCar td{font-weight:bold;font-size:1.2em;}
+#score-table td .large_col{width:300px;}
+#score-table.default{width:300px;right:0px;bottom:10px;margin:5px;background-color:rgba(255, 255, 255, 0.3);transition:0.25s ease-in-out;}
+#score-table.big{width:500px;background-color:white;transition:0.5s linear;bottom:10%;right:50%;margin-right:-250px;border-radius:20px;}
+#score-table.big td,#score-table.big th{font-size:12px;transition:0.5s linear;}

@@ -84,7 +84,9 @@
     });
 
     $('#playerName').keyup(function() {
-      Karma.LocalStorage.set('playerName', $(this).val());
+      var name = $(this).val();
+      Karma.LocalStorage.set('playerName', name);
+      connection.emit('updatePlayerNameHome', name);
     });
 
     function addMaps(maps) {

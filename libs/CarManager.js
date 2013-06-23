@@ -37,6 +37,7 @@ CarManager.prototype.savePlayersInDb = function() {
   for (var pcID in this.gameServer.players) {
     var pc = this.gameServer.players[pcID];
     pc.playerCar.saveUserDb();
+    pc.playerCar.FBSetHighScore();
   }
 };
 

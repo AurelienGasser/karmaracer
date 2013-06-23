@@ -160,6 +160,21 @@ GameServerSocket.prototype.registerMethods = function(client) {
   });
 
 
+  client.on('updatePlayerNameHome', function(name) {
+    try {
+      var user = client.handshake.session.user;
+      console.log('updatePlayerNameHome', user, name);
+      if (!KLib.isUndefined(user)) {
+        var UserController = require('./db/UserController');
+        user.playerName = name;
+        UserController.saveUser(user);
+      }
+
+    } catch (e) {
+      console.error(e, e.stack);
+    }
+  });
+
   client.on('updatePlayerName', function(name) {
     try {
       client.player.playerCar.updatePlayerName(name);

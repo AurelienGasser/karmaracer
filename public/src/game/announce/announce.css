@@ -5,4 +5,4 @@
 #announce{height:100px;line-height:100px;left:20%;top:100px;background-color:rgba(238, 238, 238, 0.5);position:absolute;text-align:center;width:60%;margin:0px auto;z-index:9999;border-radius:10px;}
 #announce.freeze{background-color:#eee;}
 .announce span{font-size:32px;margin:10px;text-align:center;}
-.announce table.keys{text-align:center;border:none;border-collapse:collapse;padding:10px;margin:auto;}.announce table.keys td,.announce table.keys th,.announce table.keys tr{border:none;color:black;font-size:16px;background-color:rgba(238, 238, 238, 0.5);height:20px;line-height:16px;padding:2px;}
+.announce table.keys{text-align:center;border-radius:10px;margin:auto;margin-top:15px;background-color:rgba(238, 238, 238, 0.5);}.announce table.keys td,.announce table.keys th,.announce table.keys tr{border:none;border-radius:10px;color:black;font-size:18px;height:20px;line-height:16px;padding:5px;}

@@ -189,7 +189,6 @@ var setup = function(app, io, renderMethod) {
 
       var UserController = require('./db/UserController');
       UserController.createOrGetUser(uid, "Guest",function(err, user) {
-        console.log('user', uid, err, user);
         req.session.userId = user._id;
         req.session.user = user;
         res.redirect(route);
