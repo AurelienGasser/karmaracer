@@ -127,7 +127,8 @@ app.get('/mm\.:map', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
 
-app.get('/marketplace', auth.ensureAuthenticated, function(req, res) {
+//ensureAuthenticated
+app.get('/marketplace', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
   index(req, res, "marketplace.jade", "CANVAS");
 });
 

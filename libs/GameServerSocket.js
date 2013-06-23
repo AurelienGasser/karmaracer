@@ -77,6 +77,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
+  client.on('getCars', function(callback) {
+    var CarController = require('./db/CarController');
+    return CarController.collection().find().toArray(callback);
+  });
+
+
   client.on('get_map', function(mapName, callback) {
     console.info('get map', mapName)
     var map = that.mapManager.maps[mapName];

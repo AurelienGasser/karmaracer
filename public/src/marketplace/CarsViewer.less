@@ -1,0 +1,54 @@
+#marketplace-cars{
+  ul {
+    // width: 450px;
+
+  }
+  li{
+    transition: 0.25s ease-in-out;
+    -webkit-transition: 0.25s ease-in-out; /* Safari */
+
+    display: inline-block;
+    width: 200px;
+    height: 200px;
+    list-style: none;
+    vertical-align: top;
+    overflow: hidden;
+    border-radius: 5px;
+    border: 1px solid #eee;
+    margin:5px;
+    text-align: center;
+
+    span{
+      font-size: 18px;
+      font-weight: bold;
+      display: block;
+      margin: 10px;
+    }
+
+    img{
+      margin: 20px auto;
+      margin-top: 40px;
+      
+      transition: 0.25s ease-in-out;
+      -webkit-transition: 0.25s ease-in-out; /* Safari */
+
+    }
+  }
+
+  li:hover
+  {
+    transition: 0.25s ease-in-out;
+    -webkit-transition: 0.25s ease-in-out; /* Safari */
+
+    border: 1px solid #333;
+    img
+    {
+        transform: rotate(45deg);
+        -ms-transform: rotate(-45deg); /* IE 9 */
+        -webkit-transform: rotate(-10deg); /* Safari and Chrome */  
+        transition: 0.25s ease-in-out;
+        -webkit-transition: 0.25s ease-in-out; /* Safari */
+      }
+    };
+
+}
