@@ -47,6 +47,7 @@
       }
     };
 
+
     var createOrGetUser = function(userFBId, playerName, callback) {
       that.users.find({
         'fbid': userFBId

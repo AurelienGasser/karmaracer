@@ -12,8 +12,6 @@ var Bot = function(gameServer, name) {
     r += 2;
     this.playerCar.car.carImageName = 'c' + r;
     this.id = this.playerCar.id;
-
-
     return this;
   }
 

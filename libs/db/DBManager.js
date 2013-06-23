@@ -32,10 +32,61 @@ module.exports = function() {
     });
   };
 
+  var saveItem = function(collection, criteria, item, callback) {
+    if (item && item !== null) {
+      //clone
+      var s = JSON.stringify(item);
+      if (s === null) {
+        return;
+      }
+      var updateItem = JSON.parse(s);
+      if (updateItem === null) {
+        return;
+      }
+
+      delete updateItem._id;
+      collection.update(criteria, {
+        $set: updateItem
+      }, {
+        upsert: true
+      }, function(err) {
+        if (err) {
+          console.warn('err save item', err.message);
+          if (KLib.isFunction(callback)) {
+            return callback(err);
+          }
+        } else {
+          if (KLib.isFunction(callback)) {
+            return callback(null);
+          }
+        }
+      });
+    }
+  };
+
+  var createOrGetItem = function(collection, criteria, initValue, callback) {
+    collection.find(criteria).toArray(function(err, results) {
+      if (err) {
+        return callback(err);
+      }
+      if (results.length === 0) {
+        collection.insert(initValue, function(err, results) {
+          if (err) {
+            return callback(err);
+          }
+          return callback(null, results[0]);
+        });
+      } else {
+        return callback(null, results[0]);
+      }
+    });
+  };
+
   return {
     connect: connect,
-    getCollection : getCollection
+    getCollection: getCollection,
+    saveItem: saveItem,
+    createOrGetItem: createOrGetItem
   }
 
 }();
-
