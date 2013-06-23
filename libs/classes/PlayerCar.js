@@ -121,7 +121,6 @@ PlayerCar.prototype.updatePlayerName = function(name) {
   if (this.userDb !== null) {
     this.userDb.playerName = name;
     this.saveUserDb(function(err){
-      console.log('save user name', err);
     });
   }
 }

@@ -9,7 +9,7 @@ module.exports = function(gameServer) {
     var end = new Date();
     if (config.performanceTest) {
       if (i % (numTicks / 10) === 0) {
-        console.log(100 * i / numTicks + '%');
+        console.info(100 * i / numTicks + '%');
       }
       perfTimes.push(end - start);
       if (i === numTicks) {
@@ -17,7 +17,7 @@ module.exports = function(gameServer) {
         for (var j in perfTimes) {
           sum += perfTimes[j];
         }
-        console.log('* Performance:', sum + 'ms for', numTicks, 'ticks');
+        console.info('* Performance:', sum + 'ms for', numTicks, 'ticks');
         process.exit(1)
       }
     }
