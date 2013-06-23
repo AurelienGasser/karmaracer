@@ -17,6 +17,7 @@
     border: 1px solid #eee;
     margin:5px;
     text-align: center;
+    position: relative;
 
     span{
       font-size: 18px;
@@ -28,10 +29,20 @@
     img{
       margin: 20px auto;
       margin-top: 40px;
+      max-width: 64px;
       
       transition: 0.25s ease-in-out;
       -webkit-transition: 0.25s ease-in-out; /* Safari */
 
+    }
+
+    .price{
+      width: 100%;
+      text-align: left;
+      position: absolute;
+      bottom:0px;
+      left: 0px;
+      padding: 5px;
     }
   }
 
@@ -43,9 +54,9 @@
     border: 1px solid #333;
     img
     {
-        transform: rotate(45deg);
-        -ms-transform: rotate(-45deg); /* IE 9 */
-        -webkit-transform: rotate(-10deg); /* Safari and Chrome */  
+        transform: rotate(120deg);
+        -ms-transform: rotate(120deg); /* IE 9 */
+        -webkit-transform: rotate(120deg); /* Safari and Chrome */  
         transition: 0.25s ease-in-out;
         -webkit-transition: 0.25s ease-in-out; /* Safari */
       }

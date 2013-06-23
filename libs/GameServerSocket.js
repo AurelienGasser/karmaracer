@@ -79,7 +79,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   client.on('getCars', function(callback) {
     var CarController = require('./db/CarController');
-    return CarController.collection().find().toArray(callback);
+    return CarController.collection().find().sort({
+      price: 1
+    }).toArray(callback);
   });
 
 
@@ -173,8 +175,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
         var UserController = require('./db/UserController');
         user.playerName = name;
         var saveUser = {
-          fbid : user.fbid,
-          playerName : name
+          fbid: user.fbid,
+          playerName: name
         }
         UserController.save(saveUser);
       }

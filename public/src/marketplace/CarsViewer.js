@@ -9,7 +9,9 @@
 
 
   CarViewer.prototype.outputCar = function(o, car) {
-    o.push('<li><span>', car.displayName, '</span><img src="', car.path, '"/></li>');
+    o.push('<li><span>', car.displayName, '</span><img src="', car.path, '"/>');
+    o.push('<div class="price">Price : ', car.price, ' Karma</div>')
+    o.push('</li>')
   };
 
   CarViewer.prototype.outputCars = function(cars) {
