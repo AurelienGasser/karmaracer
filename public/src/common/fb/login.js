@@ -90,7 +90,7 @@
   }
 
   function afterLogin() {
-    updateName();
+    // updateName();
   }
 
 

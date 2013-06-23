@@ -8,14 +8,8 @@
       Karma.Home.start();
     });
   });
-
-
-
   var start = function() {
-
     Karma.UserVoice();
-
-
     var $mapsContainer = $('#mapsContainer');
     var o = [];
     o.push('<h2>', $.i18n.prop('home_clickonmap'), '</h2>');
@@ -91,11 +85,7 @@
         var o = [];
         var m = maps[i];
         o.push('<li id="map-', m, '">');
-        //<a class="editLink" href="mm.' + m + '" >edit</a></br>
         var link = 'game.' + m;
-        // if (!KLib.isUndefined(parent)){
-        // link = 'https://apps.facebook.com/karmaracer_dev/' + link;
-        // }
         o.push('<a class="mapLink" href="', link, '" ><div>', m, '</br></div></a>');
         o.push('<div class="info"><span class="players"/></div>');
         o.push('</li>');

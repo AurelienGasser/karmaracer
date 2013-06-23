@@ -84,6 +84,10 @@ function index(req, res, view, draw_engine, opts) {
     locale : req.session.locale
   };
 
+  options['playerName'] = null;  
+  if (req.session.user){
+    options['playerName'] = req.session.user.playerName; 
+  } 
   if (KLib.isUndefined(options.locale)){
     options.locale = 'en_GB';
   }
@@ -103,7 +107,7 @@ function index(req, res, view, draw_engine, opts) {
   if (!KLib.isUndefined(map)) {
     options['map'] = map;
   }
-  // res.setHeader('X-Frame-Options', 'GOFORIT');
+
   res.render(view, options);
 }
 
@@ -118,7 +122,6 @@ app.get('/', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
 
-
 app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
   index(req, res, "game.jade", "CANVAS");
 });
@@ -126,7 +129,6 @@ app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
 app.get('/mm\.:map', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
-
 
 app.get('/privacy', function(req, res) {
   index(req, res, "privacy.jade", "CANVAS");
