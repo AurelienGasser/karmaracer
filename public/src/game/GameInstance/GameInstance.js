@@ -3,7 +3,7 @@
   "use strict";
 
   function GameInstance() {
-    Karma.TopBar.setTopBar();
+    
 
 
     var o = [];
@@ -35,7 +35,7 @@
 
     this.explosionManager = new Karma.ExplosionsManager(this);
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
-
+    Karma.TopBar.setTopBar(this.socketManager.connection);
 
     this.setUIEvents();
     this.isMobile = false;
@@ -71,20 +71,9 @@
     this.scoresTable.html(o.join(''));
   };
 
-
-  GameInstance.prototype.updatePlayerName = function(name) {
-    this.socketManager.emit('updatePlayerName', name);
-    Karma.LocalStorage.set('playerName', name);
-  };
-
   GameInstance.prototype.setUIEvents = function() {
     var that = this;
-    $('#playerName').keyup(function() {
-      that.updatePlayerName($(this).val());
-    });
   };
-
-
 
   GameInstance.prototype.onInitReceived = function(err, worldInfo) {
     var that = this;

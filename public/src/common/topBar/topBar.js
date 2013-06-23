@@ -12,7 +12,7 @@
   }
 
 
-  function setTopBar() {
+  function setTopBar(connection) {
     var o = [];
     o.push('<div id="topBar" class="init"><ul id="topBarBoxes">');
 
@@ -52,7 +52,9 @@
     var $playerName = $('#playerName');
 
     $playerName.keyup(function() {
-      Karma.LocalStorage.set('playerName', $playerName.val());
+      var name = $(this).val();
+      Karma.LocalStorage.set('playerName', name);
+      connection.emit('updatePlayerNameTopBar', name);
     });
 
 

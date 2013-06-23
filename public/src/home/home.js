@@ -14,7 +14,7 @@
   var start = function() {
 
     Karma.UserVoice();
-    Karma.TopBar.setTopBar();
+
 
     var $mapsContainer = $('#mapsContainer');
     var o = [];
@@ -26,6 +26,8 @@
     var connection = io.connect(host, {
       secure: true
     });
+
+    Karma.TopBar.setTopBar(connection);
 
     connection.emit('get_maps', function(err, maps) {
       addMaps(maps);
@@ -81,12 +83,6 @@
 
     $('#playerNameForm').submit(function() {
       return false;
-    });
-
-    $('#playerName').keyup(function() {
-      var name = $(this).val();
-      Karma.LocalStorage.set('playerName', name);
-      connection.emit('updatePlayerNameHome', name);
     });
 
     function addMaps(maps) {
