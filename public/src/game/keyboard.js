@@ -15,7 +15,6 @@
 
   function KeyboardHandler(gameInstance) {
     this.gameInstance = gameInstance;
-    this.captureKeys = true;
     return this;
   }
 
@@ -64,10 +63,6 @@
 
 
   KeyboardHandler.prototype.handleKeyDownGame = function(event) {
-
-    if (!this.captureKeys) {
-      return true;
-    }
     switch (event.keyCode) {
       case KEY_ESCAPE:
         break;
@@ -115,21 +110,10 @@
     }
   };
 
-  KeyboardHandler.prototype.isControlKey = function(event) {
-    return event.ctrlKey || ([224, 17, 91, 93].indexOf(event.keyCode) != -1);
-  }
-
   KeyboardHandler.prototype.handleKeyDown = function(event) {
-    console.log('dn ' + event.ctrlKey + ' ' + event.keyCode);
-    var isControlKey = this.isControlKey(event);
+    
 
-    if (isControlKey) {
-      this.captureKeys = false;
-      console.log('stop')
-    } else if (!this.captureKeys && !isControlKey) {
-      this.captureKeys = true;
-    }
-    else if (this.gameInstance.chat.isOpen === true) {
+    if (this.gameInstance.chat.isOpen === true) {
       return this.handleKeyDownChat(event);
     } else {
       var $pn = $('#playerName');
@@ -142,12 +126,6 @@
   };
 
   KeyboardHandler.prototype.handleKeyUp = function(event) {
-    console.log('up ' + event.ctrlKey + ' ' + event.keyCode);
-    if (this.isControlKey(event)) {
-      this.captureKeys = true;
-      console.log('start')
-      return;
-    }
     this.handleKey(event.keyCode, 'end');
   };
 
