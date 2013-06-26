@@ -24,7 +24,6 @@
     }
   };
 
-
   KeyboardHandler.prototype.handleKey = function(key, state) {
     switch (key) {
       case KEY_B:
@@ -57,35 +56,37 @@
         }
         break;
       default:
+        return false; // return false when no catch
     }
+    return true; // return true when the key is effectively catched
   };
 
-
-
   KeyboardHandler.prototype.handleKeyDownGame = function(event) {
+    var preventDefault = false;
     switch (event.keyCode) {
       case KEY_ESCAPE:
         break;
       case KEY_UP:
       case KEY_DOWN:
-        this.handleKey(event.keyCode, 'start');
+        preventDefault = this.handleKey(event.keyCode, 'start');
         break;
       case KEY_ENTER:
         if (this.gameInstance.chat.isOpen === false) {
-          this.gameInstance.chat.showChat();
+          preventDefault = this.gameInstance.chat.showChat();
         }
         break;
       case KEY_L:
       case KEY_P:
       case KEY_SPACE:
-        this.handleKey(event.keyCode, 'start');
+        preventDefault = this.handleKey(event.keyCode, 'start');
         break;
       default:
-        this.handleKey(event.keyCode, 'start');
+        preventDefault = this.handleKey(event.keyCode, 'start');
     }
-    event.preventDefault();
-    return false;
-
+    if (preventDefault) {
+      event.preventDefault();
+    }
+    return !preventDefault;
   };
 
   KeyboardHandler.prototype.handleKeyDownChat = function(event) {
@@ -111,7 +112,7 @@
   };
 
   KeyboardHandler.prototype.handleKeyDown = function(event) {
-    
+
 
     if (this.gameInstance.chat.isOpen === true) {
       return this.handleKeyDownChat(event);
