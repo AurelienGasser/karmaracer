@@ -62,6 +62,7 @@ app.configure(function(callback) {
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
+  // app.use(auth.reloadUserFromDb);
 
 
   app.use(express.errorHandler({
@@ -80,21 +81,26 @@ function index(req, res, view, draw_engine, opts) {
     layout: false,
     'title': 'Karma Racer',
     default_draw_engine: draw_engine,
-    fbid: req.session.fbsid,
-    locale : req.session.locale
+    locale: req.session.locale
   };
 
-  if (KLib.isUndefined(options.locale)){
+  options['playerName'] = null;
+  options['fbid'] = null;
+  if (req.session.user) {
+    options['playerName'] = req.session.user.playerName;
+    options['fbid'] = req.session.user.fbid;
+  }
+  if (KLib.isUndefined(options.locale)) {
     options.locale = 'en_GB';
   }
 
   options.locale = options.locale.substring(0, 2);
-  if (supportedLanguages.indexOf(options.locale) === -1){
+  if (supportedLanguages.indexOf(options.locale) === -1) {
     options.locale = 'en';
   }
 
-  if (!KLib.isUndefined(opts)){
-    for (var o in opts){
+  if (!KLib.isUndefined(opts)) {
+    for (var o in opts) {
       options[o] = opts[o];
     }
   }
@@ -103,30 +109,24 @@ function index(req, res, view, draw_engine, opts) {
   if (!KLib.isUndefined(map)) {
     options['map'] = map;
   }
-  // res.setHeader('X-Frame-Options', 'GOFORIT');
+
   res.render(view, options);
 }
 
 auth.setup(app, io, index);
 
-// for dev purpose uncomment
-auth.ensureAuthenticated = function(req, res, next){
-  return next();
-}
-
 app.get('/', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "index.jade", "CANVAS");
 });
 
+app.get('/game\.:map', auth.ensureAuthenticated, function(req, res) {
 
-app.get('/game\.:map', auth.ensureAuthenticated ,function(req, res) {
   index(req, res, "game.jade", "CANVAS");
 });
 
 app.get('/mm\.:map', auth.ensureAuthenticated, function(req, res) {
   index(req, res, "mapmaker.jade", "CANVAS");
 });
-
 
 app.get('/privacy', function(req, res) {
   index(req, res, "privacy.jade", "CANVAS");
@@ -138,15 +138,23 @@ app.get('/tos', function(req, res) {
 
 app.io = io;
 
-var MapManager = require('./libs/MapManager');
-var mapManager = new MapManager(app);
+var DBManager = require('./libs/db/DBManager');
+DBManager.connect(function(err, client) {
+  if (err) {
+    return null;
+  } else {
+    var MapManager = require('./libs/MapManager');
+    var mapManager = new MapManager(app);
+  }
+});
+
 
 app.get('/status', function(req, res) {
   res.render('status', {
     layout: false,
     numServers: Object.keys(mapManager.gameServers).length,
-    numBots   : mapManager.getNumBots(),
-    loadAvg   : os.loadavg()
+    numBots: mapManager.getNumBots(),
+    loadAvg: os.loadavg()
   });
 })
 

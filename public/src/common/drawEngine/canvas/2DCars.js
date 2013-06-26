@@ -103,9 +103,8 @@
     ctx.closePath();
   };
 
-
-
   Engine2DCanvas.prototype.drawCars = function(ctx) {
+    ctx.font = '10px Trebuchet MS';
     if (this.items.cars !== null) {
       for (var i = 0; i < this.items.cars.length; i++) {
         var c = this.items.cars[i];

@@ -16,18 +16,18 @@ Player.prototype.initCar = function(gameServer) {
   }
 }
 
-Player.prototype.saveVictory = function() {
-  this.client.gameServer.mapManager.collectionVictories.findAndModify({
-    playerName: this.playerName
-  }, [], {
-    $inc: {
-      numVictories: 1
-    }
-  }, {
-    upsert: true,
-    'new': true
-  }, function(err, res) {
-  });  
-}
+// Player.prototype.saveVictory = function() {
+  // this.client.gameServer.mapManager.collectionUsers.findAndModify({
+  //   playerName: this.playerName
+  // }, [], {
+  //   $inc: {
+  //     victories: 1
+  //   }
+  // }, {
+  //   upsert: true,
+  //   'new': true
+  // }, function(err, res) {
+  // });  
+// }
 
 module.exports = Player;

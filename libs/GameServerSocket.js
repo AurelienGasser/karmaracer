@@ -65,7 +65,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
       if (!err) {
         callback(null, victories);
       }
-    })
+    });
   });
   client.on('get_items', function(callback) {
     return callback(null, that.mapManager.itemsByName);
@@ -160,9 +160,21 @@ GameServerSocket.prototype.registerMethods = function(client) {
   });
 
 
-  client.on('updatePlayerName', function(name) {
+  client.on('updatePlayerNameTopBar', function(name) {
     try {
-      client.player.playerCar.updatePlayerName(name);
+      var user = client.handshake.session.user;
+      if (!KLib.isUndefined(user)) {
+        var UserController = require('./db/UserController');
+        user.playerName = name;
+        var saveUser = {
+          fbid : user.fbid,
+          playerName : name
+        }
+        UserController.saveUser(saveUser);
+      }
+      if (client.player && client.player.playerCar) {
+        client.player.playerCar.updatePlayerName(name);
+      }
     } catch (e) {
       console.error(e, e.stack);
     }

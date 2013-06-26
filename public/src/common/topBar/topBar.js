@@ -1,5 +1,7 @@
+
 (function() {
   "use strict";
+  /*global GKarmaOptions*/
 
   function getPageName() {
     var url = document.URL;
@@ -12,7 +14,7 @@
   }
 
 
-  function setTopBar() {
+  function setTopBar(connection) {
     var o = [];
     o.push('<div id="topBar" class="init"><ul id="topBarBoxes">');
 
@@ -22,7 +24,7 @@
     }
 
     o.push('<li class="topBarMainZone"><form id="playerNameForm" href="#">');
-    
+
     o.push($.i18n.prop('topbar_welcome'), '<input title="', $.i18n.prop('topbar_changename'), '" id="playerName" type="text" placeholder="Your name" required="required" name="playerName" autocomplete="off"></input>');
     o.push('<input type="submit" style="display:none"/>');
     o.push('</form></li>');
@@ -34,7 +36,7 @@
     o.push('</li>');
 
     o.push('<li id="fbLoginImage">');
-    o.push('<a href="/login"><img src="/images/iconLogin.png" id="iconLogin" title="', $.i18n.prop('topbar_login'), '"/></a>');
+    o.push('<a href="/auth/facebook"><img src="/images/iconLogin.png" id="iconLogin" title="', $.i18n.prop('topbar_login'), '"/></a>');
     o.push('</li>');
 
     o.push('</ul>');
@@ -52,18 +54,26 @@
     var $playerName = $('#playerName');
 
     $playerName.keyup(function() {
-      Karma.LocalStorage.set('playerName', $playerName.val());
+      var name = $(this).val();
+      Karma.LocalStorage.set('playerName', name);
+      connection.emit('updatePlayerNameTopBar', name);
     });
 
-
-    $playerName.val(Karma.LocalStorage.get('playerName'));
+    setPlayerNameValue($playerName);
 
     loginZone.children().hide();
-
     Karma.TopBar.show();
-
-
   }
+
+  function setPlayerNameValue($playerName) {
+    var dbValue = GKarmaOptions.playerName;
+    if (dbValue !== '') {
+      $playerName.val(dbValue);
+    } else {
+      $playerName.val(Karma.LocalStorage.get('playerName'));
+    }
+  }
+
 
   function createHelp(k, text) {
     return {
@@ -103,7 +113,7 @@
   Karma.TopBar = {
     setTopBar: setTopBar,
     show: show,
-    getHelps : getHelps
+    getHelps: getHelps
   };
 
 }());

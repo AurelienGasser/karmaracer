@@ -1,21 +1,14 @@
-/*global io*/
+/*global io,GKarmaOptions, G_locale*/
 (function(io) {
   "use strict";
-  /*global G_locale*/
 
   $(function() {
     Karma.i18n(G_locale, function() {
       Karma.Home.start();
     });
   });
-
-
-
   var start = function() {
-
     Karma.UserVoice();
-    Karma.TopBar.setTopBar();
-
     var $mapsContainer = $('#mapsContainer');
     var o = [];
     o.push('<h2>', $.i18n.prop('home_clickonmap'), '</h2>');
@@ -27,19 +20,14 @@
       secure: true
     });
 
+    Karma.TopBar.setTopBar(connection);
+
     connection.emit('get_maps', function(err, maps) {
       addMaps(maps);
       $('#loadingImage').fadeOut();
       $('#victoriesTitle').html($.i18n.prop('home_high_scores_table'));
       connection.emit('get_victories', function(err, victories) {
-        var html_start = '<table style="width: 100%"><thead><tr><th>' + $.i18n.prop('home_high_scores_title_player') +
-          '</th><th>' + $.i18n.prop('home_high_scores_title_victories') + '</th></tr></thead><tbody>';
-        var html_end = '</tbody></table>';
-        var html = '';
-        for (var i = 0; i < victories.length; i++) {
-          html += '<tr><td>' + victories[i].playerName + '</td><td>' + victories[i].numVictories + '</td></tr>';
-        }
-        $('#victories').html(html_start + html + html_end);
+        outputVictories(victories);
       });
     });
 
@@ -56,6 +44,17 @@
         $('#map-' + m.map + ' .players').html(players);
       }
     });
+
+    function outputVictories(victories) {
+      var html_start = '<table style="width: 100%"><thead><tr><th>' + $.i18n.prop('home_high_scores_title_rank') + '</th><th>' + $.i18n.prop('home_high_scores_title_player') +
+        '</th><th>' + $.i18n.prop('home_high_scores_title_victories') + '</th><th>' + $.i18n.prop('home_high_scores_title_highscore') + '</th></tr></thead><tbody>';
+      var html_end = '</tbody></table>';
+      var html = '';
+      for (var i = 0; i < victories.length; i++) {
+        html += '<tr><td>' + (i + 1) + '.</td><td>' + victories[i].playerName + '</td><td>' + victories[i].victories + '</td><td>' + victories[i].highScore + '</td></tr>';
+      }
+      $('#victories').html(html_start + html + html_end);
+    }
 
 
     function registerMaps() {
@@ -79,21 +78,13 @@
       return false;
     });
 
-    $('#playerName').keyup(function() {
-      Karma.LocalStorage.set('playerName', $(this).val());
-    });
-
     function addMaps(maps) {
       var $ul = $('ul#maps');
       for (var i = 0; i < maps.length; i++) {
         var o = [];
         var m = maps[i];
         o.push('<li id="map-', m, '">');
-        //<a class="editLink" href="mm.' + m + '" >edit</a></br>
         var link = 'game.' + m;
-        // if (!KLib.isUndefined(parent)){
-        // link = 'https://apps.facebook.com/karmaracer_dev/' + link;
-        // }
         o.push('<a class="mapLink" href="', link, '" ><div>', m, '</br></div></a>');
         o.push('<div class="info"><span class="players"/></div>');
         o.push('</li>');

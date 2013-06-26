@@ -132,11 +132,13 @@
 
       };
 
+      var updateScoreInTopBar = function() {
+        Karma.FB.updateScoreInTopBar(G_fbid);
+      };
+
       var msg = $.i18n.prop('game_winsthegame', d.winnerName);
       announce(msg, 'black', 'freeze');
-      announceIn('2', 'red', 3, 'freeze', function(){
-        Karma.FB.updateScoreInTopBar(G_fbid);
-      });
+      announceIn('2', 'red', 3, 'freeze', updateScoreInTopBar);
       announceIn('1', 'orange', 4, 'freeze', removeBigScore);
       announceIn($.i18n.prop('game_go'), 'green', 5, '');
 

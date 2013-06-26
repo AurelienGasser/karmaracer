@@ -44,76 +44,34 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.playerName = playerName || 'car' + Math.floor(Math.random() * 1e5);
   this.id = this.car.id;
   this.reset();
-  this.highScore = 0;
   this.fbId = 0;
+  this.userDb = null;
+  this.loadFromSessionUser();
   if (this.client !== null) {
     this.FBInit();
   }
 }
 
+PlayerCar.prototype.addHighScore = function(score) {
+  if (this.userDb !== null) {
+    this.userDb.highScore += score;
+  }
+};
+
 PlayerCar.prototype.getMiniInfo = function() {
   return {
-    fbId : this.fbId,
-    name : this.playerName
+    fbId: this.fbId,
+    name: this.playerName
   }
 };
 
 
-PlayerCar.prototype.FBInit = function(callback) {
-  if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.fbsid)) {
-    this.fbId = this.client.handshake.session.fbsid;
-    return this.FBGetHighScore(callback);
-  }
-};
-
-
-PlayerCar.prototype.FBSetHighScore = function() {
-  var that = this;
-  try {
-    this.client.graph.post("/me/scores", {
-      score: that.highScore,
-    }, function(response) {
-      if (!response || response.error) {
-        console.error(response);
-      } else {
-        // ok upated
-      }
-    });
-  } catch (err) {
-    console.error(err);
-  }
-
-};
-
-PlayerCar.prototype.FBGetHighScore = function(callback) {
-  try {
-    var that = this;
-    this.client.graph.get("/" + that.fbId + "/scores/" + CONFIG.appName, function(err, response) {
-      if (!response || response.error) {
-        console.error('FBGetHighScore', response);
-      } else {
-        var score = 0;
-        if (response.data.length > 0) {
-          score = response.data[0].score;
-        }
-        if (score !== 0) {
-          that.highScore = score;
-          if (KLib.isFunction(callback)) {
-            return callback(null);
-          }
-        }
-      }
-    });
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-PlayerCar.prototype.saveVictory = function() {
-  if (!this.isBot) {
-    this.player.saveVictory()
+PlayerCar.prototype.addVictory = function() {
+  if (!this.isBot && this.userDb !== null) {
+    this.userDb.victories += 1;
   }
 }
+
 
 PlayerCar.prototype.reset = function() {
   this.score = 0;
@@ -130,7 +88,6 @@ PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
   share.life = this.life;
   share.maxLife = this.maxLife;
-  share.highScore = this.highScore;
   share.shootingWithWeapon = this.shootingWithWeapon;
   share.playerName = this.playerName;
   share.s = this.score;
@@ -143,6 +100,9 @@ PlayerCar.prototype.getShared = function() {
   this.weaponShootOff();
   share.weaponName = this.weapon.name;
   share.isBot = this.isBot;
+  if (this.userDb !== null) {
+    share.highScore = this.userDb.highScore;
+  }
   return share;
 }
 
@@ -158,6 +118,11 @@ PlayerCar.prototype.receiveHit = function(damage) {
 
 PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;
+  if (this.userDb !== null) {
+    this.userDb.playerName = name;
+    this.saveUserDb(function(err){
+    });
+  }
 }
 
 PlayerCar.prototype.getExperience = function(experience) {
@@ -230,5 +195,8 @@ PlayerCar.prototype.die = function() {
   }
   this.rebornIn(5);
 }
+
+require('./PlayerCarFacebook')(PlayerCar);
+require('./PlayerCarDb')(PlayerCar);
 
 module.exports = PlayerCar;

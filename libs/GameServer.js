@@ -250,16 +250,17 @@ function handleError(err) {
   console.error("caught handle", err);
 }
 
-GameServer.prototype.updateHighScores = function() {
-  this.carManager.updateHighScores();
+GameServer.prototype.savePlayersInDb = function() {
+  this.carManager.savePlayersInDb();
 };
 
 GameServer.prototype.gameEnd = function(winnerCar) {
   this.broadcast('game end', {
     winnerName: winnerCar.playerName
   });
-  winnerCar.saveVictory();
-  this.updateHighScores();
+  winnerCar.addVictory();
+  // this.updateHighScores();
+  this.savePlayersInDb();
   this.resetGame();
   this.doStep = false;
   var that = this;
