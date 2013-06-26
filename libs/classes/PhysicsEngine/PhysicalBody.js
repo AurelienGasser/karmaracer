@@ -1,6 +1,7 @@
-var KLib = require('./../KLib');
-var G_bodyID = 0;
 var CONFIG = require('./../../../config');
+var KLib = require('./../KLib');
+var PhysicsUtils = require('./PhysicsUtils');
+var G_bodyID = 0;
 
 var PhysicalBody = function() {
   return this;
@@ -388,14 +389,14 @@ PhysicalBody.prototype.axis2 = function() {
 };
 
 PhysicalBody.prototype.getAxisProjections = function(axis) {
-  var aProjectionUL = this.engine.projection(this.UL, axis, this.playerName + 'aUL');
-  var aProjectionUR = this.engine.projection(this.UR, axis, this.playerName + 'aUR');
-  var aProjectionBL = this.engine.projection(this.BL, axis, this.playerName + 'aBL');
-  var aProjectionBR = this.engine.projection(this.BR, axis, this.playerName + 'aBR');
-  var aULValue = this.engine.scalarValue(aProjectionUL, axis);
-  var aURValue = this.engine.scalarValue(aProjectionUR, axis);
-  var aBLValue = this.engine.scalarValue(aProjectionBL, axis);
-  var aBRValue = this.engine.scalarValue(aProjectionBR, axis);
+  var aProjectionUL = PhysicsUtils.projection(this.UL, axis, this.playerName + 'aUL');
+  var aProjectionUR = PhysicsUtils.projection(this.UR, axis, this.playerName + 'aUR');
+  var aProjectionBL = PhysicsUtils.projection(this.BL, axis, this.playerName + 'aBL');
+  var aProjectionBR = PhysicsUtils.projection(this.BR, axis, this.playerName + 'aBR');
+  var aULValue = PhysicsUtils.scalarValue(aProjectionUL, axis);
+  var aURValue = PhysicsUtils.scalarValue(aProjectionUR, axis);
+  var aBLValue = PhysicsUtils.scalarValue(aProjectionBL, axis);
+  var aBRValue = PhysicsUtils.scalarValue(aProjectionBR, axis);
   if (this.shareCollisionInfo) {
     this.p1 = aProjectionUL;
     this.p2 = aProjectionUR;
