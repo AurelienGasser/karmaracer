@@ -1,10 +1,14 @@
 var mongodb = require('mongodb');
 var KLib = require('./../classes/KLib');
+var config = require('../../config');
 
 module.exports = function() {
   var that = {};
 
   var getCollection = function(name, callback) {
+    if (config.performanceTest) {
+      return callback();
+    }
     that.client.collection(name, function(err, collection) {
       if (err) {
         console.error('ERROR connecting to DB collection', err)

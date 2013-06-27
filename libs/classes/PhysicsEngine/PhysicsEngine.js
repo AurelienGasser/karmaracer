@@ -1,7 +1,8 @@
 var fs = require('fs');
-var PhysicalBody = require('./PhysicalBody');
-var KLib = require('./../KLib');
 var CONFIG = require('./../../../config');
+var KLib = require('./../KLib');
+var PhysicsUtils = require('./PhysicsUtils');
+var PhysicalBody = require('./PhysicalBody');
 
 var G_bodyID = 0;
 var PhysicsEngine = function(size, map) {
@@ -24,49 +25,9 @@ PhysicsEngine.prototype.destroyBodies = function() {
   this.itemsToDestroy = [];
 };
 
-
 PhysicsEngine.prototype.setupWorld = function(size) {
   this.size = size;
 };
-
-PhysicsEngine.prototype.projection = function(a, b, name) {
-  var res = (a.x * b.x + a.y * b.y) / (b.x * b.x + b.y * b.y);
-  var p = {
-    x: res * b.x,
-    y: res * b.y
-  };
-  if (!KLib.isUndefined(name)) {
-    p.name = name;
-  }
-  return p;
-};
-
-PhysicsEngine.prototype.projectionWithTranslate = function(base_vector, corner, axis, name) {
-  var pointTranslated = {
-    x: corner.x - base_vector.x,
-    y: corner.y - base_vector.y
-  }
-  var res = (pointTranslated.x * axis.x + pointTranslated.y * axis.y) / (axis.x * axis.x + axis.y * axis.y);
-  var p = {
-    x: res * axis.x,
-    y: res * axis.y
-  };
-
-  p.name = name;
-  return p;
-};
-
-PhysicsEngine.prototype.scalarValue = function(v1, v2) {
-  return v1.x * v2.x + v1.y * v2.y;
-};
-
-
-function translate(p, v) {
-  return {
-    x: p.x + v.x,
-    y: p.y + v.y
-  }
-}
 
 function compareScalar(c1, c2) {
   return c1.scalar - c2.scalar;
@@ -78,24 +39,24 @@ PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
     y: B.y - A.y
   };
 
-  A.bUL = translate(B.UL, deltaBA);
+  A.bUL = PhysicsUtils.translate(B.UL, deltaBA);
   A.bUL.name = A.playerName + '.bUL';
-  A.bUR = translate(B.UR, deltaBA);
+  A.bUR = PhysicsUtils.translate(B.UR, deltaBA);
   A.bUR.name = A.playerName + '.bUR';
-  A.bBL = translate(B.BL, deltaBA);
+  A.bBL = PhysicsUtils.translate(B.BL, deltaBA);
   A.bBL.name = A.playerName + '.bBL';
-  A.bBR = translate(B.BR, deltaBA);
+  A.bBR = PhysicsUtils.translate(B.BR, deltaBA);
   A.bBR.name = A.playerName + '.bBR';
 
-  var bProjectionUL = this.projection(A.bUL, axis, A.playerName + 'bUL');
-  var bProjectionUR = this.projection(A.bUR, axis, A.playerName + 'bUR');
-  var bProjectionBL = this.projection(A.bBL, axis, A.playerName + 'bBL');
-  var bProjectionBR = this.projection(A.bBR, axis, A.playerName + 'bBR');
+  var bProjectionUL = PhysicsUtils.projection(A.bUL, axis, A.playerName + 'bUL');
+  var bProjectionUR = PhysicsUtils.projection(A.bUR, axis, A.playerName + 'bUR');
+  var bProjectionBL = PhysicsUtils.projection(A.bBL, axis, A.playerName + 'bBL');
+  var bProjectionBR = PhysicsUtils.projection(A.bBR, axis, A.playerName + 'bBR');
 
-  var bULValue = this.scalarValue(bProjectionUL, axis);
-  var bURValue = this.scalarValue(bProjectionUR, axis);
-  var bBLValue = this.scalarValue(bProjectionBL, axis);
-  var bBRValue = this.scalarValue(bProjectionBR, axis);
+  var bULValue = PhysicsUtils.scalarValue(bProjectionUL, axis);
+  var bURValue = PhysicsUtils.scalarValue(bProjectionUR, axis);
+  var bBLValue = PhysicsUtils.scalarValue(bProjectionBL, axis);
+  var bBRValue = PhysicsUtils.scalarValue(bProjectionBR, axis);
 
   var aProjections;
   if (axisIndex == 1 || axisIndex == 2) {
@@ -112,19 +73,19 @@ PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
 
   var bProjections = [];
   bProjections.push({
-    scalar: this.scalarValue(bProjectionBL, axis),
+    scalar: PhysicsUtils.scalarValue(bProjectionBL, axis),
     p: bProjectionBL
   });
   bProjections.push({
-    scalar: this.scalarValue(bProjectionBR, axis),
+    scalar: PhysicsUtils.scalarValue(bProjectionBR, axis),
     p: bProjectionBR
   });
   bProjections.push({
-    scalar: this.scalarValue(bProjectionUL, axis),
+    scalar: PhysicsUtils.scalarValue(bProjectionUL, axis),
     p: bProjectionUL
   });
   bProjections.push({
-    scalar: this.scalarValue(bProjectionUR, axis),
+    scalar: PhysicsUtils.scalarValue(bProjectionUR, axis),
     p: bProjectionUR
   });
 
@@ -159,13 +120,6 @@ PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
   return false;
 };
 
-function myRotate(p, r) {
-  return {
-    x: p.x * Math.cos(r) - p.y * Math.sin(r),
-    y: p.x * Math.sin(r) + p.y * Math.cos(r)
-  }
-}
-
 PhysicsEngine.prototype.collideTest = function(A, B) {
   if (A.id === B.id) {
     return false;
@@ -192,8 +146,6 @@ PhysicsEngine.prototype.outOfWalls = function(point) {
   return res;
 }
 
-
-
 PhysicsEngine.prototype.getWorldInfo = function() {
   return {
     "size": {
@@ -205,6 +157,7 @@ PhysicsEngine.prototype.getWorldInfo = function() {
     "background": this.map.background
   };
 }
+
 PhysicsEngine.prototype.getShareStaticItems = function() {
   var shareStaticItems = [];
   var items = this.staticBodies;
@@ -216,45 +169,9 @@ PhysicsEngine.prototype.getShareStaticItems = function() {
   return shareStaticItems;
 }
 
-PhysicsEngine.prototype.getLine = function(p1, p2) {
-  var l = {};
-  l.A = p2.y - p1.y;
-  l.B = p1.x - p2.x;
-  l.C = l.A * p1.x - l.B * p1.y;
-  return l;
-};
-
-//http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=geometry2
-PhysicsEngine.prototype.lineIntersectLine = function(line1, line2) {
-  var det = line1.A * line2.B - line2.A * line1.B
-  if (det == 0) {
-    //Lines are parallel
-    return null;
-  } else {
-    var p = {};
-    p.x = ((line2.B * line1.C) - (line1.B * line2.C)) / det;
-    p.y = ((line1.A * line2.C) - (line2.A * line1.C)) / det;
-    p.x = Math.abs(p.x);
-    p.y = Math.abs(p.y);
-    return p;
-  }
-};
-
-
-PhysicsEngine.prototype.getVector = function(p1, p2) {
-  return {
-    x: p2.x - p1.x,
-    y: p2.y - p1.y
-  };
-}
-
-PhysicsEngine.prototype.vectorCrossProduct = function(v, w) {
-  return v.x * w.y - v.y * w.x
-}
-
 // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
-  var r_times_s = this.vectorCrossProduct(r, s);
+  var r_times_s = PhysicsUtils.vectorCrossProduct(r, s);
   if (r_times_s === 0) {
     // segments are parallel
     return null;
@@ -264,13 +181,13 @@ PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
     x: q.x - p.x,
     y: q.y - p.y
   };
-  var t = this.vectorCrossProduct(q_minus_p, s) / r_times_s;
+  var t = PhysicsUtils.vectorCrossProduct(q_minus_p, s) / r_times_s;
 
   if (t < 0 || t > 1) {
     // on the line but out of segment
     return null;
   }
-  var u = this.vectorCrossProduct(q_minus_p, r) / r_times_s;
+  var u = PhysicsUtils.vectorCrossProduct(q_minus_p, r) / r_times_s;
   if (u < 0 || u > 1) {
     // on the line but ouf of segment
     return null;
@@ -289,15 +206,15 @@ PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
-  var p1 = translate(B.UL, B);
-  var p2 = translate(B.UR, B);
-  var p3 = translate(B.BR, B);
-  var p4 = translate(B.BL, B);
+  var p1 = PhysicsUtils.translate(B.UL, B);
+  var p2 = PhysicsUtils.translate(B.UR, B);
+  var p3 = PhysicsUtils.translate(B.BR, B);
+  var p4 = PhysicsUtils.translate(B.BL, B);
 
-  var v1 = this.getVector(B.UL, B.UR);
-  var v2 = this.getVector(B.UR, B.BR);
-  var v3 = this.getVector(B.BR, B.BL);
-  var v4 = this.getVector(B.BL, B.UL);
+  var v1 = PhysicsUtils.getVector(B.UL, B.UR);
+  var v2 = PhysicsUtils.getVector(B.UR, B.BR);
+  var v3 = PhysicsUtils.getVector(B.BR, B.BL);
+  var v4 = PhysicsUtils.getVector(B.BL, B.UL);
   var i1 = this.segmentCollideSegment(pBullet, vBullet, p1, v1);
   var i2 = this.segmentCollideSegment(pBullet, vBullet, p2, v2);
   var i3 = this.segmentCollideSegment(pBullet, vBullet, p3, v3);
@@ -371,37 +288,8 @@ PhysicsEngine.prototype.bulletCollision = function(projectile) {
     },
     point: this.bulletCollideWall(projectile)
   });
-  return this.getClosestPoint(projectile, pointsAndBullets);
+  return PhysicsUtils.getClosestPoint(projectile, pointsAndBullets);
 };
-
-
-PhysicsEngine.prototype.getClosestPoint = function(source, points) {
-
-  function getScore(source, p) {
-    return Math.abs(source.x - p.x) * Math.abs(source.y - p.y);
-  }
-
-  var twins = [];
-  for (var i = 0; i < points.length; i++) {
-    var pointAndBody = points[i];
-    var point = pointAndBody.point;
-    if (point !== null) {
-      twins.push({
-        score: getScore(source, point),
-        point: point,
-        body: pointAndBody.body
-      });
-    }
-  };
-  if (twins.length == 0) {
-    return null;
-  }
-  var sorted = twins.sort(function(a, b) {
-    return a.score - b.score;
-  });
-
-  return sorted[0];
-}
 
 PhysicsEngine.prototype.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
@@ -463,7 +351,6 @@ PhysicsEngine.prototype.getShared = function() {
   }
   return bodies;
 }
-
 
 PhysicsEngine.prototype.destroy = function() {
   this.bodies = null;
@@ -531,5 +418,3 @@ PhysicsEngine.prototype.loadStaticItems = function() {
 }
 
 module.exports = PhysicsEngine;
-
-// PhysicsEngine = null;
