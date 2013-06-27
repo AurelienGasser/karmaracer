@@ -56,6 +56,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   require('./Sockets/miniMap')(this, client);
 
+  require('./MarketPlace/MarketPlaceSockets')(client);
+
   client.on('get_maps', function(callback) {
     that.addHomeClient(client);
     return callback(null, Object.keys(that.mapManager.maps));
@@ -82,6 +84,19 @@ GameServerSocket.prototype.registerMethods = function(client) {
     return CarController.collection().find().sort({
       price: 1
     }).toArray(callback);
+  });
+
+  client.on('getMyInfo', function(callback) {
+    if (client.handshake.session && client.handshake.session.user) {
+      var user = client.handshake.session.user;
+      var UserController = require('./db/UserController');
+      UserController.createOrGet(user.fbid, user.playerName, function(err, user){
+        return callback(err, user);
+      });
+    } else{
+      return callback('not authenticated');
+    }
+
   });
 
 

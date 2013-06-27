@@ -4,8 +4,6 @@ var KLib = require('./../classes/KLib');
 module.exports = function() {
   var that = {};
 
-
-
   var getCollection = function(name, callback) {
     that.client.collection(name, function(err, collection) {
       if (err) {
@@ -67,29 +65,47 @@ module.exports = function() {
     }
   };
 
-  var createOrGetItem = function(collection, criteria, initValue, callback) {
+  var getOne = function(collection, criteria, callback) {
     collection.find(criteria).toArray(function(err, results) {
       if (err) {
         return callback(err);
       }
-      if (results.length === 0) {
-        collection.insert(initValue, function(err, results) {
-          if (err) {
-            return callback(err);
-          }
-          return callback(null, results[0]);
-        });
-      } else {
+      if (results.length === 1) {
         return callback(null, results[0]);
+      } else {
+        return callback('itemNotFound');
       }
     });
   };
+
+  var insert = function(collection, initValue, callback) {
+    collection.insert(initValue, function(err, results) {
+      if (err) {
+        return callback(err);
+      }
+      return callback(null, results[0]);
+    });
+  }
+
+
+  var createOrGetItem = function(collection, criteria, initValue, callback) {
+    getOne(collection, criteria, function(err, item) {
+      if (err === 'itemNotFound') {
+        return insert(collection, initValue, callback);
+      }
+      if (err) {
+        return callback(err);
+      }
+      return callback(null, item);
+    });
+  }
 
   return {
     connect: connect,
     getCollection: getCollection,
     saveItem: saveItem,
-    createOrGetItem: createOrGetItem
+    createOrGetItem: createOrGetItem,
+    getOne: getOne
   }
 
 }();

@@ -12,6 +12,9 @@
 
     var CarViewer = new Karma.CarViewer(connection);
 
+    
+
+    
     Karma.Loading.remove();
 
   }

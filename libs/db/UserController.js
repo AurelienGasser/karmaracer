@@ -21,9 +21,10 @@
       return {
         'fbid': userFBId,
         'victories': 0,
-        'currentCar': 'car1',
+        'currentCar': 'c1',
         'highScore': 0,
-        'playerName': playerName
+        'playerName': playerName,
+        'cars' : ['c1']
       };
     };
 

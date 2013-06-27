@@ -20,6 +20,7 @@ var os = require("os");
 var hostname = os.hostname();
 
 app.configure('local', function() {});
+// app.listen(8080);
 
 var http = require('http');
 
