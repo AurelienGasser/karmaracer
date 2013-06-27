@@ -16,24 +16,16 @@ module.exports = function(client) {
 
 
     client.on('buyCar', function(info, callback) {
-      console.log('buyCar', info);
-
-
-      console.log('user', user);
-
       CarController.createOrGet(info.carName, {}, function(err, car) {
-        console.log('car', car);
         if (user.highScore > car.price) {
-        user.highScore -= car.price;
-        user.cars.push(car.name);
-        UserController.save(user, function(err) {
-          return callback(null, user);
-        });
+          user.highScore -= car.price;
+          user.cars.push(car.name);
+          UserController.save(user, function(err) {
+            return callback(null, user);
+          });
         } else {
           return callback('notEnoughMoney');
-        } 
-
-
+        }
       });
     });
   }

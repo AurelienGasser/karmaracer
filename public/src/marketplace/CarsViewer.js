@@ -22,7 +22,9 @@
       o.push('<div class="bottom">');
       o.push('<span class="price">', $.i18n.prop('marketplace_price'), ' : ', car.price, ' Karma</span>');
       if (!KLib.isUndefined(user)) {
-        o.push('<span class="option"><a class="marketplace-buy-link" data-name="', car.name, '">', $.i18n.prop('marketplace_buy'), '</a></span>');
+        if (car.price < user.highScore) {
+          o.push('<span class="option"><a class="marketplace-buy-link" data-name="', car.name, '">', $.i18n.prop('marketplace_buy'), '</a></span>');
+        }
       }
       o.push('</div>');
     }
@@ -45,19 +47,17 @@
       var $a = $(a);
       var carName = $a.attr('data-name');
       $a.on('click.buy', function(e) {
-        console.log('buy', carName);
         that.connection.emit('buyCar', {
           carName: carName
         }, function(err, status) {
-          console.log(err, status);
-          if (!err){
-            that.getCars(function(){});
+          if (!err) {
+            Karma.FB.updateScoreInTopBar();
+            that.getCars(function() {});
           } else {
-            if (err === 'notEnoughMoney'){
+            if (err === 'notEnoughMoney') {
               alert($.i18n.prop('marketplace_notEnoughKarma'));
             }
           }
-          console.log(status);
         });
       });
     });
@@ -66,12 +66,11 @@
       var $a = $(a);
       var carName = $a.attr('data-name');
       $a.on('click.use', function(e) {
-        console.log('use', carName);
         that.connection.emit('useCar', {
           carName: carName
         }, function(err) {
-          if (!err){
-            that.getCars(function(){});
+          if (!err) {
+            that.getCars(function() {});
           }
         });
       });
@@ -85,7 +84,6 @@
         Karma.Log.error(err);
         return;
       }
-      console.log(cars);
 
       if (GKarmaOptions.playerName !== '') {
         that.connection.emit('getMyInfo', function(err, user) {
