@@ -19,11 +19,13 @@
     };
 
     this.carsImages = {};
+
     registerCar(getCar('c1', 'car.png', 128, 64));
     registerCar(getCar('c2', 'car2.png', 82, 36));
     registerCar(getCar('c3', 'car3.png', 72, 32));
     registerCar(getCar('c4', 'car4.png', 74, 34));
     registerCar(getCar('c5', 'car5.png', 81, 35));
+    registerCar(getCar('c6', 'car6.png', 206, 130));
   };
 
   Engine2DCanvas.prototype.drawLifeBar = function(ctx, c, w) {

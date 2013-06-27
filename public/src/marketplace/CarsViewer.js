@@ -13,7 +13,7 @@
 
     if (!KLib.isUndefined(user) && user.cars.indexOf(car.name) !== -1) {
       if (user.currentCar === car.name) {
-        o.push('<div class="bottom option"><span class="info">Currently Used</span></div>');
+        o.push('<div class="bottom option"><span class="option">Currently Used</span></div>');
       } else {
         o.push('<div class="bottom option"><span class="option"><a class="karma-use-car" data-name="', car.name, '">', $.i18n.prop('marketplace_use'), '</a></span></div>');
       }
@@ -49,6 +49,14 @@
         that.connection.emit('buyCar', {
           carName: carName
         }, function(err, status) {
+          console.log(err, status);
+          if (!err){
+            that.getCars(function(){});
+          } else {
+            if (err === 'notEnoughMoney'){
+              alert($.i18n.prop('marketplace_notEnoughKarma'));
+            }
+          }
           console.log(status);
         });
       });
@@ -61,8 +69,10 @@
         console.log('use', carName);
         that.connection.emit('useCar', {
           carName: carName
-        }, function(err, status) {
-          console.log(status);
+        }, function(err) {
+          if (!err){
+            that.getCars(function(){});
+          }
         });
       });
     });

@@ -9,6 +9,7 @@ module.exports = function(PlayerCar) {
       if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.user)) {
         var user = this.client.handshake.session.user;
         this.userDb = user;
+        this.car.carImageName = user.currentCar;
         this.saveUserDb();
       }
     }
