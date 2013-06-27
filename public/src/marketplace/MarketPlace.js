@@ -1,5 +1,6 @@
 (function() {
   "use strict";
+  /*global io */
 
   var MarketPlace = {};
 
@@ -10,14 +11,11 @@
     });
     Karma.TopBar.setTopBar(connection);
 
-    var CarViewer = new Karma.CarViewer(connection);
+    new Karma.CarViewer(connection);
 
-    
-
-    
     Karma.Loading.remove();
 
-  }
+  };
 
   Karma.MarketPlace = MarketPlace;
 

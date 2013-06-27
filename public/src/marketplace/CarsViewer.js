@@ -1,5 +1,6 @@
 (function() {
   "use strict";
+  /*global GKarmaOptions, io */
 
   var CarViewer = function(connection) {
     this.connection = connection;
@@ -36,26 +37,26 @@
     for (var i = 0; i < cars.length; i++) {
       var c = cars[i];
       this.outputCar(o, c, user);
-    };
+    }
     this.$ul.html(o.join(''));
     this.setupEvents(cars, user);
   };
 
-  CarViewer.prototype.setupEvents = function(cars, user) {
+  CarViewer.prototype.setupEvents = function() {
     var that = this;
     $('.marketplace-buy-link').each(function(i, a) {
       var $a = $(a);
       var carName = $a.attr('data-name');
-      $a.on('click.buy', function(e) {
+      $a.on('click.buy', function() {
         that.connection.emit('buyCar', {
           carName: carName
-        }, function(err, status) {
+        }, function(err) {
           if (!err) {
             Karma.FB.updateScoreInTopBar();
             that.getCars(function() {});
           } else {
             if (err === 'notEnoughMoney') {
-              alert($.i18n.prop('marketplace_notEnoughKarma'));
+              // alert($.i18n.prop('marketplace_notEnoughKarma'));
             }
           }
         });
@@ -65,7 +66,7 @@
     $('.karma-use-car').each(function(i, a) {
       var $a = $(a);
       var carName = $a.attr('data-name');
-      $a.on('click.use', function(e) {
+      $a.on('click.use', function() {
         that.connection.emit('useCar', {
           carName: carName
         }, function(err) {
@@ -113,10 +114,7 @@
       secure: true
     });
     Karma.TopBar.setTopBar(connection);
-
-
-
-  }
+  };
 
   Karma.CarViewer = CarViewer;
 
