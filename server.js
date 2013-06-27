@@ -159,10 +159,7 @@ DBManager.connect(function(err, client) {
         loadAvg: os.loadavg()
       });
     })
-
   }
 });
-
-
 
 module.exports = app;
