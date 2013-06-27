@@ -15,7 +15,7 @@
       if (user.currentCar === car.name) {
         o.push('<div class="bottom option"><span class="info">Currently Used</span></div>');
       } else {
-        o.push('<div class="bottom option"><span class="option"><a class="karma-use-car" data-name="', car.name, '">Use</a></span></div>');
+        o.push('<div class="bottom option"><span class="option"><a class="karma-use-car" data-name="', car.name, '">', $.i18n.prop('marketplace_use'), '</a></span></div>');
       }
 
     } else {
