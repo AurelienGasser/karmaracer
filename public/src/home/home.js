@@ -46,12 +46,12 @@
     });
 
     function outputVictories(victories) {
-      var html_start = '<table style="width: 100%"><thead><tr><th>' + $.i18n.prop('home_high_scores_title_rank') + '</th><th>' + $.i18n.prop('home_high_scores_title_player') +
+      var html_start = '<table style="width: 100%"><thead><tr><th>' + $.i18n.prop('home_high_scores_title_rank') + '</th><th>' + $.i18n.prop('home_high_scores_title_car') + '</th><th>' + $.i18n.prop('home_high_scores_title_player') +
         '</th><th>' + $.i18n.prop('home_high_scores_title_victories') + '</th><th>' + $.i18n.prop('home_high_scores_title_highscore') + '</th></tr></thead><tbody>';
       var html_end = '</tbody></table>';
       var html = '';
       for (var i = 0; i < victories.length; i++) {
-        html += '<tr><td>' + (i + 1) + '.</td><td>' + victories[i].playerName + '</td><td>' + victories[i].victories + '</td><td>' + victories[i].highScore + '</td></tr>';
+        html += '<tr><td>' + (i + 1) + '.</td><td class="car"><img src="/sprites/'+victories[i].currentCar+'.png"/></td><td>' + victories[i].playerName + '</td><td>' + victories[i].victories + '</td><td>' + victories[i].highScore + '</td></tr>';
       }
       $('#victories').html(html_start + html + html_end);
     }

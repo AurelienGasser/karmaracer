@@ -91,7 +91,6 @@ module.exports = function() {
     });
   }
 
-
   var createOrGetItem = function(collection, criteria, initValue, callback) {
     getOne(collection, criteria, function(err, item) {
       if (err === 'itemNotFound') {
