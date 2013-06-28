@@ -23,8 +23,10 @@
         'victories': 0,
         'currentCar': 'c1',
         'highScore': 0,
+        'money' : 0,
         'playerName': playerName,
-        'cars' : ['c1']
+        'cars' : ['c1'],
+        'type' : 'player'
       };
     };
 

@@ -22,10 +22,10 @@
       return car;
     };
     var registerCar = function(car) {
-      that.carsImages[car.name] = car;
+      that.cars[car.name] = car;
     };
 
-    this.carsImages = {};
+    this.cars = {};
 
     if (!KLib.isUndefined(this.connection)) {
       this.connection.emit('getCars', function(err, cars) {
@@ -125,6 +125,12 @@
         if (c.dead) {
           continue;
         }
+        // car
+        var car = this.cars[c.carImageName];
+        console.log(car);
+        c.w = car.w;
+        c.h = car.h;
+
         var pos = {
           x: this.gScaleValue * c.x,
           y: this.gScaleValue * c.y
@@ -140,9 +146,7 @@
           ctx.translate(pos.x, pos.y);
           ctx.rotate(c.r);
 
-          // car
-          var carImage = this.carsImages[c.carImageName];
-          ctx.drawImage(carImage.image, 0, 0, carImage.w, carImage.h, -size.w / 2, -size.h / 2, size.w, size.h);
+          ctx.drawImage(car.image, 0, 0, car.imageSize.w, car.imageSize.h, -size.w / 2, -size.h / 2, size.w, size.h);
 
           // gun flammes
           if (c.shootingWithWeapon !== null) {

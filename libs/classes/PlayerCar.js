@@ -85,23 +85,33 @@ PlayerCar.prototype.reset = function() {
 
 PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
-  share.life = this.life;
-  share.maxLife = this.maxLife;
-  share.shootingWithWeapon = this.shootingWithWeapon;
-  share.playerName = this.playerName;
+  delete share.w;
+  delete share.h;
+
+  // current game info
   share.s = this.score;
   share.l = this.level;
   share.dead = this.dead;
-  if (!KLib.isUndefined(this.car.carImageName)) {
-    share.carImageName = this.car.carImageName;
-  }
+  share.life = this.life;
+  share.maxLife = this.maxLife;
+
+  //weapon
+  share.shootingWithWeapon = this.shootingWithWeapon;
   share.gunLife = this.weapon.weaponEnergy;
   this.weaponShootOff();
   share.weaponName = this.weapon.name;
+
+  //user
+  share.playerName = this.playerName;
   share.isBot = this.isBot;
   if (this.user) {
     share.highScore = this.user.highScore;
   }
+  if (!this.car.carImageName) {
+    share.carImageName = this.car.carImageName;
+  }
+
+
   return share;
 }
 
