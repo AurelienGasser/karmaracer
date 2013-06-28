@@ -116,6 +116,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     var gameServer = that.mapManager.gameServers[mapName];
     if (gameServer) {
       var worldInfo = gameServer.engine.getWorldInfo();
+      worldInfo.gameInfo = gameServer.carManager.getGameInfo();
       client.emit('init', worldInfo);
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;
@@ -126,6 +127,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     console.info('client initialized:', userData.playerName, ' on ', client.gameServer.map.name);
     client.player = new Player(client, userData.playerName);
     client.gameServer.addPlayer(client.player);
+    client.gameServer.broadCastGameInfo();  
   });
 
   client.on('saveMap', function(map) {

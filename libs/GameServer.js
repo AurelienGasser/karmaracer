@@ -187,6 +187,7 @@ GameServer.prototype.step = function() {
     }
     if(this.tickCounter % 4 === 0) {
       that.sendPositionsToPlayers();
+      this.broadCastGameInfo();      
       start = registerDateDiff(timer, 'sendPositions', start);
     }
     if(this.tickCounter % 4 === 0) {
@@ -216,6 +217,11 @@ GameServer.prototype.getPlayersForShare = function() {
   return players;
 };
 
+
+GameServer.prototype.broadCastGameInfo = function() {
+  var gameInfo = this.carManager.getGameInfo();
+  this.broadcast('gameInfo', gameInfo);
+};
 
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();

@@ -1,16 +1,16 @@
 (function() {
-"use strict";
+  "use strict";
   /**
    * Provides requestAnimationFrame in a cross browser way.
    */
   window.requestAnimFrame = (function() {
     return (
-    window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
+      window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function(callback) {
       window.setTimeout(callback, 1000 / 60);
     });
   })();
 
-  function drawEngineFactory(canvasID, defaultDrawEngineType, items, worldInfo, gScale, connection, callback) {
+  function drawEngineFactory(canvasID, defaultDrawEngineType, items, worldInfo, gScale, gameInstance, connection, callback) {
     var canvas = document.getElementById(canvasID);
     var drawEngineType = defaultDrawEngineType;
     var gl;
@@ -18,7 +18,7 @@
     var factory = function(drawEngineType, canvasID, canvas) {
       switch (drawEngineType) {
         case 'CANVAS':
-          return new Karma.Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, connection, callback);
+          return new Karma.Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, gameInstance, connection, callback);
       }
     };
     // 'getWebGL' is defined but never used.

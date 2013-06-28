@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  function Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, connection, callback) {
+  function Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, gameInstance, connection, callback) {
 
     this.canvas = canvas;
     this.canvasID = canvasID;
@@ -13,7 +13,7 @@
 
     this.items = items;
     this.worldInfo = worldInfo;
-
+    this.gameInstance = gameInstance;
     this.connection = connection;
     this.setGScale(gScale);
     this.$canvas = $(canvas);

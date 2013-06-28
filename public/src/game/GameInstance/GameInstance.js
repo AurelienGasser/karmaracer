@@ -4,8 +4,6 @@
 
   function GameInstance() {
 
-
-
     var o = [];
     o.push('<table class="scores default" id="score-table">');
     o.push('<thead><tr>');
@@ -36,7 +34,6 @@
     this.explosionManager = new Karma.ExplosionsManager(this);
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
 
-
     this.setUIEvents();
     this.isMobile = false;
 
@@ -47,10 +44,10 @@
     var that = this;
 
     function getScores() {
-      var scores = _.map(that.items.cars, function(car) {
+      var scores = _.map(that.gameInfo, function(car) {
         return {
-          'score': car.s,
-          'level': car.l,
+          'score': car.score,
+          'level': car.level,
           'name': car.playerName,
           'highScore': car.highScore,
           'id': car.id
@@ -82,6 +79,8 @@
     this.worldInfo = worldInfo;
     this.bullets = [];
     this.rockets = [];
+    this.gameInfo = null;//this.worldInfo.gameInfo;
+
     var defaultDrawEngineType = 'CANVAS';
     var canvasReady = function() {
       that.keyboardHandler = new Karma.KeyboardHandler(that);
@@ -90,11 +89,11 @@
       that.drawEngine.tick();
     };
 
-    that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, 32, that.socketManager.connection, canvasReady);
+    that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, 32, that, that.socketManager.connection, canvasReady);
     that.explosionManager.start();
 
     if (that.isMobile === false) {
-      new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items);
+      // new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items);
     }
   };
 

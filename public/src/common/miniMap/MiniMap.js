@@ -26,7 +26,7 @@
     var that = this;
 
     var getMiniMap = function(err, worldInfo) {
-      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', that.items, worldInfo, 4, that.connection,function(drawEngine) {
+      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', that.items, worldInfo, 4, undefined, that.connection,function(drawEngine) {
         that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
         that.drawEngine.resize();
         that.drawEngine.tick();

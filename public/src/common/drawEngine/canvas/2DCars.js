@@ -40,14 +40,14 @@
     }
   };
 
-  Engine2DCanvas.prototype.drawLifeBar = function(ctx, c, w) {
+  Engine2DCanvas.prototype.drawLifeBar = function(ctx, c, player, w) {
     ctx.save();
     ctx.translate(-w / 2, -40);
     var maxLifeSize = w;
     ctx.fillStyle = '#0F0';
     ctx.fillRect(0, 0, maxLifeSize, 5);
     ctx.fillStyle = '#F00';
-    var ratioSize = maxLifeSize * (c.life / c.maxLife);
+    var ratioSize = maxLifeSize * (c.life / player.maxLife);
     ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
     ctx.restore();
   };
@@ -71,6 +71,7 @@
 
 
   Engine2DCanvas.prototype.drawGunFlame = function(ctx, car, size) {
+
     if (KLib.isUndefined(this.carFlameTicks[car.id])) {
       this.carFlameTicks[car.id] = 0;
     }
@@ -118,6 +119,9 @@
   };
 
   Engine2DCanvas.prototype.drawCars = function(ctx) {
+    if (this.gameInstance === null) {
+      return;
+    }
     ctx.font = '10px Trebuchet MS';
     if (this.items.cars !== null) {
       for (var i = 0; i < this.items.cars.length; i++) {
@@ -126,8 +130,9 @@
           continue;
         }
         // car
-        var car = this.cars[c.carImageName];
-        console.log(car);
+        var player = this.gameInstance.gameInfo[c.id];
+        var car = this.cars[player.carImageName];
+        c.playerName = player.playerName;
         c.w = car.w;
         c.h = car.h;
 
@@ -161,7 +166,7 @@
           ctx.translate(pos.x, pos.y);
           ctx.fillStyle = 'white';
           ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
-          this.drawLifeBar(ctx, c, size.w);
+          this.drawLifeBar(ctx, c, player, size.w);
           ctx.restore();
 
           // bullet

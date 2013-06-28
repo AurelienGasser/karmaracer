@@ -144,19 +144,24 @@
 
     });
 
+    that.connection.on('gameInfo', function(gameInfo){
+      gameInstance.gameInfo = gameInfo;
+      gameInstance.updateScoresHTML();
+    });
+
 
     that.connection.on('objects', function(objects) {
       gameInstance.items.cars = objects.cars;
       gameInstance.items.mycar = objects.myCar;
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
-      gameInstance.updateScoresHTML();
+
       //for minimap
       if (objects.myCar !== null) {
-        that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);
+        var player = gameInstance.gameInfo[objects.myCar.id];
+        that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
       }
 
-      // gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
       })));
