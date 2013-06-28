@@ -38,10 +38,16 @@
       return that.collection;
     };
 
+    var getOne = function(criteria, callback) {
+      return DBManager.getOne(that.collection, criteria, callback);
+    };
+
+
     return {
       createOrGet: createOrGet,
       collection: getCollection,
-      save: save
+      save: save,
+      getOne : getOne
     };
 
   }();
