@@ -9,6 +9,11 @@ module.exports = function(client) {
   if (!KLib.isUndefined(user)) {
 
 
+    client.on('getCars', function(callback) {
+      return CarController.collection().find().toArray(callback);
+    });
+
+
     client.on('useCar', function(info, callback) {
       user.currentCar = info.carName;
       UserController.save(user, callback);

@@ -3,6 +3,13 @@
 
   Engine2DCanvas.prototype.loadCars = function() {
     var that = this;
+
+    var getCarFromDB = function(carDB) {
+      carDB.image = new Image();
+      carDB.image.src = carDB.path;
+      return carDB;
+    };
+
     var getCar = function(name, imageName, w, h) {
       var car = {
         name: name,
@@ -20,12 +27,17 @@
 
     this.carsImages = {};
 
-    registerCar(getCar('c1', 'c1.png', 128, 64));
-    registerCar(getCar('c2', 'c2.png', 82, 36));
-    registerCar(getCar('c3', 'c3.png', 72, 32));
-    registerCar(getCar('c4', 'c4.png', 74, 34));
-    registerCar(getCar('c5', 'c5.png', 81, 35));
-    registerCar(getCar('c6', 'c6.png', 206, 130));
+    if (!KLib.isUndefined(this.connection)) {
+      this.connection.emit('getCars', function(err, cars) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        for (var i = 0; i < cars.length; i++) {
+          registerCar(getCarFromDB(cars[i]));
+        };
+      });
+    }
   };
 
   Engine2DCanvas.prototype.drawLifeBar = function(ctx, c, w) {
@@ -91,7 +103,7 @@
   Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, pos) {
     ctx.strokeStyle = 'white';
     if (this.items.mycar !== null && c.id === this.items.mycar.id) { //me
-      ctx.fillStyle = 'black';      
+      ctx.fillStyle = 'black';
     } else if (c.isBot === true) { //bots
       ctx.fillStyle = 'white';
     } else { //player

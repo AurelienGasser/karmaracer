@@ -13,7 +13,7 @@ DBManager.connect(function(err, client) {
       }
       user.cars = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6'];
       UserController.save(user, function(err, u) {
-        console.log(u);
+        console.info(err, u);
       });
     });
   }
