@@ -7,11 +7,11 @@ var WeaponsManager = require('./WeaponsManager');
 var MemLeakLog = require('./MemLeakLog');
 
 var GameServer = function(app, map, mapManager) {
-    this.app = app;
-    this.mapManager = mapManager;
-    this.initGameServer(map);
-    return this;
-  }
+  this.app = app;
+  this.mapManager = mapManager;
+  this.initGameServer(map);
+  return this;
+}
 
 GameServer.prototype.initGameServer = function(map) {
   this.map = map;
@@ -53,7 +53,7 @@ GameServer.prototype.initGameServer = function(map) {
     setTimeout(function() {
       that.mem.diff();
       that.mem.save();
-      if(that.doStep) {
+      if (that.doStep) {
         that.step();
       }
       stepGame(that.tickInterval);
@@ -61,7 +61,7 @@ GameServer.prototype.initGameServer = function(map) {
       that.mem.save();
       that.mem.log();
       that.tickInterval += ((that.lastStepTooLong) ? 1 : -1);
-      if(that.tickInterval < that.minTickInterval) {
+      if (that.tickInterval < that.minTickInterval) {
         that.tickInterval = that.minTickInterval;
       }
     }, time);
@@ -85,57 +85,57 @@ GameServer.prototype.handleClientKeyboard = function() {
   var that = this;
 
   try {
-    if(this.doStep === false) {
+    if (this.doStep === false) {
       return;
     }
 
     function reverseTurning(client, turningRight) {
-      if(client.keyboard['backward'] === true) {
+      if (client.keyboard['backward'] === true) {
         return !turningRight;
       }
       return turningRight;
     }
-    for(var i in that.players) {
+    for (var i in that.players) {
       var player = that.players[i];
       var client = player.client;
-      if(player.playerCar.dead) {
+      if (player.playerCar.dead) {
         continue;
       }
       var car = player.playerCar.car;
-      for(var event in client.keyboard) {
+      for (var event in client.keyboard) {
         var state = client.keyboard[event];
-        if(state) {
-          switch(event) {
-          case 'break':
-            // car.reduceAngularVelocity(0.3);
-            // car.reduceLinearVelocity(0.4);
-            break;
-          case 'shoot':
-            player.playerCar.shoot();
-            break;
-          case 'forward':
-            car.accelerate(0.3);
-            break;
-          case 'backward':
-            car.accelerate(-0.2);
-            break;
-          case 'left':
-            car.turn(reverseTurning(client, false));
-            break;
-          case 'right':
-            car.turn(reverseTurning(client, true));
-            break;
+        if (state) {
+          switch (event) {
+            case 'break':
+              // car.reduceAngularVelocity(0.3);
+              // car.reduceLinearVelocity(0.4);
+              break;
+            case 'shoot':
+              player.playerCar.shoot();
+              break;
+            case 'forward':
+              car.accelerate(0.3);
+              break;
+            case 'backward':
+              car.accelerate(-0.2);
+              break;
+            case 'left':
+              car.turn(reverseTurning(client, false));
+              break;
+            case 'right':
+              car.turn(reverseTurning(client, true));
+              break;
           }
         }
         if (config.stepByStepMode === true) {
           delete client.keyboard[event];
         }
       }
-      if(!client.keyboard.left && !client.keyboard.right) {
+      if (!client.keyboard.left && !client.keyboard.right) {
         car.currentAngularAcceleration = 0;
       }
     }
-  } catch(err) {
+  } catch (err) {
     console.error(err);
     throw err;
   }
@@ -144,7 +144,7 @@ GameServer.prototype.handleClientKeyboard = function() {
 
 
 GameServer.prototype.step = function() {
-  if(this.doStep === false) {
+  if (this.doStep === false) {
     return;
   }
 
@@ -155,7 +155,7 @@ GameServer.prototype.step = function() {
   }
 
   var maxDiff = this.tickInterval;
-  if(this.timer.lastDiff > maxDiff) {
+  if (this.timer.lastDiff > maxDiff) {
     // console.error('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms, max ', this.tickInterval, 'min ', this.minTickInterval); //, this.timer, 'max:', maxDiff);
     this.lastStepTooLong = true;
   } else {
@@ -178,36 +178,43 @@ GameServer.prototype.step = function() {
 
     var start = new Date();
     start = registerDateDiff(timer, 'physics', start);
-    if(this.tickCounter % 2 === 0) {
+    if (this.tickCounter % 2 === 0) {
       start = new Date();
       that.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
       that.engine.step();
       start = registerDateDiff(timer, 'Physics', start);
     }
-    if(this.tickCounter % 4 === 0) {
+    if (this.tickCounter % 4 === 0) {
       that.sendPositionsToPlayers();
-      this.broadCastGameInfo();      
       start = registerDateDiff(timer, 'sendPositions', start);
     }
-    if(this.tickCounter % 4 === 0) {
+    if (this.tickCounter % 4 === 0) {
       start = new Date();
       that.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
     }
-  } catch(e) {
+    if (this.tickCounter % 16 === 0) {
+      start = new Date();
+      this.broadCastGameInfo();
+      start = registerDateDiff(timer, 'broadCastGameInfo', start);
+    }
+
+
+  } catch (e) {
     console.error("error main interval", e, e.stack);
     throw e;
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
   registerDateDiff(timer, 'lastDiff', timer.begin);
+  // console.log(timer);
   this.timer = timer;
 }
 
 
 GameServer.prototype.getPlayersForShare = function() {
   var players = [];
-  for(var i in this.players) {
+  for (var i in this.players) {
     var p = this.players[i];
     var pShare = {
       'name': p.playerName
@@ -226,7 +233,7 @@ GameServer.prototype.broadCastGameInfo = function() {
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();
   var projectiles = this.weaponsManager.getGraphicProjectiles();
-  for(var i in this.players) {
+  for (var i in this.players) {
     var p = this.players[i];
     var myCar = p.playerCar.dead ? null : p.playerCar.getShared();
     var share = {
@@ -240,7 +247,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
 };
 
 GameServer.prototype.broadcast = function(key, data) {
-  for(var i in this.players) {
+  for (var i in this.players) {
     this.players[i].client.emit(key, data);
   }
 }
@@ -278,10 +285,10 @@ GameServer.prototype.gameEnd = function(winnerCar) {
 GameServer.prototype.resetGame = function(first_argument) {
   var players = this.players;
 
-  for(var i in players) {
+  for (var i in players) {
     players[i].client.keyboard = {};
   }
-  for(var i in players) {
+  for (var i in players) {
     players[i].initCar(this);
   }
   this.botManager.resetBots();
@@ -295,7 +302,7 @@ GameServer.prototype.addPlayer = function(player) {
 }
 
 GameServer.prototype.removePlayer = function(player) {
-  if(player.playerCar.car) {
+  if (player.playerCar.car) {
     player.playerCar.car.scheduleForDestroy();
   }
   player.connected = false;
