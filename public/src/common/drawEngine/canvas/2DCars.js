@@ -105,7 +105,7 @@
     ctx.strokeStyle = 'white';
     if (this.items.mycar !== null && c.id === this.items.mycar.id) { //me
       ctx.fillStyle = 'black';
-    } else if (c.isBot === true) { //bots
+    } else if (player.isBot === true) { //bots
       ctx.fillStyle = 'white';
     } else { //player
       ctx.fillStyle = 'red';
