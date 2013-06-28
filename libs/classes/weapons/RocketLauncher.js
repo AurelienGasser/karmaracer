@@ -1,4 +1,4 @@
-var Rocket = require('../PhysicsEngine/Rocket');
+var Rocket = require('../Physics/Bodies/Rocket');
 var KLib = require('./../KLib');
 var Weapon = require('./Weapon');
 

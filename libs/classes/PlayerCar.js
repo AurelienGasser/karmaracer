@@ -1,4 +1,4 @@
-var Car = require('./PhysicsEngine/Car');
+var Car = require('./Physics/Bodies/Car');
 var RocketLauncher = require('./weapons/RocketLauncher');
 var MachineGun = require('./weapons/MachineGun');
 var SuperMachineGun = require('./weapons/SuperMachineGun');

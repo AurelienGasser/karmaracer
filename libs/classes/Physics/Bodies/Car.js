@@ -1,9 +1,9 @@
-var KLib = require('../KLib');
 var sys = require("sys");
-var KPhysicalBody = require('./PhysicalBody');
+var KLib = require('../../KLib');
+var KBody = require('./../Body');
 
 var Car = function(playerCar) {
-    KLib.extend(KPhysicalBody, this);
+    KLib.extend(KBody, this);
     this.startPosition = {
       x: 10.0,
       y: 11.5,
@@ -22,7 +22,7 @@ var Car = function(playerCar) {
 
 Car.prototype.goToFreeLandingPoint = function() {
   if(this.engine !== null) {
-    var currentPosition = this.getPosition();    
+    var currentPosition = this.getPosition();
     var res = this.engine.checkCollisions(this);
     if(res) {
       this.resetCollisions();

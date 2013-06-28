@@ -4,7 +4,7 @@ var CONFIG = require('./../config');
 
 var GameServerSocket = function(mapManager) {
 
-  var Car = require('./classes/PhysicsEngine/Car');
+  var Car = require('./classes/Physics/Bodies/Car');
 
 
   this.homeClientIdCount = 0;

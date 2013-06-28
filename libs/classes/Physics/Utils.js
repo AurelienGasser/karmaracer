@@ -1,7 +1,7 @@
 var KLib = require('../KLib');
-var PhysicsUtils = {}
+var Utils = {}
 
-PhysicsUtils.projection = function(a, b, name) {
+Utils.projection = function(a, b, name) {
   var res = (a.x * b.x + a.y * b.y) / (b.x * b.x + b.y * b.y);
   var p = {
     x: res * b.x,
@@ -13,18 +13,18 @@ PhysicsUtils.projection = function(a, b, name) {
   return p;
 };
 
-PhysicsUtils.scalarValue = function(v1, v2) {
+Utils.scalarValue = function(v1, v2) {
   return v1.x * v2.x + v1.y * v2.y;
 };
 
-PhysicsUtils.translate = function(p, v) {
+Utils.translate = function(p, v) {
   return {
     x: p.x + v.x,
     y: p.y + v.y
   }
 }
 
-PhysicsUtils.getLine = function(p1, p2) {
+Utils.getLine = function(p1, p2) {
   var l = {};
   l.A = p2.y - p1.y;
   l.B = p1.x - p2.x;
@@ -33,7 +33,7 @@ PhysicsUtils.getLine = function(p1, p2) {
 };
 
 //http://community.topcoder.com/tc?module=Static&d1=tutorials&d2=geometry2
-PhysicsUtils.lineIntersectLine = function(line1, line2) {
+Utils.lineIntersectLine = function(line1, line2) {
   var det = line1.A * line2.B - line2.A * line1.B
   if (det == 0) {
     //Lines are parallel
@@ -48,14 +48,21 @@ PhysicsUtils.lineIntersectLine = function(line1, line2) {
   }
 };
 
-PhysicsUtils.getVector = function(p1, p2) {
+Utils.getVector = function(p1, p2) {
   return {
     x: p2.x - p1.x,
     y: p2.y - p1.y
   };
 }
 
-PhysicsUtils.vectorCrossProduct = function(v, w) {
+Utils.addVectors = function(a, b) {
+  return {
+    x: a.x + b.x,
+    y: a.y + b.y
+  }
+}
+
+Utils.vectorCrossProduct = function(v, w) {
   return v.x * w.y - v.y * w.x
 }
 
@@ -63,7 +70,7 @@ function getScore(source, p) {
   return Math.abs(source.x - p.x) * Math.abs(source.y - p.y);
 }
 
-PhysicsUtils.getClosestPoint = function(source, points) {
+Utils.getClosestPoint = function(source, points) {
   var twins = [];
   for (var i = 0; i < points.length; i++) {
     var pointAndBody = points[i];
@@ -85,4 +92,4 @@ PhysicsUtils.getClosestPoint = function(source, points) {
   return sorted[0];
 }
 
-module.exports = PhysicsUtils
+module.exports = Utils
