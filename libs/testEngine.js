@@ -6,7 +6,7 @@ var mem = new MemLeakLog();
 var game = function() {
     mem.diff();
     mem.save();
-    var KarmaEngine = require('./classes/PhysicsEngine/PhysicsEngine');
+    var KarmaEngine = require('./classes/Physics/Engine');
     // var KLib = require('./classes/KLib');
     var engine = new KarmaEngine({
       'w': 256,
@@ -42,8 +42,8 @@ var game = function() {
 
   };
 
-mem.register('PhysicsEngine');
-mem.register('PhysicalBody');
+mem.register('Engine');
+mem.register('Body');
 
 mem.save();
 

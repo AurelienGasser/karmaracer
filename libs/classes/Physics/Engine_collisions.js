@@ -1,39 +1,14 @@
-var fs = require('fs');
-var CONFIG = require('./../../../config');
+var PhysicsUtils = require('./Utils');
+var Body = require('./Body');
 var KLib = require('./../KLib');
-var PhysicsUtils = require('./PhysicsUtils');
-var PhysicalBody = require('./PhysicalBody');
 
-var G_bodyID = 0;
-var PhysicsEngine = function(size, map) {
-  this.shareCollisionInfo = false;
-  this.itemsToDestroy = [];
-  this.bodies = {};
-  this.gScale = 1;
-  this.staticItemTypes = {};
-  this.map = map;
-  this.setupWorld(size);
-  this.loadStaticItems();
-}
-
-PhysicsEngine.prototype.destroyBodies = function() {
-  for (var i in this.itemsToDestroy) {
-    var item = this.itemsToDestroy[i];
-    item.destroy();
-    delete this.bodies[item.id];
-  }
-  this.itemsToDestroy = [];
-};
-
-PhysicsEngine.prototype.setupWorld = function(size) {
-  this.size = size;
-};
+var Engine_collisions = {};
 
 function compareScalar(c1, c2) {
   return c1.scalar - c2.scalar;
 }
 
-PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
+Engine_collisions.axisCollideCheck = function(axis, A, B, axisIndex) {
   var deltaBA = {
     x: B.x - A.x,
     y: B.y - A.y
@@ -116,11 +91,10 @@ PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
       return true;
     }
   }
-
   return false;
 };
 
-PhysicsEngine.prototype.collideTest = function(A, B) {
+Engine_collisions.collideTest = function(A, B) {
   if (A.id === B.id) {
     return false;
   }
@@ -141,36 +115,11 @@ PhysicsEngine.prototype.collideTest = function(A, B) {
   return collides;
 };
 
-PhysicsEngine.prototype.outOfWalls = function(point) {
-  var res = point.x < 0 || point.y < 0 || point.x > this.map.size.w || point.y > this.map.size.h
-  return res;
-}
 
-PhysicsEngine.prototype.getWorldInfo = function() {
-  return {
-    "size": {
-      w: this.map.size.w * this.gScale,
-      h: this.map.size.h * this.gScale,
-    },
-    "staticItems": this.getShareStaticItems(),
-    "itemsInMap": this.staticItemTypes,
-    "background": this.map.background
-  };
-}
+// returns point of impact {x, y} or null
+Engine_collisions.segmentCollideSegment = function(p, r, q, s) {
+  // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
 
-PhysicsEngine.prototype.getShareStaticItems = function() {
-  var shareStaticItems = [];
-  var items = this.staticBodies;
-  // return shareStaticItems;
-  for (var i = 0; i < items.length; i++) {
-    var w = items[i];
-    shareStaticItems.push(w.getShared());
-  };
-  return shareStaticItems;
-}
-
-// http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
-PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   var r_times_s = PhysicsUtils.vectorCrossProduct(r, s);
   if (r_times_s === 0) {
     // segments are parallel
@@ -202,7 +151,8 @@ PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   // }
 };
 
-PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
+// returns a list of collision points [{x, y}, {x, y}] or an empty list []
+Engine_collisions.bulletCollidesBody = function(projectile, B) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
@@ -230,28 +180,16 @@ PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   return res
 };
 
-PhysicsEngine.prototype.bulletCollideWall = function(projectile) {
+// return collision point {x, y} or null
+Engine_collisions.bulletCollideWall = function(projectile) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
-  var getWall = function(px, py, vx, vy) {
-    return {
-      p: {
-        x: px,
-        y: py
-      },
-      v: {
-        x: vx,
-        y: vy
-      }
-    };
-  }
-  var walls = [];
-  walls.push(getWall(0, 0, this.map.size.w, 0));
-  walls.push(getWall(0, 0, 0, this.map.size.h));
-  walls.push(getWall(this.map.size.w, this.map.size.h, -this.map.size.w, 0));
-  walls.push(getWall(this.map.size.w, this.map.size.h, 0, -this.map.size.h));
-
+  var walls = []; // list of segments
+  walls.push({ p: { x: 0, y: 0 }, v: { x: this.map.size.w, y: 0 } });
+  walls.push({ p: { x: 0, y: 0 }, v: { x: 0, y: this.map.size.h } });
+  walls.push({ p: { x: this.map.size.w, y: this.map.size.h }, v: { x: -this.map.size.w, y: 0 } });
+  walls.push({ p: { x: this.map.size.w, y: this.map.size.h }, v: { x: 0, y: -this.map.size.h } });
 
   for (var i = 0; i < walls.length; i++) {
     var w = walls[i];
@@ -263,25 +201,26 @@ PhysicsEngine.prototype.bulletCollideWall = function(projectile) {
   return null;
 }
 
-PhysicsEngine.prototype.bulletCollision = function(projectile) {
+Engine_collisions.bulletCollision = function(projectile) {
   var pointsAndBullets = [];
   for (var bID in this.bodies) {
     var B = this.bodies[bID];
     if (projectile.playerCar.car.id === B.id) {
-      continue;
+      continue; // don't collide with own car
     }
     if (!KLib.isUndefined(B.playerCar) && B.playerCar.dead === true) {
       continue;
     }
-    var _points = this.bulletCollideBody(projectile, B);
-    for (var i = 0; i < _points.length; i++) {
-      var p = _points[i];
+    var colPoints = this.bulletCollidesBody(projectile, B);
+    for (var i = 0; i < colPoints.length; i++) {
+      var p = colPoints[i];
       pointsAndBullets.push({
         body: B,
         point: p
       });
     };
   }
+  // bullet necesarily collides with a wall
   pointsAndBullets.push({
     body: {
       name: 'outsideWall'
@@ -291,11 +230,11 @@ PhysicsEngine.prototype.bulletCollision = function(projectile) {
   return PhysicsUtils.getClosestPoint(projectile, pointsAndBullets);
 };
 
-PhysicsEngine.prototype.checkCollisions = function(body) {
+Engine_collisions.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
     return true;
   }
-  if (this.outOfWalls(body.addVectors(body, body.UL)) || this.outOfWalls(body.addVectors(body, body.UR)) || this.outOfWalls(body.addVectors(body, body.BL)) || this.outOfWalls(body.addVectors(body, body.BR))) {
+  if (this.outOfWalls(PhysicsUtils.addVectors(body, body.UL)) || this.outOfWalls(PhysicsUtils.addVectors(body, body.UR)) || this.outOfWalls(PhysicsUtils.addVectors(body, body.BL)) || this.outOfWalls(PhysicsUtils.addVectors(body, body.BR))) {
     body.collidesWith = {
       name: 'outsideWall',
       isStatic: true
@@ -320,101 +259,4 @@ PhysicsEngine.prototype.checkCollisions = function(body) {
   return false;
 }
 
-PhysicsEngine.prototype.step = function() {
-
-  var A, AID;
-  for (AID in this.bodies) {
-    A = this.bodies[AID];
-    if (A.isStatic === false) {
-      A.resetCollisions();
-    }
-  }
-  for (AID in this.bodies) {
-    A = this.bodies[AID];
-
-    if (A.isStatic === false) {
-      if (this.moveToPosition !== null) {
-        A.doMove();
-      }
-
-    }
-  }
-  this.destroyBodies();
-};
-
-
-PhysicsEngine.prototype.getShared = function() {
-  var bodies = [];
-  for (var bID in this.bodies) {
-    var body = this.bodies[bID];
-    bodies.push(body.getShared());
-  }
-  return bodies;
-}
-
-PhysicsEngine.prototype.destroy = function() {
-  this.bodies = null;
-  this.size = null;
-};
-
-PhysicsEngine.prototype.addBody = function(body) {
-  this.bodies[body.id] = body;
-}
-
-PhysicsEngine.prototype.createBody = function(position, size, name) {
-  var b, id;
-  b = new PhysicalBody();
-  b.initialize(this, position, size);
-  if (!KLib.isUndefined(name)) {
-    b.name = name;
-  }
-  this.bodies[b.id] = b;
-  id = b.id;
-  b = null;
-  return id;
-};
-
-PhysicsEngine.prototype.loadStaticItems = function() {
-  var b;
-  var staticItems = this.map.staticItems.concat([{
-    name: 'outsideWall'
-  }]);
-  this.staticBodies = [];
-  var itemsDir = CONFIG.serverPath + '/public/items/';
-  for (var i = 0; i < staticItems.length; i++) {
-    var item = staticItems[i];
-    var itemJSONPath = itemsDir + item.name + '.json';
-    var itemJSONString = fs.readFileSync(itemJSONPath);
-    var itemJSON = JSON.parse(itemJSONString);
-    if (item.name === 'outsideWall') {
-      var wallThickness = 1;
-      var id;
-      id = this.createBody({ x: this.map.size.w / 2, y: this.map.size.h + wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallTop');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-      id = this.createBody({ x: -wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallLeft');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-      id = this.createBody({ x: this.map.size.w  + wallThickness / 2, y: this.map.size.h / 2 }, { w: wallThickness, h: this.map.size.h }, 'wallRight');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-      id = this.createBody({ x: this.map.size.w / 2, y: -wallThickness / 2 }, { w: this.map.size.w, h: wallThickness }, 'wallBottom');
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-    } else {
-      var id = this.createBody(item.position, item.size, item.name);
-      b = this.bodies[id];
-      b.isStatic = true;
-      this.staticBodies.push(b);
-    }
-    if (this.staticItemTypes[itemJSON.name] == undefined) {
-      this.staticItemTypes[itemJSON.name] = itemJSON;
-    }
-  };
-}
-
-module.exports = PhysicsEngine;
+module.exports = Engine_collisions;

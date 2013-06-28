@@ -1,6 +1,5 @@
-var Bullet = require('../PhysicsEngine/Bullet');
+var Bullet = require('../Physics/Bodies/Bullet');
 var KLib = require('./../KLib');
-
 
 var WeaponMinLife = -2;
 
@@ -19,7 +18,6 @@ var Weapon = function(gameServer) {
     max: 50
   };
 }
-
 
 Weapon.prototype.deleteDeads = function(deads) {
   for (var i = 0; i < deads.length; i++) {
@@ -65,6 +63,7 @@ Weapon.prototype.shoot = function(playerCar) {
     }
   }
 };
+
 Weapon.prototype.customShoot = function(playerCar) {
   this.addProjectile(playerCar);
 };
@@ -125,8 +124,6 @@ Weapon.prototype.getGraphics = function() {
     }
   }
   return graphics;
-
 }
-
 
 module.exports = Weapon;

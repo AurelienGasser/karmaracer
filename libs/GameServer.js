@@ -16,7 +16,7 @@ var GameServer = function(app, map, mapManager) {
 GameServer.prototype.initGameServer = function(map) {
   this.map = map;
 
-  var KarmaEngine = require('./classes/PhysicsEngine/PhysicsEngine');
+  var KarmaEngine = require('./classes/Physics/Engine');
   this.engine = new KarmaEngine({
     'w': map.size.w,
     'h': map.size.h

@@ -1,10 +1,10 @@
-var KLib = require('./../KLib');
 var sys = require("sys");
-var KPhysicalBody = require('./PhysicalBody');
+var KLib = require('./../../KLib');
+var KBody = require('./../Body');
 
 var Bullet = function(playerCar, pos, angle) {
     // angle = -0.9252754126021274;
-    // KLib.extend(KPhysicalBody, this);
+    // KLib.extend(KBody, this);
     this.playerCar = playerCar;
     // var size = {
     //   w: 0.1,

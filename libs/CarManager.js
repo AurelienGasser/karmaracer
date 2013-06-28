@@ -1,4 +1,4 @@
-var Car = require('./classes/PhysicsEngine/Car');
+var Car = require('./classes/Physics/Bodies/Car');
 
 var CarManager = function(gameServer) {
   this.gameServer = gameServer;

@@ -1,5 +1,5 @@
 var PlayerCar = require('./PlayerCar');
-var Car = require('./PhysicsEngine/Car');
+var Car = require('./Physics/Bodies/Car');
 var KLib = require('./KLib');
 
 var Player = function(client, playerName) {
