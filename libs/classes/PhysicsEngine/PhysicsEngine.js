@@ -116,7 +116,6 @@ PhysicsEngine.prototype.axisCollideCheck = function(axis, A, B, axisIndex) {
       return true;
     }
   }
-
   return false;
 };
 
@@ -152,16 +151,15 @@ PhysicsEngine.prototype.getWorldInfo = function() {
       w: this.map.size.w * this.gScale,
       h: this.map.size.h * this.gScale,
     },
-    "staticItems": this.getShareStaticItems(),
+    "staticItems": this.getSharedStaticItems(),
     "itemsInMap": this.staticItemTypes,
     "background": this.map.background
   };
 }
 
-PhysicsEngine.prototype.getShareStaticItems = function() {
+PhysicsEngine.prototype.getSharedStaticItems = function() {
   var shareStaticItems = [];
   var items = this.staticBodies;
-  // return shareStaticItems;
   for (var i = 0; i < items.length; i++) {
     var w = items[i];
     shareStaticItems.push(w.getShared());
@@ -169,8 +167,10 @@ PhysicsEngine.prototype.getShareStaticItems = function() {
   return shareStaticItems;
 }
 
-// http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+// returns point of impact {x, y} or null
 PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
+  // http://stackoverflow.com/questions/563198/how-do-you-detect-where-two-line-segments-intersect
+
   var r_times_s = PhysicsUtils.vectorCrossProduct(r, s);
   if (r_times_s === 0) {
     // segments are parallel
@@ -202,7 +202,8 @@ PhysicsEngine.prototype.segmentCollideSegment = function(p, r, q, s) {
   // }
 };
 
-PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
+// returns a list of collision points [{x, y}, {x, y}] or an empty list []
+PhysicsEngine.prototype.bulletCollidesBody = function(projectile, B) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
@@ -230,28 +231,16 @@ PhysicsEngine.prototype.bulletCollideBody = function(projectile, B) {
   return res
 };
 
+// return collision point {x, y} or null
 PhysicsEngine.prototype.bulletCollideWall = function(projectile) {
   var pBullet = projectile.pBullet,
     vBullet = projectile.vBullet;
 
-  var getWall = function(px, py, vx, vy) {
-    return {
-      p: {
-        x: px,
-        y: py
-      },
-      v: {
-        x: vx,
-        y: vy
-      }
-    };
-  }
-  var walls = [];
-  walls.push(getWall(0, 0, this.map.size.w, 0));
-  walls.push(getWall(0, 0, 0, this.map.size.h));
-  walls.push(getWall(this.map.size.w, this.map.size.h, -this.map.size.w, 0));
-  walls.push(getWall(this.map.size.w, this.map.size.h, 0, -this.map.size.h));
-
+  var walls = []; // list of segments
+  walls.push({ p: { x: 0, y: 0 }, v: { x: this.map.size.w, y: 0 } });
+  walls.push({ p: { x: 0, y: 0 }, v: { x: 0, y: this.map.size.h } });
+  walls.push({ p: { x: this.map.size.w, y: this.map.size.h }, v: { x: -this.map.size.w, y: 0 } });
+  walls.push({ p: { x: this.map.size.w, y: this.map.size.h }, v: { x: 0, y: -this.map.size.h } });
 
   for (var i = 0; i < walls.length; i++) {
     var w = walls[i];
@@ -268,20 +257,21 @@ PhysicsEngine.prototype.bulletCollision = function(projectile) {
   for (var bID in this.bodies) {
     var B = this.bodies[bID];
     if (projectile.playerCar.car.id === B.id) {
-      continue;
+      continue; // don't collide with own car
     }
     if (!KLib.isUndefined(B.playerCar) && B.playerCar.dead === true) {
       continue;
     }
-    var _points = this.bulletCollideBody(projectile, B);
-    for (var i = 0; i < _points.length; i++) {
-      var p = _points[i];
+    var colPoints = this.bulletCollidesBody(projectile, B);
+    for (var i = 0; i < colPoints.length; i++) {
+      var p = colPoints[i];
       pointsAndBullets.push({
         body: B,
         point: p
       });
     };
   }
+  // bullet necesarily collides with a wall
   pointsAndBullets.push({
     body: {
       name: 'outsideWall'
