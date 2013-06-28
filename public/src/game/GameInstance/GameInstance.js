@@ -93,7 +93,7 @@
     that.explosionManager.start();
 
     if (that.isMobile === false) {
-      // new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items);
+      new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that);
     }
   };
 

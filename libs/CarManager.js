@@ -33,7 +33,6 @@ CarManager.prototype.getGameInfo = function() {
     var c = cars[i];
     gameInfo[c.id] = c;
   };
-  // console.log(cars.length, Object.keys(gameInfo).length);
   return gameInfo;
 }
 

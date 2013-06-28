@@ -1,13 +1,17 @@
 (function() {
   "use strict";
 
-  var MiniMap = function($container, mapName, connection, items) {
+  var MiniMap = function($container, mapName, connection, items, gameInstance) {
     this.$container = $container;
     this.connection = connection;
     this.canvasID = 'minimap-' + mapName;
     this.$canvas = $('<canvas id="' + this.canvasID + '" class="miniMap"></canvas>');
     this.$container.append(this.$canvas);
     this.canvas = this.$canvas[0];
+    this.gameInstance = gameInstance;
+    if (!this.gameInstance){
+      this.gameInstance = null;
+    }
 
     this.items = items;
     if (KLib.isUndefined(this.items)) {
@@ -26,7 +30,7 @@
     var that = this;
 
     var getMiniMap = function(err, worldInfo) {
-      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', that.items, worldInfo, 4, undefined, that.connection,function(drawEngine) {
+      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', that.items, worldInfo, 4, that.gameInstance, that.connection,function(drawEngine) {
         that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
         that.drawEngine.resize();
         that.drawEngine.tick();

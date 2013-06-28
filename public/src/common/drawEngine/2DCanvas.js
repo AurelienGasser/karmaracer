@@ -172,6 +172,9 @@
   var explosionHeight = 51;
 
   Engine2DCanvas.prototype.drawExplosions = function(ctx) {
+    if (this.isMiniMap === true) {
+      return;
+    }
     if (this.items.explosions !== null) {
       ctx.fillStyle = '#FFFFFF';
       for (var i in this.items.explosions) {

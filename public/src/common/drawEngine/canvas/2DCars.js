@@ -101,7 +101,7 @@
   };
 
 
-  Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, pos) {
+  Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, player, pos) {
     ctx.strokeStyle = 'white';
     if (this.items.mycar !== null && c.id === this.items.mycar.id) { //me
       ctx.fillStyle = 'black';
@@ -145,7 +145,7 @@
           h: this.gScaleValue * c.h
         };
         if (this.isMiniMap === true) {
-          this.drawCarForMiniMap(ctx, c, pos);
+          this.drawCarForMiniMap(ctx, c, player, pos);
         } else {
           ctx.save();
           ctx.translate(pos.x, pos.y);
