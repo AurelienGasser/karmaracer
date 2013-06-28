@@ -8,7 +8,7 @@ module.exports = function(PlayerCar) {
     if (that.client !== null) {
       if (!KLib.isUndefined(this.client.handshake.session) && !KLib.isUndefined(this.client.handshake.session.user)) {
         var user = this.client.handshake.session.user;
-        this.userDb = user;
+        this.user = user;
         this.car.carImageName = user.currentCar;
         this.saveUserDb();
       }
@@ -16,9 +16,8 @@ module.exports = function(PlayerCar) {
   };
 
   PlayerCar.prototype.saveUserDb = function(callback) {
-    if (this.userDd !== null) {
-      var user = this.userDb;
-      UserController.save(user, callback);
+    if (this.user) {
+      UserController.save(this.user, callback);
     }
   };
 

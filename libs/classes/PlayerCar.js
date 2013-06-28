@@ -45,7 +45,6 @@ var PlayerCar = function(gameServer, client, playerName, player) {
   this.id = this.car.id;
   this.reset();
   this.fbId = 0;
-  this.userDb = null;
   this.loadFromSessionUser();
   if (this.client !== null) {
     this.FBInit();
@@ -53,8 +52,8 @@ var PlayerCar = function(gameServer, client, playerName, player) {
 }
 
 PlayerCar.prototype.addHighScore = function(score) {
-  if (this.userDb !== null) {
-    this.userDb.highScore += score;
+  if (this.user) {
+    this.user.highScore += score;
   }
 };
 
@@ -67,8 +66,8 @@ PlayerCar.prototype.getMiniInfo = function() {
 
 
 PlayerCar.prototype.addVictory = function() {
-  if (!this.isBot && this.userDb !== null) {
-    this.userDb.victories += 1;
+  if (!this.isBot && this.user) {
+    this.user.victories += 1;
   }
 }
 
@@ -100,8 +99,8 @@ PlayerCar.prototype.getShared = function() {
   this.weaponShootOff();
   share.weaponName = this.weapon.name;
   share.isBot = this.isBot;
-  if (this.userDb !== null) {
-    share.highScore = this.userDb.highScore;
+  if (this.user) {
+    share.highScore = this.user.highScore;
   }
   return share;
 }
@@ -118,8 +117,8 @@ PlayerCar.prototype.receiveHit = function(damage) {
 
 PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;
-  if (this.userDb !== null) {
-    this.userDb.playerName = name;
+  if (this.user !== null) {
+    this.user.playerName = name;
     this.saveUserDb(function(err){
     });
   }

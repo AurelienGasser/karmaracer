@@ -14,8 +14,11 @@ module.exports = function(PlayerCar) {
   PlayerCar.prototype.FBSetHighScore = function() {
     var that = this;
     try {
+      if (!this.user){
+        return;
+      }
       this.client.graph.post("/me/scores", {
-        score: that.userDb.highScore,
+        score: that.user.highScore,
       }, function(response) {
         if (!response || response.error) {
           console.error('FBSetHighScore', response);
