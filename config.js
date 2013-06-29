@@ -30,6 +30,9 @@ var configSingleton = function() {
       break;
   }
 
+  config.physicalTicksPerSecond = 30;
+  config.positionsSocketEmitsPerSecond = 15;
+  config.botManagerTicksPerSecond = 15;
   config.botsPerMap = 7;
   config.stepByStepMode = false;
   config.serverPath = __dirname;
