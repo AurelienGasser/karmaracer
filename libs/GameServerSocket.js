@@ -1,32 +1,19 @@
 var KLib = require('./classes/KLib');
-var Player = require('./classes/Player');
 var CONFIG = require('./../config');
+var Player = require('./classes/Player');
+var Car = require('./classes/Physics/Bodies/Car');
 
 var GameServerSocket = function(mapManager) {
-
-  var Car = require('./classes/Physics/Bodies/Car');
-
-
   this.homeClientIdCount = 0;
   this.homeClients = {};
-
-
   this.mapManager = mapManager;
   var that = this;
 
-  function broadcastMapsState() {
-    for (var i in that.homeClients) {
-      var client = that.homeClients[i];
-      client.emit('maps_state', that.mapManager.getMapsWithPlayers());
-    }
-  }
-
-  setInterval(broadcastMapsState, 1000);
+  setInterval(this.broadcastMapsState.bind(this), 1000);
 
   this.mapManager.app.io.sockets.on('connection', function(client) {
     // console.info('client connected');
-
-    //TODOFIX
+    // TODOFIX
     that.registerMethods(client);
     client.graph = require('fbgraph');
     if (!KLib.isUndefined(client.handshake.session)) {
@@ -35,6 +22,12 @@ var GameServerSocket = function(mapManager) {
   });
 }
 
+GameServerSocket.prototype.broadcastMapsState = function() {
+  for (var i in this.homeClients) {
+    var client = this.homeClients[i];
+    client.emit('maps_state', this.mapManager.getMapsWithPlayers());
+  }
+}
 
 GameServerSocket.prototype.addHomeClient = function(client) {
   client.homeID = this.homeClientIdCount++;
@@ -48,20 +41,18 @@ GameServerSocket.prototype.removeHomeClient = function(client) {
   }
 }
 
-
 GameServerSocket.prototype.registerMethods = function(client) {
   var that = this;
+
   client.keyboard = {};
-
-
   require('./Sockets/miniMap')(this, client);
-
   require('./MarketPlace/MarketPlaceSockets')(client);
 
   client.on('get_maps', function(callback) {
     that.addHomeClient(client);
     return callback(null, Object.keys(that.mapManager.maps));
   });
+
   client.on('get_victories', function(callback) {
     that.mapManager.getVictories(function(err, victories) {
       if (!err) {
@@ -69,9 +60,11 @@ GameServerSocket.prototype.registerMethods = function(client) {
       }
     });
   });
+
   client.on('get_items', function(callback) {
     return callback(null, that.mapManager.itemsByName);
   });
+
   client.on('move_car', function(info) {
     if (!KLib.isUndefined(client.player) && !client.player.playerCar.dead) {
       client.player.playerCar.car.accelerate(info.force);
@@ -96,9 +89,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     } else{
       return callback('not authenticated');
     }
-
   });
-
 
   client.on('get_map', function(mapName, callback) {
     console.info('get map', mapName)
@@ -181,7 +172,6 @@ GameServerSocket.prototype.registerMethods = function(client) {
       console.error(e, e.stack);
     }
   });
-
 
   client.on('updatePlayerNameTopBar', function(name) {
     try {
