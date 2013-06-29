@@ -60,7 +60,10 @@ PlayerCar.prototype.addHighScore = function(score) {
 PlayerCar.prototype.getMiniInfo = function() {
   return {
     fbId: this.fbId,
-    name: this.playerName
+    name: this.playerName,
+    x : this.car.x,
+    y : this.car.y,
+    isBot : this.isBot
   }
 };
 

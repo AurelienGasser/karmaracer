@@ -26,6 +26,10 @@
     this.items.explosions = {};
     this.items.mycar = null;
     this.items.projectiles = [];
+    this.points = {};
+    this.pointsID = 0;
+
+    this.pointsManager = new Karma.PointsManager();
 
     this.worldInfo = {};
 
@@ -40,25 +44,28 @@
     this.chat = new Karma.ChatController();
   }
 
+
+
+  GameInstance.prototype.getScores = function() {
+    var scores = _.map(this.gameInfo, function(car) {
+      return {
+        'score': car.score,
+        'level': car.level,
+        'name': car.playerName,
+        'highScore': car.highScore,
+        'id': car.id
+      };
+    });
+    scores = _.sortBy(scores, function(c) {
+      return c.score;
+    }).reverse();
+    return scores;
+  };
+
   GameInstance.prototype.updateScoresHTML = function() {
     var that = this;
 
-    function getScores() {
-      var scores = _.map(that.gameInfo, function(car) {
-        return {
-          'score': car.score,
-          'level': car.level,
-          'name': car.playerName,
-          'highScore': car.highScore,
-          'id': car.id
-        };
-      });
-      scores = _.sortBy(scores, function(c) {
-        return c.score;
-      }).reverse();
-      return scores;
-    }
-    var scores = getScores();
+    var scores = this.getScores();
     var o = [];
     for (var i = 0; i < scores.length; i++) {
       var playerScore = scores[i];
@@ -79,7 +86,7 @@
     this.worldInfo = worldInfo;
     this.bullets = [];
     this.rockets = [];
-    this.gameInfo = null;//this.worldInfo.gameInfo;
+    this.gameInfo = null; //this.worldInfo.gameInfo;
 
     var defaultDrawEngineType = 'CANVAS';
     var canvasReady = function() {

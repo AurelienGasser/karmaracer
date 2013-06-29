@@ -84,6 +84,8 @@
       if (data.victim.fbId !== 0) {
         Karma.Facebook.takeSoul(data.victim.fbId);
       }
+      // console.log(that.gameInstance.pointsManager);
+      that.gameInstance.pointsManager.add(data.victim);
       that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
     });
 

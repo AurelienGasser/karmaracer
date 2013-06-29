@@ -50,8 +50,7 @@ Body_shared.getShared = function() {
     w: this.w * this.gScale,
     h: this.h * this.gScale,
     r: this.r,
-    name: this.name,
-    playerName: this.playerName
+    name: this.name
   };
 
   options.id = this.id;

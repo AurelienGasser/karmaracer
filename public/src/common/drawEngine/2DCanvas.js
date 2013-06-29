@@ -300,6 +300,10 @@
     // this.drawBullets(this.ctx);
     // this.drawRockets(this.ctx);
     this.drawProjectiles(this.ctx);
+
+    if (this.gameInstance !== null){
+      this.gameInstance.pointsManager.draw(this.ctx, this.gScaleValue);
+    }
     // this.drawCollisionPoints();
   };
 

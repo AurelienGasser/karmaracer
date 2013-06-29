@@ -17,7 +17,6 @@ Body.prototype.initialize = function(engine, position, size) {
   this.h = size.h;
   this.r = position.r || 0;
   this.radius = size.radius || Math.sqrt(size.w * size.w + size.h * size.h);
-  this.playerName = 'b' + this.id;
   this.name = 'body';
   this.s = 0;
   this.l = 0;
