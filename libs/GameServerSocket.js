@@ -107,7 +107,14 @@ GameServerSocket.prototype.registerMethods = function(client) {
     var gameServer = that.mapManager.gameServers[mapName];
     if (gameServer) {
       var worldInfo = gameServer.engine.getWorldInfo();
-      client.emit('init', worldInfo);
+      var configShared = {
+        physicalTicksPerSecond        : CONFIG.physicalTicksPerSecond,
+        positionsSocketEmitsPerSecond : CONFIG.positionsSocketEmitsPerSecond
+      };
+      client.emit('init', {
+        worldInfo: worldInfo,
+        config: configShared
+      });
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;
     }
