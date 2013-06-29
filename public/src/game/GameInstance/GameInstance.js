@@ -3,7 +3,6 @@
   "use strict";
 
   function GameInstance() {
-
     var o = [];
     o.push('<table class="scores default" id="score-table">');
     o.push('<thead><tr>');
@@ -21,6 +20,7 @@
 
     this.scoresTable = $('tbody#scores');
 
+    this.config = undefined; // will be defined by onInitReceived
     this.items = {};
     this.items.cars = [];
     this.items.explosions = {};
@@ -79,8 +79,8 @@
     var that = this;
   };
 
-  GameInstance.prototype.onInitReceived = function(err, worldInfo) {
-
+  GameInstance.prototype.onInitReceived = function(err, worldInfo, config) {
+    this.config = config;
     Karma.TopBar.setTopBar(this.socketManager.connection);
     var that = this;
     this.worldInfo = worldInfo;

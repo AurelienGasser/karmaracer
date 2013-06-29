@@ -110,7 +110,14 @@ GameServerSocket.prototype.registerMethods = function(client) {
     if (gameServer) {
       var worldInfo = gameServer.engine.getWorldInfo();
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
-      client.emit('init', worldInfo);
+      var configShared = {
+        physicalTicksPerSecond        : CONFIG.physicalTicksPerSecond,
+        positionsSocketEmitsPerSecond : CONFIG.positionsSocketEmitsPerSecond
+      };
+      client.emit('init', {
+        worldInfo: worldInfo,
+        config: configShared
+      });
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;
     }

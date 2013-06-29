@@ -12,7 +12,6 @@
     this.msg_id = 0;
     this.gameInstance.bodies = [];
 
-
     var that = this;
 
     $(window).on('beforeunload', function() {
@@ -63,8 +62,10 @@
 
     });
 
-    this.connection.on('init', function(worldInfo) {
-      onInitCallback(null, worldInfo);
+    this.connection.on('init', function(initInfo) {
+      var worldInfo = initInfo.worldInfo;
+      var config    = initInfo.config;
+      onInitCallback(null, worldInfo, config);
       if (!Karma.LocalStorage.get('playerName') || Karma.LocalStorage.get('playerName').length === 0) {
         Karma.LocalStorage.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
       }
