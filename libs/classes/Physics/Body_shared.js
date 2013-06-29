@@ -2,6 +2,21 @@ var KLib = require('./../KLib');
 
 var Body_shared = {};
 
+Body_shared.scalePosition = function(p) {
+  if (!p) {
+    return {
+      x: 0,
+      y: 0
+    }
+  }
+  var scaled = {
+    x: p.x * this.gScale,
+    y: p.y * this.gScale,
+    r: p.r
+  };
+  return scaled;
+};
+
 Body_shared.scalePoint = function(p) {
   if (!p) {
     return {
@@ -101,8 +116,7 @@ Body_shared.getShared = function() {
     }
     options.collision = collision;
   }
-
-
+  options.lastMove = this.scalePosition(this.lastMove);
   return options;
 };
 

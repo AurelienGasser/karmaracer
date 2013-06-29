@@ -57,7 +57,6 @@ Engine.prototype.getSharedStaticItems = function() {
 }
 
 Engine.prototype.step = function() {
-
   var A, AID;
   for (AID in this.bodies) {
     A = this.bodies[AID];
@@ -67,12 +66,12 @@ Engine.prototype.step = function() {
   }
   for (AID in this.bodies) {
     A = this.bodies[AID];
-
     if (A.isStatic === false) {
-      if (this.moveToPosition !== null) {
+      if (A.moveToPosition !== null) {
         A.doMove();
+      } else {
+        A.lastMove = { x: 0, y: 0, r: 0 };
       }
-
     }
   }
   this.destroyBodies();

@@ -33,6 +33,9 @@ Body.prototype.initialize = function(engine, position, size) {
   this.shareCollisionInfo = engine.shareCollisionInfo;
   this.moveToPosition = this.getPositionAndAngle();
   this.oldPosition = this.getPositionAndAngle();
+  // The last move delta
+  // If a collision occured during last move, lastMove is reset to { x: 0, y: 0, r: 0 }
+  this.lastMove = { x: 0, y: 0, r: 0 };
 }
 
 Body.prototype.scheduleForDestroy = function() {

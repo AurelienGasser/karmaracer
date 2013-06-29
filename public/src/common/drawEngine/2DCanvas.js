@@ -10,6 +10,7 @@
     this.debugDraw = false;
     this.carFlameTicks = {};
     this.isMiniMap = false;
+    this.fps = undefined; // will be defined by requestAnimFrame
 
     this.items = items;
     this.worldInfo = worldInfo;
@@ -21,6 +22,7 @@
     this.init();
     this.loaded();
     this.loadImages(callback);
+    this.movementSmoothingIntervals = {};
   }
 
 
@@ -29,7 +31,6 @@
     this.gScaleList(this.worldInfo.staticItems);
     this.gScale(this.worldInfo.size);
   };
-
 
   Engine2DCanvas.prototype.loadImages = function(callback) {
 
@@ -131,6 +132,8 @@
     Karma.Loading.remove();
   };
 
+  var toto = 0;
+
   Engine2DCanvas.prototype.resize = function() {
     var size = {
       w: this.$canvas.width(),
@@ -139,10 +142,8 @@
     if (!KLib.isUndefined(this.canvasSize)) {
       size = this.canvasSize;
     }
-
-    this.camera.ctx.canvas.width = size.w;
-    this.camera.ctx.canvas.height = size.h;
-
+    this.canvas.width = size.w;
+    this.canvas.height = size.h;
   };
 
   Engine2DCanvas.prototype.draw = function() {
@@ -309,7 +310,8 @@
     var now = new Date().getTime();
     if (now - this.timer > 1000) {
       this.timer = now;
-      $('#fps').html('fps: ' + this.frames);
+      this.fps = this.frames;
+      $('#fps').html('fps: ' + this.fps);
       this.frames = 0;
     }
   };

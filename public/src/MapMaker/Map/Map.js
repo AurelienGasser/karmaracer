@@ -154,7 +154,6 @@
 
   Map.prototype.tick = function() {
     this.tickCount++;
-
     var now = new Date();
     var tickDiff = now.getTime() - this.tickStart;
     if (tickDiff > 1000) {

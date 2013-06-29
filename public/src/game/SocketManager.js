@@ -11,6 +11,7 @@
     this.timestamp = new Date().getTime();
     this.msg_id = 0;
     this.gameInstance.bodies = [];
+    this.smoothingIntervals = {};
 
     var that = this;
 
@@ -157,6 +158,8 @@
         that.gv.updateEnergy(objects.myCar.weaponName, objects.myCar.gunLife);
       }
 
+      that.smootheCarsMovements();
+
       // gameInstance.drawEngine.gScaleDynamicsRequired = true;
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
@@ -169,6 +172,54 @@
     });
 
   }
+
+  SocketManager.prototype.smootheCarMovements = function(car, move) {
+    var that = this;
+    return function() {
+      car.x = car.x + move.x;
+      car.y = car.y + move.y;
+      car.r = car.r + move.r;
+      var mycar = that.gameInstance.items.mycar;
+      if (car.id === mycar.id) {
+        mycar.x = car.x;
+        mycar.y = car.y;
+        mycar.r = car.r;
+      }
+    };
+  };
+
+  SocketManager.prototype.clearSmoothingInterval = function(carId) {
+    if (this.smoothingIntervals[carId]) {
+      clearInterval(this.smoothingIntervals[carId]);
+      delete this.smoothingIntervals[carId];
+    }
+  };
+
+  SocketManager.prototype.smootheCarsMovements = function() {
+    var physicalTicksPerSecond        = this.gameInstance.config.physicalTicksPerSecond;
+    var positionsSocketEmitsPerSecond = this.gameInstance.config.positionsSocketEmitsPerSecond;
+    var fps                           = this.gameInstance.drawEngine.fps;
+
+    var delayToNextReception = 1000 / positionsSocketEmitsPerSecond;
+    var numberOfDrawsToNextReception = Math.round(fps * delayToNextReception / 1000);
+    var numberOfIterations = numberOfDrawsToNextReception;
+    var delayBetweenIterations = delayToNextReception / numberOfIterations;
+    var delayToNextPhysicalTick = 1000 / physicalTicksPerSecond;
+    var numberOfPhysicalTicksUntilNextReception = physicalTicksPerSecond / positionsSocketEmitsPerSecond;
+    var totalMovementMultiplier = numberOfPhysicalTicksUntilNextReception;
+    var movementMultiplier = totalMovementMultiplier / numberOfIterations;
+
+    for (var i in this.gameInstance.items.cars) {
+      var car = this.gameInstance.items.cars[i];
+      this.clearSmoothingInterval(car.id);
+      var move = {
+        x: car.lastMove.x * movementMultiplier,
+        y: car.lastMove.y * movementMultiplier,
+        r: car.lastMove.r * movementMultiplier
+      };
+      this.smoothingIntervals[car.id] = setInterval(this.smootheCarMovements(car, move).bind(this), delayBetweenIterations);
+    }
+  };
 
   SocketManager.prototype.getConnection = function() {
     return this.connection;

@@ -35,7 +35,7 @@
         }
         for (var i = 0; i < cars.length; i++) {
           registerCar(getCarFromDB(cars[i]));
-        };
+        }
       });
     }
   };

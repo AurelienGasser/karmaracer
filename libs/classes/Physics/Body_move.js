@@ -109,6 +109,14 @@ Body_move.doMove = function() {
       }
     }
     this.updateCornerCache();
+    // if collision, reset lastMove
+    this.lastMove = { x: 0, y: 0, r: 0 };
+  } else {
+    this.lastMove = {
+      x: this.moveToPosition.x - this.oldPosition.x,
+      y: this.moveToPosition.y - this.oldPosition.y,
+      r: this.moveToPosition.r ? this.moveToPosition.r - this.oldPosition.r : 0
+    };
   }
   this.moveToPosition = null;
 };
