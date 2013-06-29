@@ -153,9 +153,5 @@ Engine.prototype.loadStaticItems = function() {
   };
 }
 
-// extend Engine methods with Engine_collisions
-for (var method in Engine_collisions) {
-  Engine.prototype[method] = Engine_collisions[method];
-}
-
+KLib.extendPrototype(Engine, Engine_collisions);
 module.exports = Engine;
