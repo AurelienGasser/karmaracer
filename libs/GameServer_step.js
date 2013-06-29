@@ -1,3 +1,4 @@
+var config = require('./../config');
 var GameServer_step = {};
 
 function registerDateDiff(timer, name, start) {
@@ -52,20 +53,24 @@ GameServer_step.step = function() {
   timer = this.timer;
   timer.begin = new Date();
   try {
+    var shouldPerform;
     var start = new Date();
     start = registerDateDiff(timer, 'physics', start);
-    if(this.tickCounter % 2 === 0) {
+    shouldPerform = this.tickCounter % Math.floor(this.ticksPerSecond / config.physicalTicksPerSecond) === 0;
+    if (shouldPerform) {
       start = new Date();
       this.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
       this.engine.step();
       start = registerDateDiff(timer, 'Physics', start);
     }
-    if(this.tickCounter % 4 === 0) {
+    shouldPerform = this.tickCounter % Math.floor(this.ticksPerSecond / config.positionsSocketEmitsPerSecond) === 0;
+    if (shouldPerform) {
       this.sendPositionsToPlayers();
       start = registerDateDiff(timer, 'sendPositions', start);
     }
-    if(this.tickCounter % 4 === 0) {
+    shouldPerform = this.tickCounter % Math.floor(this.ticksPerSecond / config.botManagerTicksPerSecond) === 0;
+    if (shouldPerform) {
       start = new Date();
       this.botManager.tick();
       start = registerDateDiff(timer, 'botManager', start);
