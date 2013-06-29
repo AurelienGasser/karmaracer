@@ -116,12 +116,25 @@ h1 {
 }
 
 #victories {
-  width: 300px;
+  border: none;
+  width: 40%;
   margin: 0 auto;
   text-align: center;
   font-size: 14px;
+  
+  table{
+    border-collapse: collapse;  
+  }
+  
+  th, td{
+    border: none;
+  }
 
   td.car img{
     width: 52px;
+    margin: 5px;
+  }
+  tr:hover td{
+    background-color: #eee;
   }
 }
