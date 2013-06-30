@@ -117,6 +117,7 @@ Body_shared.getShared = function() {
     options.collision = collision;
   }
   options.lastMove = this.scalePosition(this.lastMove);
+  options.isBot = (this.playerCar && this.playerCar.isBot);
   return options;
 };
 

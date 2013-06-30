@@ -70,7 +70,9 @@ Engine.prototype.step = function() {
       if (A.moveToPosition !== null) {
         A.doMove();
       } else {
-        A.lastMove = { x: 0, y: 0, r: 0 };
+        if (!A.playerCar.isBot) {
+          A.lastMove = { x: 0, y: 0, r: 0 };
+        }
       }
     }
   }

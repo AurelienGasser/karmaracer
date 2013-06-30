@@ -109,7 +109,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
       var worldInfo = gameServer.engine.getWorldInfo();
       var configShared = {
         physicalTicksPerSecond        : CONFIG.physicalTicksPerSecond,
-        positionsSocketEmitsPerSecond : CONFIG.positionsSocketEmitsPerSecond
+        positionsSocketEmitsPerSecond : CONFIG.positionsSocketEmitsPerSecond,
+        botManagerTicksPerSecond      : CONFIG.botManagerTicksPerSecond
       };
       client.emit('init', {
         worldInfo: worldInfo,

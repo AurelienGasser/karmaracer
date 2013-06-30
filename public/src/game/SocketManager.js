@@ -197,20 +197,30 @@
 
   SocketManager.prototype.smootheCarsMovements = function() {
     var physicalTicksPerSecond        = this.gameInstance.config.physicalTicksPerSecond;
+    var botManagerTicksPerSecond      = this.gameInstance.config.botManagerTicksPerSecond;
     var positionsSocketEmitsPerSecond = this.gameInstance.config.positionsSocketEmitsPerSecond;
     var fps                           = this.gameInstance.drawEngine.fps;
+    if (!fps) {
+      return;
+    }
 
     var delayToNextReception = 1000 / positionsSocketEmitsPerSecond;
     var numberOfDrawsToNextReception = Math.round(fps * delayToNextReception / 1000);
     var numberOfIterations = numberOfDrawsToNextReception;
     var delayBetweenIterations = delayToNextReception / numberOfIterations;
-    var delayToNextPhysicalTick = 1000 / physicalTicksPerSecond;
-    var numberOfPhysicalTicksUntilNextReception = physicalTicksPerSecond / positionsSocketEmitsPerSecond;
-    var totalMovementMultiplier = numberOfPhysicalTicksUntilNextReception;
-    var movementMultiplier = totalMovementMultiplier / numberOfIterations;
 
     for (var i in this.gameInstance.items.cars) {
       var car = this.gameInstance.items.cars[i];
+      var numberOfPhysicalTicksUntilNextReception;
+      var totalMovementMultiplier;
+      var movementMultiplier;
+      if (car.isBot) {
+        numberOfPhysicalTicksUntilNextReception = botManagerTicksPerSecond / positionsSocketEmitsPerSecond;
+      } else {
+        numberOfPhysicalTicksUntilNextReception = physicalTicksPerSecond / positionsSocketEmitsPerSecond;
+      }
+      totalMovementMultiplier = numberOfPhysicalTicksUntilNextReception;
+      movementMultiplier = totalMovementMultiplier / numberOfIterations;
       this.clearSmoothingInterval(car.id);
       var move = {
         x: car.lastMove.x * movementMultiplier,
