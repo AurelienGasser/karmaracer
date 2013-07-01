@@ -10,17 +10,6 @@
       return carDB;
     };
 
-    var getCar = function(name, imageName, w, h) {
-      var car = {
-        name: name,
-        path: '/sprites/' + imageName,
-        w: w,
-        h: h
-      };
-      car.image = new Image();
-      car.image.src = car.path;
-      return car;
-    };
     var registerCar = function(car) {
       that.cars[car.name] = car;
     };
@@ -30,12 +19,12 @@
     if (!KLib.isUndefined(this.connection)) {
       this.connection.emit('getCars', function(err, cars) {
         if (err) {
-          console.error(err);
+          Karma.Log.error(err);
           return;
         }
         for (var i = 0; i < cars.length; i++) {
           registerCar(getCarFromDB(cars[i]));
-        };
+        }
       });
     }
   };
