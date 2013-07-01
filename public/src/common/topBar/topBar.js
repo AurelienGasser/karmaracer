@@ -68,6 +68,10 @@
       connection.emit('updatePlayerNameTopBar', name);
     });
 
+    connection.emit('getCurrentUser', function(err, user){
+      setKarma(user);
+    });
+
     setPlayerNameValue($playerName);
 
     loginZone.children().hide();

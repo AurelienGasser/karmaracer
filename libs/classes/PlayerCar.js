@@ -109,17 +109,15 @@ PlayerCar.prototype.getGameInfo = function() {
   return share;
 };
 
+
+
 PlayerCar.prototype.addMoneyFromKillingCar = function(victim) {
   var that = this;
   var earnMoneyValue = 150;
   if (victim.isBot) {
     earnMoneyValue = 50;
   }
-  this.increaseMoney(earnMoneyValue, function(err, user) {    
-    if (!err) {
-      that.client.emit('moneyUpdated', user)
-    }
-  });
+  this.increaseMoney(earnMoneyValue);
 
 };
 

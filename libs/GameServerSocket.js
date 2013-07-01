@@ -120,9 +120,6 @@ GameServerSocket.prototype.registerMethods = function(client) {
     if (gameServer) {
       var worldInfo = gameServer.engine.getWorldInfo();
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
-      if (user) {
-        worldInfo.user = user;
-      }
       client.emit('init', worldInfo);
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;

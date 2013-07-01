@@ -65,9 +65,6 @@
 
     this.connection.on('init', function(worldInfo) {
       onInitCallback(null, worldInfo);
-      if (worldInfo.user){        
-        Karma.TopBar.setKarma(worldInfo.user);
-      }
       if (!Karma.LocalStorage.get('playerName') || Karma.LocalStorage.get('playerName').length === 0) {
         Karma.LocalStorage.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
       }

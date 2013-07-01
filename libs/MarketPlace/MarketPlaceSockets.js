@@ -10,7 +10,9 @@ module.exports = function(client) {
 
 
     client.on('getCars', function(callback) {
-      return CarController.collection().find().sort({'price' : -1}).toArray(callback);
+      return CarController.collection().find().sort({
+        'price': -1
+      }).toArray(callback);
     });
 
     client.on('useCar', function(info, callback) {
@@ -18,11 +20,16 @@ module.exports = function(client) {
       UserController.save(user, callback);
     });
 
+    client.on('getCurrentUser', function(callback) {
+      return callback(null, user);
+    });
+
 
     client.on('buyCar', function(info, callback) {
       CarController.createOrGet(info.carName, {}, function(err, car) {
-        if (user.highScore > car.price) {
-          user.highScore -= car.price;
+        if (user.money > car.price) {
+          user.money -= car.price;
+          client.emit('moneyUpdated', user);
           user.cars.push(car.name);
           UserController.save(user, function(err) {
             return callback(null, user);
