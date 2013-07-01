@@ -68,7 +68,7 @@
       connection.emit('updatePlayerNameTopBar', name);
     });
 
-    connection.emit('getCurrentUser', function(err, user){
+    connection.emit('getMyInfo', function(err, user){
       setKarma(user);
     });
 

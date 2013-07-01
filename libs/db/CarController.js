@@ -42,6 +42,12 @@
       return that.collection;
     };
 
+    function getCars(callback) {
+      that.collection.find().sort({
+        'price': 1
+      }).toArray(callback);
+    }
+
     function initCars() {
       var cars = [
         getInitValue('c1', '/sprites/c1.png', 128, 64, 1, 0.5, 'Classical Red', 0),
@@ -62,7 +68,8 @@
     return {
       createOrGet: createOrGet,
       collection: getCollection,
-      save: save
+      save: save,
+      getCars: getCars
     };
 
   }();

@@ -85,9 +85,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   client.on('getCars', function(callback) {
     var CarController = require('./db/CarController');
-    return CarController.collection().find().sort({
-      price: 1
-    }).toArray(callback);
+    return CarController.getCars(callback);
   });
 
   client.on('getMyInfo', function(callback) {
