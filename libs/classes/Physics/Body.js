@@ -1,3 +1,4 @@
+var KLib = require('./../KLib');
 var Body_move = require('./Body_move');
 var Body_shared = require('./Body_shared');
 var Body_cache = require('./Body_cache');
@@ -86,18 +87,7 @@ Body.prototype.getPositionAndAngle = function(first_argument) {
   return pos;
 };
 
-// extend Body methods with Body_move
-for (var method in Body_move) {
-  Body.prototype[method] = Body_move[method];
-}
-
-// extend Body methods with Body_shared
-for (var method in Body_shared) {
-  Body.prototype[method] = Body_shared[method];
-}
-// extend Body methods with Body_cache
-for (var method in Body_cache) {
-  Body.prototype[method] = Body_cache[method];
-}
-
+KLib.extendPrototype(Body, Body_move);
+KLib.extendPrototype(Body, Body_shared);
+KLib.extendPrototype(Body, Body_cache);
 module.exports = Body;

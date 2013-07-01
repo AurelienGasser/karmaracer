@@ -11,7 +11,7 @@
 #fbLoginImage{width:40px;}#fbLoginImage img{border-radius:5px;}
 .fb-picture{width:40px;height:40px;}
 #topHelp{position:relative;left:0px;text-align:left;width:40px;}
-#keys{position:fixed;background-color:#eee;display:none;right:0px;top:40px;margin:0px!important;font-size:1.4em;}#keys td{padding:5px;}
+#keys{padding-top:20px;position:fixed;background-color:#eee;display:none;right:0px;top:40px;margin:0px!important;font-size:1.4em;}#keys td{padding:5px;}
 .iconTop{width:40px;height:40px;}
 #iconHelp{width:40px;height:40px;cursor:help;}
 #iconLogin{width:40px;height:40px;}
