@@ -10,7 +10,7 @@ module.exports = function(client) {
 
 
     client.on('getCars', function(callback) {
-      return CarController.collection().find().toArray(callback);
+      return CarController.collection().find().sort({'price' : -1}).toArray(callback);
     });
 
     client.on('useCar', function(info, callback) {
