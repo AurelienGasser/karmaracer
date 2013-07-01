@@ -15,10 +15,10 @@ module.exports = function(PlayerCar) {
     }
   };
 
-  PlayerCar.prototype.increaseMoney = function(value) {
+  PlayerCar.prototype.increaseMoney = function(value, callback) {
     if (this.user) {
       this.user.money += value;
-      UserController.save(this.user);
+      UserController.save(this.user, callback);
     }
   };
 

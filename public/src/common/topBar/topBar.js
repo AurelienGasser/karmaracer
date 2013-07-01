@@ -29,6 +29,7 @@
     o.push('<input type="submit" style="display:none"/>');
     o.push('</form></li>');
 
+    o.push('<li id="topBarKarma" class="scoreZone"/>');
     o.push('<li id="fbHighScore" class="scoreZone"/>');
     if (GKarmaOptions.playerName !== ''){
     o.push('<li id="topShoping" class="topBarIcon"><a href="/marketplace"><img src="/images/iconShoping.png" id="iconShoping" title="', $.i18n.prop('topbar_shoping'), '"/></a></li>');

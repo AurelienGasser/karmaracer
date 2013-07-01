@@ -13,7 +13,6 @@ module.exports = function(client) {
       return CarController.collection().find().toArray(callback);
     });
 
-
     client.on('useCar', function(info, callback) {
       user.currentCar = info.carName;
       UserController.save(user, callback);

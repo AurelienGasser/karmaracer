@@ -84,7 +84,6 @@
       if (data.victim.fbId !== 0) {
         Karma.Facebook.takeSoul(data.victim.fbId);
       }
-      // console.log(that.gameInstance.pointsManager);
       that.gameInstance.pointsManager.add(data.victim);
       that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
     });
@@ -109,6 +108,11 @@
       // });
 
     }
+
+    this.connection.on('moneyUpdated', function(user) {
+      $('#topBarKarma').html($.i18n.prop('topbar_karma') + '</br>' + user.money);
+    });
+
 
     this.connection.on('dead', function() {
       announce($.i18n.prop('game_playerdie'), 'red');

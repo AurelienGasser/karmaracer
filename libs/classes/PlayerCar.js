@@ -61,9 +61,9 @@ PlayerCar.prototype.getMiniInfo = function() {
   return {
     fbId: this.fbId,
     name: this.playerName,
-    x : this.car.x,
-    y : this.car.y,
-    isBot : this.isBot
+    x: this.car.x,
+    y: this.car.y,
+    isBot: this.isBot
   }
 };
 
@@ -104,17 +104,23 @@ PlayerCar.prototype.getGameInfo = function() {
   if (this.user) {
     share.highScore = this.user.highScore;
     share.carImageName = this.user.currentCar;
-  }  
+  }
 
   return share;
 };
 
 PlayerCar.prototype.addMoneyFromKillingCar = function(victim) {
-    var earnMoneyValue = 150;
-    if (victim.isBot){
-      earnMoneyValue = 50;
+  var that = this;
+  var earnMoneyValue = 150;
+  if (victim.isBot) {
+    earnMoneyValue = 50;
+  }
+  this.increaseMoney(earnMoneyValue, function(err, user) {    
+    if (!err) {
+      that.client.emit('moneyUpdated', user)
     }
-    this.increaseMoney(earnMoneyValue);  
+  });
+
 };
 
 
@@ -148,8 +154,7 @@ PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;
   if (this.user) {
     this.user.playerName = name;
-    this.saveUserDb(function(err){
-    });
+    this.saveUserDb(function(err) {});
   }
 }
 

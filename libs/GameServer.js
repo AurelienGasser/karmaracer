@@ -207,7 +207,6 @@ GameServer.prototype.step = function() {
   }
   this.tickCounter = (this.tickCounter + 1) % this.ticksPerSecond
   registerDateDiff(timer, 'lastDiff', timer.begin);
-  // console.log(timer);
   this.timer = timer;
 }
 

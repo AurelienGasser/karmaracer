@@ -62,7 +62,7 @@ module.exports = function() {
           }
         } else {
           if (KLib.isFunction(callback)) {
-            return callback(null);
+            return callback(null, item);
           }
         }
       });

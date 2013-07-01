@@ -81,7 +81,7 @@
           if (response.data.length > 0) {
             score = response.data[0].score;
           }
-          $('#fbHighScore').html('<div title="' + $.i18n.prop('topbar_highscore') + '">' + $.i18n.prop('topbar_highscore') + '</br>' + score + '</div>');
+          $('#fbHighScore').html($.i18n.prop('topbar_highscore') + '</br>' + score);
         }
       });
     } catch (err) {
