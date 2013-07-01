@@ -1,4 +1,3 @@
-
 (function() {
   "use strict";
   /*global GKarmaOptions*/
@@ -11,6 +10,12 @@
       page = page.split('#')[0];
     }
     return page;
+  }
+
+  function setKarma(user) {
+    if (user) {
+      $('#topBarKarma').html($.i18n.prop('topbar_karma') + '</br>' + user.money);
+    }
   }
 
 
@@ -31,8 +36,8 @@
 
     o.push('<li id="topBarKarma" class="scoreZone"/>');
     o.push('<li id="fbHighScore" class="scoreZone"/>');
-    if (GKarmaOptions.playerName !== ''){
-    o.push('<li id="topShoping" class="topBarIcon"><a href="/marketplace"><img src="/images/iconShoping.png" id="iconShoping" title="', $.i18n.prop('topbar_shoping'), '"/></a></li>');
+    if (GKarmaOptions.playerName !== '') {
+      o.push('<li id="topShoping" class="topBarIcon"><a href="/marketplace"><img src="/images/iconShoping.png" id="iconShoping" title="', $.i18n.prop('topbar_shoping'), '"/></a></li>');
     }
 
     o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="', $.i18n.prop('topbar_help'), '"/>');
@@ -117,7 +122,8 @@
   Karma.TopBar = {
     setTopBar: setTopBar,
     show: show,
-    getHelps: getHelps
+    getHelps: getHelps,
+    setKarma : setKarma
   };
 
 }());

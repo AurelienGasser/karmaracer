@@ -55,8 +55,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
 
   require('./Sockets/miniMap')(this, client);
-
   require('./MarketPlace/MarketPlaceSockets')(client);
+  var user
+  if (client.handshake.session && client.handshake.session.user) {
+    user = client.handshake.session.user;
+  }
+
 
   client.on('get_maps', function(callback) {
     that.addHomeClient(client);
@@ -87,13 +91,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
   });
 
   client.on('getMyInfo', function(callback) {
-    if (client.handshake.session && client.handshake.session.user) {
-      var user = client.handshake.session.user;
+    if (user) {
       var UserController = require('./db/UserController');
-      UserController.createOrGet(user.fbid, user.playerName, function(err, user){
+      UserController.createOrGet(user.fbid, user.playerName, function(err, user) {
         return callback(err, user);
       });
-    } else{
+    } else {
       return callback('not authenticated');
     }
 
@@ -117,6 +120,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
     if (gameServer) {
       var worldInfo = gameServer.engine.getWorldInfo();
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
+      if (user) {
+        worldInfo.user = user;
+      }
       client.emit('init', worldInfo);
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;
@@ -127,7 +133,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     console.info('client initialized:', userData.playerName, ' on ', client.gameServer.map.name);
     client.player = new Player(client, userData.playerName);
     client.gameServer.addPlayer(client.player);
-    client.gameServer.broadCastGameInfo();  
+    client.gameServer.broadCastGameInfo();
   });
 
   client.on('saveMap', function(map) {

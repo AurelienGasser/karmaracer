@@ -55,7 +55,6 @@
 
     this.gv = new Karma.GunViewer($('body'), that.connection);
 
-
     that.connection.on('connect', function() {
       if (!_.isUndefined(G_mapName)) {
         that.connection.emit('enter_map', G_mapName);
@@ -66,6 +65,9 @@
 
     this.connection.on('init', function(worldInfo) {
       onInitCallback(null, worldInfo);
+      if (worldInfo.user){        
+        Karma.TopBar.setKarma(worldInfo.user);
+      }
       if (!Karma.LocalStorage.get('playerName') || Karma.LocalStorage.get('playerName').length === 0) {
         Karma.LocalStorage.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
       }
@@ -88,31 +90,23 @@
       that.gameInstance.chat.onChatMsgReceived(msg, 'gameMessage');
     });
 
-
-
     function announce(text, color, extraClass) {
       if (KLib.isUndefined(extraClass)) {
         extraClass = '';
       }
       $('#announce').remove();
       var div = $('<div id="announce" class="announce ' + extraClass + ' announce-' + color + '"><span>' + text + '</span></div>');
-      // div.hide();
       div.appendTo($('body'));
-
-      // div.fadeIn(function() {
       setTimeout(function() {
         $('#announce').fadeOut(function() {
           $('#announce').remove();
         });
       }, 4000);
-      // });
-
     }
 
     this.connection.on('moneyUpdated', function(user) {
-      $('#topBarKarma').html($.i18n.prop('topbar_karma') + '</br>' + user.money);
+      Karma.TopBar.setKarma(user);
     });
-
 
     this.connection.on('dead', function() {
       announce($.i18n.prop('game_playerdie'), 'red');
