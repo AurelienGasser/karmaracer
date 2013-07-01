@@ -34,7 +34,6 @@ GameServer.prototype.initGameServer = function(map) {
   this.mem = new MemLeakLog();
   this.mem.enable = false;
   this.mem.register('b2Body');
-
   if (config.performanceTest) {
     require('./GameServerPerfTest')(this);
   } else {
