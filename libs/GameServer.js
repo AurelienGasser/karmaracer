@@ -121,6 +121,11 @@ GameServer.prototype.getPlayersForShare = function() {
   return players;
 };
 
+GameServer.prototype.broadCastGameInfo = function() {
+  var gameInfo = this.carManager.getGameInfo();
+  this.broadcast('gameInfo', gameInfo);
+};
+
 GameServer.prototype.sendPositionsToPlayers = function() {
   var cars = this.carManager.getShared();
   var projectiles = this.weaponsManager.getGraphicProjectiles();
@@ -174,7 +179,7 @@ GameServer.prototype.gameEnd = function(winnerCar) {
 
 GameServer.prototype.resetGame = function(first_argument) {
   var players = this.players;
-  for(var i in players) {
+  for (var i in players) {
     players[i].client.keyboard = {};
   }
   for (var i in players) {
