@@ -2,7 +2,7 @@
   "use strict";
 
   var ID = 0;
-  var maxTimer = 100;
+  var maxTimer = 50;
 
   var PointsManager = function(gameInstance) {
     this.gameInstance = gameInstance;
@@ -14,9 +14,13 @@
       x: info.x,
       y: info.y
     };
+    var points = 150;
+    if (info.isBot === true){
+      points = 50;
+    }
     this.points[ID] = {
       pos: pos,
-      points: 50,
+      points: points,
       timer: 0,
       id : ID
     };
@@ -40,6 +44,7 @@
         ctx.fillText(text, -textSize.width / 2, 0);
         ctx.restore();
         p.timer += 1;
+        p.pos.y -= 0.025;
         if (p.timer > maxTimer) {
           delete this.points[p.id];
         }
