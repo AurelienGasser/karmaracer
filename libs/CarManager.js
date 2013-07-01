@@ -71,6 +71,7 @@ CarManager.prototype.projectileHitCar = function(attacker, victim, projectile) {
       attacker: attacker.getMiniInfo()
     });
     attacker.getExperience(100);
+    attacker.addMoneyFromKillingCar(victim);
   }
 }
 

@@ -109,6 +109,16 @@ PlayerCar.prototype.getGameInfo = function() {
   return share;
 };
 
+PlayerCar.prototype.addMoneyFromKillingCar = function(victim) {
+    var earnMoneyValue = 150;
+    if (victim.isBot){
+      earnMoneyValue = 50;
+    }
+    this.increaseMoney(earnMoneyValue);  
+};
+
+
+
 PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();
   delete share.w;
@@ -136,7 +146,7 @@ PlayerCar.prototype.receiveHit = function(damage) {
 
 PlayerCar.prototype.updatePlayerName = function(name) {
   this.playerName = name;
-  if (this.user !== null) {
+  if (this.user) {
     this.user.playerName = name;
     this.saveUserDb(function(err){
     });

@@ -1,9 +1,10 @@
 #topBarBoxes{margin:0px;padding:0px;width:100%;display:table;}#topBarBoxes li{display:table-cell;overflow:hidden;vertical-align:top;list-style:none;}#topBarBoxes li>*{margin:5px;}
 #topBar li a img{margin:5px;}
 #topBar{position:fixed;right:0px;top:-30px;height:50px;width:100%;vertical-align:top;text-align:right;z-index:6000;-webkit-transition:0.25s ease-in-out;-moz-transition:0.25s ease-in-out;-o-transition:0.25s ease-in-out;transition:0.25s ease-in-out;background-color:white;opacity:0.5;}#topBar input{font-size:1.2em;text-align:center;font-weight:bold;background-color:#eee;border:1px solid #ddd;margin-left:10px;-webkit-transition:0.25s ease-in-out;-moz-transition:0.25s ease-in-out;-o-transition:0.25s ease-in-out;transition:0.25s ease-in-out;}
+#topBar .scoreZone{padding-top:5px;text-align:center;height:40px;min-width:100px;}#topBar .scoreZone br{margin:2px;}
+#topBar .scoreZone div{cursor:help;}
 #topBar:hover,#topBar.init{top:0px;background-color:#eee;opacity:1;border-bottom:none;-webkit-transition:0.25s ease-in-out;-moz-transition:0.25s ease-in-out;-o-transition:0.25s ease-in-out;transition:0.25s ease-in-out;}
 #topBar:hover input,#topBar.init input{background-color:#ddd;border-color:#eee;-webkit-transition:0.25s ease-in-out;-moz-transition:0.25s ease-in-out;-o-transition:0.25s ease-in-out;transition:0.25s ease-in-out;}
-#fbHighScore{line-height:40px;height:40px;width:150px;}#fbHighScore div{cursor:help;}
 .topBarMainZone{text-align:center;}
 #playerName{height:35px;line-height:35px;width:300px;}
 #playerName:focus{background-color:#ccc;}

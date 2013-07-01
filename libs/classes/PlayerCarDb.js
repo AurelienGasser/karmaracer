@@ -15,6 +15,14 @@ module.exports = function(PlayerCar) {
     }
   };
 
+  PlayerCar.prototype.increaseMoney = function(value) {
+    if (this.user) {
+      this.user.money += value;
+      UserController.save(this.user);
+    }
+  };
+
+
   PlayerCar.prototype.saveUserDb = function(callback) {
     if (this.user) {
       UserController.save(this.user, callback);
