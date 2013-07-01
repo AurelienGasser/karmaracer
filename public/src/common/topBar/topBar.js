@@ -114,9 +114,9 @@
     $bar.slideDown(function() {
       $bar.children().fadeIn();
     });
-    setTimeout(function() {
-      $bar.removeClass('init');
-    }, 2500);
+    // setTimeout(function() {
+    //   $bar.removeClass('init');
+    // }, 2500);
   }
 
   Karma.TopBar = {

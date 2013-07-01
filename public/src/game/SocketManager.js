@@ -124,11 +124,11 @@
 
     this.connection.on('game end', function(d) {
       $('table.scores').addClass('big').removeClass('default');
-      $('#topBar').toggleClass('init');
+      // $('#topBar').toggleClass('init');
 
       var removeBigScore = function() {
         $('table.scores').removeClass('big').addClass('default');
-        $('#topBar').toggleClass('init');
+        // $('#topBar').toggleClass('init');
 
       };
 
