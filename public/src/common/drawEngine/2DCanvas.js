@@ -301,7 +301,7 @@
     // this.drawRockets(this.ctx);
     this.drawProjectiles(this.ctx);
 
-    if (this.gameInstance !== null){
+    if (this.gameInstance !== null && this.isMiniMap === false){
       this.gameInstance.pointsManager.draw(this.ctx, this.gScaleValue);
     }
     // this.drawCollisionPoints();
