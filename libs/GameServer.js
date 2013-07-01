@@ -28,7 +28,6 @@ GameServer.prototype.initGameServer = function(map) {
   this.weaponsManager = new WeaponsManager(this);
   this.clients = [];
   this.players = {};
-
   this.initStep();
 
   // memory
