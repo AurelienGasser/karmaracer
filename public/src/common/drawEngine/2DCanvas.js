@@ -7,6 +7,7 @@
     this.canvasID = canvasID;
     this.timer = new Date().getTime();
     this.frames = 0;
+    this.fps = undefined; // will be defined by requestAnimFrame
     this.debugDraw = false;
     this.carFlameTicks = {};
     this.isMiniMap = false;
@@ -316,7 +317,8 @@
     var now = new Date().getTime();
     if (now - this.timer > 1000) {
       this.timer = now;
-      $('#fps').html('fps: ' + this.frames);
+      this.fps = this.frames;
+      $('#fps').html('fps: ' + this.fps);
       this.frames = 0;
     }
   };
