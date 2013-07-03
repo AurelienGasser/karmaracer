@@ -126,8 +126,6 @@
 
       var removeBigScore = function() {
         $('table.scores').removeClass('big').addClass('default');
-        // $('#topBar').toggleClass('init');
-
       };
 
       var updateScoreInTopBar = function() {
@@ -142,9 +140,12 @@
 
     });
 
+    var counterGameInfo = 0;
+
     that.connection.on('gameInfo', function(gameInfo){
       gameInstance.gameInfo = gameInfo;
-      gameInstance.updateScoresHTML();
+      gameInstance.scoreTable.updateScoresHTML(gameInfo, gameInstance.items);
+      counterGameInfo += 1;
     });
 
 
@@ -162,7 +163,7 @@
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
-      })));
+      }).concat([counterGameInfo])));
       socketReceived();
     });
 

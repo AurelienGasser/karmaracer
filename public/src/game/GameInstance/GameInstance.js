@@ -3,22 +3,6 @@
   "use strict";
 
   function GameInstance() {
-    var o = [];
-    o.push('<table class="scores default" id="score-table">');
-    o.push('<thead><tr>');
-
-    o.push('<td>', $.i18n.prop('scoretable_name'), '</td>');
-    o.push('<td>', $.i18n.prop('scoretable_score'), '</td>');
-    o.push('<td>', $.i18n.prop('scoretable_level'), '</td>');
-    o.push('<td class="large_col">', $.i18n.prop('scoretable_highscore'), '</td>');
-
-    o.push('</tr></thead>');
-    o.push('<tbody id="scores"/>');
-    o.push('</table>');
-    $('body').append(o.join(''));
-
-
-    this.scoresTable = $('tbody#scores');
 
     this.config = undefined; // will be defined by onInitReceived
     this.items = {};
@@ -30,6 +14,8 @@
     this.pointsID = 0;
 
     this.pointsManager = new Karma.PointsManager();
+    this.scoreTable = Karma.ScoreTable;
+    this.scoreTable.setup();
 
     this.worldInfo = {};
 
@@ -46,34 +32,7 @@
 
 
 
-  GameInstance.prototype.getScores = function() {
-    var scores = _.map(this.gameInfo, function(car) {
-      return {
-        'score': car.score,
-        'level': car.level,
-        'name': car.playerName,
-        'highScore': car.highScore,
-        'id': car.id
-      };
-    });
-    scores = _.sortBy(scores, function(c) {
-      return c.score;
-    }).reverse();
-    return scores;
-  };
 
-  GameInstance.prototype.updateScoresHTML = function() {
-    var that = this;
-
-    var scores = this.getScores();
-    var o = [];
-    for (var i = 0; i < scores.length; i++) {
-      var playerScore = scores[i];
-      var userCarClass = (that.items.mycar !== null && that.items.mycar.id === playerScore.id) ? 'userCar' : '';
-      o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
-    }
-    this.scoresTable.html(o.join(''));
-  };
 
   GameInstance.prototype.setUIEvents = function() {
     var that = this;
@@ -86,7 +45,7 @@
     this.worldInfo = worldInfo;
     this.bullets = [];
     this.rockets = [];
-    this.gameInfo = null; //this.worldInfo.gameInfo;
+    this.gameInfo = null; // is set from sockets
 
     var defaultDrawEngineType = 'CANVAS';
     var canvasReady = function() {

@@ -140,6 +140,7 @@ PlayerCar.prototype.updatePos = function() {
 
 PlayerCar.prototype.receiveHit = function(damage) {
   this.life -= damage;
+  this.gameServer.broadCastGameInfo();
 }
 
 PlayerCar.prototype.updatePlayerName = function(name) {
@@ -148,6 +149,7 @@ PlayerCar.prototype.updatePlayerName = function(name) {
     this.user.playerName = name;
     this.saveUserDb(function(err) {});
   }
+  this.gameServer.broadCastGameInfo();  
 }
 
 PlayerCar.prototype.getExperience = function(experience) {
