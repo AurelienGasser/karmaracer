@@ -23,7 +23,7 @@
       o.push('<div class="bottom">');
       o.push('<span class="price">', $.i18n.prop('marketplace_price'), ' : ', car.price, ' Karma</span>');
       if (!KLib.isUndefined(user)) {
-        if (car.price < user.highScore) {
+        if (car.price < user.money) {
           o.push('<span class="option"><a class="marketplace-buy-link" data-name="', car.name, '">', $.i18n.prop('marketplace_buy'), '</a></span>');
         }
       }
