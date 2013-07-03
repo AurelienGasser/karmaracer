@@ -69,7 +69,7 @@ Engine.prototype.step = function() {
     A = this.bodies[AID];
 
     if (A.isStatic === false) {
-      if (this.moveToPosition !== null) {
+      if (A.moveToPosition !== null) {
         A.doMove();
       }
 
