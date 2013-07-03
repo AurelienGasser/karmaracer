@@ -105,11 +105,8 @@ PlayerCar.prototype.getGameInfo = function() {
     share.highScore = this.user.highScore;
     share.carImageName = this.user.currentCar;
   }
-
   return share;
 };
-
-
 
 PlayerCar.prototype.addMoneyFromKillingCar = function(victim) {
   var that = this;
@@ -118,10 +115,7 @@ PlayerCar.prototype.addMoneyFromKillingCar = function(victim) {
     earnMoneyValue = 50;
   }
   this.increaseMoney(earnMoneyValue);
-
 };
-
-
 
 PlayerCar.prototype.getShared = function() {
   var share = this.car.getShared();

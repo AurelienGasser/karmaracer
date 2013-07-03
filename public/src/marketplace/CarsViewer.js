@@ -14,7 +14,7 @@
 
     if (!KLib.isUndefined(user) && user.cars.indexOf(car.name) !== -1) {
       if (user.currentCar === car.name) {
-        o.push('<div class="bottom option"><span class="option">Currently Used</span></div>');
+        o.push('<div class="bottom option"><span class="option">', $.i18n.prop('marketplace_currentlyUsed'),'</span></div>');
       } else {
         o.push('<div class="bottom option"><span class="option"><a class="karma-use-car" data-name="', car.name, '">', $.i18n.prop('marketplace_use'), '</a></span></div>');
       }
