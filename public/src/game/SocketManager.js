@@ -178,19 +178,11 @@
     var that = this;
     var sentTs = Date.now();
     this.connection.emit('ping', { clientSentTs: sentTs }, function(err, res) {
-      var receivedTs = Date.now();
-      var ping = receivedTs - sentTs;
-      // update clock and ping only if this packet is the most recently sent
-      if (that.gameInstance.clock === null
-        || sentTs > that.gameInstance.clock.clientSentTs) {
-          that.ping = ping;
-          that.gameInstance.clock = {
-            serverTs:         res.serverReceivedTs + that.ping / 2,
-            clientReceivedTs: receivedTs,
-            clientSentTs:     sentTs
-          };
-          $('#ping').html('ping: ' + that.ping + 'ms');
-        }
+      if (!err) {
+        res.clientSentTs     = sentTs;
+        res.clientReceivedTs = Date.now();
+        that.gameInstance.clock.pong(res);
+      }
     });
   }
 

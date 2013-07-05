@@ -12,7 +12,6 @@
     this.items.projectiles = [];
     this.points = {};
     this.pointsID = 0;
-    this.clock = null;
 
     this.pointsManager = new Karma.PointsManager();
     this.scoreTable = Karma.ScoreTable;
@@ -23,6 +22,7 @@
     this.drawEngine = null;
 
     this.explosionManager = new Karma.ExplosionsManager(this);
+    this.clock = new Karma.Clock();
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
 
     this.setUIEvents();
