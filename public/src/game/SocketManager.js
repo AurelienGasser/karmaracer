@@ -58,8 +58,9 @@
       if (!_.isUndefined(G_mapName)) {
         that.connection.emit('enter_map', G_mapName);
         announce($.i18n.prop('game_startmessage') + '</br>' + Karma.TopBar.getHelps(), 'blue');
-      } else {}
-
+      }
+      setInterval(that.ping.bind(that), 1000);
+      that.ping();
     });
 
     this.connection.on('init', function(initInfo) {
@@ -171,6 +172,17 @@
       gameInstance.explosionManager.addExplosion(explosion);
     });
 
+  }
+
+  SocketManager.prototype.ping = function() {
+    var that = this;
+    var now = Date.now();
+    this.connection.emit('ping', {}, function(err, res) {
+      var serverTs = res.now;
+      var ping = Date.now() - now;
+      that.ping = ping;
+      $('#ping').html('ping: ' + that.ping + 'ms');
+    });
   }
 
   SocketManager.prototype.getConnection = function() {

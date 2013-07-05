@@ -52,6 +52,10 @@ GameServerSocket.prototype.registerMethods = function(client) {
     user = client.handshake.session.user;
   }
 
+  client.on('ping', function(data, callback) {
+    var now = Date.now();
+    callback(null, { now: now });
+  });
 
   client.on('get_maps', function(callback) {
     that.addHomeClient(client);

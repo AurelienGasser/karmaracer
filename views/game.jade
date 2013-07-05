@@ -3,7 +3,7 @@ html
   head
     title Karma Racer Race for your Soul!
     meta(http-equiv='content-type', content='text/html; charset=utf-8')
-    link(rel="icon", type="image/png", href="/favicon.png")      
+    link(rel="icon", type="image/png", href="/favicon.png")
     link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
     meta(name="viewport", content="initial-scale=0.5, maximum-scale=1.0, user-scalable=0.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
@@ -12,12 +12,12 @@ html
       var G_defaultDrawEngineType = '#{default_draw_engine}';
       var G_MOBILE_DEVICE = false;
       var G_fbid = '#{fbid}';
-      var G_locale = '#{locale}';            
+      var G_locale = '#{locale}';
       var GKarmaOptions = {'playerName' : '#{playerName}'};
     script(type='text/javascript', src='/socket.io/socket.io.js')
-    script(type='text/javascript', src='/dist/vendor_common.js')    
-    script(type='text/javascript', src='/dist/all_game.js')    
-    link(rel='stylesheet', href='/dist/all_game.css')          
+    script(type='text/javascript', src='/dist/vendor_common.js')
+    script(type='text/javascript', src='/dist/all_game.js')
+    link(rel='stylesheet', href='/dist/all_game.css')
     script(type='text/javascript')
       Karma.setGoogleAnalytics();
   body
@@ -26,6 +26,7 @@ html
       div#botMenu
     div#debug
       #fps
+      #ping
       #high-score
     canvas#game-canvas
     img#loadingImage(src='/images/loading.gif')
