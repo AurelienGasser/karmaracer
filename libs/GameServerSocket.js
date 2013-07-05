@@ -53,8 +53,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
   }
 
   client.on('ping', function(data, callback) {
-    var now = Date.now();
-    callback(null, { now: now });
+    var clientSentTs = data.clientSentTs;
+    var serverReceivedTs = Date.now();
+    callback(null, {
+      clientSentTs:     clientSentTs,
+      serverReceivedTs: serverReceivedTs,
+    });
   });
 
   client.on('get_maps', function(callback) {

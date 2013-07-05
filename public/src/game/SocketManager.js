@@ -176,12 +176,21 @@
 
   SocketManager.prototype.ping = function() {
     var that = this;
-    var now = Date.now();
-    this.connection.emit('ping', {}, function(err, res) {
-      var serverTs = res.now;
-      var ping = Date.now() - now;
-      that.ping = ping;
-      $('#ping').html('ping: ' + that.ping + 'ms');
+    var sentTs = Date.now();
+    this.connection.emit('ping', { clientSentTs: sentTs }, function(err, res) {
+      var receivedTs = Date.now();
+      var ping = receivedTs - sentTs;
+      // update clock and ping only if this packet is the most recently sent
+      if (that.gameInstance.clock === null
+        || sentTs > that.gameInstance.clock.clientSentTs) {
+          that.ping = ping;
+          that.gameInstance.clock = {
+            serverTs:         res.serverReceivedTs + that.ping / 2,
+            clientReceivedTs: receivedTs,
+            clientSentTs:     sentTs
+          };
+          $('#ping').html('ping: ' + that.ping + 'ms');
+        }
     });
   }
 

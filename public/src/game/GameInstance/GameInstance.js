@@ -12,6 +12,7 @@
     this.items.projectiles = [];
     this.points = {};
     this.pointsID = 0;
+    this.clock = null;
 
     this.pointsManager = new Karma.PointsManager();
     this.scoreTable = Karma.ScoreTable;
