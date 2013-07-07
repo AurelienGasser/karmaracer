@@ -152,23 +152,27 @@
     this.camera.ctx.canvas.height = size.h;
   };
 
+  Engine2DCanvas.prototype.udateCameraCenter = function() {
+    if (this.isMiniMap === false && this.interpData.ready) {
+      var newCenter = this.oldCenter;
+      var pos = this.scalePos(this.interpPos(this.interpData.snapBefore.myCar, this.interpData.snapAfter.myCar, this.interpData.interpPercent));
+      newCenter = {
+        x: pos.x,
+        y: pos.y
+      };
+      this.camera.update(newCenter);
+      if (newCenter && newCenter != this.oldCenter) {
+        this.oldCenter = newCenter;
+      }
+    }
+  };
+
   Engine2DCanvas.prototype.draw = function() {
     if (this.worldInfo.staticItems.length > 0) {
       this.resize();
-      if (this.isMiniMap === false && this.interpData.ready) {
-        var newCenter = this.oldCenter;
-        var pos = this.scalePos(this.interpPos(this.interpData.snapBefore.myCar, this.interpData.snapAfter.myCar, this.interpData.interpPercent));
-        newCenter = {
-          x: pos.x,
-          y: pos.y
-        };
-        this.camera.update(newCenter);
-        if (newCenter && newCenter != this.oldCenter) {
-          this.oldCenter = newCenter;
-        }
-      }
-      this.drawItems();
+      this.udateCameraCenter();
     }
+    this.drawItems();
   };
 
   var explosionWidth = 56;
@@ -304,7 +308,7 @@
     // this.drawRockets(this.ctx);
     this.drawProjectiles(this.ctx);
 
-    if (this.gameInstance !== null && this.isMiniMap === false){
+    if (this.gameInstance !== null && this.isMiniMap === false) {
       this.gameInstance.pointsManager.draw(this.ctx, this.gScaleValue);
     }
     // this.drawCollisionPoints();
