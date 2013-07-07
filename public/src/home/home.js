@@ -21,40 +21,26 @@
       secure: true
     });
 
-    function setPCars() {
-      var $objWindow = $(window);
-      $('.pcar').each(function() {
-        var $bgObj = $(this);
-        $bgObj.width($objWindow.width());
-        $objWindow.scroll(function() {
-          var xPos = ($objWindow.scrollLeft() / $bgObj.data('speed'));
-          var coords = xPos + '% 10%';
-          // Change the position of background
-          $bgObj.css({
-            backgroundPosition: coords
-          });
-        });
-      });
-
-      var scroll = function(e, delta) {
-        var $b = $objWindow;
-        if (!KLib.isUndefined(delta)) {
-          var m = delta;
+    var scroll = function(e, delta) {
+      var $b = $objWindow;
+      if (!KLib.isUndefined(delta)) {
+        var m = delta;
+        if (Math.abs(m) > 4){
           $b.scrollLeft($b.scrollLeft() + m);
-          e.preventDefault();
-          return false;
         }
-      };
-      $objWindow.mousewheel(scroll);
-
-    }
+        e.preventDefault();
+        return false;
+      }
+    };
+    var $objWindow = $(window);
+    $objWindow.mousewheel(scroll);
 
 
     Karma.TopBar.setTopBar(connection);
 
     connection.emit('get_maps', function(err, maps) {
       Karma.Maps.addMaps(connection, maps);
-      setPCars();
+      Karma.CarParallax.setCars(connection);
 
       $('#loadingImage').fadeOut();
       $('#victoriesTitle').html($.i18n.prop('home_high_scores_table'));
