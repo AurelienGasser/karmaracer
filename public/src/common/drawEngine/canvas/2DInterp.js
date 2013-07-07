@@ -30,30 +30,27 @@
     }
     var wantedServerTs = serverTs - interpolation;
     var found = false;
-    var i;
     // find the two snapshots we fall between
-    for (i = numSnaps - 2; i >= 0; --i) {
+    for (var i = numSnaps - 2; i >= 0; --i) {
       if (snapshots[stepNumbers[i    ]].stepTs <= wantedServerTs &&
           snapshots[stepNumbers[i + 1]].stepTs >= wantedServerTs) {
             found = true;
+            var snapBefore = snapshots[stepNumbers[i]];
+            var snapAfter =  snapshots[stepNumbers[i + 1]];
+            for (var j = 0; j < i; ++j) {
+              // free memory
+              // delete old snapshots
+              delete snapshots[stepNumbers[j]];
+            }
+            this.interpData.snapBefore = snapBefore;
+            this.interpData.snapAfter = snapAfter;
             break;
       }
     }
-    if (found) {
-      var snapBefore = snapshots[stepNumbers[i]];
-      var snapAfter =  snapshots[stepNumbers[i + 1]];
-      for (var j = 0; j < i; ++j) {
-        // free memory
-        // delete old snapshots
-        delete snapshots[stepNumbers[j]];
-      }
-      this.interpData.snapBefore = snapBefore;
-      this.interpData.snapAfter = snapAfter;
-    } else {
+    if (!found) {
       // no data available
       // don't touch this.interpData.snapBefore and this.interpData.snapAfter
     }
-
     this.interpData.ready = typeof this.interpData.snapBefore !== 'undefined' &&
       typeof this.interpData.snapAfter !== 'undefined';
     if (this.interpData.ready) {
