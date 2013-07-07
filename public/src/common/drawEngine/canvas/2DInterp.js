@@ -10,10 +10,18 @@
         r: afterPos.r
       };
     }
+    if (Math.abs(afterPos.r - beforePos.r) > Math.PI) {
+      // angle goes from 0 to 360 or from 360 to 0
+        if (beforePos.r > Math.PI) {
+          beforePos.r -= 2 * Math.PI
+        } else {
+          beforePos.r += 2 * Math.PI
+        }
+    }
     return {
       x: beforePos.x + (afterPos.x - beforePos.x) * interpPercent,
       y: beforePos.y + (afterPos.y - beforePos.y) * interpPercent,
-      r: beforePos.r + (afterPos.r - beforePos.r) * interpPercent
+      r: (beforePos.r + (afterPos.r - beforePos.r) * interpPercent) % (2 * Math.PI)
     };
   };
 
