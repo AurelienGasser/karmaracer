@@ -15,7 +15,7 @@
           return false;
         }
         Karma.LocalStorage.set('playerName', $('#playerName').val());
-        Karma.LocalStorage.set('map', $(this).text());
+        Karma.LocalStorage.set('map', $(this).data('map'));
         return true;
       });
     }
@@ -27,14 +27,16 @@
         var m = maps[i];
         o.push('<li id="map-', m, '">');
         var link = 'game.' + m;
-        o.push('<a class="mapLink" href="', link, '" ><div>', m, '</br></div></a>');
-        o.push('<div class="info"><span class="players"/></div>');
+        o.push('<a class="mapLink" href="', link, '" data-map="', m, '"><div class="box"><div class="name">', m, '</div><div class="miniMap"></div>');
+        o.push('<div class="info"><div class="players"/></div>');
+        o.push('</div></a>');
         o.push('</li>');
+
         var $li = $(o.join(''));
         $li.hide();
         $ul.append($li);
         $li.fadeIn(1000);
-        new Karma.MiniMap($li.find('a div'), m, connection);
+        new Karma.MiniMap($li.find('a div.miniMap'), m, connection);
       }
       registerMaps();
     }

@@ -1,63 +1,79 @@
 
 #maps{
+
+  
+  //  border:1px solid blue;
+  //  border-left:none; 
+  // border-right: none;
+  
   margin: 0px;
   padding:0px;
+    padding-top: 30px;
   background-color: #fefefe;
   vertical-align: top;
-  // border: 1px solid blue;
   width: auto;
-  height: 200px;
     white-space: nowrap;
 
 
    li {
-    vertical-align: middle;
+    vertical-align: top;
     list-style: none;
     display: inline-block;
-    margin: 10px;
-    // border: 1px solid blue;
-    width: 500px;
+    min-width: 400px;
+    text-align: left;
+    margin: 5px;
+    padding: 0px;
 
     div.info{
-      position: absolute;
-      display: none;
-      z-index: 5000;
-      background-color: rgba(238, 238, 238, 0.5);
-      margin: 5px;
-      padding: 5px;
       text-align: left;
       border-radius: 5px;
+      vertical-align: top;
+      width: 256px;
+      max-width: 256px;
+      min-width: 256px;
     }
 
     a {
       text-decoration: none;  
-
-      div{
+      color:#333;
+      
+      div.name{
+        vertical-align: top;
+        background: #eee;
+        border-radius:5px 5px 0px 0px;
         text-align: center;
-        padding: 5px;
+        font-size: 2.0em;  
+        padding: 10px;        
+      }
+      div.miniMap, div.info{
+        display: inline-block;
+        // width: 256px;    
+        width: auto;  
+
+      }
+      div.miniMap{
+      }
+
+      div.box{
+        text-align: left;
+        vertical-align: top;
         border: 1px solid #eee;
         border-radius: 5px;
-        box-shadow: #eee 2px 2px 2px;
-        min-height: 180px;
-        min-width: 180px;
-          
-      }
-      canvas{
-        margin: 5px;
+        min-height: 220px;
 
       }
-      div:hover{
+      canvas, div.players{
+        margin: 10px;
+      }
+
+      div.players{
+        white-space: normal;        
+      }
+      div.box:hover{
         border-color: #999;
         background: #eee;
       }
     }
-  }
-  li:hover{
-    div.info{
-      display: block;
-
-    }
-
   }
 } 
 
@@ -66,7 +82,6 @@
 }
 
 .mapLink{
-  font-size: 2.0em;
   text-decoration: none;
     color:blue;
 }
@@ -76,8 +91,5 @@
 }
 
 #mapsContainer {
-  /*float: left;*/
-  /*width: 700px;*/
-  // display: none;
   vertical-align: top;
 }

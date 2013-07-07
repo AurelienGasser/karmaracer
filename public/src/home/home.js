@@ -7,11 +7,12 @@
       Karma.Home.start();
     });
   });
+
   var start = function() {
     Karma.UserVoice();
     var $mapsContainer = $('#mapsContainer');
     var o = [];
-    o.push('<h2>', $.i18n.prop('home_clickonmap'), '</h2>');
+    o.push('<div id="titleContainer"><h1>', $.i18n.prop('home_clickonmap'), '</h1></div>');
     o.push('<ul id="maps"></ul>');
     $mapsContainer.append(o.join(''));
 
@@ -73,7 +74,7 @@
         if (players.length > 0) {
           players = $.i18n.prop('home_playingnow') + ' : ' + players;
         }
-        $('#map-' + m.map + ' .players').html(players);
+        $('#map-' + m.map + ' div.players').html(players);
       }
     });
 
