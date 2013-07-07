@@ -25,6 +25,9 @@
       var $b = $objWindow;
       if (!KLib.isUndefined(delta)) {
         var m = delta;
+        if (window.navigator.platform.indexOf('Mac') === -1){
+          m *= -28;
+        }
         $b.scrollLeft($b.scrollLeft() + m);
         e.preventDefault();
         return false;
