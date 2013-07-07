@@ -28,6 +28,9 @@ html
       #fps
       #ping
       #high-score
+      div(style="position: absolute; z-index:99999; top: 100px; width: 100px")
+        input#interpolate(type="checkbox", autocomplete="off", checked="checked")
+        label(for="interpolate") interpolation
     canvas#game-canvas
     img#loadingImage(src='/images/loading.gif')
     div#loadingInfo

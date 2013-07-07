@@ -2,7 +2,7 @@
   "use strict";
 
   Engine2DCanvas.prototype.interpPos = function(beforePos, afterPos, interpPercent) {
-    if (interpPercent > 1) {
+    if (interpPercent > 1 || !$('#interpolate').is(':checked')) {
       // we can't interpolate out of bounds !
       return {
         x: afterPos.x,
@@ -63,6 +63,9 @@
       // 1:   snapAfter
       var snapshotsInterval = this.interpData.snapAfter.stepTs - this.interpData.snapBefore.stepTs;
       this.interpData.interpPercent = (wantedServerTs - this.interpData.snapBefore.stepTs) / snapshotsInterval;
+    }
+    if (!$('#interpolate').is(':checked') && numSnaps >= 2) {
+      this.interpData.snapAfter = snapshots[stepNumbers[numSnaps - 1]];
     }
   };
 }(Karma.Engine2DCanvas));
