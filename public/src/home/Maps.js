@@ -3,26 +3,6 @@
 
   Karma.Maps = function() {
 
-
-
-    var lastScrollTop = 0,
-      lastScrollLeft = 0,
-      direction, x = 0, y = 0;
-
-    function detectDirection() {
-      x = window.pageXOffset;
-      y = window.pageYOffset;
-      direction = {
-        x: x - lastScrollLeft,
-        y: y - lastScrollTop
-      };
-      lastScrollLeft = x;
-      lastScrollTop = y;
-      return direction;
-    }
-
-    
-
     function registerMaps() {
       $('.mapLink').click(function(e) {
         if (!$('#playerNameForm')[0].checkValidity()) {
@@ -60,8 +40,7 @@
     }
 
     return {
-      addMaps: addMaps,
-      detectDirection: detectDirection
+      addMaps: addMaps
     };
   }();
 

@@ -20,7 +20,6 @@
       secure: true
     });
 
-
     function setPCars() {
       var $objWindow = $(window);
       $('.pcar').each(function() {
@@ -37,14 +36,12 @@
       });
 
       var scroll = function(e, delta) {
-        var dir = Karma.Maps.detectDirection();
         var $b = $objWindow;
         if (!KLib.isUndefined(delta)) {
-          var m = 30;
-          if (delta < 0) {
-            m = -m;
-          }
+          var m = delta;
           $b.scrollLeft($b.scrollLeft() + m);
+          e.preventDefault();
+          return false;
         }
       };
       $objWindow.mousewheel(scroll);
