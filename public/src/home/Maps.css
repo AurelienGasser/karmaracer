@@ -1,0 +1,9 @@
+#maps{margin:0px;padding:0px;background-color:#fefefe;vertical-align:top;width:auto;height:200px;white-space:nowrap;}#maps li{vertical-align:middle;list-style:none;display:inline-block;margin:10px;width:500px;}#maps li div.info{position:absolute;display:none;z-index:5000;background-color:rgba(238, 238, 238, 0.5);margin:5px;padding:5px;text-align:left;border-radius:5px;}
+#maps li a{text-decoration:none;}#maps li a div{text-align:center;padding:5px;border:1px solid #eee;border-radius:5px;box-shadow:#eee 2px 2px 2px;min-height:180px;min-width:180px;}
+#maps li a canvas{margin:5px;}
+#maps li a div:hover{border-color:#999;background:#eee;}
+#maps li:hover div.info{display:block;}
+#maps .players{font-size:1em;}
+.mapLink{font-size:2.0em;text-decoration:none;color:blue;}
+.mapLink:hover{text-decoration:underline;}
+#mapsContainer{vertical-align:top;}

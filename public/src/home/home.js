@@ -20,14 +20,49 @@
       secure: true
     });
 
+
+    function setPCars() {
+      var $objWindow = $(window);
+      $('.pcar').each(function() {
+        var $bgObj = $(this);
+        $bgObj.width($objWindow.width());
+        $objWindow.scroll(function() {
+          var xPos = ($objWindow.scrollLeft() / $bgObj.data('speed'));
+          var coords = xPos + '% 10%';
+          // Change the position of background
+          $bgObj.css({
+            backgroundPosition: coords
+          });
+        });
+      });
+
+      var scroll = function(e, delta) {
+        var dir = Karma.Maps.detectDirection();
+        var $b = $objWindow;
+        if (!KLib.isUndefined(delta)) {
+          var m = 30;
+          if (delta < 0) {
+            m = -m;
+          }
+          $b.scrollLeft($b.scrollLeft() + m);
+        }
+      };
+      $objWindow.mousewheel(scroll);
+
+    }
+
+
     Karma.TopBar.setTopBar(connection);
 
     connection.emit('get_maps', function(err, maps) {
-      addMaps(maps);
+      Karma.Maps.addMaps(connection, maps);
+      setPCars();
+
       $('#loadingImage').fadeOut();
       $('#victoriesTitle').html($.i18n.prop('home_high_scores_table'));
       connection.emit('get_victories', function(err, victories) {
         outputVictories(victories);
+
       });
     });
 
@@ -51,51 +86,18 @@
       var html_end = '</tbody></table>';
       var html = '';
       for (var i = 0; i < victories.length; i++) {
-        html += '<tr><td>' + (i + 1) + '.</td><td class="car"><img src="/sprites/'+victories[i].currentCar+'.png"/></td><td>' + victories[i].playerName + '</td><td>' + victories[i].victories + '</td><td>' + victories[i].highScore + '</td></tr>';
+        html += '<tr><td>' + (i + 1) + '.</td><td class="car"><img src="/sprites/' + victories[i].currentCar + '.png"/></td><td>' + victories[i].playerName + '</td><td>' + victories[i].victories + '</td><td>' + victories[i].highScore + '</td></tr>';
       }
       $('#victories').html(html_start + html + html_end);
     }
 
 
-    function registerMaps() {
-      $('.mapLink').click(function(e) {
-        if (!$('#playerNameForm')[0].checkValidity()) {
-          // If the form is invalid, submit it.
-          // The form won't actually submit;
-          // this will just cause the browser to display the native
-          // HTML5 error messages.
-          $('#playerNameForm').find(':submit').click();
-          e.preventDefault();
-          return false;
-        }
-        Karma.LocalStorage.set('playerName', $('#playerName').val());
-        Karma.LocalStorage.set('map', $(this).text());
-        return true;
-      });
-    }
 
     $('#playerNameForm').submit(function() {
       return false;
     });
 
-    function addMaps(maps) {
-      var $ul = $('ul#maps');
-      for (var i = 0; i < maps.length; i++) {
-        var o = [];
-        var m = maps[i];
-        o.push('<li id="map-', m, '">');
-        var link = 'game.' + m;
-        o.push('<a class="mapLink" href="', link, '" ><div>', m, '</br></div></a>');
-        o.push('<div class="info"><span class="players"/></div>');
-        o.push('</li>');
-        var $li = $(o.join(''));
-        $li.hide();
-        $ul.append($li);
-        $li.fadeIn(1000);
-        new Karma.MiniMap($li.find('a div'), m, connection);
-      }
-      registerMaps();
-    }
+
   };
 
   Karma.Home = {

@@ -1,20 +1,18 @@
-body{margin-top:100px;}
+body{margin:0px;margin-top:100px;padding:0px;overflow-x:auto;overflow-y:hidden;white-space:nowrap;width:auto;}
 .header{text-align:center;}
 #topBar{top:0px;background-color:#eee;opacity:1;}
 #loadingImage{position:fixed;left:50%;top:50%;margin-left:-16px;margin-top:-16px;}
-#mainContent{width:100%;display:block;margin:0px auto;text-align:center;vertical-align:top;}
+#mainContent{width:100%;height:100%;display:block;margin:0px auto;text-align:center;vertical-align:top;}
 h1{text-align:center;}
-#maps{margin:0px;padding:0px;background-color:#fefefe;vertical-align:top;}#maps li{vertical-align:middle;list-style:none;display:inline-block;margin:10px;}#maps li div.info{position:absolute;display:none;z-index:5000;background-color:rgba(238, 238, 238, 0.5);margin:5px;padding:5px;text-align:left;border-radius:5px;}
-#maps li a{text-decoration:none;}#maps li a div{text-align:center;padding:5px;border:1px solid #eee;border-radius:5px;box-shadow:#eee 2px 2px 2px;min-height:180px;min-width:180px;}
-#maps li a canvas{margin:5px;}
-#maps li a div:hover{border-color:#999;background:#eee;}
-#maps li:hover div.info{display:block;}
-#maps .players{font-size:1em;}
-.mapLink{font-size:2.0em;text-decoration:none;color:blue;}
-.mapLink:hover{text-decoration:underline;}
+.center{position:fixed;left:50%;margin-left:-200px;width:400px;}
+h2{top:60px;margin:0px;position:fixed;left:50%;margin-left:-200px;width:400px;}
+#pcar1{background-image:url('/sprites/c1.png');bottom:48px;}
+#pcar2{background-image:url('/sprites/c2.png');bottom:0px;}
+#pcar3{background-image:url('/sprites/c3.png');bottom:96px;}
+.pcar{background-size:72px 32px;height:48px;background-origin:initial;background-clip:initial;background-repeat:no-repeat;background-position:0px 0px;position:fixed;left:0px;opacity:0.2;}
+#victoriesContainer{position:fixed;left:50%;margin-left:-200px;width:400px;}
 .editLink{font-size:11px;}
-#mapsContainer{vertical-align:top;}
-#victories{border:none;width:40%;margin:0 auto;text-align:center;font-size:14px;}#victories table{border-collapse:collapse;}
+#victories{border:none;width:100%;margin:0 auto;text-align:center;font-size:14px;}#victories table{border-collapse:collapse;}
 #victories th,#victories td{border:none;}
 #victories td.car img{width:52px;margin:5px;}
 #victories tr:hover td{background-color:#eee;}

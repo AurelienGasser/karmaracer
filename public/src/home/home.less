@@ -1,5 +1,12 @@
 body{  
+  margin: 0px;
   margin-top: 100px;
+  padding: 0px;
+
+  overflow-x:auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  width: auto;
 }
 
 .header {
@@ -22,102 +29,85 @@ body{
 
 #mainContent {
   width: 100%;
+  height: 100%;
   display: block;
   margin: 0px auto;
   text-align: center;
   vertical-align: top;
-  /*display: none;*/
+
+  // background-color: #eee;
 }
 
 h1 {
   text-align: center;
+
 }
 
+.center{
+  position: fixed;
+  left:50%;
+  margin-left:-200px;
+  width: 400px;
 
-#maps{
+}
+
+h2{
+  top:60px;
   margin: 0px;
-  padding:0px;
-  background-color: #fefefe;
-  vertical-align: top;
-   li {
-    vertical-align: middle;
-    list-style: none;
-    display: inline-block;
-    margin: 10px;
+  .center;
 
-    div.info{
-      position: absolute;
-      display: none;
-      z-index: 5000;
-      background-color: rgba(238, 238, 238, 0.5);
-      margin: 5px;
-      padding: 5px;
-      text-align: left;
-      border-radius: 5px;
-    }
-
-    a {
-      text-decoration: none;  
-
-      div{
-        text-align: center;
-        padding: 5px;
-        border: 1px solid #eee;
-        border-radius: 5px;
-        box-shadow: #eee 2px 2px 2px;
-        min-height: 180px;
-        min-width: 180px;
-          
-      }
-      canvas{
-        margin: 5px;
-
-      }
-      div:hover{
-        border-color: #999;
-        background: #eee;
-      }
-    }
-  }
-  li:hover{
-    div.info{
-      display: block;
-
-    }
-
-  }
-} 
-
-#maps .players{
-  font-size: 1em;
 }
 
-.mapLink{
-  font-size: 2.0em;
-  text-decoration: none;
-    color:blue;
+
+#pcar1{
+  background-image: url('/sprites/c1.png');
+  // background-size: 96px 48px; 
+  bottom: 48px;
 }
 
-.mapLink:hover{
-  text-decoration: underline;
+#pcar2{
+  background-image: url('/sprites/c2.png');
+  bottom: 0px;
+  // background-size: 82px 36px; 
+}
+#pcar3{
+  background-image: url('/sprites/c3.png');
+  bottom: 96px;
+  // background-size: 72px 32px; 
 }
 
+.pcar{
+  background-size: 72px 32px; 
+  height:48px;
+  // background-attachment: fixed;
+  background-origin: initial;
+  background-clip: initial;
+  // background-size: cover;
+  background-repeat:no-repeat;
+  background-position:0px 0px;
+
+  position:fixed;
+  left:0px;
+  // min-width:1080px;
+  opacity: 0.2;
+  // width: 100%;
+  // height: 64px;
+}
+
+
+#victoriesContainer{
+  .center;
+}
 
 
 .editLink {
   font-size: 11px;
 }
 
-#mapsContainer {
-  /*float: left;*/
-  /*width: 700px;*/
-  // display: none;
-  vertical-align: top;
-}
 
 #victories {
   border: none;
-  width: 40%;
+  width: 100%;
   margin: 0 auto;
   text-align: center;
   font-size: 14px;
