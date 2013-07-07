@@ -155,7 +155,7 @@
   Engine2DCanvas.prototype.draw = function() {
     if (this.worldInfo.staticItems.length > 0) {
       this.resize();
-      if (this.isMiniMap === false) {
+      if (this.isMiniMap === false && this.interpData.ready) {
         var newCenter = this.oldCenter;
         var pos = this.scalePos(this.interpPos(this.interpData.snapBefore.myCar, this.interpData.snapAfter.myCar, this.interpData.interpPercent));
         newCenter = {
