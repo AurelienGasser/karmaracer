@@ -1,0 +1,68 @@
+(function(Engine2DCanvas) {
+  "use strict";
+
+  Engine2DCanvas.prototype.interpPos = function(beforePos, afterPos, interpPercent) {
+    if (interpPercent > 1) {
+      // we can't interpolate out of bounds !
+      return {
+        x: afterPos.x,
+        y: afterPos.y,
+        r: afterPos.r
+      };
+    }
+    return {
+      x: beforePos.x + (afterPos.x - beforePos.x) * interpPercent,
+      y: beforePos.y + (afterPos.y - beforePos.y) * interpPercent,
+      r: beforePos.r + (afterPos.r - beforePos.r) * interpPercent
+    };
+  };
+
+  Engine2DCanvas.prototype.getInterpData = function() {
+    var interpolation = 100;
+    var snapshots = this.gameInstance.snapshots;
+    var stepNumbers = Object.keys(snapshots);
+    var now = Date.now();
+    var numSnaps = stepNumbers.length;
+    var serverTs = this.gameInstance.clock.getServerTsForClientTs(Date.now());
+    if (serverTs === null) {
+      // clock not started yet, cannot draw
+      return;
+    }
+    var wantedServerTs = serverTs - interpolation;
+    var found = false;
+    var i;
+    // find the two snapshots we fall between
+    for (i = numSnaps - 2; i >= 0; --i) {
+      if (snapshots[stepNumbers[i    ]].stepTs <= wantedServerTs &&
+          snapshots[stepNumbers[i + 1]].stepTs >= wantedServerTs) {
+            found = true;
+            break;
+      }
+    }
+    if (found) {
+      var snapBefore = snapshots[stepNumbers[i]];
+      var snapAfter =  snapshots[stepNumbers[i + 1]];
+      for (var j = 0; j < i; ++j) {
+        // free memory
+        // delete old snapshots
+        delete snapshots[stepNumbers[j]];
+      }
+      this.interpData.snapBefore = snapBefore;
+      this.interpData.snapAfter = snapAfter;
+    } else {
+      // no data available
+      // don't touch this.interpData.snapBefore and this.interpData.snapAfter
+    }
+
+    this.interpData.ready = typeof this.interpData.snapBefore !== 'undefined' &&
+      typeof this.interpData.snapAfter !== 'undefined';
+    if (this.interpData.ready) {
+      // interpPercent
+      // 0:   snapBefore
+      // 0.5: in the middle of snapBefore and snapAfter
+      // 1:   snapAfter
+      var snapshotsInterval = this.interpData.snapAfter.stepTs - this.interpData.snapBefore.stepTs;
+      this.interpData.interpPercent = (wantedServerTs - this.interpData.snapBefore.stepTs) / snapshotsInterval;
+    }
+  };
+}(Karma.Engine2DCanvas));

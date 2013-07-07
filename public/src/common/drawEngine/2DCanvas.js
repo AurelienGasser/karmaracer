@@ -2,7 +2,6 @@
   "use strict";
 
   function Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, gameInstance, connection, callback) {
-
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.timer = new Date().getTime();
@@ -11,6 +10,9 @@
     this.debugDraw = false;
     this.carFlameTicks = {};
     this.isMiniMap = false;
+    this.interpData = {
+      ready: false
+    };
 
     this.items = items;
     this.worldInfo = worldInfo;
@@ -24,13 +26,19 @@
     this.loadImages(callback);
   }
 
-
   Engine2DCanvas.prototype.setGScale = function(gScaleValue) {
     this.gScaleValue = gScaleValue;
     this.gScaleList(this.worldInfo.staticItems);
     this.gScale(this.worldInfo.size);
   };
 
+  Engine2DCanvas.prototype.scalePos = function(pos) {
+    return {
+      x: pos.x * this.gScaleValue,
+      y: pos.y * this.gScaleValue,
+      r: pos.r
+    };
+  };
 
   Engine2DCanvas.prototype.loadImages = function(callback) {
 
@@ -140,10 +148,8 @@
     if (!KLib.isUndefined(this.canvasSize)) {
       size = this.canvasSize;
     }
-
     this.camera.ctx.canvas.width = size.w;
     this.camera.ctx.canvas.height = size.h;
-
   };
 
   Engine2DCanvas.prototype.draw = function() {
@@ -151,23 +157,19 @@
       this.resize();
       if (this.isMiniMap === false) {
         var newCenter = this.oldCenter;
-        if (this.items.mycar !== null) {
-          newCenter = {
-            x: this.items.mycar.x * this.gScaleValue,
-            y: this.items.mycar.y * this.gScaleValue
-          };
-          this.camera.update(newCenter);
-        }
+        var pos = this.scalePos(this.interpPos(this.interpData.snapBefore.myCar, this.interpData.snapAfter.myCar, this.interpData.interpPercent));
+        newCenter = {
+          x: pos.x,
+          y: pos.y
+        };
+        this.camera.update(newCenter);
         if (newCenter && newCenter != this.oldCenter) {
           this.oldCenter = newCenter;
         }
       }
-
       this.drawItems();
     }
   };
-
-
 
   var explosionWidth = 56;
   var explosionHeight = 51;
@@ -311,8 +313,16 @@
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
 
-    this.draw();
-
+    if (!this.gameInstance) {
+      // welcome page
+      // TODO: use another draw engine
+      this.draw();
+    } else {
+      this.getInterpData();
+      if (this.interpData.ready) {
+        this.draw();
+      }
+    }
     this.frames++;
     var now = new Date().getTime();
     if (now - this.timer > 1000) {

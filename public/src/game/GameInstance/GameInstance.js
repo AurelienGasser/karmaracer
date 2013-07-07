@@ -5,6 +5,7 @@
   function GameInstance() {
 
     this.config = undefined; // will be defined by onInitReceived
+    this.snapshots = {};
     this.items = {};
     this.items.cars = [];
     this.items.explosions = {};
@@ -30,10 +31,6 @@
 
     this.chat = new Karma.ChatController();
   }
-
-
-
-
 
   GameInstance.prototype.setUIEvents = function() {
     var that = this;

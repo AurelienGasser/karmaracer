@@ -1,4 +1,5 @@
 var config = require('./../config');
+var Snapshot = require('./classes/Physics/Snapshot');
 var GameServer_step = {};
 
 function registerDateDiff(timer, name, start) {
@@ -16,6 +17,7 @@ GameServer_step.initStep = function() {
   this.minTickInterval = this.tickInterval
   this.tickCounter = 0;
   this.tickTs = new Date();
+  this.snapshot = new Snapshot(this);
 }
 
 GameServer_step.tryStep = function() {
@@ -62,6 +64,7 @@ GameServer_step.step = function() {
       this.weaponsManager.step();
       start = registerDateDiff(timer, 'weaponsManager', start);
       this.engine.step();
+      this.snapshot.update();
       start = registerDateDiff(timer, 'Physics', start);
     }
     shouldPerform = this.tickCounter % Math.floor(this.ticksPerSecond / config.positionsSocketEmitsPerSecond) === 0;
