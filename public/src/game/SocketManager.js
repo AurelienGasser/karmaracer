@@ -145,7 +145,11 @@
 
     that.connection.on('gameInfo', function(gameInfo){
       gameInstance.gameInfo = gameInfo;
-      gameInstance.scoreTable.updateScoresHTML(gameInfo, gameInstance.items);
+      var mycar = null;
+      if (gameInstance.drawEngine.interpData.ready){
+        mycar = gameInstance.drawEngine.interpData.snapAfter.myCar;
+      }
+      gameInstance.scoreTable.updateScoresHTML(gameInfo, gameInstance.items, mycar);
       counterGameInfo += 1;
     });
 
