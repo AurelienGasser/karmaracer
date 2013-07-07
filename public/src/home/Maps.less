@@ -1,4 +1,8 @@
 
+.translation{
+  transition: 0.25s ease-in-out;
+}
+
 #maps{
 
   
@@ -9,13 +13,22 @@
   margin: 0px;
   padding:0px;
     padding-top: 30px;
+    // padding-left: 200px;
   background-color: #fefefe;
   vertical-align: top;
   width: auto;
     white-space: nowrap;
 
 
+    li.centerFocus{
+      .translation;
+      font-size: 3em;
+      // border: 5px solid black !important;
+      
+    }
+
    li {
+      .translation;
     vertical-align: top;
     list-style: none;
     display: inline-block;
