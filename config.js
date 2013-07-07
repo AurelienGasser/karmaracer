@@ -31,7 +31,7 @@ var configSingleton = function() {
   }
 
   config.physicalTicksPerSecond = 30;
-  config.positionsSocketEmitsPerSecond = 15;
+  config.positionsSocketEmitsPerSecond = 20;
   config.botManagerTicksPerSecond = 15;
   config.botsPerMap = 7;
   config.stepByStepMode = false;

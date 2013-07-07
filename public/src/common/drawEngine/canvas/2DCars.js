@@ -89,10 +89,10 @@
     this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
   };
 
-
   Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, player, pos) {
     ctx.strokeStyle = 'white';
-    if (this.items.mycar !== null && c.id === this.items.mycar.id) { //me
+    var mycar = this.interpData.snapAfter.myCar;
+    if (mycar !== null && c.id === mycar.id) { //me
       ctx.fillStyle = 'black';
     } else if (player.isBot === true) { //bots
       ctx.fillStyle = 'white';
@@ -107,28 +107,30 @@
     ctx.closePath();
   };
 
+  Engine2DCanvas.prototype.interpPosOfCar = function(carIndex) {
+    var carBefore = this.interpData.snapBefore.cars[carIndex];
+    var carAfter = this.interpData.snapAfter.cars[carIndex];
+    return this.interpPos(carBefore, carAfter, this.interpData.interpPercent);
+  };
+
   Engine2DCanvas.prototype.drawCars = function(ctx) {
     if (this.gameInstance === null) {
       return;
     }
     ctx.font = '10px Trebuchet MS';
-    if (this.items.cars !== null) {
-      for (var i = 0; i < this.items.cars.length; i++) {
-        var c = this.items.cars[i];
-        if (c.dead) {
+    var cars = this.interpData.snapAfter.cars;
+    if (cars !== null) {
+      for (var i = 0; i < cars.length; i++) {
+        var c = cars[i];
+        var pos = this.scalePos(this.interpPosOfCar(i));
+        if (!pos || c.dead) {
           continue;
         }
-        // car
         var player = this.gameInstance.gameInfo[c.id];
         var car = this.cars[player.carImageName];
         c.playerName = player.playerName;
         c.w = car.w;
         c.h = car.h;
-
-        var pos = {
-          x: this.gScaleValue * c.x,
-          y: this.gScaleValue * c.y
-        };
         var size = {
           w: this.gScaleValue * c.w,
           h: this.gScaleValue * c.h
@@ -138,7 +140,7 @@
         } else {
           ctx.save();
           ctx.translate(pos.x, pos.y);
-          ctx.rotate(c.r);
+          ctx.rotate(pos.r);
 
           ctx.drawImage(car.image, 0, 0, car.imageSize.w, car.imageSize.h, -size.w / 2, -size.h / 2, size.w, size.h);
 

@@ -58,8 +58,9 @@
       if (!_.isUndefined(G_mapName)) {
         that.connection.emit('enter_map', G_mapName);
         announce($.i18n.prop('game_startmessage') + '</br>' + Karma.TopBar.getHelps(), 'blue');
-      } else {}
-
+      }
+      setInterval(that.ping.bind(that), 1000);
+      that.ping();
     });
 
     this.connection.on('init', function(initInfo) {
@@ -148,17 +149,15 @@
       counterGameInfo += 1;
     });
 
-
     that.connection.on('objects', function(objects) {
-      gameInstance.items.cars = objects.cars;
-      gameInstance.items.mycar = objects.myCar;
+      gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
 
       //for minimap
-      if (objects.myCar !== null) {
-        var player = gameInstance.gameInfo[objects.myCar.id];
-        that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
+      if (objects.snapshot.myCar !== null) {
+        var player = gameInstance.gameInfo[objects.snapshot.myCar.id];
+        that.gv.updateEnergy(player.weaponName, objects.snapshot.myCar.gunLife);
       }
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
@@ -172,6 +171,18 @@
     });
 
   }
+
+  SocketManager.prototype.ping = function() {
+    var that = this;
+    var sentTs = Date.now();
+    this.connection.emit('ping', { clientSentTs: sentTs }, function(err, res) {
+      if (!err) {
+        res.clientSentTs     = sentTs;
+        res.clientReceivedTs = Date.now();
+        that.gameInstance.clock.pong(res);
+      }
+    });
+  };
 
   SocketManager.prototype.getConnection = function() {
     return this.connection;

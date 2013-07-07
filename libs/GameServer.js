@@ -6,6 +6,7 @@ var CarManager = require('./CarManager');
 var WeaponsManager = require('./WeaponsManager');
 var MemLeakLog = require('./MemLeakLog');
 var GameServer_step = require('./GameServer_step');
+var Engine = require('./classes/Physics/Engine');
 
 var GameServer = function(app, map, mapManager) {
   this.app = app;
@@ -16,9 +17,9 @@ var GameServer = function(app, map, mapManager) {
 
 GameServer.prototype.initGameServer = function(map) {
   this.map = map;
+  this.snapshot = undefined;
 
-  var KarmaEngine = require('./classes/Physics/Engine');
-  this.engine = new KarmaEngine({
+  this.engine = new Engine({
     'w': map.size.w,
     'h': map.size.h
   }, map);
@@ -125,17 +126,17 @@ GameServer.prototype.broadCastGameInfo = function() {
 };
 
 GameServer.prototype.sendPositionsToPlayers = function() {
-  var cars = this.carManager.getShared();
+  if (!this.snapshot.ready) {
+    return;
+  }
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for (var i in this.players) {
     var p = this.players[i];
-    var myCar = p.playerCar.dead ? null : p.playerCar.getShared();
     var share = {
-      myCar: myCar,
-      cars: cars,
-      projectiles: projectiles,
-      collisionPoints: p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null
-    };
+      snapshot:       this.snapshot.getSharedSnapshotForPlayer(p),
+      projectiles:    projectiles,
+      collisionPoints:p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null,
+    }
     p.client.emit('objects', share);
   }
 };

@@ -6,6 +6,8 @@ var Engine_collisions = require('./Engine_collisions');
 
 var G_bodyID = 0;
 var Engine = function(size, map) {
+  this.stepNum = 0;
+  this.stepTs = undefined;
   this.shareCollisionInfo = false;
   this.itemsToDestroy = [];
   this.bodies = {};
@@ -76,6 +78,8 @@ Engine.prototype.step = function() {
     }
   }
   this.destroyBodies();
+  ++this.stepNum;
+  this.stepTs = Date.now();
 };
 
 
