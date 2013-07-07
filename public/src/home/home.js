@@ -25,9 +25,7 @@
       var $b = $objWindow;
       if (!KLib.isUndefined(delta)) {
         var m = delta;
-        if (Math.abs(m) > 4){
-          $b.scrollLeft($b.scrollLeft() + m);
-        }
+        $b.scrollLeft($b.scrollLeft() + m);
         e.preventDefault();
         return false;
       }
