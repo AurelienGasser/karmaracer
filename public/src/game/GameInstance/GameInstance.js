@@ -9,7 +9,7 @@
     this.items = {};
     this.items.cars = [];
     this.items.explosions = {};
-    this.items.mycar = null;
+    this.items.myCar = null;
     this.items.projectiles = [];
     this.points = {};
     this.pointsID = 0;

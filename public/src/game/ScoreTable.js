@@ -19,14 +19,15 @@
       }).reverse();
       return scores;
     };
-
-    var updateScoresHTML = function(gameInfo, items, mycar) {
-
+    var updateScoresHTML = function(gameInfo, items, myCar) {
+      if (!myCar) {
+        return;
+      }
       var scores = getScores(gameInfo);
       var o = [];
       for (var i = 0; i < scores.length; i++) {
-        var playerScore = scores[i];                
-        var userCarClass = (mycar !== null && mycar.id === playerScore.id) ? 'userCar' : '';
+        var playerScore = scores[i];
+        var userCarClass = (myCar !== null && myCar.id === playerScore.id) ? 'userCar' : '';
         o.push('<tr class="', userCarClass, '"><td>', playerScore.name, '</td><td>', playerScore.score, '</td><td>', playerScore.level, '</td><td>', playerScore.highScore, '</td></tr>');
       }
       that.scoresTable.html(o.join(''));
@@ -47,7 +48,7 @@
       o.push('</table>');
       $('body').append(o.join(''));
       that.scoresTable = $('tbody#scores');
-    }    
+    }
     return {
       setup : setup,
       updateScoresHTML: updateScoresHTML

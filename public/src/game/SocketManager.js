@@ -145,23 +145,27 @@
 
     that.connection.on('gameInfo', function(gameInfo){
       gameInstance.gameInfo = gameInfo;
-      var mycar = null;
-      if (gameInstance.drawEngine.interpData.ready){
-        mycar = gameInstance.drawEngine.interpData.snapAfter.myCar;
-      }
-      gameInstance.scoreTable.updateScoresHTML(gameInfo, gameInstance.items, mycar);
+      gameInstance.scoreTable.updateScoresHTML(gameInfo, gameInstance.items, gameInstance.myCar);
       counterGameInfo += 1;
     });
 
     that.connection.on('objects', function(objects) {
+      // remove myCar from snapshot.cars
+      for (var i in objects.snapshot.cars) {
+        if (objects.snapshot.cars[i].id === objects.myCar.id) {
+          delete objects.snapshot.cars[i];
+          break;
+        }
+      }
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
+      gameInstance.myCar = objects.myCar;
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
 
       //for minimap
-      if (objects.snapshot.myCar !== null) {
-        var player = gameInstance.gameInfo[objects.snapshot.myCar.id];
-        that.gv.updateEnergy(player.weaponName, objects.snapshot.myCar.gunLife);
+      if (objects.myCar !== null) {
+        var player = gameInstance.gameInfo[objects.myCar.id];
+        that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
       }
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {

@@ -13,9 +13,9 @@
     if (Math.abs(afterPos.r - beforePos.r) > Math.PI) {
       // angle goes from 0 to 360 or from 360 to 0
         if (beforePos.r > Math.PI) {
-          beforePos.r -= 2 * Math.PI
+          beforePos.r -= 2 * Math.PI;
         } else {
-          beforePos.r += 2 * Math.PI
+          beforePos.r += 2 * Math.PI;
         }
     }
     return {

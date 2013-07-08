@@ -152,10 +152,10 @@
     this.camera.ctx.canvas.height = size.h;
   };
 
-  Engine2DCanvas.prototype.udateCameraCenter = function() {
-    if (this.isMiniMap === false && this.interpData.ready) {
+  Engine2DCanvas.prototype.updateCameraCenter = function() {
+    if (this.isMiniMap === false && this.gameInstance && this.gameInstance.myCar) {
       var newCenter = this.oldCenter;
-      var pos = this.scalePos(this.interpPos(this.interpData.snapBefore.myCar, this.interpData.snapAfter.myCar, this.interpData.interpPercent));
+      var pos = this.scalePos(this.gameInstance.myCar);
       newCenter = {
         x: pos.x,
         y: pos.y
@@ -170,7 +170,7 @@
   Engine2DCanvas.prototype.draw = function() {
     if (this.worldInfo.staticItems.length > 0) {
       this.resize();
-      this.udateCameraCenter();
+      this.updateCameraCenter();
     }
     this.drawItems();
   };

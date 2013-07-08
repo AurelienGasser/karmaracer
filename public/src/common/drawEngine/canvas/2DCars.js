@@ -91,7 +91,7 @@
 
   Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, player, pos) {
     ctx.strokeStyle = 'white';
-    var mycar = this.interpData.snapAfter.myCar;
+    var mycar = this.gameInstance.myCar;
     if (mycar !== null && c.id === mycar.id) { //me
       ctx.fillStyle = 'black';
     } else if (player.isBot === true) { //bots
@@ -113,57 +113,68 @@
     return this.interpPos(carBefore, carAfter, this.interpData.interpPercent);
   };
 
+  Engine2DCanvas.prototype._drawCar = function(ctx, c, pos) {
+    if (!pos || c.dead) {
+      return;
+    }
+    var player = this.gameInstance.gameInfo[c.id];
+    var car = this.cars[player.carImageName];
+    c.playerName = player.playerName;
+    c.w = car.w;
+    c.h = car.h;
+    var size = {
+      w: this.gScaleValue * c.w,
+      h: this.gScaleValue * c.h
+    };
+    if (this.isMiniMap === true) {
+      this.drawCarForMiniMap(ctx, c, player, pos);
+    } else {
+      ctx.save();
+      ctx.translate(pos.x, pos.y);
+      ctx.rotate(pos.r);
+
+      ctx.drawImage(car.image, 0, 0, car.imageSize.w, car.imageSize.h, -size.w / 2, -size.h / 2, size.w, size.h);
+
+      // gun flammes
+      if (c.shootingWithWeapon !== null) {
+        this.drawGunFlame(ctx, c, size);
+      }
+      ctx.restore();
+
+      //name
+      var textSize = ctx.measureText(c.playerName);
+      var textPad = 25;
+      ctx.save();
+      ctx.translate(pos.x, pos.y);
+      ctx.fillStyle = 'white';
+      ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+      this.drawLifeBar(ctx, c, player, size.w);
+      ctx.restore();
+
+      // bullet
+      this.drawBullet(c, ctx, pos);
+    }
+  };
+
   Engine2DCanvas.prototype.drawCars = function(ctx) {
     if (this.gameInstance === null) {
       return;
     }
     ctx.font = '10px Trebuchet MS';
     var cars = this.interpData.snapAfter.cars;
+    var str = "";
+    for (var i in cars) {
+      str += " " + cars[i].id;
+    }
     if (cars !== null) {
-      for (var i = 0; i < cars.length; i++) {
-        var c = cars[i];
-        var pos = this.scalePos(this.interpPosOfCar(i));
-        if (!pos || c.dead) {
-          continue;
-        }
-        var player = this.gameInstance.gameInfo[c.id];
-        var car = this.cars[player.carImageName];
-        c.playerName = player.playerName;
-        c.w = car.w;
-        c.h = car.h;
-        var size = {
-          w: this.gScaleValue * c.w,
-          h: this.gScaleValue * c.h
-        };
-        if (this.isMiniMap === true) {
-          this.drawCarForMiniMap(ctx, c, player, pos);
-        } else {
-          ctx.save();
-          ctx.translate(pos.x, pos.y);
-          ctx.rotate(pos.r);
-
-          ctx.drawImage(car.image, 0, 0, car.imageSize.w, car.imageSize.h, -size.w / 2, -size.h / 2, size.w, size.h);
-
-          // gun flammes
-          if (c.shootingWithWeapon !== null) {
-            this.drawGunFlame(ctx, c, size);
-          }
-          ctx.restore();
-
-          //name
-          var textSize = ctx.measureText(c.playerName);
-          var textPad = 25;
-          ctx.save();
-          ctx.translate(pos.x, pos.y);
-          ctx.fillStyle = 'white';
-          ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
-          this.drawLifeBar(ctx, c, player, size.w);
-          ctx.restore();
-
-          // bullet
-          this.drawBullet(c, ctx, pos);
-        }
+      for (var j in cars) {
+        var pos = this.scalePos(this.interpPosOfCar(j));
+        this._drawCar(ctx, cars[j], pos);
       }
+    }
+    if (this.gameInstance.myCar !== null) {
+      var myPos = this.scalePos(this.gameInstance.myCar);
+      this._drawCar(ctx, this.gameInstance.myCar, myPos);
     }
   };
 }(Karma.Engine2DCanvas));
