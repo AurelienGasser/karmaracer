@@ -16,6 +16,28 @@ var Engine = function(size, map) {
   this.loadStaticItems();
 }
 
+Engine.prototype.destroy = function() {
+  this.bodies = null;
+  this.size = null;
+};
+
+Engine.prototype.addBody = function(body) {
+  this.bodies[body.id] = body;
+}
+
+Engine.prototype.createBody = function(position, size, name) {
+  var b, id;
+  b = new Body();
+  b.initialize(this, position, size);
+  if (!KLib.isUndefined(name)) {
+    b.name = name;
+  }
+  this.bodies[b.id] = b;
+  id = b.id;
+  b = null;
+  return id;
+};
+
 Engine.prototype.destroyBodies = function() {
   for (var i in this.itemsToDestroy) {
     var item = this.itemsToDestroy[i];
@@ -44,6 +66,15 @@ Engine.prototype.getWorldInfo = function() {
     staticItemTypes:      this.staticItemTypes,
     map:                  this.map
   };
+}
+
+Engine.prototype.getShared = function() {
+  var bodies = [];
+  for (var bID in this.bodies) {
+    var body = this.bodies[bID];
+    bodies.push(body.getShared());
+  }
+  return bodies;
 }
 
 Engine.prototype.getSharedStaticItems = function() {
@@ -78,38 +109,6 @@ Engine.prototype.step = function() {
   this.destroyBodies();
   ++this.stepNum;
   this.stepTs = Date.now();
-};
-
-
-Engine.prototype.getShared = function() {
-  var bodies = [];
-  for (var bID in this.bodies) {
-    var body = this.bodies[bID];
-    bodies.push(body.getShared());
-  }
-  return bodies;
-}
-
-Engine.prototype.destroy = function() {
-  this.bodies = null;
-  this.size = null;
-};
-
-Engine.prototype.addBody = function(body) {
-  this.bodies[body.id] = body;
-}
-
-Engine.prototype.createBody = function(position, size, name) {
-  var b, id;
-  b = new Body();
-  b.initialize(this, position, size);
-  if (!KLib.isUndefined(name)) {
-    b.name = name;
-  }
-  this.bodies[b.id] = b;
-  id = b.id;
-  b = null;
-  return id;
 };
 
 Engine.prototype.loadStaticItems = function() {

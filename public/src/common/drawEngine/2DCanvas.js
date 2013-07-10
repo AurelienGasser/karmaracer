@@ -304,7 +304,7 @@
         ctx.strokeRect(c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
       });
     }
-  }
+  };
 
   Engine2DCanvas.prototype.drawBackground = function(ctx) {
     if (KLib.isUndefined(this.backgroundPattern)) {
