@@ -118,6 +118,10 @@
       return;
     }
     var player = this.gameInstance.gameInfo[c.id];
+    if (typeof player === 'undefined') {
+      // we don't have enough data to draw this car
+      return;
+    }
     var car = this.cars[player.carImageName];
     c.playerName = player.playerName;
     c.w = car.w;
@@ -168,8 +172,13 @@
     }
     if (cars !== null) {
       for (var j in cars) {
-        var pos = this.scalePos(this.interpPosOfCar(j));
-        this._drawCar(ctx, cars[j], pos);
+        if (typeof this.interpData.snapBefore.cars[j] !== 'undefined' &&
+            typeof this.interpData.snapAfter.cars[j] !== 'undefined') {
+              var pos = this.scalePos(this.interpPosOfCar(j));
+              this._drawCar(ctx, cars[j], pos);
+        } else {
+          // we don't have enough data to draw this car yet
+        }
       }
     }
     if (this.gameInstance.myCar !== null) {
