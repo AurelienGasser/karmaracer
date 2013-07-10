@@ -41,7 +41,7 @@ Engine.prototype.getWorldInfo = function() {
       h: this.map.size.h * this.gScale,
     },
     staticItems:          this.getSharedStaticItems(),
-    itemsInMap:           this.staticItemTypes,
+    staticItemTypes:      this.staticItemTypes,
     map:                  this.map
   };
 }

@@ -44,7 +44,7 @@
 
     var that = this;
 
-    var imagesNumToLoad = Object.keys(this.worldInfo.itemsInMap).length + 1;
+    var imagesNumToLoad = Object.keys(this.worldInfo.staticItemTypes).length + 1;
     var imageNumLoaded = 0;
 
     function imageLoaded() {
@@ -62,16 +62,16 @@
     var onLoadImage = function() {
       if (this.patternType !== 'none') {
         var _pattern = that.ctx.createPattern(img, 'repeat');
-        that.worldInfo.itemsInMap[this.name].pattern = _pattern;
-        that.worldInfo.itemsInMap[this.name].img = img;
+        that.worldInfo.staticItemTypes[this.name].pattern = _pattern;
+        that.worldInfo.staticItemTypes[this.name].img = img;
       } else {
-        that.worldInfo.itemsInMap[this.name].pattern = null;
+        that.worldInfo.staticItemTypes[this.name].pattern = null;
       }
       imageLoaded();
     };
 
-    for (var itemName in this.worldInfo.itemsInMap) {
-      var item = this.worldInfo.itemsInMap[itemName];
+    for (var itemName in this.worldInfo.staticItemTypes) {
+      var item = this.worldInfo.staticItemTypes[itemName];
 
       var img = new Image();
       img.src = item.image.path;
@@ -259,7 +259,7 @@
     if (this.debugDraw) {
       ctx.fillStyle = '#00FF00';
     } else {
-      ctx.fillStyle = this.worldInfo.itemsInMap.outsideWall.pattern;
+      ctx.fillStyle = this.worldInfo.staticItemTypes.outsideWall.pattern;
     }
 
     // bot
@@ -276,7 +276,7 @@
     var that = this;
     if (that.worldInfo.staticItems !== null) {
       _.each(that.worldInfo.staticItems, function(c) {
-        var staticItem = that.worldInfo.itemsInMap[c.name];
+        var staticItem = that.worldInfo.staticItemTypes[c.name];
         if (!KLib.isUndefined(staticItem) && !KLib.isUndefined(staticItem.pattern)) {
           if (staticItem.pattern === null) {
             ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
