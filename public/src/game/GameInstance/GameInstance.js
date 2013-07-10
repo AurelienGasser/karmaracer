@@ -41,6 +41,7 @@
     Karma.TopBar.setTopBar(this.socketManager.connection);
     var that = this;
     this.worldInfo = worldInfo;
+    this.engine = new Karma.Engine(worldInfo.map.size, worldInfo.map);
     this.bullets = [];
     this.rockets = [];
     this.gameInfo = null; // is set from sockets

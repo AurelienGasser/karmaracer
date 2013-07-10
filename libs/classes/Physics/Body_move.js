@@ -1,5 +1,5 @@
 var KLib = require('./../KLib');
-var CONFIG = require('./../../../config');
+var sharedConfig = require('./../../../config_shared');
 
 var COLLISION_DISTANCE_TRESHOLD = 5e-10;
 
@@ -94,7 +94,7 @@ Body_move.doMove = function() {
   var collision = this.engine.checkCollisions(this);
   if (collision) {
     var movedDicho = false;
-    if (CONFIG.physics.dichotomyIterations != 0) {
+    if (sharedConfig.physics.dichotomyIterations != 0) {
       this.moveToDichotomie(dup(this.oldPosition), pos);
       var before = this.oldPosition;
       var after = this.getPositionAndAngle();
@@ -117,7 +117,7 @@ Body_move.moveToDichotomie = function(from, to) {
   var it = 1;
   while (true) {
     var distance = getDistance(from, to);
-    if (it > CONFIG.physics.dichotomyIterations) {
+    if (it > sharedConfig.physics.dichotomyIterations) {
       this.setPosition(from);
       return true;
     } else {

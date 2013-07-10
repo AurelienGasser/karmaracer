@@ -1,4 +1,17 @@
 module.exports = function(grunt) {
+  var browserify_src_path = 'libs/shared_browserify.js';
+  var browserify_dest_path = 'public/dist/shared.js';
+  var browserify_deps = [
+    'libs/classes/Physics/Body.js',
+    'libs/classes/Physics/Body_cache.js',
+    'libs/classes/Physics/Body_move.js',
+    'libs/classes/Physics/Body_shared.js',
+    'libs/classes/Physics/Engine.js',
+    'libs/classes/Physics/Engine_collisions.js',
+    'libs/classes/Physics/Utils.js',
+    'libs/classes/KLib.js',
+    'config_shared',
+  ];
 
   var G_options = {};
   var G_files = {};
@@ -9,6 +22,7 @@ module.exports = function(grunt) {
   G_options.concat = {};
   G_options.less = {};
   G_options.uglify = {};
+  G_options.browserify = {};
 
   function addConcatModule(name, mimeType) {
     var moduleName = mimeType + '_' + name;
@@ -39,9 +53,16 @@ module.exports = function(grunt) {
   }
 
   function addModule(name) {
-    G_files['js_' + name] = ['public/src/' + name + '/startup.js', 'public/src/' + name + '/*.js', 'public/src/' + name + '/**/*.js', 'public/src/' + name + '/**/**/*.js'];
+    G_files['js_' + name] = [
+      'public/src/' + name + '/startup.js',
+      'public/src/' + name + '/*.js',
+      'public/src/' + name + '/**/*.js',
+      'public/src/' + name + '/**/**/*.js',
+      browserify_dest_path
+    ];
     G_files['less_' + name] = ['public/src/' + name + '/*.less', 'public/src/' + name + '/**/*.less', 'public/src/' + name + '/**/**/*.less'];
-    G_JSHintFiles = G_JSHintFiles.concat(G_files['js_' + name]);
+    // exclude shared physics engine from jshint because it is not strict code
+    G_JSHintFiles = G_JSHintFiles.concat(G_files['js_' + name]).concat(['!' + browserify_dest_path]);
     G_watchFiles = G_watchFiles.concat(G_files['js_' + name]);
     G_watchFilesLess = G_watchFilesLess.concat(G_files['less_' + name]);
   }
@@ -69,6 +90,7 @@ module.exports = function(grunt) {
   addModule('mobile');
   addModule('desktop');
   addModule('marketplace');
+  addModule('browserify');
 
   addMainModule('home', ['common', 'home']);
   addMainModule('game', ['common', 'game']);
@@ -116,6 +138,7 @@ module.exports = function(grunt) {
     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
     // report: 'gzip'
   };
+
   G_options.watch = {
     concat: {
       files: G_watchFiles,
@@ -124,6 +147,19 @@ module.exports = function(grunt) {
     less: {
       files: G_watchFilesLess,
       tasks: ['less'],
+    },
+    browserify: {
+      files: browserify_deps.concat([browserify_src_path]),
+      tasks: ['default']
+    }
+  }
+
+  G_options.browserify = {
+    all: {
+      files: [{
+        src: browserify_src_path,
+        dest: browserify_dest_path
+      }]
     }
   }
 
@@ -135,7 +171,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-concat');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-less');
+  grunt.loadNpmTasks('grunt-browserify');
 
   // Default task(s).
-  grunt.registerTask('default', ['jshint', 'concat', 'uglify', 'less']);
+  grunt.registerTask('default', ['jshint', 'browserify', 'concat', 'uglify', 'less']);
 };

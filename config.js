@@ -1,4 +1,5 @@
 var os = require("os");
+var sharedConfig = require('./config_shared');
 
 var configSingleton = function() {
   var config = {
@@ -36,10 +37,10 @@ var configSingleton = function() {
   config.botsPerMap = 7;
   config.stepByStepMode = false;
   config.serverPath = __dirname;
-  config.physics.dichotomyIterations = 3;
   config.botDensity = 1 / 2300;
   config.noBots = process.env.NO_BOTS;
   config.FBScope = 'publish_actions';
+  config.physics.dichotomyIterations = sharedConfig.physics.dichotomyIterations;
 
   console.info('run on host', config.host);
 
