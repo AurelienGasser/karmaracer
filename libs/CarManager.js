@@ -10,13 +10,13 @@ CarManager.prototype.addCars = function(list, mapMethod, cars) {
     var c = list[id];
     if (c.playerCar !== null && c.playerCar.car !== null) {
       var share = c.playerCar[mapMethod]();
-      cars.push(share);
+      cars[share.id] = share;
     }
   }
 };
 
 CarManager.prototype.mapCars = function(mapMethod) {
-  var cars = [];
+  var cars = {};
   this.addCars(this.gameServer.players, mapMethod, cars);
   this.addCars(this.gameServer.botManager.bots, mapMethod, cars);
   return cars;
@@ -27,13 +27,7 @@ CarManager.prototype.getShared = function() {
 }
 
 CarManager.prototype.getGameInfo = function() {
-  var gameInfo = {};
-  var cars = this.mapCars('getGameInfo');
-  for (var i = 0; i < cars.length; i++) {
-    var c = cars[i];
-    gameInfo[c.id] = c;
-  };
-  return gameInfo;
+  return this.mapCars('getGameInfo');
 }
 
 CarManager.prototype.getAliveCars = function(source) {
