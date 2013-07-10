@@ -289,6 +289,26 @@
     }
   };
 
+  Engine2DCanvas.prototype.drawStaticItems_localPhysicsEngine = function(ctx) {
+    var that = this;
+    if (that.gameInstance.engine.staticBodies !== null) {
+      _.each(that.gameInstance.engine.staticBodies, function(c) {
+        var staticItemType = that.worldInfo.staticItemTypes[c.name];
+        if (!KLib.isUndefined(staticItemType) && !KLib.isUndefined(staticItemType.pattern)) {
+          c = {
+            x: c.x * that.gScaleValue,
+            y: c.y * that.gScaleValue,
+            w: c.w * that.gScaleValue,
+            h: c.h * that.gScaleValue
+          };
+          ctx.lineWidth = 4;
+          ctx.strokeStyle = "#00FF00";
+          ctx.strokeRect(c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
+        }
+      });
+    }
+  };
+
   Engine2DCanvas.prototype.drawBackground = function(ctx) {
     if (KLib.isUndefined(this.backgroundPattern)) {
       return;
@@ -302,6 +322,9 @@
     this.drawBodies(this.ctx);
     this.drawOutsideWalls(this.ctx);
     this.drawStaticItems(this.ctx);
+    if ($('#show_local_physics_engine_bodies').is(':checked')) {
+      this.drawStaticItems_localPhysicsEngine(this.ctx);
+    }
     this.drawCars(this.ctx);
     this.drawExplosions(this.ctx);
     // this.drawBullets(this.ctx);
