@@ -63,6 +63,16 @@ MapManager.prototype.createOrUpdateMap = function(map) {
 MapManager.prototype.loadMap = function(mapName) {
   var content = fs.readFileSync(mapName);
   var map = JSON.parse(content);
+  map.staticItems = map.staticItems.concat([{
+    name: 'outsideWall'
+  }]);
+  var itemsDir = CONFIG.serverPath + '/public/items/';
+  for (var i = 0; i < map.staticItems.length; i++) {
+    var item = map.staticItems[i];
+    var itemJSONPath = itemsDir + item.name + '.json';
+    var itemJSONString = fs.readFileSync(itemJSONPath);
+    item.def = JSON.parse(itemJSONString);
+  }
   if (map.enable === true) {
     this.createOrUpdateMap(map);
   }

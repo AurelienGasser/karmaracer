@@ -1,5 +1,3 @@
-var fs = require('fs');
-var CONFIG = require('./../../../config');
 var KLib = require('./../KLib');
 var Body = require('./Body');
 var Engine_collisions = require('./Engine_collisions');
@@ -116,16 +114,11 @@ Engine.prototype.createBody = function(position, size, name) {
 
 Engine.prototype.loadStaticItems = function() {
   var b;
-  var staticItems = this.map.staticItems.concat([{
-    name: 'outsideWall'
-  }]);
+  var staticItems = this.map.staticItems;
   this.staticBodies = [];
-  var itemsDir = CONFIG.serverPath + '/public/items/';
   for (var i = 0; i < staticItems.length; i++) {
     var item = staticItems[i];
-    var itemJSONPath = itemsDir + item.name + '.json';
-    var itemJSONString = fs.readFileSync(itemJSONPath);
-    var itemJSON = JSON.parse(itemJSONString);
+    var itemJSON = item.def;
     if (item.name === 'outsideWall') {
       var wallThickness = 1;
       var id;
