@@ -42,9 +42,9 @@ Engine.prototype.getWorldInfo = function() {
       w: this.map.size.w * this.gScale,
       h: this.map.size.h * this.gScale,
     },
-    "staticItems": this.getSharedStaticItems(),
-    "itemsInMap": this.staticItemTypes,
-    "background": this.map.background
+    staticItems:          this.getSharedStaticItems(),
+    itemsInMap:           this.staticItemTypes,
+    map:                  this.map
   };
 }
 

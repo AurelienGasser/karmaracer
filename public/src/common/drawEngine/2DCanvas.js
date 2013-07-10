@@ -85,7 +85,7 @@
     var that = this;
     // create background pattern
     var bgImage = new Image();
-    bgImage.src = that.worldInfo.background.path;
+    bgImage.src = that.worldInfo.map.background.path;
     bgImage.onload = function() {
       var bgPattern = that.ctx.createPattern(this, 'repeat');
       that.backgroundPattern = bgPattern;
