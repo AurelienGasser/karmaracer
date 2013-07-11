@@ -153,7 +153,8 @@
       that.gameInstance.engine.bodies = {};
       for (var i in objects.snapshot.cars) {
         var car = objects.snapshot.cars[i];
-        if (car.id === objects.myCar.id) {
+        if (objects.myCar !== null &&
+            car.id === objects.myCar.id) {
           // remove myCar from snapshot.cars
           delete objects.snapshot.cars[i];
         }

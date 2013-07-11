@@ -153,13 +153,15 @@
   };
 
   Engine2DCanvas.prototype.updateCameraCenter = function() {
-    if (this.isMiniMap === false && this.gameInstance && this.gameInstance.myCar) {
+    if (this.isMiniMap === false && this.gameInstance) {
       var newCenter = this.oldCenter;
-      var pos = this.scalePos(this.gameInstance.myCar);
-      newCenter = {
-        x: pos.x,
-        y: pos.y
-      };
+      if (this.gameInstance.myCar) {
+        var pos = this.scalePos(this.gameInstance.myCar);
+        newCenter = {
+          x: pos.x,
+          y: pos.y
+        };
+      }
       this.camera.update(newCenter);
       if (newCenter && newCenter != this.oldCenter) {
         this.oldCenter = newCenter;
