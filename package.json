@@ -31,7 +31,7 @@
     "grunt-contrib-concat": ">=0.0.1",
     "grunt-contrib-watch": ">=0.0.1",
     "grunt-contrib-less": ">=0.0.1",
-    "grunt-contrib-browserify": ">=0.0.1"
+    "grunt-browserify": ">=0.0.1"
   },
   "private": true
 }
