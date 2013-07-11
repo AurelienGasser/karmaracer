@@ -158,10 +158,12 @@
           // remove myCar from snapshot.cars
           delete objects.snapshot.cars[i];
         }
-        // update the physical body
-        car.w = 1;
-        car.h = 0.5;
-        that.gameInstance.engine.createBody(car, car, 'car');
+        if (car.dead === false) {
+          // add the physical body
+          car.w = 1;
+          car.h = 0.5;
+          that.gameInstance.engine.createBody(car, car, 'car');
+        }
       }
 
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
