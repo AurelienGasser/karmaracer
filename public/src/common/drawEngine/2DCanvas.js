@@ -291,6 +291,9 @@
 
   Engine2DCanvas.prototype.drawLocalPhysicsEngineBodies = function(ctx) {
     var that = this;
+    // draw static bodies
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = "#00FF00";
     if (that.gameInstance.engine.staticBodies !== null) {
       _.each(that.gameInstance.engine.staticBodies, function(c) {
         c = {
@@ -299,10 +302,28 @@
           w: c.w * that.gScaleValue,
           h: c.h * that.gScaleValue
         };
-        ctx.lineWidth = 4;
-        ctx.strokeStyle = "#00FF00";
         ctx.strokeRect(c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
       });
+    }
+    // draw other bodies
+    if (that.gameInstance.engine.bodies !== null) {
+      for (var id in that.gameInstance.engine.bodies) {
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "#00FF00";
+        ctx.save();
+        var c = that.gameInstance.engine.bodies[id];
+        c = {
+          x: c.x * that.gScaleValue,
+          y: c.y * that.gScaleValue,
+          w: c.w * that.gScaleValue,
+          h: c.h * that.gScaleValue,
+          r: c.r
+        };
+        ctx.translate(c.x, c.y);
+        ctx.rotate(c.r);
+        ctx.strokeRect(-c.w / 2, -c.h / 2, c.w, c.h);
+        ctx.restore();
+      }
     }
   };
 

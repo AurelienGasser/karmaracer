@@ -150,13 +150,19 @@
     });
 
     that.connection.on('objects', function(objects) {
-      // remove myCar from snapshot.cars
+      that.gameInstance.engine.bodies = {};
       for (var i in objects.snapshot.cars) {
-        if (objects.snapshot.cars[i].id === objects.myCar.id) {
+        var car = objects.snapshot.cars[i];
+        if (car.id === objects.myCar.id) {
+          // remove myCar from snapshot.cars
           delete objects.snapshot.cars[i];
-          break;
         }
+        // update the physical body
+        car.w = 1;
+        car.h = 0.5;
+        that.gameInstance.engine.createBody(car, car, 'car');
       }
+
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
       gameInstance.myCar = objects.myCar;
       gameInstance.items.projectiles = objects.projectiles;
