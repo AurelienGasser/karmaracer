@@ -189,14 +189,6 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  client.on('shoot', function() {
-    try {
-      client.player.playerCar.shoot();
-    } catch (e) {
-      console.error(e, e.stack);
-    }
-  });
-
   client.on('updatePlayerNameTopBar', function(name) {
     try {
       var user = client.handshake.session.user;

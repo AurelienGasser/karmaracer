@@ -36,12 +36,16 @@ Weapon.prototype.getProjectileVector = function(playerCar, angle) {
   return pos;
 };
 
-Weapon.prototype.canShoot = function() {
+Weapon.prototype.canShoot = function(playerCar) {
   var now = (new Date()).getTime();
   if (this.weaponEnergy.cur <= 0) {
+    playerCar.weaponShootOff();
     return false;
   }
   if (now - this.lastShot > this.lastShotInterval) {
+    if (this.weaponEnergy.cur > 0) {
+      playerCar.weaponShootOn();
+    }
     this.lastShot = now;
     return true;
   } else {
@@ -50,16 +54,18 @@ Weapon.prototype.canShoot = function() {
 };
 
 Weapon.prototype.shoot = function(playerCar) {
-  var canShoot = this.canShoot();
-  if (!KLib.isUndefined(playerCar) && canShoot === true) {
-    if (this.weaponEnergy.cur > WeaponMinLife) {
-      this.weaponEnergy.cur -= 1;
-    }
-    playerCar.weaponShootOn();
-    this.customShoot(playerCar);
-  } else {
-    if (this.weaponEnergy.cur > WeaponMinLife) {
-      this.weaponEnergy.cur -= 0.25;
+  var canShoot = this.canShoot(playerCar);
+  if (!KLib.isUndefined(playerCar)) {
+    if (canShoot === true) {
+      if (this.weaponEnergy.cur > WeaponMinLife) {
+        this.weaponEnergy.cur -= 1;
+      }
+      playerCar.weaponShootOn();
+      this.customShoot(playerCar);
+    } else {
+      if (this.weaponEnergy.cur > WeaponMinLife) {
+        this.weaponEnergy.cur -= 0.25;
+      }
     }
   }
 };

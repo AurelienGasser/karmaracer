@@ -28,6 +28,7 @@ Bot.prototype.tick = function() {
       car.accelerateAndTurn(0.5, angle);
       car.playerCar.shoot();
     } else {
+      car.playerCar.weaponShootOff();
       car.accelerate(0.5);
     }
   }
