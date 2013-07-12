@@ -22,32 +22,6 @@
     if (this.gameInstance.socketManager.getConnection()) {
       this.gameInstance.socketManager.getConnection().emit('drive', event, state);
     }
-    this.useKeyboardCommand(event, state);
-  };
-
-  KeyboardHandler.prototype.useKeyboardCommand = function(event, state) {
-    switch (event) {
-      case 'break':
-        break;
-      case 'shoot':
-        if (state === 'start') {
-          this.gameInstance.localCar.shootingWithWeapon = true;
-        } else {
-          this.gameInstance.localCar.shootingWithWeapon = false;
-        }
-        break;
-      case 'left':
-        break;
-      case 'right':
-        break;
-      case 'forward':
-        break;
-      case 'backward':
-        break;
-      default:
-        console.log('Error: Could not use keyboard command ' + event);
-        break;
-    }
   };
 
   KeyboardHandler.prototype.handleKey = function(key, state) {
