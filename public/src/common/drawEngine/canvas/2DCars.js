@@ -113,7 +113,7 @@
     return this.interpPos(carBefore, carAfter, this.interpData.interpPercent);
   };
 
-  Engine2DCanvas.prototype._drawCar = function(ctx, c, pos) {
+  Engine2DCanvas.prototype._drawCar = function(ctx, c, pos, isMyCar) {
     if (!pos || c.dead) {
       return;
     }
@@ -140,7 +140,14 @@
       ctx.drawImage(car.image, 0, 0, car.imageSize.w, car.imageSize.h, -size.w / 2, -size.h / 2, size.w, size.h);
 
       // gun flammes
-      if (c.shootingWithWeapon !== null) {
+      var shouldDrawFlames;
+      if (isMyCar) {
+        // client side prediction
+        shouldDrawFlames = this.gameInstance.localCar.shootingWithWeapon;
+      } else {
+        shouldDrawFlames = (c.shootingWithWeapon !== null);
+      }
+      if (shouldDrawFlames) {
         this.drawGunFlame(ctx, c, size);
       }
       ctx.restore();
@@ -183,7 +190,7 @@
     }
     if (this.gameInstance.myCar !== null) {
       var myPos = this.scalePos(this.gameInstance.myCar);
-      this._drawCar(ctx, this.gameInstance.myCar, myPos);
+      this._drawCar(ctx, this.gameInstance.myCar, myPos, true);
     }
   };
 }(Karma.Engine2DCanvas));

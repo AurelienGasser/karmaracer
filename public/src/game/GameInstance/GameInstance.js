@@ -30,6 +30,7 @@
     this.isMobile = false;
 
     this.chat = new Karma.ChatController();
+    this.localCar = {};
   }
 
   GameInstance.prototype.setUIEvents = function() {
