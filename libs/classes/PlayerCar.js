@@ -127,7 +127,6 @@ PlayerCar.prototype.getShared = function() {
   //weapon
   share.shootingWithWeapon = this.shootingWithWeapon;
   share.gunLife = this.weapon.weaponEnergy;
-  this.weaponShootOff();
 
   return share;
 }
@@ -149,7 +148,7 @@ PlayerCar.prototype.updatePlayerName = function(name) {
     this.user.playerName = name;
     this.saveUserDb(function(err) {});
   }
-  this.gameServer.broadCastGameInfo();  
+  this.gameServer.broadCastGameInfo();
 }
 
 PlayerCar.prototype.getExperience = function(experience) {

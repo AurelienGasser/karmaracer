@@ -178,6 +178,11 @@ GameServerSocket.prototype.registerMethods = function(client) {
         client.keyboard[event] = true;
       } else {
         client.keyboard[event] = false;
+        if (event === 'shoot') {
+          if (client.player && client.player.playerCar) {
+            client.player.playerCar.weaponShootOff();
+          }
+        }
       }
     } catch (e) {
       console.error(e.stack);
