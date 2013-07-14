@@ -60,6 +60,7 @@
     // enhance items with patterns
 
     var onLoadImage = function() {
+      var img = this.img;
       if (this.patternType !== 'none') {
         var _pattern = that.ctx.createPattern(img, 'repeat');
         that.worldInfo.staticItemTypes[this.name].pattern = _pattern;
@@ -72,11 +73,9 @@
 
     for (var itemName in this.worldInfo.staticItemTypes) {
       var item = this.worldInfo.staticItemTypes[itemName];
-
-      var img = new Image();
-      img.src = item.image.path;
-      img.onload = onLoadImage.bind(item);
-      item.img = img;
+      item.img = new Image();
+      item.img.src = item.image.path;    
+      item.img.onload = onLoadImage.bind(item);      
     }
 
   };
@@ -279,6 +278,7 @@
     if (that.worldInfo.staticItems !== null) {
       _.each(that.worldInfo.staticItems, function(c) {
         var staticItem = that.worldInfo.staticItemTypes[c.name];
+
         if (!KLib.isUndefined(staticItem) && !KLib.isUndefined(staticItem.pattern)) {
           if (staticItem.pattern === null) {
             ctx.drawImage(staticItem.img, c.x - c.w / 2, c.y - c.h / 2, c.w, c.h);
