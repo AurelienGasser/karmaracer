@@ -18,32 +18,33 @@
     return this;
   }
 
-  KeyboardHandler.prototype.sendKeyboardEvent = function(event, state) {
+  KeyboardHandler.prototype.createUserCommand = function(command, state) {
+    var userCommand = new Karma.UserCommand(command, state, Date.now());
     if (this.gameInstance.socketManager.getConnection()) {
-      this.gameInstance.socketManager.getConnection().emit('drive', event, state);
+      this.gameInstance.socketManager.getConnection().emit('drive', userCommand.command, userCommand.state);
     }
   };
 
   KeyboardHandler.prototype.handleKey = function(key, state) {
     switch (key) {
       case KEY_B:
-        this.sendKeyboardEvent('break', state);
+        this.createUserCommand('break', state);
         break;
       case KEY_SPACE:
       case KEY_S:
-        this.sendKeyboardEvent('shoot', state);
+        this.createUserCommand('shoot', state);
         break;
       case KEY_LEFT:
-        this.sendKeyboardEvent('left', state);
+        this.createUserCommand('left', state);
         break;
       case KEY_RIGHT:
-        this.sendKeyboardEvent('right', state);
+        this.createUserCommand('right', state);
         break;
       case KEY_UP:
-        this.sendKeyboardEvent('forward', state);
+        this.createUserCommand('forward', state);
         break;
       case KEY_DOWN:
-        this.sendKeyboardEvent('backward', state);
+        this.createUserCommand('backward', state);
         break;
       case KEY_L:
         if (state == 'start') {
