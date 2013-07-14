@@ -15,6 +15,22 @@ var GameServer = function(app, map, mapManager) {
   return this;
 }
 
+
+GameServer.prototype.reloadMap = function(map) {
+  this.map = map;
+  this.engine.size = {
+    'w': map.size.w,
+    'h': map.size.h
+  };
+  this.engine.map = map;
+  this.engine.staticItemTypes = {};
+  for (var i = 0; i < this.engine.staticBodies.length; i++) {
+    var sb = this.engine.staticBodies[i];
+    delete this.engine.bodies[sb.id];
+  };
+  this.engine.loadStaticItems();
+};
+
 GameServer.prototype.initGameServer = function(map) {
   this.map = map;
   this.snapshot = undefined;
@@ -146,7 +162,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
         }
       }
       if (!myCar) {
-        console.log('sendPositionsToPlayers: Error retrieving player car');
+        console.error('sendPositionsToPlayers: Error retrieving player car');
       }
     }
     var share = {

@@ -102,11 +102,16 @@
         var sItem = map.staticItems[i];
         var sItemFull = that.itemsByName[sItem.name];
 
+        if (!sItem.position || !sItem.size) {
+          continue;
+        }
         var mapItem = that.createMapItem(sItemFull);
+
         mapItem.position.x = sItem.position.x * that.gScale;
         mapItem.position.y = sItem.position.y * that.gScale;
         mapItem.size.w = sItem.size.w * that.gScale;
         mapItem.size.h = sItem.size.h * that.gScale;
+
       }
 
       // if (!KLib.isUndefined(that.svgTag)){

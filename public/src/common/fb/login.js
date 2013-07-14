@@ -98,7 +98,7 @@
     FB.Event.subscribe('auth.login', function() {
       afterLogin();
     });
-    if (G_fbid !== '') {
+    if (!KLib.isUndefined(G_fbid) && G_fbid !== '') {
       loginIfAuthorized();
     }
   }

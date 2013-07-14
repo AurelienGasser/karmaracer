@@ -56,7 +56,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     var clientSentTs = data.clientSentTs;
     var serverReceivedTs = Date.now();
     callback(null, {
-      clientSentTs:     clientSentTs,
+      clientSentTs: clientSentTs,
       serverReceivedTs: serverReceivedTs,
     });
   });
@@ -119,8 +119,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
       var worldInfo = gameServer.engine.getWorldInfo();
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
       var configShared = {
-        physicalTicksPerSecond        : CONFIG.physicalTicksPerSecond,
-        positionsSocketEmitsPerSecond : CONFIG.positionsSocketEmitsPerSecond
+        physicalTicksPerSecond: CONFIG.physicalTicksPerSecond,
+        positionsSocketEmitsPerSecond: CONFIG.positionsSocketEmitsPerSecond
       };
       client.emit('init', {
         worldInfo: worldInfo,
@@ -143,12 +143,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
       var fs = require('fs');
       var path = CONFIG.serverPath + "/public/maps/" + map.name + '.json';
       //reload map
-      that.mapManager.createOrUpdateMap(map);
       fs.writeFile(path, JSON.stringify(map), function(err) {
         if (err) {
           console.error(err);
         } else {
           console.info('The map was saved : ', map.name, ' on ', path);
+          that.mapManager.createOrUpdateMap(map);
         }
       });
     } catch (e) {

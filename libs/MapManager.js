@@ -21,7 +21,9 @@ MapManager.prototype.addGameServer = function(map) {
 
 MapManager.prototype.updateGameServerMap = function(map) {
   var gameServer = this.gameServers[map.name];
-  gameServer.initGameServer(map);
+
+  // gameServer.initGameServer(map);
+  gameServer.reloadMap(map);
   console.info('update game ', map.name);
 };
 
@@ -49,23 +51,21 @@ function getJSONSForDirectory(path, action, callback) {
   });
 };
 
-
-
 MapManager.prototype.createOrUpdateMap = function(map) {
-  if (KLib.isUndefined(this.maps[map])) {
+  if (KLib.isUndefined(this.maps[map.name])) {
     this.addGameServer(map);
   } else {
-    this.updateGameServerMap(map);
+    var loadedMap = this.loadMap(map);
+    this.updateGameServerMap(loadedMap);
   }
   this.maps[map.name] = map;
 };
 
-MapManager.prototype.loadMap = function(mapName) {
-  var content = fs.readFileSync(mapName);
-  var map = JSON.parse(content);
+MapManager.prototype.loadMap = function(map) {
   map.staticItems = map.staticItems.concat([{
-    name: 'outsideWall'
-  }]);
+      name: 'outsideWall'
+    }
+  ]);
   var itemsDir = CONFIG.serverPath + '/public/items/';
   for (var i = 0; i < map.staticItems.length; i++) {
     var item = map.staticItems[i];
@@ -73,9 +73,8 @@ MapManager.prototype.loadMap = function(mapName) {
     var itemJSONString = fs.readFileSync(itemJSONPath);
     item.def = JSON.parse(itemJSONString);
   }
-  if (map.enable === true) {
-    this.createOrUpdateMap(map);
-  }
+  
+  return map;
 };
 
 MapManager.prototype.loadMaps = function(callback) {
@@ -84,7 +83,13 @@ MapManager.prototype.loadMaps = function(callback) {
   filesLib.brosweFilesRec(mapsPath, function(err, maps) {
     for (var i = 0; i < maps.length; i++) {
       var mName = maps[i];
-      that.loadMap(mName);
+      var content = fs.readFileSync(mName);
+      var map = JSON.parse(content);
+
+      var map = that.loadMap(map);
+      if (map.enable === true) {
+        that.createOrUpdateMap(map);
+      }
     };
     if (KLib.isFunction(callback)) {
       return callback(null);
