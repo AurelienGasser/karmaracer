@@ -15,11 +15,13 @@
 
   function KeyboardHandler(gameInstance) {
     this.gameInstance = gameInstance;
+    this.commandsToAck = [];
     return this;
   }
 
   KeyboardHandler.prototype.createUserCommand = function(command, state) {
     var cmd = new Karma.UserCommand(command, state, Date.now());
+    this.commandsToAck.push(cmd);
     if (this.gameInstance.socketManager.getConnection()) {
       this.gameInstance.socketManager.getConnection().emit('drive', cmd.command, cmd.state);
     }
