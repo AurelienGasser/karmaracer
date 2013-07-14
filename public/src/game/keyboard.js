@@ -19,9 +19,9 @@
   }
 
   KeyboardHandler.prototype.createUserCommand = function(command, state) {
-    var userCommand = new Karma.UserCommand(command, state, Date.now());
+    var cmd = new Karma.UserCommand(command, state, Date.now());
     if (this.gameInstance.socketManager.getConnection()) {
-      this.gameInstance.socketManager.getConnection().emit('drive', userCommand.command, userCommand.state);
+      this.gameInstance.socketManager.getConnection().emit('drive', cmd.command, cmd.state);
     }
   };
 
