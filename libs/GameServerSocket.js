@@ -159,9 +159,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('disconnect', function(socket) {
     try {
       console.info('client left:', client.id);
-      for (var action in client.commandIntervals) {
-        stopAction(action);
-      }
+      cancelAllUserActions();
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
@@ -175,7 +173,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  var commandActions = {
+  var userActionFunctions = {
     shoot: function(car) {
       car.playerCar.shoot();
     },
@@ -186,17 +184,17 @@ GameServerSocket.prototype.registerMethods = function(client) {
       car.accelerate(-0.2);
     },
     left: function(car) {
-      var direction = (typeof client.commandIntervals.backward !== 'undefined');
-      car.turn(direction);
+      var isGoingBackward = (typeof client.commandIntervals.backward !== 'undefined');
+      car.turn(isGoingBackward);
     },
     right: function(car) {
-      var direction = (typeof client.commandIntervals.backward !== 'undefined');
-      car.turn(!direction);
+      var isGoingBackward = (typeof client.commandIntervals.backward !== 'undefined');
+      car.turn(!isGoingBackward);
     },
   };
 
-  function actionLauncher(action) {
-    var cmdFun = commandActions[action];
+  function userActionLauncher(action) {
+    var cmdFun = userActionFunctions[action];
     return function() {
       if (typeof client.player !== 'undefined' &&
           typeof client.player.playerCar !== 'undefined' &&
@@ -207,14 +205,15 @@ GameServerSocket.prototype.registerMethods = function(client) {
             var car = client.player.playerCar.car;
             cmdFun(car);
       } else {
+        // player car is not ready for executing user command
         if (typeof client.commandIntervals[action] !== 'undefined') {
-          stopAction(action);
+          cancelUserAction(action);
         }
       }
     }
   }
 
-  function stopAction(action) {
+  function cancelUserAction(action) {
     clearInterval(client.commandIntervals[action]);
     delete client.commandIntervals[action];
     if (action == 'shoot' && client.player && client.player.playerCar) {
@@ -222,11 +221,17 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   }
 
+  function cancelAllUserActions() {
+    for (var action in client.commandIntervals) {
+      cancelUserAction(action);
+    }
+  }
+
   client.on('drive', function(cmd) {
     try {
       if (cmd.state === 'start') {
         if (typeof client.commandIntervals[cmd.action] === 'undefined') {
-          var cmdFun = actionLauncher(cmd.action);
+          var cmdFun = userActionLauncher(cmd.action);
           cmdFun();
           client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.userActionRepeatsPerSecond);
         } else {
@@ -234,7 +239,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
           // we reach this case because of keyboard repetition
         }
       } else if (cmd.state === 'end') {
-        stopAction(cmd.action);
+        cancelUserAction(cmd.action);
       }
     } catch (e) {
       console.error(e.stack);
