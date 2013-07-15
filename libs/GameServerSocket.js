@@ -159,7 +159,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('disconnect', function(socket) {
     try {
       console.info('client left:', client.id);
-      cancelAllUserActions();
+      cancelAllUserCommands();
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
@@ -173,7 +173,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  var userActionFunctions = {
+  var userCommandFunctions = {
     shoot: function(car) {
       car.playerCar.shoot();
     },
@@ -193,8 +193,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
     },
   };
 
-  function userActionLauncher(action) {
-    var cmdFun = userActionFunctions[action];
+  function userCommandLauncher(action) {
+    var cmdFun = userCommandFunctions[action];
     return function() {
       if (typeof client.player !== 'undefined' &&
           typeof client.player.playerCar !== 'undefined' &&
@@ -207,13 +207,13 @@ GameServerSocket.prototype.registerMethods = function(client) {
       } else {
         // player car is not ready for executing user command
         if (typeof client.commandIntervals[action] !== 'undefined') {
-          cancelUserAction(action);
+          cancelUserCommand(action);
         }
       }
     }
   }
 
-  function cancelUserAction(action) {
+  function cancelUserCommand(action) {
     clearInterval(client.commandIntervals[action]);
     delete client.commandIntervals[action];
     if (action == 'shoot' && client.player && client.player.playerCar) {
@@ -221,9 +221,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   }
 
-  function cancelAllUserActions() {
+  function cancelAllUserCommands() {
     for (var action in client.commandIntervals) {
-      cancelUserAction(action);
+      cancelUserCommand(action);
     }
   }
 
@@ -231,15 +231,15 @@ GameServerSocket.prototype.registerMethods = function(client) {
     try {
       if (cmd.state === 'start') {
         if (typeof client.commandIntervals[cmd.action] === 'undefined') {
-          var cmdFun = userActionLauncher(cmd.action);
+          var cmdFun = userCommandLauncher(cmd.action);
           cmdFun();
-          client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.userActionRepeatsPerSecond);
+          client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.userCommandRepeatsPerSecond);
         } else {
           // do nothing, this action is already schedules to be performed
           // we reach this case because of keyboard repetition
         }
       } else if (cmd.state === 'end') {
-        cancelUserAction(cmd.action);
+        cancelUserCommand(cmd.action);
       }
     } catch (e) {
       console.error(e.stack);
