@@ -228,7 +228,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
         if (typeof client.commandIntervals[cmd.action] === 'undefined') {
           var cmdFun = actionLauncher(cmd.action);
           cmdFun();
-          client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.handleClientKeyboardPerSecond);
+          client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.userActionRepeatsPerSecond);
         } else {
           // do nothing, this action is already schedules to be performed
           // we reach this case because of keyboard repetition
