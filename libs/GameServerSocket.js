@@ -13,13 +13,7 @@ var GameServerSocket = function(mapManager) {
 
   this.mapManager.app.io.sockets.on('connection', function(client) {
     // console.info('client connected');
-    client.commands = {
-      shoot:    [],
-      forward:  [],
-      backward: [],
-      left:     [],
-      right:    []
-    };
+    client.commandIntervals = {};
     // TODOFIX
     that.registerMethods(client);
     client.graph = require('fbgraph');
@@ -165,6 +159,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('disconnect', function(socket) {
     try {
       console.info('client left:', client.id);
+      for (var action in client.commandIntervals) {
+        stopAction(action);
+      }
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
@@ -178,13 +175,66 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
+  var commandActions = {
+    shoot: function(car) {
+      car.playerCar.shoot();
+    },
+    forward: function(car) {
+      car.accelerate(0.3);
+    },
+    backward: function(car) {
+      car.accelerate(-0.2);
+    },
+    left: function(car) {
+      var direction = (typeof client.commandIntervals.backward !== 'undefined');
+      car.turn(direction);
+    },
+    right: function(car) {
+      var direction = (typeof client.commandIntervals.backward !== 'undefined');
+      car.turn(!direction);
+    },
+  };
+
+  function actionLauncher(action) {
+    var cmdFun = commandActions[action];
+    return function() {
+      if (typeof client.player !== 'undefined' &&
+          typeof client.player.playerCar !== 'undefined' &&
+          !client.player.playerCar.dead &&
+          typeof client.player.playerCar.car !== 'undefined' &&
+          typeof client.player.playerCar.gameServer !== 'undefined' &&
+          client.player.playerCar.gameServer.doStep) {
+            var car = client.player.playerCar.car;
+            cmdFun(car);
+      } else {
+        if (typeof client.commandIntervals[action] !== 'undefined') {
+          stopAction(action);
+        }
+      }
+    }
+  }
+
+  function stopAction(action) {
+    clearInterval(client.commandIntervals[action]);
+    delete client.commandIntervals[action];
+    if (action == 'shoot' && client.player && client.player.playerCar) {
+      client.player.playerCar.weaponShootOff();
+    }
+  }
+
   client.on('drive', function(cmd) {
     try {
-      client.commands[cmd.action].push(cmd);
-      if (cmd.action === 'shoot') {
-        if (client.player && client.player.playerCar) {
-          client.player.playerCar.weaponShootOff();
+      if (cmd.state === 'start') {
+        if (typeof client.commandIntervals[cmd.action] === 'undefined') {
+          var cmdFun = actionLauncher(cmd.action);
+          cmdFun();
+          client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.handleClientKeyboardPerSecond);
+        } else {
+          // do nothing, this action is already schedules to be performed
+          // we reach this case because of keyboard repetition
         }
+      } else if (cmd.state === 'end') {
+        stopAction(cmd.action);
       }
     } catch (e) {
       console.error(e.stack);

@@ -40,7 +40,6 @@ GameServer.prototype.initGameServer = function(map) {
   } else {
     this.mem.save();
     this.tryStepAfterDelay(0);
-    setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
   }
   this.postInit();
 };
@@ -48,66 +47,6 @@ GameServer.prototype.initGameServer = function(map) {
 GameServer.prototype.postInit = function() {
   // post init: add additional bots, etc..
 }
-
-function reverseTurning(client, turningRight) {
-  if (client.keyboard['backward'] === true) {
-    return !turningRight;
-  }
-  return turningRight;
-}
-
-GameServer.prototype.handleClientKeyboard = function() {
-  var that = this;
-  try {
-    if (this.doStep === false) {
-      return;
-    }
-    for(var i in that.players) {
-      var player = that.players[i];
-      var client = player.client;
-      var car = player.playerCar.car;
-      var isGoingBackward = false;
-      if (player.playerCar.dead) {
-        continue;
-      }
-      for (var action in client.commands) {
-        var cmds = client.commands[action];
-        var cmd = null; // most recent command
-        for (var i = cmds.length - 1; i >= 0; --i) {
-          if (cmd === null || cmds[i].seqNum > cmd.seqNum) {
-            cmd = cmds[i];
-          }
-        }
-        if (cmd !== null && cmd.state === 'start') {
-          switch(cmd.action) {
-          case 'break':
-            // todo ?
-            break;
-          case 'shoot':
-            player.playerCar.shoot();
-            break;
-          case 'forward':
-            car.accelerate(0.3);
-            break;
-          case 'backward':
-            isGoingBackward = true;
-            car.accelerate(-0.2);
-            break;
-          case 'left':
-            car.turn(isGoingBackward);
-            break;
-          case 'right':
-            car.turn(!isGoingBackward);
-            break;
-          }
-        }
-      }
-    }
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
 
 GameServer.prototype.getPlayersForShare = function() {
   var players = [];
