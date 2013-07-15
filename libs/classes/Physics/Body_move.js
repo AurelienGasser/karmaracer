@@ -5,27 +5,38 @@ var COLLISION_DISTANCE_TRESHOLD = 5e-10;
 
 var Body_move = {};
 
+Body_move.getTransientPosition = function() {
+  return {
+    x: this.moveToPosition !== null && !KLib.isUndefined(this.moveToPosition.x) ? this.moveToPosition.x : this.x,
+    y: this.moveToPosition !== null && !KLib.isUndefined(this.moveToPosition.y) ? this.moveToPosition.y : this.y,
+    r: this.moveToPosition !== null && !KLib.isUndefined(this.moveToPosition.r) ? this.moveToPosition.r : this.r,
+  }
+}
+
 Body_move.accelerate = function(ac) {
+  var pos = this.getTransientPosition();
   var newpos = {
-    x: this.x + ac * Math.cos(this.r),
-    y: this.y + ac * Math.sin(this.r)
+    x: pos.x + ac * Math.cos(pos.r),
+    y: pos.y + ac * Math.sin(pos.r)
   };
   this.moveTo(newpos);
 }
 
 Body_move.accelerateAndTurn = function(ac, a) {
+  var pos = this.getTransientPosition();
   var newpos = {
-    x: this.x + ac * Math.cos(this.r),
-    y: this.y + ac * Math.sin(this.r),
-    r: (this.r + a) % (Math.PI * 2)
+    x: pos.x + ac * Math.cos(pos.r),
+    y: pos.y + ac * Math.sin(pos.r),
+    r: (pos.r + a) % (Math.PI * 2)
   };
   this.moveTo(newpos);
 }
 
 Body_move.turn = function(side) {
+  var pos = this.getTransientPosition();
   var angleToAdd = side * (Math.PI * 1.5);
   this.moveTo({
-    r: (this.r + angleToAdd) % (Math.PI * 2)
+    r: (pos.r + angleToAdd) % (Math.PI * 2)
   });
 }
 
@@ -40,7 +51,6 @@ Body_move.setPosition = function(data) {
     this.r = data.r;
   }
 }
-
 
 function getMiddle(from, to) {
   var res = {}
@@ -141,22 +151,13 @@ Body_move.moveTo = function(pos) {
     this.moveToPosition = {};
   }
   if (!KLib.isUndefined(pos.x)) {
-    // pos.x = this.x;
     this.moveToPosition.x = pos.x;
-  } else {
-    // delete this.moveToPosition.x;
   }
   if (!KLib.isUndefined(pos.y)) {
-    // pos.y = this.y;
     this.moveToPosition.y = pos.y;
-  } else {
-    // delete this.moveToPosition.y;
   }
   if (!KLib.isUndefined(pos.r)) {
-    // pos.r = this.r;
     this.moveToPosition.r = pos.r;
-  } else {
-    // delete this.moveToPosition.r;
   }
 }
 
