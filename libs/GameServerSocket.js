@@ -13,6 +13,13 @@ var GameServerSocket = function(mapManager) {
 
   this.mapManager.app.io.sockets.on('connection', function(client) {
     // console.info('client connected');
+    client.commands = {
+      shoot:    [],
+      forward:  [],
+      backward: [],
+      left:     [],
+      right:    []
+    };
     // TODOFIX
     that.registerMethods(client);
     client.graph = require('fbgraph');
@@ -44,7 +51,6 @@ GameServerSocket.prototype.removeHomeClient = function(client) {
 GameServerSocket.prototype.registerMethods = function(client) {
   var that = this;
 
-  client.keyboard = {};
   require('./Sockets/miniMap')(this, client);
   require('./MarketPlace/MarketPlaceSockets')(client);
   var user
@@ -172,16 +178,12 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  client.on('drive', function(event, state) {
+  client.on('drive', function(cmd) {
     try {
-      if (state === 'start') {
-        client.keyboard[event] = true;
-      } else {
-        client.keyboard[event] = false;
-        if (event === 'shoot') {
-          if (client.player && client.player.playerCar) {
-            client.player.playerCar.weaponShootOff();
-          }
+      client.commands[cmd.action].push(cmd);
+      if (cmd.action === 'shoot') {
+        if (client.player && client.player.playerCar) {
+          client.player.playerCar.weaponShootOff();
         }
       }
     } catch (e) {

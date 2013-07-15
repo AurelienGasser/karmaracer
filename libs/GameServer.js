@@ -65,15 +65,21 @@ GameServer.prototype.handleClientKeyboard = function() {
     for(var i in that.players) {
       var player = that.players[i];
       var client = player.client;
+      var car = player.playerCar.car;
+      var isGoingBackward = false;
       if (player.playerCar.dead) {
         continue;
       }
-      var car = player.playerCar.car;
-      for (var event in client.keyboard) {
-        var state = client.keyboard[event];
-
-        if(state) {
-          switch(event) {
+      for (var action in client.commands) {
+        var cmds = client.commands[action];
+        var cmd = null; // most recent command
+        for (var i = cmds.length - 1; i >= 0; --i) {
+          if (cmd === null || cmds[i].seqNum > cmd.seqNum) {
+            cmd = cmds[i];
+          }
+        }
+        if (cmd !== null && cmd.state === 'start') {
+          switch(cmd.action) {
           case 'break':
             // todo ?
             break;
@@ -84,22 +90,17 @@ GameServer.prototype.handleClientKeyboard = function() {
             car.accelerate(0.3);
             break;
           case 'backward':
+            isGoingBackward = true;
             car.accelerate(-0.2);
             break;
           case 'left':
-            car.turn(reverseTurning(client, false));
+            car.turn(isGoingBackward);
             break;
           case 'right':
-            car.turn(reverseTurning(client, true));
+            car.turn(!isGoingBackward);
             break;
           }
         }
-        if (config.stepByStepMode === true) {
-          delete client.keyboard[event];
-        }
-      }
-      if (!client.keyboard.left && !client.keyboard.right) {
-        car.currentAngularAcceleration = 0;
       }
     }
   } catch (err) {

@@ -35,7 +35,6 @@ var configSingleton = function() {
   config.positionsSocketEmitsPerSecond = 20;
   config.botManagerTicksPerSecond = 15;
   config.botsPerMap = 7;
-  config.stepByStepMode = false;
   config.serverPath = __dirname;
   config.botDensity = 1 / 2300;
   config.noBots = process.env.NO_BOTS;
