@@ -167,7 +167,9 @@
       }
 
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-      gameInstance.myCar = objects.myCar;
+      if (typeof gameInstance.userCommandManager !== 'undefined') {
+        gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
+      }
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
 

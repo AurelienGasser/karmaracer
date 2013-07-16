@@ -48,6 +48,7 @@
 
     var defaultDrawEngineType = 'CANVAS';
     var canvasReady = function() {
+      that.userCommandManager = new Karma.UserCommandManager_client(that);
       that.keyboardHandler = new Karma.KeyboardHandler(that);
       document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);
       document.onkeyup = that.keyboardHandler.handleKeyUp.bind(that.keyboardHandler);
@@ -61,7 +62,6 @@
       new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that);
     }
   };
-
 
   Karma.GameInstance = GameInstance;
 
