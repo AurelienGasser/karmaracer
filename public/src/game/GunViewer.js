@@ -20,16 +20,14 @@
     var that = this;
     this.$gunZone.click(function(e) {
       that.connection.emit('shoot');
-      // that.connection.emit('drive', 'shoot', 'start');
-      // that.connection.emit('drive', 'shoot', 'end');
     });
 
     this.$gunZone.on('touchstart', function(e) {
-      that.connection.emit('drive', 'shoot', 'start');
+      that.connection.emit('user_command', 'shoot', 'start');
     });
 
     this.$gunZone.on('touchend', function(e) {
-      that.connection.emit('drive', 'shoot', 'end');
+      that.connection.emit('user_command', 'shoot', 'end');
     });
 
   };

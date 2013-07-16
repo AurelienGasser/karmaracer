@@ -2,6 +2,7 @@ var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
 var Player = require('./classes/Player');
 var Car = require('./classes/Physics/Bodies/Car');
+var UserCommandManager = require('./UserCommandManager');
 
 var GameServerSocket = function(mapManager) {
   this.homeClientIdCount = 0;
@@ -13,7 +14,6 @@ var GameServerSocket = function(mapManager) {
 
   this.mapManager.app.io.sockets.on('connection', function(client) {
     // console.info('client connected');
-    client.commandIntervals = {};
     // TODOFIX
     that.registerMethods(client);
     client.graph = require('fbgraph');
@@ -44,10 +44,12 @@ GameServerSocket.prototype.removeHomeClient = function(client) {
 
 GameServerSocket.prototype.registerMethods = function(client) {
   var that = this;
-
+  var user;
   require('./Sockets/miniMap')(this, client);
   require('./MarketPlace/MarketPlaceSockets')(client);
-  var user
+
+  client.userCommandManager = new UserCommandManager(client);
+
   if (client.handshake.session && client.handshake.session.user) {
     user = client.handshake.session.user;
   }
@@ -173,74 +175,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  var userCommandFunctions = {
-    shoot: function(car) {
-      car.playerCar.shoot();
-    },
-    forward: function(car) {
-      car.accelerate(0.1);
-    },
-    backward: function(car) {
-      car.accelerate(-0.05);
-    },
-    left: function(car) {
-      var isGoingBackward = (typeof client.commandIntervals.backward !== 'undefined');
-      car.turn(isGoingBackward);
-    },
-    right: function(car) {
-      var isGoingBackward = (typeof client.commandIntervals.backward !== 'undefined');
-      car.turn(!isGoingBackward);
-    },
-  };
-
-  function userCommandLauncher(action) {
-    var cmdFun = userCommandFunctions[action];
-    return function() {
-      if (typeof client.player !== 'undefined' &&
-          typeof client.player.playerCar !== 'undefined' &&
-          !client.player.playerCar.dead &&
-          typeof client.player.playerCar.car !== 'undefined' &&
-          typeof client.gameServer !== 'undefined' &&
-          client.gameServer.doStep) {
-            var car = client.player.playerCar.car;
-            cmdFun(car);
-      } else {
-        // player car is not ready for executing user command
-        if (typeof client.commandIntervals[action] !== 'undefined') {
-          cancelUserCommand(action);
-        }
-      }
-    }
-  }
-
-  function cancelUserCommand(action) {
-    clearInterval(client.commandIntervals[action]);
-    delete client.commandIntervals[action];
-    if (action == 'shoot' && client.player && client.player.playerCar) {
-      client.player.playerCar.weaponShootOff();
-    }
-  }
-
-  function cancelAllUserCommands() {
-    for (var action in client.commandIntervals) {
-      cancelUserCommand(action);
-    }
-  }
-
-  client.on('drive', function(cmd) {
+  client.on('user_command', function(userCmd) {
     try {
-      if (cmd.state === 'start') {
-        if (typeof client.commandIntervals[cmd.action] === 'undefined') {
-          var cmdFun = userCommandLauncher(cmd.action);
-          cmdFun();
-          client.commandIntervals[cmd.action] = setInterval(cmdFun, 1000 / CONFIG.userCommandRepeatsPerSecond);
-        } else {
-          // do nothing, this action is already schedules to be performed
-          // we reach this case because of keyboard repetition
-        }
-      } else if (cmd.state === 'end') {
-        cancelUserCommand(cmd.action);
-      }
+      client.userCommandManager.onUserCmdReceived(userCmd);
     } catch (e) {
       console.error(e.stack);
     }
