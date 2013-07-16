@@ -18,6 +18,7 @@ GameServer_step.initStep = function() {
   this.tickCounter = 0;
   this.tickTs = new Date();
   this.snapshot = new Snapshot(this);
+  this.ack = {};
 }
 
 GameServer_step.tryStep = function() {
@@ -65,6 +66,9 @@ GameServer_step.step = function() {
       start = registerDateDiff(timer, 'weaponsManager', start);
       this.engine.step();
       this.snapshot.update();
+      for (var playerId in this.players) {
+        this.ack[playerId] = this.players[i].client.userCommandManager.toAck;
+      }
       start = registerDateDiff(timer, 'Physics', start);
     }
     shouldPerform = this.tickCounter % Math.floor(this.ticksPerSecond / config.positionsSocketEmitsPerSecond) === 0;

@@ -4,7 +4,7 @@ var UserCommandManager = function(client) {
   this.client = client;
   this.intervals = {};
   var that = this;
-  this.ack = -1;
+  this.toAck = -1;
   this.userCmdInnerFunctions = {
     shoot: function(car) {
       car.playerCar.shoot();
@@ -28,7 +28,7 @@ var UserCommandManager = function(client) {
 }
 
 UserCommandManager.prototype.updateAck = function(userCmd) {
-  this.ack = Math.max(userCmd.seqNum, this.ack);
+  this.toAck = Math.max(userCmd.seqNum, this.toAck);
 }
 
 UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
