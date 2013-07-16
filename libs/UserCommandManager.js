@@ -1,9 +1,8 @@
 var config = require('../config');
 
-
 var UserCommandManager = function(client) {
   this.client = client;
-  this.userCmdIntervals = {};
+  this.intervals = {};
   var that = this;
   this.userCmdInnerFunctions = {
     shoot: function(car) {
@@ -16,11 +15,11 @@ var UserCommandManager = function(client) {
       car.accelerate(-0.05);
     },
     left: function(car) {
-      var isGoingBackward = (typeof that.userCmdIntervals.backward !== 'undefined');
+      var isGoingBackward = (typeof that.intervals.backward !== 'undefined');
       car.turn(isGoingBackward);
     },
     right: function(car) {
-      var isGoingBackward = (typeof that.userCmdIntervals.backward !== 'undefined');
+      var isGoingBackward = (typeof that.intervals.backward !== 'undefined');
       car.turn(!isGoingBackward);
     },
   };
@@ -29,10 +28,10 @@ var UserCommandManager = function(client) {
 
 UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
   if (userCmd.state === 'start') {
-    if (typeof this.userCmdIntervals[userCmd.action] === 'undefined') {
+    if (typeof this.intervals[userCmd.action] === 'undefined') {
       var userCmdFun = this.userCommandLauncher(userCmd);
       userCmdFun();
-      this.userCmdIntervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
+      this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
     } else {
       // do nothing, this action is already schedules to be performed
       // we reach this case because of keyboard repetition
@@ -56,7 +55,7 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
           userCmdInnerFun(car);
     } else {
       // player car is not ready for executing user command
-      if (typeof this.userCmdIntervals[userCmd.action] !== 'undefined') {
+      if (typeof this.intervals[userCmd.action] !== 'undefined') {
         cancelUserCommand(userCmd.action);
       }
     }
@@ -64,15 +63,15 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
 }
 
 UserCommandManager.prototype.cancelUserCommand = function(action) {
-  clearInterval(this.userCmdIntervals[action]);
-  delete this.userCmdIntervals[action];
+  clearInterval(this.intervals[action]);
+  delete this.intervals[action];
   if (action == 'shoot' && this.client.player && this.client.player.playerCar) {
     this.client.player.playerCar.weaponShootOff();
   }
 }
 
 UserCommandManager.prototype.cancelAllUserCommands = function() {
-  for (var action in this.userCmdIntervals) {
+  for (var action in this.intervals) {
     this.cancelUserCommand(action);
   }
 }
