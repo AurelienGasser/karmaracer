@@ -62,8 +62,8 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
           that.updateAck(userCmd);
     } else {
       // player car is not ready for executing user command
-      if (typeof this.intervals[userCmd.action] !== 'undefined') {
-        cancelUserCommand(userCmd.action);
+      if (typeof that.intervals[userCmd.action] !== 'undefined') {
+        that.cancelUserCommand(userCmd.action);
       }
     }
   }
