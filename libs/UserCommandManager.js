@@ -4,6 +4,7 @@ var UserCommandManager = function(client) {
   this.client = client;
   this.intervals = {};
   var that = this;
+  this.ack = -1;
   this.userCmdInnerFunctions = {
     shoot: function(car) {
       car.playerCar.shoot();
@@ -26,6 +27,10 @@ var UserCommandManager = function(client) {
   return this;
 }
 
+UserCommandManager.prototype.updateAck = function(userCmd) {
+  this.ack = Math.max(userCmd.seqNum, this.ack);
+}
+
 UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
   if (userCmd.state === 'start') {
     if (typeof this.intervals[userCmd.action] === 'undefined') {
@@ -44,6 +49,7 @@ UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
 UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
   var client = this.client;
   var userCmdInnerFun = this.userCmdInnerFunctions[userCmd.action];
+  var that = this;
   return function() {
     if (typeof client.player !== 'undefined' &&
         typeof client.player.playerCar !== 'undefined' &&
@@ -53,6 +59,7 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
         client.gameServer.doStep) {
           var car = client.player.playerCar.car;
           userCmdInnerFun(car);
+          that.updateAck(userCmd);
     } else {
       // player car is not ready for executing user command
       if (typeof this.intervals[userCmd.action] !== 'undefined') {

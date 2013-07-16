@@ -90,7 +90,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       }
     }
     var share = {
-      snapshot:       this.snapshot.shared,
+      snapshot:       this.snapshot.getShared(p.client.id),
       myCar:          myCar,
       projectiles:    projectiles,
       collisionPoints:p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null,
