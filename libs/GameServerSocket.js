@@ -178,10 +178,10 @@ GameServerSocket.prototype.registerMethods = function(client) {
       car.playerCar.shoot();
     },
     forward: function(car) {
-      car.accelerate(0.3);
+      car.accelerate(0.1);
     },
     backward: function(car) {
-      car.accelerate(-0.2);
+      car.accelerate(-0.05);
     },
     left: function(car) {
       var isGoingBackward = (typeof client.commandIntervals.backward !== 'undefined');
