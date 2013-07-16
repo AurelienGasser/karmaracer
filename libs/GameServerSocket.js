@@ -200,8 +200,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
           typeof client.player.playerCar !== 'undefined' &&
           !client.player.playerCar.dead &&
           typeof client.player.playerCar.car !== 'undefined' &&
-          typeof client.player.playerCar.gameServer !== 'undefined' &&
-          client.player.playerCar.gameServer.doStep) {
+          typeof client.gameServer !== 'undefined' &&
+          client.gameServer.doStep) {
             var car = client.player.playerCar.car;
             cmdFun(car);
       } else {
