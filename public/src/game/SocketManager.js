@@ -162,7 +162,10 @@
           // add the physical body
           car.w = 1;
           car.h = 0.5;
-          that.gameInstance.engine.createBody(car, car, 'car');
+          var id = that.gameInstance.engine.createBody(car, car, 'car');
+          if (car.id === objects.myCar.id) {
+            that.gameInstance.engine.myCarBodyId = id;
+          }
         }
       }
 

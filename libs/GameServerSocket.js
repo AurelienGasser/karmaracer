@@ -186,6 +186,14 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
+  client.on('shoot', function(state) {
+    try {
+      client.userCommandManager.shoot(state);
+    } catch (e) {
+      console.error(e.stack);
+    }
+  });
+
   client.on('updatePlayerNameTopBar', function(name) {
     try {
       var user = client.handshake.session.user;

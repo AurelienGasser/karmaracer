@@ -9,7 +9,11 @@
     var that = this;
     this.userCmdInnerFunctions = {
       shoot: function() {
-        that.gameInstance.myCar.shootingWithWeapon = true;
+        if (typeof that.gameInstance.myCar !== 'undefined') {
+          if (that.gameInstance.myCar.gunLife.cur > 0) {
+            that.gameInstance.myCar.shootingWithWeapon = true;
+          }
+        }
       },
       forward: function() {
         that.myCarAccelerate(that.gameInstance.config.myCarSpeed);
@@ -32,8 +36,13 @@
 
   UserCommandManager.prototype.myCarAccelerate = function(speed) {
     var myCar = this.gameInstance.myCar;
-    myCar.x += speed * Math.cos(myCar.r);
-    myCar.y += speed * Math.sin(myCar.r);
+    var engine = this.gameInstance.engine;
+    var body = engine.bodies[engine.myCarBodyId];
+    body.moveToPosition = {
+      x: myCar.x + speed * Math.cos(myCar.r),
+      y: myCar.y + speed * Math.sin(myCar.r)
+    };
+    body.doMove();
   };
 
   UserCommandManager.prototype.myCarTurn = function(speed, isTurningLeft) {
@@ -47,8 +56,8 @@
       this.gameInstance.socketManager.getConnection().emit('user_command', userCmd);
     }
     this.commandsToAck[userCmd.seqNum] = userCmd;
-    this.executeUserCommand_create(userCmd);
-  }
+    this.scheduleAction(userCmd);
+  };
 
   UserCommandManager.prototype.createUserCommand = function(action, state) {
     if (state === 'start') {
@@ -70,48 +79,24 @@
     return function() {
       f();
       ++userCmd.iteration;
-    }
-  }
-
-  UserCommandManager.prototype.executeUserCommand_create = function(userCmd) {
-    if (userCmd.state === 'start') {
-      var userCmdFun = this.launcher(userCmd);
-      userCmdFun();
-      this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / this.gameInstance.config.userCommandRepeatsPerSecond);
-    } else if (userCmd.state === 'end') {
-      this.cancelUserCommand(userCmd.action);
-    }
+    };
   };
 
-  UserCommandManager.prototype.executeUserCommand = function(userCmd, iterations) {
+  UserCommandManager.prototype.scheduleAction = function(userCmd) {
+    var userCmdFun = this.launcher(userCmd);
     if (userCmd.state === 'start') {
-      var userCmdFun = this.launcher(userCmd);
-      if (iterations > 0) {
-        for (var i = 0; i < iterations - 1; ++i) {
-          userCmdFun();
-        }
-      }
-      if (typeof this.intervals[userCmd.action] === 'undefined') {
-        console.log('create interval ' + userCmd.action)
+      if (userCmd.action === 'shoot') {
+        userCmdFun();
+      } else {
         userCmdFun();
         this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / this.gameInstance.config.userCommandRepeatsPerSecond);
-      } else {
-        // do nothing, this action is already schedules to be performed
-        // we reach this case because of keyboard repetition
-        console.log(iterations + ' iterations')
-        if (iterations > 0) {
-          for (var i in this.commandsToAck) {
-            var toAck = this.commandsToAck[i];
-            console.log(userCmd.action+ ' ' + userCmd.state + ' vs ' + toAck.action + ' ' + toAck.state)
-            if (toAck.action === userCmd.action && toAck.state === 'start') {
-              console.log('add ' + iterations + ' iterations')
-              toAck.iteration += iterations;
-            }
-          }
-        }
       }
     } else if (userCmd.state === 'end') {
-      this.cancelUserCommand(userCmd.action);
+      if (userCmd.action === 'shoot') {
+        this.gameInstance.myCar.shootingWithWeapon = false;
+      } else {
+        this.cancelUserCommand(userCmd.action);
+      }
     }
   };
 
@@ -122,6 +107,12 @@
   };
 
   UserCommandManager.prototype.synchronizeMyCar = function(myCar) {
+    if (typeof this.gameInstance.myCar !== 'undefined') {
+      var diffx = myCar.x - this.gameInstance.myCar.x;
+      var diffy = myCar.y - this.gameInstance.myCar.y;
+      var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);
+      // console.log('error: ', diffx.toFixed(1));
+    }
     this.gameInstance.myCar = myCar;
     // replay user cmds
     for (var seqNumToAck in this.commandsToAck) {
