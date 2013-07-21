@@ -38,7 +38,7 @@ Car.prototype.goToFreeLandingPoint = function() {
 };
 
 Car.prototype.turn = function(turningRight) {
-  this.base.turn.bind(this)((turningRight ? 1 : -1) * Math.PI / 128)
+  this.base.turn.bind(this)((turningRight ? 1 : -1) * Math.PI / 256)
 }
 
 Car.prototype.receiveHit = function() {

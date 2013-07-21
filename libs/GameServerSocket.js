@@ -2,6 +2,7 @@ var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
 var Player = require('./classes/Player');
 var Car = require('./classes/Physics/Bodies/Car');
+var UserCommandManager = require('./UserCommandManager');
 
 var GameServerSocket = function(mapManager) {
   this.homeClientIdCount = 0;
@@ -43,11 +44,12 @@ GameServerSocket.prototype.removeHomeClient = function(client) {
 
 GameServerSocket.prototype.registerMethods = function(client) {
   var that = this;
-
-  client.keyboard = {};
+  var user;
   require('./Sockets/miniMap')(this, client);
   require('./MarketPlace/MarketPlaceSockets')(client);
-  var user
+
+  client.userCommandManager = new UserCommandManager(client);
+
   if (client.handshake.session && client.handshake.session.user) {
     user = client.handshake.session.user;
   }
@@ -159,6 +161,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('disconnect', function(socket) {
     try {
       console.info('client left:', client.id);
+      cancelAllUserCommands();
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
@@ -172,18 +175,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  client.on('drive', function(event, state) {
+  client.on('user_command', function(userCmd) {
     try {
-      if (state === 'start') {
-        client.keyboard[event] = true;
-      } else {
-        client.keyboard[event] = false;
-        if (event === 'shoot') {
-          if (client.player && client.player.playerCar) {
-            client.player.playerCar.weaponShootOff();
-          }
-        }
-      }
+      client.userCommandManager.onUserCmdReceived(userCmd);
     } catch (e) {
       console.error(e.stack);
     }

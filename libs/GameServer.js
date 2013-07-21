@@ -56,7 +56,6 @@ GameServer.prototype.initGameServer = function(map) {
   } else {
     this.mem.save();
     this.tryStepAfterDelay(0);
-    setInterval(this.handleClientKeyboard.bind(this), 1000 / 100);
   }
   this.postInit();
 };
@@ -64,65 +63,6 @@ GameServer.prototype.initGameServer = function(map) {
 GameServer.prototype.postInit = function() {
   // post init: add additional bots, etc..
 }
-
-function reverseTurning(client, turningRight) {
-  if (client.keyboard['backward'] === true) {
-    return !turningRight;
-  }
-  return turningRight;
-}
-
-GameServer.prototype.handleClientKeyboard = function() {
-  var that = this;
-  try {
-    if (this.doStep === false) {
-      return;
-    }
-    for(var i in that.players) {
-      var player = that.players[i];
-      var client = player.client;
-      if (player.playerCar.dead) {
-        continue;
-      }
-      var car = player.playerCar.car;
-      for (var event in client.keyboard) {
-        var state = client.keyboard[event];
-
-        if(state) {
-          switch(event) {
-          case 'break':
-            // todo ?
-            break;
-          case 'shoot':
-            player.playerCar.shoot();
-            break;
-          case 'forward':
-            car.accelerate(0.3);
-            break;
-          case 'backward':
-            car.accelerate(-0.2);
-            break;
-          case 'left':
-            car.turn(reverseTurning(client, false));
-            break;
-          case 'right':
-            car.turn(reverseTurning(client, true));
-            break;
-          }
-        }
-        if (config.stepByStepMode === true) {
-          delete client.keyboard[event];
-        }
-      }
-      if (!client.keyboard.left && !client.keyboard.right) {
-        car.currentAngularAcceleration = 0;
-      }
-    }
-  } catch (err) {
-    console.error(err);
-    throw err;
-  }
-};
 
 GameServer.prototype.getPlayersForShare = function() {
   var players = [];
@@ -166,7 +106,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       }
     }
     var share = {
-      snapshot:       this.snapshot.shared,
+      snapshot:       this.snapshot.getShared(p.client.id),
       myCar:          myCar,
       projectiles:    projectiles,
       collisionPoints:p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null,
