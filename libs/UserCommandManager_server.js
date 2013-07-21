@@ -4,16 +4,16 @@ var UserCommandManager = function(client) {
   this.client = client;
   this.intervals = {};
   var that = this;
-  this.toAck = -1;
+  this.toAck = {};
   this.userCmdInnerFunctions = {
     shoot: function(car) {
       car.playerCar.shoot();
     },
     forward: function(car) {
-      car.accelerate(0.1);
+      car.accelerate(config.myCarSpeed);
     },
     backward: function(car) {
-      car.accelerate(-0.05);
+      car.accelerate(-config.myCarSpeed / 2);
     },
     left: function(car) {
       var isGoingBackward = (typeof that.intervals.backward !== 'undefined');
@@ -28,21 +28,24 @@ var UserCommandManager = function(client) {
 }
 
 UserCommandManager.prototype.updateAck = function(userCmd) {
-  this.toAck = Math.max(userCmd.seqNum, this.toAck);
+  if (typeof this.toAck[userCmd.action] !== 'undefined') {
+    if (this.toAck[userCmd.action].seqNum < userCmd.seqNum) {
+      this.toAck[userCmd.action] = userCmd;
+    }
+  } else {
+    this.toAck[userCmd.action] = userCmd;
+  }
 }
 
 UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
-  if (userCmd.state === 'start') {
-    if (typeof this.intervals[userCmd.action] === 'undefined') {
-      var userCmdFun = this.userCommandLauncher(userCmd);
-      userCmdFun();
-      this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
-    } else {
-      // do nothing, this action is already schedules to be performed
-      // we reach this case because of keyboard repetition
-    }
+  if (userCmd.state === 'start' && typeof this.intervals[userCmd.action] === 'undefined') {
+    var userCmdFun = this.userCommandLauncher(userCmd);
+    userCmdFun();
+    this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
+    this.updateAck(userCmd);
   } else if (userCmd.state === 'end') {
     this.cancelUserCommand(userCmd.action);
+    this.updateAck(userCmd);
   }
 }
 
@@ -59,7 +62,7 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
         client.gameServer.doStep) {
           var car = client.player.playerCar.car;
           userCmdInnerFun(car);
-          that.updateAck(userCmd);
+          ++userCmd.iteration;
     } else {
       // player car is not ready for executing user command
       if (typeof that.intervals[userCmd.action] !== 'undefined') {

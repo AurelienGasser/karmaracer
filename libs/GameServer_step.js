@@ -67,7 +67,7 @@ GameServer_step.step = function() {
       this.engine.step();
       this.snapshot.update();
       for (var playerId in this.players) {
-        this.ack[playerId] = this.players[i].client.userCommandManager.toAck;
+        this.ack[playerId] = this.players[playerId].client.userCommandManager.toAck;
       }
       start = registerDateDiff(timer, 'Physics', start);
     }

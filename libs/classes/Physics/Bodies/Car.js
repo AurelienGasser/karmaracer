@@ -1,6 +1,7 @@
 var sys = require("sys");
 var KLib = require('../../KLib');
 var KBody = require('./../Body');
+var config = require('../../../../config');
 
 var Car = function(playerCar) {
     KLib.extend(KBody, this);
@@ -38,7 +39,7 @@ Car.prototype.goToFreeLandingPoint = function() {
 };
 
 Car.prototype.turn = function(turningRight) {
-  this.base.turn.bind(this)((turningRight ? 1 : -1) * Math.PI / 256)
+  this.base.turn.bind(this)((turningRight ? 1 : -1) * config.myCarTurnSpeed);
 }
 
 Car.prototype.receiveHit = function() {

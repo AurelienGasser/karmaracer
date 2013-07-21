@@ -162,12 +162,17 @@
           // add the physical body
           car.w = 1;
           car.h = 0.5;
-          that.gameInstance.engine.createBody(car, car, 'car');
+          var id = that.gameInstance.engine.createBody(car, car, 'car');
+          if (car.id === objects.myCar.id) {
+            that.gameInstance.engine.myCarBodyId = id;
+          }
         }
       }
 
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-      gameInstance.myCar = objects.myCar;
+      if (typeof gameInstance.userCommandManager !== 'undefined') {
+        gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
+      }
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
 
