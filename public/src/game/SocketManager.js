@@ -149,28 +149,11 @@
       counterGameInfo += 1;
     });
 
-    that.connection.on('objects', function(objects) {
-      that.gameInstance.engine.bodies = {};
-      for (var i in objects.snapshot.cars) {
-        var car = objects.snapshot.cars[i];
-        if (objects.myCar !== null &&
-            car.id === objects.myCar.id) {
-          // remove myCar from snapshot.cars
-          delete objects.snapshot.cars[i];
-        }
-        if (car.dead === false) {
-          // add the physical body
-          car.w = 1;
-          car.h = 0.5;
-          var id = that.gameInstance.engine.createBody(car, car, 'car');
-          if (car.id === objects.myCar.id) {
-            that.gameInstance.engine.myCarBodyId = id;
-          }
-        }
-      }
+    this.connection.on('objects', function(objects) {
 
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-      if (typeof gameInstance.userCommandManager !== 'undefined') {
+      if (typeof gameInstance.userCommandManager !== 'undefined' &&
+          objects.myCar !== null /* myCar dead */) {
         gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
       }
       gameInstance.items.projectiles = objects.projectiles;
@@ -181,6 +164,7 @@
         var player = gameInstance.gameInfo[objects.myCar.id];
         that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
       }
+      that.updateEngineBodies(objects);
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
@@ -188,11 +172,33 @@
       socketReceived();
     });
 
-    that.connection.on('explosion', function(explosion) {
+    this.connection.on('explosion', function(explosion) {
       gameInstance.explosionManager.addExplosion(explosion);
     });
 
   }
+
+  SocketManager.prototype.updateEngineBodies = function(objects) {
+    var gameInstance = this.gameInstance;
+    var engine = this.gameInstance.engine;
+    var myCar = this.gameInstance.myCar;
+    engine.bodies = {};
+    for (var i in objects.snapshot.cars) {
+      var car = objects.snapshot.cars[i];
+      if (car.dead === false) {
+        // add the physical body
+        car.w = 1;
+        car.h = 0.5;
+        engine.createBody(car, car, 'car');
+      }
+    }
+    if (typeof myCar !== 'undefined') {
+      myCar.w = 1;
+      myCar.h = 0.5;
+      engine.myCarBodyId = engine.createBody(myCar, myCar, 'car');
+    }
+    engine.loadStaticItems();
+  };
 
   SocketManager.prototype.ping = function() {
     var that = this;

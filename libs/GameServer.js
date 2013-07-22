@@ -91,7 +91,7 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       myCar.ack = this.ack[p.id];
     }
     var share = {
-      snapshot:       this.snapshot.shared,
+      snapshot:       this.snapshot.getShared(p.id),
       myCar:          myCar,
       projectiles:    projectiles,
       collisionPoints:p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null,

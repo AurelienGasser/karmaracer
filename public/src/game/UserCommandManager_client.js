@@ -43,6 +43,8 @@
       y: myCar.y + speed * Math.sin(myCar.r)
     };
     body.doMove();
+    this.gameInstance.myCar.x = body.x;
+    this.gameInstance.myCar.y = body.y;
   };
 
   UserCommandManager.prototype.myCarTurn = function(speed, isTurningLeft) {
@@ -107,6 +109,9 @@
   };
 
   UserCommandManager.prototype.synchronizeMyCar = function(myCar) {
+    if (myCar === null) {
+      return;
+    }
     if (typeof this.gameInstance.myCar !== 'undefined') {
       var diffx = myCar.x - this.gameInstance.myCar.x;
       var diffy = myCar.y - this.gameInstance.myCar.y;

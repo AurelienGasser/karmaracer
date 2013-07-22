@@ -17,7 +17,7 @@ var Bullet = function(playerCar, pos, angle) {
     this.name = 'bullet';
     this.r = angle;
     this.life = 2;
-    this.damage = 5;
+    this.damage = 500;
     this.len = 10;
     // this.p1 = {
     //   x: this.x,

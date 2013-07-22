@@ -10,6 +10,7 @@ CarManager.prototype.addCars = function(list, mapMethod, cars) {
     var c = list[id];
     if (c.playerCar !== null && c.playerCar.car !== null) {
       var share = c.playerCar[mapMethod]();
+      share.playerId = id;
       cars[share.id] = share;
     }
   }
