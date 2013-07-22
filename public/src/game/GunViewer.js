@@ -34,7 +34,7 @@
     });
 
     this.$gunZone.on('touchend', function(e) {
-      var userCmd = new Karma.UserCommand('shoot', 'start', Date.now());
+      var userCmd = new Karma.UserCommand('shoot', 'end', Date.now());
       that.connection.emit('user_command', userCmd);
     });
 
