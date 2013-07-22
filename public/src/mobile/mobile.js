@@ -15,7 +15,9 @@
   window.addEventListener('webkitfullscreenchange', doOnOrientationChange);
 
   document.ontouchstart = function(e) {
-    e.preventDefault();
+    if (!$(e.target).hasClass('nativeTouchEnabled')) {
+      e.preventDefault();
+    }
   };
 
 
@@ -33,7 +35,7 @@
     $('#left_panel').remove();
     $('#player_name_div').remove();
 
-    // 
+    //
     // link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
 
 
@@ -50,7 +52,7 @@
     // this.addTouchScreenAreas();
     // this.initTouchScreenEvents();
     // $('#debug').remove();
-    // 
+    //
 
   };
 
