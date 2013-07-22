@@ -152,8 +152,7 @@
     this.connection.on('objects', function(objects) {
 
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-      if (typeof gameInstance.userCommandManager !== 'undefined' &&
-          objects.myCar !== null /* myCar dead */) {
+      if (typeof gameInstance.userCommandManager !== 'undefined') {
         gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
       }
       gameInstance.items.projectiles = objects.projectiles;
@@ -192,7 +191,7 @@
         engine.createBody(car, car, 'car');
       }
     }
-    if (typeof myCar !== 'undefined') {
+    if (myCar !== null) {
       myCar.w = 1;
       myCar.h = 0.5;
       engine.myCarBodyId = engine.createBody(myCar, myCar, 'car');

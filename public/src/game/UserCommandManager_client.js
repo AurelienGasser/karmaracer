@@ -9,7 +9,7 @@
     var that = this;
     this.userCmdInnerFunctions = {
       shoot: function() {
-        if (typeof that.gameInstance.myCar !== 'undefined') {
+        if (that.gameInstance.myCar !== null) {
           if (that.gameInstance.myCar.gunLife.cur > 0) {
             that.gameInstance.myCar.shootingWithWeapon = true;
           }
@@ -78,9 +78,12 @@
 
   UserCommandManager.prototype.launcher = function(userCmd) {
     var f = this.userCmdInnerFunctions[userCmd.action];
+    var that = this;
     return function() {
-      f();
-      ++userCmd.iteration;
+      if (that.gameInstance.myCar !== null) {
+        f();
+        ++userCmd.iteration;
+      }
     };
   };
 
@@ -110,9 +113,10 @@
 
   UserCommandManager.prototype.synchronizeMyCar = function(myCar) {
     if (myCar === null) {
+      this.gameInstance.myCar = null;
       return;
     }
-    if (typeof this.gameInstance.myCar !== 'undefined') {
+    if (this.gameInstance.myCar !== null) {
       var diffx = myCar.x - this.gameInstance.myCar.x;
       var diffy = myCar.y - this.gameInstance.myCar.y;
       var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);

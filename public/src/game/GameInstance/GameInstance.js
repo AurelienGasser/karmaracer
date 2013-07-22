@@ -7,6 +7,7 @@
     this.config = undefined; // will be defined by onInitReceived
     this.snapshots = {};
     this.items = {};
+    this.myCar = null;
     this.items.cars = [];
     this.items.explosions = {};
     this.items.myCar = null;

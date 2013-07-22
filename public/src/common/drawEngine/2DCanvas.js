@@ -353,7 +353,7 @@
       this.draw();
     } else {
       this.getInterpData();
-      if (this.interpData.ready && typeof this.gameInstance.myCar !== 'undefined') {
+      if (this.interpData.ready) {
         this.draw();
       }
     }
