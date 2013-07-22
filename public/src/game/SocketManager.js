@@ -21,8 +21,8 @@
 
     function setupBotMenu() {
       var $botmenu = $('#botMenu');
-      var $addBot = $('<input id="#addBot" type="button" value="' + $.i18n.prop('bots_add') + '"/>');
-      var $removeBot = $('<input id="#removeBot" type="button" value="' + $.i18n.prop('bots_remove') + '"/>');
+      var $addBot = $('<button id="#addBot" class="nativeTouchEnabled">' + $.i18n.prop('bots_add') + '</button>');
+      var $removeBot = $('<button id="#removeBot"  class="nativeTouchEnabled">' + $.i18n.prop('bots_remove') + '</button>');
 
       $botmenu.append($addBot);
       $botmenu.append($removeBot);
@@ -46,11 +46,7 @@
       that.socketCounter += 1;
     }
 
-
-    var $debug = $('#debug');
-    $debug.append('<div id="debug-sockets" class="info">sockets</div>');
-    this.$socketps = $('<div id="socketps" class="info"></div>');
-    $debug.append(this.$socketps);
+    this.$socketps = $('#socketps');
 
     this.gv = new Karma.GunViewer($('body'), that.connection);
 
