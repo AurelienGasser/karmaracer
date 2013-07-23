@@ -2,7 +2,7 @@
   "name" : "house1",
   "image" : {
     "path" : "/sprites/house1.png",
-    "size" : 10,
+    "size" : 76,
     "crop" : {
       "x" : 0,
       "y" : 0,

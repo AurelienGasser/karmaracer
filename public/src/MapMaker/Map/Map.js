@@ -247,8 +247,8 @@
       var sourceMapItem = that.itemsByName[item.name];
       Karma.Log.info('add map item', sourceMapItem);
       var mapItem = that.createMapItem(sourceMapItem);
-      mapItem.size.w = sourceMapItem.size.w * that.gScale;
-      mapItem.size.h = sourceMapItem.size.h * that.gScale;
+      mapItem.size.w = sourceMapItem.size.w;
+      mapItem.size.h = sourceMapItem.size.h;
       that.svgRaphaelAddItem(mapItem);
     });
 
