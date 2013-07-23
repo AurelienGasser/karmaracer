@@ -27,7 +27,7 @@
       },
       right: function() {
         var isGoingBackward = (typeof that.intervals.backward !== 'undefined');
-        that.myCarTurn(that.gameInstance.config.myCarTurnSpeed, -isGoingBackward);
+        that.myCarTurn(-that.gameInstance.config.myCarTurnSpeed, isGoingBackward);
       }
     };
     return this;
@@ -49,7 +49,7 @@
 
   UserCommandManager.prototype.myCarTurn = function(speed, isTurningLeft) {
     var myCar = this.gameInstance.myCar;
-    myCar.r += isTurningLeft ? 1 : -1 * speed;
+    myCar.r += (isTurningLeft ? 1 : -1) * speed;
   };
 
   UserCommandManager.prototype._createUserCommand = function(action, state) {
