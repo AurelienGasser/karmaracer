@@ -18,16 +18,24 @@
     this.gunName = name;
 
     var that = this;
-    this.$gunZone.click(function(e) {
-      that.connection.emit('shoot');
+    this.$gunZone.on('mousedown', function(e) {
+      var userCmd = new Karma.UserCommand('shoot', 'start', Date.now());
+      that.connection.emit('user_command', userCmd);
+    });
+
+    this.$gunZone.on('mouseup', function(e) {
+      var userCmd = new Karma.UserCommand('shoot', 'end', Date.now());
+      that.connection.emit('user_command', userCmd);
     });
 
     this.$gunZone.on('touchstart', function(e) {
-      that.connection.emit('user_command', 'shoot', 'start');
+      var userCmd = new Karma.UserCommand('shoot', 'start', Date.now());
+      that.connection.emit('user_command', userCmd);
     });
 
     this.$gunZone.on('touchend', function(e) {
-      that.connection.emit('user_command', 'shoot', 'end');
+      var userCmd = new Karma.UserCommand('shoot', 'end', Date.now());
+      that.connection.emit('user_command', userCmd);
     });
 
   };

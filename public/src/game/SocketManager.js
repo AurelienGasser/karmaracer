@@ -21,8 +21,8 @@
 
     function setupBotMenu() {
       var $botmenu = $('#botMenu');
-      var $addBot = $('<input id="#addBot" type="button" value="' + $.i18n.prop('bots_add') + '"/>');
-      var $removeBot = $('<input id="#removeBot" type="button" value="' + $.i18n.prop('bots_remove') + '"/>');
+      var $addBot = $('<button id="#addBot" class="nativeTouchEnabled">' + $.i18n.prop('bots_add') + '</button>');
+      var $removeBot = $('<button id="#removeBot"  class="nativeTouchEnabled">' + $.i18n.prop('bots_remove') + '</button>');
 
       $botmenu.append($addBot);
       $botmenu.append($removeBot);
@@ -46,11 +46,7 @@
       that.socketCounter += 1;
     }
 
-
-    var $debug = $('#debug');
-    $debug.append('<div id="debug-sockets" class="info">sockets</div>');
-    this.$socketps = $('<div id="socketps" class="info"></div>');
-    $debug.append(this.$socketps);
+    this.$socketps = $('#socketps');
 
     this.gv = new Karma.GunViewer($('body'), that.connection);
 
@@ -149,25 +145,12 @@
       counterGameInfo += 1;
     });
 
-    that.connection.on('objects', function(objects) {
-      that.gameInstance.engine.bodies = {};
-      for (var i in objects.snapshot.cars) {
-        var car = objects.snapshot.cars[i];
-        if (objects.myCar !== null &&
-            car.id === objects.myCar.id) {
-          // remove myCar from snapshot.cars
-          delete objects.snapshot.cars[i];
-        }
-        if (car.dead === false) {
-          // add the physical body
-          car.w = 1;
-          car.h = 0.5;
-          that.gameInstance.engine.createBody(car, car, 'car');
-        }
-      }
+    this.connection.on('objects', function(objects) {
 
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-      gameInstance.myCar = objects.myCar;
+      if (typeof gameInstance.userCommandManager !== 'undefined') {
+        gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
+      }
       gameInstance.items.projectiles = objects.projectiles;
       gameInstance.items.collisionPoints = objects.collisionPoints;
 
@@ -176,6 +159,7 @@
         var player = gameInstance.gameInfo[objects.myCar.id];
         that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
       }
+      that.updateEngineBodies(objects);
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
@@ -183,11 +167,33 @@
       socketReceived();
     });
 
-    that.connection.on('explosion', function(explosion) {
+    this.connection.on('explosion', function(explosion) {
       gameInstance.explosionManager.addExplosion(explosion);
     });
 
   }
+
+  SocketManager.prototype.updateEngineBodies = function(objects) {
+    var gameInstance = this.gameInstance;
+    var engine = this.gameInstance.engine;
+    var myCar = this.gameInstance.myCar;
+    engine.bodies = {};
+    for (var i in objects.snapshot.cars) {
+      var car = objects.snapshot.cars[i];
+      if (car.dead === false) {
+        // add the physical body
+        car.w = 1;
+        car.h = 0.5;
+        engine.createBody(car, car, 'car');
+      }
+    }
+    if (myCar !== null) {
+      myCar.w = 1;
+      myCar.h = 0.5;
+      engine.myCarBodyId = engine.createBody(myCar, myCar, 'car');
+    }
+    engine.loadStaticItems();
+  };
 
   SocketManager.prototype.ping = function() {
     var that = this;

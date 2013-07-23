@@ -104,9 +104,10 @@ GameServer.prototype.sendPositionsToPlayers = function() {
       if (!myCar) {
         console.error('sendPositionsToPlayers: Error retrieving player car');
       }
+      myCar.ack = this.ack[p.id];
     }
     var share = {
-      snapshot:       this.snapshot.getShared(p.client.id),
+      snapshot:       this.snapshot.getShared(p.id),
       myCar:          myCar,
       projectiles:    projectiles,
       collisionPoints:p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null,

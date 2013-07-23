@@ -22,19 +22,27 @@ html
       Karma.setGoogleAnalytics();
   body
     div#fb-root
-    div#camera-debug
-      div#botMenu
-    div#debug
+    #debug
+      #camera-debug
       #fps
       #ping
       #high-score
-      div(style="position: absolute; z-index:99999; top: 100px; width: 300px")
+      #debug-sockets.info sockets
+      #socketps.info
+    #options-container
+      #options-bar
+        #options-bar-text Options
+        #options-expanded
+        #options-folded
+      div(style="clear: both")
+      #options
+        div#botMenu
         div
-          input#interpolate(type="checkbox", autocomplete="off", checked="checked")
-          label(for="interpolate") interpolation
+          input#interpolate.nativeTouchEnabled(type="checkbox", autocomplete="off", checked="checked")
+          label.nativeTouchEnabled(for="interpolate") Ennemies interpolation
         div
-          input#show_local_physics_engine_bodies(type="checkbox")
-          label(for="show_local_physics_engine_bodies") Show local physics engine bodies
+          input#show_local_physics_engine_bodies.nativeTouchEnabled(type="checkbox")
+          label.nativeTouchEnabled(for="show_local_physics_engine_bodies") Show local physics engine bodies
     canvas#game-canvas
     img#loadingImage(src='/images/loading.gif')
     div#loadingInfo

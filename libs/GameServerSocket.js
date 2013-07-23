@@ -2,7 +2,7 @@ var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
 var Player = require('./classes/Player');
 var Car = require('./classes/Physics/Bodies/Car');
-var UserCommandManager = require('./UserCommandManager');
+var UserCommandManager = require('./UserCommandManager_server');
 
 var GameServerSocket = function(mapManager) {
   this.homeClientIdCount = 0;
@@ -122,7 +122,10 @@ GameServerSocket.prototype.registerMethods = function(client) {
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
       var configShared = {
         physicalTicksPerSecond: CONFIG.physicalTicksPerSecond,
-        positionsSocketEmitsPerSecond: CONFIG.positionsSocketEmitsPerSecond
+        positionsSocketEmitsPerSecond: CONFIG.positionsSocketEmitsPerSecond,
+        myCarSpeed: CONFIG.myCarSpeed,
+        myCarTurnSpeed: CONFIG.myCarTurnSpeed,
+        userCommandRepeatsPerSecond: CONFIG.userCommandRepeatsPerSecond
       };
       client.emit('init', {
         worldInfo: worldInfo,
@@ -161,7 +164,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('disconnect', function(socket) {
     try {
       console.info('client left:', client.id);
-      cancelAllUserCommands();
+      client.userCommandManager.cancelAllUserCommands();
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
@@ -178,6 +181,14 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('user_command', function(userCmd) {
     try {
       client.userCommandManager.onUserCmdReceived(userCmd);
+    } catch (e) {
+      console.error(e.stack);
+    }
+  });
+
+  client.on('shoot', function(state) {
+    try {
+      client.userCommandManager.shoot(state);
     } catch (e) {
       console.error(e.stack);
     }

@@ -5,6 +5,7 @@ var UserCommand = function(action, state, ts) {
   this.state = state;
   this.ts = ts;
   this.seqNum = ++G_userCommandCounter;
+  this.iteration = 0; // used only if state === 'start'
   return this;
 }
 
