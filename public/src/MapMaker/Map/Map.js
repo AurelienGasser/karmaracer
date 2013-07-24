@@ -102,11 +102,16 @@
         var sItem = map.staticItems[i];
         var sItemFull = that.itemsByName[sItem.name];
 
+        if (!sItem.position || !sItem.size) {
+          continue;
+        }
         var mapItem = that.createMapItem(sItemFull);
+
         mapItem.position.x = sItem.position.x * that.gScale;
         mapItem.position.y = sItem.position.y * that.gScale;
         mapItem.size.w = sItem.size.w * that.gScale;
         mapItem.size.h = sItem.size.h * that.gScale;
+
       }
 
       // if (!KLib.isUndefined(that.svgTag)){
@@ -242,8 +247,8 @@
       var sourceMapItem = that.itemsByName[item.name];
       Karma.Log.info('add map item', sourceMapItem);
       var mapItem = that.createMapItem(sourceMapItem);
-      mapItem.size.w = sourceMapItem.size.w * that.gScale;
-      mapItem.size.h = sourceMapItem.size.h * that.gScale;
+      mapItem.size.w = sourceMapItem.size.w;
+      mapItem.size.h = sourceMapItem.size.h;
       that.svgRaphaelAddItem(mapItem);
     });
 

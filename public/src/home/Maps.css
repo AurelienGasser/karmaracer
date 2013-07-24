@@ -1,6 +1,6 @@
 .translation{transition:0.25s ease-in-out;}
 #maps{margin:0px;padding:0px;padding-top:30px;background-color:#fefefe;vertical-align:top;width:auto;white-space:nowrap;}#maps li.centerFocus{transition:0.25s ease-in-out;font-size:3em;}
-#maps li{transition:0.25s ease-in-out;vertical-align:top;list-style:none;display:inline-block;min-width:400px;text-align:left;margin:5px;padding:0px;}#maps li div.info{text-align:left;border-radius:5px;vertical-align:top;width:256px;max-width:256px;min-width:256px;}
+#maps li{transition:0.25s ease-in-out;vertical-align:top;list-style:none;display:inline-block;min-width:400px;text-align:left;margin:5px;padding:0px;min-height:270px;}#maps li div.info{text-align:left;border-radius:5px;vertical-align:top;width:256px;max-width:256px;min-width:256px;}
 #maps li a{text-decoration:none;color:#333;}#maps li a div.name{vertical-align:top;background:#eee;border-radius:5px 5px 0px 0px;text-align:center;font-size:2.0em;padding:10px;}
 #maps li a div.miniMap,#maps li a div.info{display:inline-block;width:auto;}
 #maps li a div.box{text-align:left;vertical-align:top;border:1px solid #eee;border-radius:5px;min-height:220px;}

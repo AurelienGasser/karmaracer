@@ -1,0 +1,1 @@
+{"name":"hd","enable":true,"size":{"w":64,"h":32},"background":{"path":"/sprites/bg_grass1.png","name":"grass"},"staticItems":[{"name":"grass","position":{"x":-1,"y":-1},"size":{"w":0,"h":0}},{"name":"stone","position":{"x":33.125,"y":18.125},"size":{"w":18,"h":12}},{"name":"house_hd1","position":{"x":33.65625,"y":18.46875},"size":{"w":14,"h":11}}]}
