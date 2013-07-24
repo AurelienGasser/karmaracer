@@ -186,16 +186,36 @@
       // console.log(this.gameInstance.myBody.oldPosition);
       // debugger;
 
+
     if(this.isMiniMap === false){
-      console.log(this.gameInstance.myBody.oldPosition.x);
-      var myPos = this.scalePos(this.gameInstance.myBody.oldPosition);
+      var pos;
+      // console.log(this.gameInstance.myBody.oldPosition.x);
+      // var oldpos = this.gameInstance.myBody.oldPosition;
+      var oldpos = this.scalePos(this.gameInstance.bodyRatioStartPosition);
+      // var myPos = this.scalePos(this.gameInstance.myBody.oldPosition);
       if (!KLib.isUndefined(this.gameInstance.deltaX) && this.gameInstance.deltaX > 0){
         // console.log('delta X', this.gameInstance.deltaX * this.gScaleValue);
-         myPos.x += (this.gameInstance.deltaX * this.gameInstance.ratioCounter);
+        var delta = this.gameInstance.deltaX * this.gameInstance.ratioCounter;
+         pos = {
+           x : oldpos.x +  (delta) * this.gScaleValue,
+           y : oldpos.y,
+           r : oldpos.r
+         };
+         // this.gameInstance.myCar.x = this.gameInstance.myBody.oldPosition.x + delta;
+         this.gameInstance.myCar.x = this.gameInstance.bodyRatioStartPosition.x + delta;
+         // console.log('carX', this.gameInstance.myCar.x, this.gameInstance.ratioCounter, delta, oldpos.x);
+         // console.log(pos.x);
+
+      } else {
+        pos = oldpos;
       }
+      // console.log(myPos.x, this.gameInstance.ratioCounter, this.gameInstance.syncCounter);
+      //
+      // console.log(this.gameInstance.myCar, pos, oldpos);
+
       this.gameInstance.syncCounter += 1;
       this.gameInstance.ratioCounter += 1;
-      this._drawCar(ctx, this.gameInstance.myCar, myPos);
+      this._drawCar(ctx, this.gameInstance.myCar, pos);
 
       }
     }

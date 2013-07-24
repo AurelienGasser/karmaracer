@@ -33,6 +33,9 @@
     this.syncCounter = 0;
     this.lastSyncCounter = 30;
     this.ratioCounter = 0;
+    this.bodyRatioStartPosition = {
+      x : 0, y : 0,r:0
+    };
     this.chat = new Karma.ChatController();
   }
 

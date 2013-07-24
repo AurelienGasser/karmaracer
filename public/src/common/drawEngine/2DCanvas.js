@@ -157,6 +157,7 @@
       var newCenter = this.oldCenter;
       if (this.gameInstance.myCar) {
         var pos = this.scalePos(this.gameInstance.myCar);
+        // console.log('cam', pos.x);
         newCenter = {
           x: pos.x,
           y: pos.y
@@ -361,8 +362,8 @@
           if (stepCount % 2 === 0){
             engine.step();
             var body = engine.bodies[engine.myCarBodyId];
-            this.gameInstance.myCar.x = body.x;
-            this.gameInstance.myCar.y = body.y;
+            // this.gameInstance.myCar.x = body.x;
+            // this.gameInstance.myCar.y = body.y;
           }
           // stepCount += 1;
           this.draw();

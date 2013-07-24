@@ -148,18 +148,18 @@ var forcount = 0;
       this.gameInstance.lastSyncCounter = this.gameInstance.syncCounter;
       this.gameInstance.syncCounter = 0;
       this.gameInstance.deltaX = 0;
-
+      this.gameInstance.bodyRatioStartPosition = {x : myCar.x, y : myCar.y, r:0};
 
       if (myCar === null) {
         this.gameInstance.myCar = null;
         return;
       }
-      if (this.gameInstance.myCar !== null) {
-        var diffx = myCar.x - this.gameInstance.myCar.x;
-        var diffy = myCar.y - this.gameInstance.myCar.y;
-        var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);
-        // console.log('error: ', diffx.toFixed(1));
-      }
+      // if (this.gameInstance.myCar !== null) {
+      //   var diffx = myCar.x - this.gameInstance.myCar.x;
+      //   var diffy = myCar.y - this.gameInstance.myCar.y;
+      //   var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);
+      //   // console.log('error: ', diffx.toFixed(1));
+      // }
       this.gameInstance.myCar = myCar;
       // replay user cmds
       for (var seqNumToAck in this.commandsToAck) {
