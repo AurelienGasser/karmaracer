@@ -8,6 +8,7 @@
     this.gameInstance = gameInstance;
     this.init_done = false;
     this.socketCounter = 0;
+    this.lastSocketCounter = 15;
     this.timestamp = new Date().getTime();
     this.msg_id = 0;
     this.gameInstance.bodies = [];
@@ -41,6 +42,7 @@
       if (now - that.timestamp > 1000) {
         that.timestamp = now;
         that.$socketps.html('socket/ps: ' + that.socketCounter);
+        that.lastSocketCounter = that.socketCounter;
         that.socketCounter = 0;
       }
       that.socketCounter += 1;
@@ -160,6 +162,12 @@
         that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
       }
       that.updateEngineBodies(objects);
+
+      var engine = gameInstance.engine;
+      var body = engine.bodies[engine.myCarBodyId];
+      gameInstance.myBody = body;
+
+
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;

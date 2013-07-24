@@ -6,7 +6,7 @@
     this.canvasID = canvasID;
     this.timer = new Date().getTime();
     this.frames = 0;
-    this.fps = undefined; // will be defined by requestAnimFrame
+    this.fps = 30; // will be defined by requestAnimFrame
     this.debugDraw = false;
     this.carFlameTicks = {};
     this.isMiniMap = false;
@@ -344,6 +344,8 @@
     // this.drawCollisionPoints();
   };
 
+  var stepCount = 0;
+
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
 
@@ -354,7 +356,17 @@
     } else {
       this.getInterpData();
       if (this.interpData.ready) {
-        this.draw();
+        var engine = this.gameInstance.engine;
+        if (typeof engine !== 'undefined') {
+          if (stepCount % 2 === 0){
+            engine.step();
+            var body = engine.bodies[engine.myCarBodyId];
+            this.gameInstance.myCar.x = body.x;
+            this.gameInstance.myCar.y = body.y;
+          }
+          // stepCount += 1;
+          this.draw();
+        }
       }
     }
     this.frames++;

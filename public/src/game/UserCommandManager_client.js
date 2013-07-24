@@ -1,8 +1,14 @@
+var forcount = 0;
 (function() {
+
+
   "use strict";
 
   function UserCommandManager(gameInstance) {
+
     this.gameInstance = gameInstance;
+
+
     this.intervals = {};
     this.actionActive = {};
     this.commandsToAck = {};
@@ -33,23 +39,44 @@
     return this;
   }
 
-
   UserCommandManager.prototype.myCarAccelerate = function(speed) {
     var myCar = this.gameInstance.myCar;
     var engine = this.gameInstance.engine;
     var body = engine.bodies[engine.myCarBodyId];
-    body.moveToPosition = {
-      x: myCar.x + speed * Math.cos(myCar.r),
-      y: myCar.y + speed * Math.sin(myCar.r)
+    engine.bodies[engine.myCarBodyId].oldPos = {
+      x : body.x,
+      y : body.y,
+      r : body.r
     };
-    body.doMove();
-    this.gameInstance.myCar.x = body.x;
-    this.gameInstance.myCar.y = body.y;
+    body.accelerate(this.gameInstance.config.myCarSpeed);
+    console.log(this.gameInstance.drawEngine.fps);
+
+    var sps = this.gameInstance.socketManager.lastSocketCounter;
+    var fps = this.gameInstance.drawEngine.fps;
+
+    var deltaX = body.moveToPosition.x = body.x;
+    var ratio = this.gameInstance.lastSyncCounter - this.gameInstance.syncCounter;
+    this.gameInstance.deltaX = this.gameInstance.config.myCarSpeed / ratio;
+    this.gameInstance.ratioCounter = 0;
+    // console.log(body.oldPos, 'sps', sps, fps, 'deltaX',deltaX, ratio, this.gameInstance.deltaX, 'mov to x', body.moveToPosition.x, body.x);
+    console.log('ratio', ratio, this.gameInstance.deltaX);
+
+
+
+    // body.doMove();
+    // this.gameInstance.myCar.x = body.x;
+    // this.gameInstance.myCar.y = body.y;
+    // console.log(++forcount + ' ' + (Date.now() % 1000));
   };
 
   UserCommandManager.prototype.myCarTurn = function(speed, isTurningLeft) {
-    var myCar = this.gameInstance.myCar;
-    myCar.r += (isTurningLeft ? 1 : -1) * speed;
+    // var myCar = this.gameInstance.myCar;
+    // myCar.r += (isTurningLeft ? 1 : -1) * speed;
+    var side = (isTurningLeft ? 1 : -1);
+    var engine = this.gameInstance.engine;
+    var body = engine.bodies[engine.myCarBodyId];
+    body.turn(side);
+
   };
 
   UserCommandManager.prototype._createUserCommand = function(action, state) {
@@ -67,12 +94,12 @@
         // don't create user command: we are already doing this action
         return;
       } else {
-        this._createUserCommand(action, state);
         this.actionActive[action] = true;
+        this._createUserCommand(action, state);
       }
     } else if (state === 'end') {
-      this._createUserCommand(action, state);
       this.actionActive[action] = false;
+      this._createUserCommand(action, state);
     }
   };
 
@@ -90,13 +117,15 @@
   UserCommandManager.prototype.scheduleAction = function(userCmd) {
     var userCmdFun = this.launcher(userCmd);
     if (userCmd.state === 'start') {
+      // console.log('start' + ' ' + (Date.now() % 1000));
       if (userCmd.action === 'shoot') {
         userCmdFun();
       } else {
         userCmdFun();
-        this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / this.gameInstance.config.userCommandRepeatsPerSecond);
+        // this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / this.gameInstance.config.userCommandRepeatsPerSecond);
       }
     } else if (userCmd.state === 'end') {
+      // console.log('end' + ' ' + (Date.now() % 1000));
       if (userCmd.action === 'shoot') {
         this.gameInstance.myCar.shootingWithWeapon = false;
       } else {
@@ -111,36 +140,48 @@
     delete this.intervals[action];
   };
 
+  var pouet = 0;
   UserCommandManager.prototype.synchronizeMyCar = function(myCar) {
-    if (myCar === null) {
-      this.gameInstance.myCar = null;
-      return;
-    }
-    if (this.gameInstance.myCar !== null) {
-      var diffx = myCar.x - this.gameInstance.myCar.x;
-      var diffy = myCar.y - this.gameInstance.myCar.y;
-      var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);
-      // console.log('error: ', diffx.toFixed(1));
-    }
-    this.gameInstance.myCar = myCar;
-    // replay user cmds
-    for (var seqNumToAck in this.commandsToAck) {
-      var commandToAck = this.commandsToAck[seqNumToAck];
-      var commandAck = myCar.ack[commandToAck.action];
-      if (typeof commandAck === 'undefined') {
-        // not ack yet
-      } else {
-        if (commandToAck.seqNum < commandAck.seqNum) {
-          // action finished
-          delete this.commandsToAck[seqNumToAck];
-        } else if (commandToAck.seqNum == commandAck.seqNum) {
-          // not finished
+    if (pouet % 10 === 0) {
+      console.log('synchronize');
+
+      this.gameInstance.lastSyncCounter = this.gameInstance.syncCounter;
+      this.gameInstance.syncCounter = 0;
+      this.gameInstance.deltaX = 0;
+
+
+      if (myCar === null) {
+        this.gameInstance.myCar = null;
+        return;
+      }
+      if (this.gameInstance.myCar !== null) {
+        var diffx = myCar.x - this.gameInstance.myCar.x;
+        var diffy = myCar.y - this.gameInstance.myCar.y;
+        var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);
+        // console.log('error: ', diffx.toFixed(1));
+      }
+      this.gameInstance.myCar = myCar;
+      // replay user cmds
+      for (var seqNumToAck in this.commandsToAck) {
+        var commandToAck = this.commandsToAck[seqNumToAck];
+        var commandAck = myCar.ack[commandToAck.action];
+        if (typeof commandAck === 'undefined') {
+          // not ack yet
         } else {
-          // command not ackd yet
+          if (commandToAck.seqNum < commandAck.seqNum) {
+            // action finished
+            delete this.commandsToAck[seqNumToAck];
+          } else if (commandToAck.seqNum == commandAck.seqNum) {
+            // not finished
+          } else {
+            // command not ackd yet
+          }
         }
       }
+      var snapAck = myCar.ack;
+
     }
-    var snapAck = myCar.ack;
+    ++pouet;
   };
 
   Karma.UserCommandManager_client = UserCommandManager;

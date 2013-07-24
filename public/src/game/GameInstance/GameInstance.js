@@ -30,6 +30,9 @@
     this.setUIEvents();
     this.isMobile = false;
 
+    this.syncCounter = 0;
+    this.lastSyncCounter = 30;
+    this.ratioCounter = 0;
     this.chat = new Karma.ChatController();
   }
 
@@ -57,6 +60,7 @@
     };
 
     that.drawEngine = Karma.getDrawEngine("game-canvas", defaultDrawEngineType, that.items, that.worldInfo, 32, that, that.socketManager.connection, canvasReady);
+
     that.explosionManager.start();
 
     if (that.isMobile === false) {

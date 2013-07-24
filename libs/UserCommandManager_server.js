@@ -40,10 +40,12 @@ UserCommandManager.prototype.updateAck = function(userCmd) {
 UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
   if (userCmd.state === 'start' && typeof this.intervals[userCmd.action] === 'undefined') {
     var userCmdFun = this.userCommandLauncher(userCmd);
+    // console.log('start', (Date.now() % 1000))
     userCmdFun();
-    this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
+    // this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
     this.updateAck(userCmd);
   } else if (userCmd.state === 'end') {
+    // console.log('end', (Date.now() % 1000))
     this.cancelUserCommand(userCmd.action);
     this.updateAck(userCmd);
   }

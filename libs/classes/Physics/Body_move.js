@@ -5,6 +5,8 @@ var COLLISION_DISTANCE_TRESHOLD = 5e-10;
 
 var Body_move = {};
 
+var forcpt = 0;
+
 Body_move.getTransientPosition = function() {
   return {
     x: this.moveToPosition !== null && !KLib.isUndefined(this.moveToPosition.x) ? this.moveToPosition.x : this.x,
@@ -20,6 +22,9 @@ Body_move.accelerate = function(ac) {
     y: pos.y + ac * Math.sin(pos.r)
   };
   this.moveTo(newpos);
+  // this.forcpt = this.forcpt ? this.forcpt + 1 : 1;
+  forcpt += 1;
+  console.log(forcpt, (Date.now() % 1000), newpos);
 }
 
 Body_move.accelerateAndTurn = function(ac, a) {
