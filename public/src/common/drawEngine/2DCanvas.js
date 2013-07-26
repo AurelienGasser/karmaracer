@@ -74,8 +74,8 @@
     for (var itemName in this.worldInfo.staticItemTypes) {
       var item = this.worldInfo.staticItemTypes[itemName];
       item.img = new Image();
-      item.img.src = item.image.path;    
-      item.img.onload = onLoadImage.bind(item);      
+      item.img.src = item.image.path;
+      item.img.onload = onLoadImage.bind(item);
     }
 
   };
@@ -300,6 +300,11 @@
     if (that.gameInstance.engine.bodies !== null) {
       for (var id in that.gameInstance.engine.bodies) {
         var c = that.gameInstance.engine.bodies[id];
+        if (id === this.gameInstance.engine.myCarBodyId + "") {
+          ctx.strokeStyle = "#FF0000";
+        } else {
+          ctx.strokeStyle = "#00FF00";
+        }
         c = {
           x: c.x * that.gScaleValue,
           y: c.y * that.gScaleValue,
