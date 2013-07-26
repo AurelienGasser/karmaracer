@@ -45,6 +45,7 @@
     body.doMove();
     this.gameInstance.myCar.x = body.x;
     this.gameInstance.myCar.y = body.y;
+    this.gameInstance.myCar.r = body.r;
   };
 
   UserCommandManager.prototype.myCarTurn = function(speed, isTurningLeft) {
@@ -119,10 +120,17 @@
     if (this.gameInstance.myCar !== null) {
       var diffx = myCar.x - this.gameInstance.myCar.x;
       var diffy = myCar.y - this.gameInstance.myCar.y;
-      var diff = Math.sqrt(diffx  * diffx + diffy * diffy).toFixed(1);
-      // console.log('error: ', diffx.toFixed(1));
+      var diff = Math.sqrt(diffx  * diffx + diffy * diffy);
+      // console.log('error: ', diffx.toFixed(2));
     }
     this.gameInstance.myCar = myCar;
+    var engine = this.gameInstance.engine;
+    var body = engine.bodies[engine.myCarBodyId];
+    if (body) {
+      body.x = myCar.x;
+      body.y = myCar.y;
+      body.r = myCar.r;
+    }
     // replay user cmds
     for (var seqNumToAck in this.commandsToAck) {
       var commandToAck = this.commandsToAck[seqNumToAck];
