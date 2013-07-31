@@ -10,7 +10,6 @@
     this.socketCounter = 0;
     this.timestamp = new Date().getTime();
     this.msg_id = 0;
-    this.gameInstance.bodies = [];
 
     var that = this;
 
@@ -146,7 +145,6 @@
     });
 
     this.connection.on('objects', function(objects) {
-
       gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
       if (typeof gameInstance.userCommandManager !== 'undefined') {
         gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
@@ -159,7 +157,6 @@
         var player = gameInstance.gameInfo[objects.myCar.id];
         that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
       }
-      that.updateEngineBodies(objects);
 
       $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
         return list ? list.length : 0;
@@ -170,30 +167,8 @@
     this.connection.on('explosion', function(explosion) {
       gameInstance.explosionManager.addExplosion(explosion);
     });
-
+    //
   }
-
-  SocketManager.prototype.updateEngineBodies = function(objects) {
-    var gameInstance = this.gameInstance;
-    var engine = this.gameInstance.engine;
-    var myCar = this.gameInstance.myCar;
-    engine.bodies = {};
-    for (var i in objects.snapshot.cars) {
-      var car = objects.snapshot.cars[i];
-      if (car.dead === false) {
-        // add the physical body
-        car.w = 1;
-        car.h = 0.5;
-        engine.createBody(car, car, 'car');
-      }
-    }
-    if (myCar !== null) {
-      myCar.w = 1;
-      myCar.h = 0.5;
-      engine.myCarBodyId = engine.createBody(myCar, myCar, 'car');
-    }
-    engine.loadStaticItems();
-  };
 
   SocketManager.prototype.ping = function() {
     var that = this;

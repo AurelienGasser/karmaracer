@@ -1,30 +1,49 @@
 var config = require('../config');
+var ucu = require('./classes/UserCommandUtils');
 
 var UserCommandManager = function(client) {
   this.client = client;
   this.intervals = {};
+  this.userCmds = {};
   var that = this;
   this.toAck = {};
   this.userCmdInnerFunctions = {
-    shoot: function(car) {
+    shoot: function(userCmd, car) {
       car.playerCar.shoot();
     },
-    forward: function(car) {
-      car.accelerate(config.myCarSpeed);
+    forward: function(userCmd, car) {
+      that.forwardBackward(userCmd, car)
     },
-    backward: function(car) {
-      car.accelerate(-config.myCarSpeed / 2);
+    backward: function(userCmd, car) {
+      that.forwardBackward(userCmd, car)
     },
-    left: function(car) {
-      var isGoingBackward = (typeof that.intervals.backward !== 'undefined');
-      car.turn(isGoingBackward);
+    left: function(userCmd, car) {
+      that.turn(userCmd, car);
     },
-    right: function(car) {
-      var isGoingBackward = (typeof that.intervals.backward !== 'undefined');
-      car.turn(!isGoingBackward);
+    right: function(userCmd, car) {
+      that.turn(userCmd, car);
     },
   };
   return this;
+}
+
+UserCommandManager.prototype.forwardBackward = function(userCmd, car) {
+  var now = Date.now();
+  var distance = ucu.getDistanceOrAngleToAdd(now, userCmd, config.myCarSpeed);
+  distance = userCmd.action === 'forward' ? distance : -distance / 2;
+  car.accelerate(distance);
+  userCmd.doneTo = now;
+}
+
+UserCommandManager.prototype.turn = function(userCmd, car) {
+  var now = Date.now();
+  var isGoingBackward = (typeof this.intervals.backward !== 'undefined');
+  var angularSpeed = config.myCarTurnSpeed;
+  angularSpeed = userCmd.action === 'left' ? angularSpeed : -angularSpeed;
+  angularSpeed = isGoingBackward ? angularSpeed : -angularSpeed;
+  var angleToAdd = ucu.getDistanceOrAngleToAdd(now, userCmd, angularSpeed);
+  car.turn(angleToAdd);
+  userCmd.doneTo = now;
 }
 
 UserCommandManager.prototype.updateAck = function(userCmd) {
@@ -39,9 +58,12 @@ UserCommandManager.prototype.updateAck = function(userCmd) {
 
 UserCommandManager.prototype.onUserCmdReceived = function(userCmd) {
   if (userCmd.state === 'start' && typeof this.intervals[userCmd.action] === 'undefined') {
+    var now = Date.now();
+    userCmd.doneTo = now;
     var userCmdFun = this.userCommandLauncher(userCmd);
     userCmdFun();
     this.intervals[userCmd.action] = setInterval(userCmdFun, 1000 / config.userCommandRepeatsPerSecond);
+    this.userCmds[userCmd.action] = userCmd;
     this.updateAck(userCmd);
   } else if (userCmd.state === 'end') {
     this.cancelUserCommand(userCmd.action);
@@ -61,8 +83,7 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
         typeof client.gameServer !== 'undefined' &&
         client.gameServer.doStep) {
           var car = client.player.playerCar.car;
-          userCmdInnerFun(car);
-          ++userCmd.iteration;
+          userCmdInnerFun(userCmd, car);
     } else {
       // player car is not ready for executing user command
       if (typeof that.intervals[userCmd.action] !== 'undefined') {
@@ -73,8 +94,12 @@ UserCommandManager.prototype.userCommandLauncher = function(userCmd) {
 }
 
 UserCommandManager.prototype.cancelUserCommand = function(action) {
+  var car = this.client.player.playerCar.car;
+  this.userCmds[action].stopServerTs = Date.now();
+  this.userCmdInnerFunctions[action](this.userCmds[action], car);
   clearInterval(this.intervals[action]);
   delete this.intervals[action];
+  delete this.userCmds[action];
   if (action == 'shoot' && this.client.player && this.client.player.playerCar) {
     this.client.player.playerCar.weaponShootOff();
   }

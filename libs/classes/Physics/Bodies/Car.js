@@ -38,10 +38,6 @@ Car.prototype.goToFreeLandingPoint = function() {
   }
 };
 
-Car.prototype.turn = function(turningRight) {
-  this.base.turn.bind(this)((turningRight ? 1 : -1) * config.myCarTurnSpeed);
-}
-
 Car.prototype.receiveHit = function() {
   this.playerCar.receiveHit();
 }

@@ -304,10 +304,13 @@
     this.drawBodies(this.ctx);
     this.drawOutsideWalls(this.ctx);
     this.drawStaticItems(this.ctx);
+    if ($('#show_most_up_to_date_myCar').is(':checked')) {
+      this.drawMostUpToDateMyCar(this.ctx);
+    }
+    this.drawCars(this.ctx);
     if ($('#show_local_physics_engine_bodies').is(':checked')) {
       this.drawLocalPhysicsEngineBodies(this.ctx);
     }
-    this.drawCars(this.ctx);
     this.drawExplosions(this.ctx);
     // this.drawBullets(this.ctx);
     // this.drawRockets(this.ctx);

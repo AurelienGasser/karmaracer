@@ -8,10 +8,10 @@ var Body = function() {
   return this;
 }
 
-Body.prototype.initialize = function(engine, position, size) {
+Body.prototype.initialize = function(engine, position, size, reuseId) {
   this.engine = engine;
   this.gScale = this.engine.gScale;
-  this.id = G_bodyID++;
+  this.id = reuseId || G_bodyID++;
   this.x = position.x;
   this.y = position.y;
   this.w = size.w;

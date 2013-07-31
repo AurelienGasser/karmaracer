@@ -174,7 +174,20 @@
       for (var j in cars) {
         if (typeof this.interpData.snapBefore.cars[j] !== 'undefined' &&
             typeof this.interpData.snapAfter.cars[j] !== 'undefined') {
-              var pos = this.scalePos(this.interpPosOfCar(j));
+              var car = this.interpPosOfCar(j);
+              var id = this.interpData.snapAfter.cars[j].id;
+              car.id = id;
+
+              var player = this.gameInstance.gameInfo[id];
+              if (typeof player === 'undefined') {
+                // we don't have enough data to draw this car
+                continue;
+              }
+              var carImage = this.cars[player.carImageName];
+              car.w = carImage.w;
+              car.h = carImage.h;
+              this.gameInstance.engine.replaceCarBody(car);
+              var pos = this.scalePos(car);
               this._drawCar(ctx, cars[j], pos);
         } else {
           // we don't have enough data to draw this car yet
@@ -182,8 +195,19 @@
       }
     }
     if (this.gameInstance.myCar !== null) {
+      // execute user commands to get precise position
+      var ucc = this.gameInstance.userCommandManager;
+      var cc = ucc.currentCommands;
+      for (var action in cc) {
+        var userCmd = cc[action];
+        if (userCmd !== null) {
+          ucc.userCmdInnerFunctions[action](userCmd);
+        }
+      }
+      // draw the car
       var myPos = this.scalePos(this.gameInstance.myCar);
       this._drawCar(ctx, this.gameInstance.myCar, myPos);
     }
   };
+
 }(Karma.Engine2DCanvas));

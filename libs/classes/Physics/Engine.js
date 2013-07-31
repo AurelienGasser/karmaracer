@@ -2,7 +2,6 @@ var KLib = require('./../KLib');
 var Body = require('./Body');
 var Engine_collisions = require('./Engine_collisions');
 
-var G_bodyID = 0;
 var Engine = function(size, map) {
   this.stepNum = 0;
   this.stepTs = undefined;
@@ -25,12 +24,15 @@ Engine.prototype.addBody = function(body) {
   this.bodies[body.id] = body;
 }
 
-Engine.prototype.createBody = function(position, size, name) {
+Engine.prototype.createBody = function(position, size, name, reuseId) {
   var b, id;
   b = new Body();
-  b.initialize(this, position, size);
+  b.initialize(this, position, size, reuseId);
   if (!KLib.isUndefined(name)) {
     b.name = name;
+  }
+  if (typeof position.id !== 'undefined') {
+    b.oldId = position.id;
   }
   this.bodies[b.id] = b;
   id = b.id;
@@ -147,6 +149,17 @@ Engine.prototype.loadStaticItems = function() {
       this.staticItemTypes[itemJSON.name] = itemJSON;
     }
   };
+}
+
+Engine.prototype.replaceCarBody = function(car) {
+  if (typeof this.bodies[car.id] === 'undefined') {
+    this.createBody(car, { w: car.w, h: car.h }, 'car', car.id);
+  } else {
+    this.bodies[car.id].x = car.x;
+    this.bodies[car.id].y = car.y;
+    this.bodies[car.id].r = car.r;
+  }
+  return car.id;
 }
 
 KLib.extendPrototype(Engine, Engine_collisions);
