@@ -10,11 +10,14 @@
 
   var start = function() {
     Karma.UserVoice();
+
+
     var $mapsContainer = $('#mapsContainer');
     var o = [];
     o.push('<div id="titleContainer"><h1>', $.i18n.prop('home_clickonmap'), '</h1></div>');
     o.push('<ul id="maps"></ul>');
     $mapsContainer.append(o.join(''));
+
 
     var host = window.location.hostname;
     var connection = io.connect(host, {

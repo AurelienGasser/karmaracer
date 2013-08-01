@@ -11,13 +11,27 @@
     var that = this;
     var opacityStart = 1;
     var opacityDrag = 0.5;
-    var c = this.R.rect(item.position.x, item.position.y, item.size.w, item.size.h).attr({
-      //fill: "hsb(.8, 1, 1)",
-      fill: "url('" + item.image.src + "')",
-      stroke: "none",
-      opacity: opacityStart,
-      cursor: "move"
-    });
+
+    var c;
+    if (item.patternType === 'none') {
+      c = this.R.image(item.image.src, item.position.x, item.position.y, item.size.w, item.size.h).attr({
+        cursor: 'move'
+      });
+
+      var stroke = this.R.rect(item.position.x, item.position.y, item.size.w, item.size.h).attr({
+        stroke: 'red'
+      });
+
+    } else {
+      c = this.R.rect(item.position.x, item.position.y, item.size.w, item.size.h).attr({
+        //fill: "hsb(.8, 1, 1)",
+        fill: "url('" + item.image.src + "')",
+        stroke: "none",
+        opacity: opacityStart,
+        cursor: "move"
+      });
+    }
+
     var size = 32;
 
     var s = this.R.rect(item.position.x + item.size.w - size, item.position.y + item.size.h - size, size, size).attr({
@@ -106,6 +120,15 @@
         item.position.y = 0;
       }
 
+      console.log(stroke);
+      if (stroke) {
+        stroke.attr({
+          x: item.position.x,
+          y: item.position.y
+        });
+      }
+
+
 
     };
     var up = function() {
@@ -137,7 +160,14 @@
       });
       item.size.w = this.box.attr("width");
       item.size.h = this.box.attr("height");
+      console.log(stroke);
+      if (stroke) {
+        stroke.attr({
+          width: item.size.w,
+          height: item.size.h
+        });
 
+      }
     };
     // rstart and rmove are the resize functions;
     $(c.node).click(function(e) {
@@ -158,6 +188,8 @@
     c.sizer = s;
     s.drag(rmove, rstart);
     s.box = c;
+    s.stroke = stroke;
+
     return c;
   };
 

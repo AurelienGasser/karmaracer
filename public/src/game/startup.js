@@ -2,6 +2,7 @@
 
 (function() {
   "use strict";
+
   Modernizr.load([{
       complete: function() {
         // Karma.Loading.append('start');

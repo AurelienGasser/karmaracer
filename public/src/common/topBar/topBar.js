@@ -2,6 +2,28 @@
   "use strict";
   /*global GKarmaOptions*/
 
+
+
+  var pfx = ["webkit", "moz", "ms", "o", ""];
+
+  function RunPrefixMethod(obj, method) {
+    var p = 0,
+      m, t;
+    while (p < pfx.length && !obj[m]) {
+      m = method;
+      if (pfx[p] == "") {
+        m = m.substr(0, 1).toLowerCase() + m.substr(1);
+      }
+      m = pfx[p] + m;
+      t = typeof obj[m];
+      if (t != "undefined") {
+        pfx = [pfx[p]];
+        return (t == "function" ? obj[m]() : obj[m]);
+      }
+      p++;
+    }
+  }
+
   function getPageName() {
     var url = document.URL;
     var list = url.split('/');
@@ -40,6 +62,11 @@
       o.push('<li id="topShoping" class="topBarIcon"><a href="/marketplace"><img src="/images/iconShoping.png" id="iconShoping" title="', $.i18n.prop('topbar_shoping'), '"/></a></li>');
     }
 
+
+    o.push('<li id="topFullScreen" class="topBarIcon"><img src="/images/iconFullScreen.png"/>');
+    o.push('</li>');
+
+
     o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="', $.i18n.prop('topbar_help'), '"/>');
     o.push('<div id="keys"></div>');
     o.push('</li>');
@@ -68,11 +95,20 @@
       connection.emit('updatePlayerNameTopBar', name);
     });
 
-    connection.emit('getMyInfo', function(err, user){
+    connection.emit('getMyInfo', function(err, user) {
       setKarma(user);
     });
 
     setPlayerNameValue($playerName);
+
+    $('#topFullScreen').click(function() {
+      if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
+        RunPrefixMethod(document, 'CancelFullScreen');
+      } else {
+        RunPrefixMethod($('body')[0], 'RequestFullScreen');
+      }
+
+    });
 
     loginZone.children().hide();
     Karma.TopBar.show();
@@ -127,7 +163,7 @@
     setTopBar: setTopBar,
     show: show,
     getHelps: getHelps,
-    setKarma : setKarma
+    setKarma: setKarma
   };
 
 }());
