@@ -62,10 +62,10 @@
       o.push('<li id="topShoping" class="topBarIcon"><a href="/marketplace"><img src="/images/iconShoping.png" id="iconShoping" title="', $.i18n.prop('topbar_shoping'), '"/></a></li>');
     }
 
-
-    o.push('<li id="topFullScreen" class="topBarIcon"><img src="/images/iconFullScreen.png"/>');
-    o.push('</li>');
-
+    if (page !== '') {
+      o.push('<li id="topFullScreen" class="topBarIcon"><img src="/images/iconFullScreen.png" title="', $.i18n.prop('topbar_toggleFullScreen'), '"/>');
+      o.push('</li>');
+    }
 
     o.push('<li id="topHelp"><img src="/images/iconHelp.png" id="iconHelp" title="', $.i18n.prop('topbar_help'), '"/>');
     o.push('<div id="keys"></div>');
@@ -104,8 +104,10 @@
     $('#topFullScreen').click(function() {
       if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
         RunPrefixMethod(document, 'CancelFullScreen');
+        $('#topFullScreen img').attr('src', '/images/iconFullScreen.png');
       } else {
         RunPrefixMethod($('body')[0], 'RequestFullScreen');
+        $('#topFullScreen img').attr('src', '/images/iconFullScreenExit.png');
       }
 
     });
