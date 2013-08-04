@@ -7,7 +7,7 @@
 
     item.position.x -= item.size.w / 2;
     item.position.y -= item.size.h / 2;
-
+var stroke;
     var that = this;
     var opacityStart = 1;
     var opacityDrag = 0.5;
@@ -18,7 +18,7 @@
         cursor: 'move'
       });
 
-      var stroke = this.R.rect(item.position.x, item.position.y, item.size.w, item.size.h).attr({
+       stroke = this.R.rect(item.position.x, item.position.y, item.size.w, item.size.h).attr({
         stroke: 'red'
       });
 

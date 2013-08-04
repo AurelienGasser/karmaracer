@@ -6,12 +6,12 @@
 
   var pfx = ["webkit", "moz", "ms", "o", ""];
 
-  function RunPrefixMethod(obj, method) {
+  function runPrefixMethod(obj, method) {
     var p = 0,
       m, t;
     while (p < pfx.length && !obj[m]) {
       m = method;
-      if (pfx[p] == "") {
+      if (pfx[p] === "") {
         m = m.substr(0, 1).toLowerCase() + m.substr(1);
       }
       m = pfx[p] + m;
@@ -102,11 +102,11 @@
     setPlayerNameValue($playerName);
 
     $('#topFullScreen').click(function() {
-      if (RunPrefixMethod(document, "FullScreen") || RunPrefixMethod(document, "IsFullScreen")) {
-        RunPrefixMethod(document, 'CancelFullScreen');
+      if (runPrefixMethod(document, "FullScreen") || runPrefixMethod(document, "IsFullScreen")) {
+        runPrefixMethod(document, 'CancelFullScreen');
         $('#topFullScreen img').attr('src', '/images/iconFullScreen.png');
       } else {
-        RunPrefixMethod($('body')[0], 'RequestFullScreen');
+        runPrefixMethod($('body')[0], 'RequestFullScreen');
         $('#topFullScreen img').attr('src', '/images/iconFullScreenExit.png');
       }
 
