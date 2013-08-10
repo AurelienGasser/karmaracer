@@ -31,6 +31,10 @@
     if (page.indexOf('#') !== -1) {
       page = page.split('#')[0];
     }
+    // fix for fb callback
+    if (page.indexOf('?code') === 0){
+      page = '';
+    }
     return page;
   }
 

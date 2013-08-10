@@ -123,7 +123,7 @@ var setup = function(app, io, renderMethod) {
   }
 
   // var callbackURL = escape(CONFIG.callbackURL);
-  // var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName);
+  var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName);
   // var FBcallbackURL = escape('https://localhost/fb');
   app.post('/', function(req, res) {
     authFB(req);
