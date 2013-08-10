@@ -123,8 +123,8 @@ var setup = function(app, io, renderMethod) {
   }
 
   // var callbackURL = escape(CONFIG.callbackURL);
-  var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName);
-
+  // var FBcallbackURL = escape('https://apps.facebook.com/' + CONFIG.appName);
+  // var FBcallbackURL = escape('https://localhost/fb');
   app.post('/', function(req, res) {
     authFB(req);
     // not authorized
@@ -180,6 +180,9 @@ var setup = function(app, io, renderMethod) {
           route = '/' + bPath;
         }
       }
+      if (route.indexOf('/oauth') === 0){
+        route = '/';
+      }
       // check if the session should be redirected somewhere special
       if (!KLib.isUndefined(req.session.initialURL)) {
         route = req.session.initialURL;
@@ -187,8 +190,6 @@ var setup = function(app, io, renderMethod) {
       var fbid = req.session.passport.user.id;
       req.session.accessToken = req.session.passport.user.accessToken;
       req.session.locale = req.session.passport.user._json.locale;
-
-
 
       var displayName = req.session.passport.user.displayName;
       // res.redirect(route);
@@ -205,12 +206,10 @@ var setup = function(app, io, renderMethod) {
 
   app.get('/auth/facebook', passport.authenticate('facebook', {
     scope: CONFIG.FBScope
-  }), function(req, res) {
-    // The request will be redirected to Facebook for authentication, so this
-    // function will not be called.
-  });
+  }));
 
   app.get('/auth/facebook/callback', passport.authenticate('facebook', {
+    // successRedirect: '/',
     failureRedirect: '/login'
   }), setupFBUser);
 }
@@ -230,7 +229,7 @@ var reloadUserFromDbIfAuthenticated = function(req, res, next) {
 
 
   function ensureAuthenticated(req, res, next) {
-    if (req.session.user){
+    if (req.session.user) {
       return next();
     } else {
       res.redirect('/login');
