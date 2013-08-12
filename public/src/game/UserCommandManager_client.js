@@ -16,42 +16,21 @@
 
 
   UserCommandManager.prototype.forwardBackward = function(action, distance) {
-    if (this.gameInstance.myCar === null) {
-      return;
-    }
     distance = action === 'forward' ? distance : distance / 2;
     var myCar = this.gameInstance.myCar;
     var engine = this.gameInstance.engine;
     var body = engine.bodies[engine.myCarBodyId];
     var mult = action === 'forward' ? 1 : -1;
-    body.moveToPosition = {
-      x: myCar.x + mult * distance * Math.cos(myCar.r),
-      y: myCar.y + mult * distance * Math.sin(myCar.r)
-    };
-    body.doMove();
-    this.gameInstance.myCar.x = body.x;
-    this.gameInstance.myCar.y = body.y;
-    this.gameInstance.myCar.r = body.r;
+    body.accelerate(mult * distance);
   };
 
-  // UserCommandManager.prototype.turn = function(userCmd) {
-  //   var now = Date.now();
-  //   var myCar = this.gameInstance.myCar;
-  //   var isGoingBackward = (typeof this.intervals.backward !== 'undefined');
-  //   var engine = this.gameInstance.engine;
-  //   var body = engine.bodies[engine.myCarBodyId];
-  //   var angularSpeed = this.gameInstance.config.myCarTurnSpeed;
-  //   angularSpeed = userCmd.action === 'left' ? angularSpeed : -angularSpeed;
-  //   angularSpeed = isGoingBackward ? angularSpeed : -angularSpeed;
-  //   var angleToAdd = Karma.UserCommandUtils.getDistanceOrAngleToAdd(now, userCmd, angularSpeed);
-  //   body.turn(angleToAdd);
-  //   body.doMove();
-  //   myCar.x = body.x;
-  //   myCar.y = body.y;
-  //   myCar.r = body.r;
-  //   // POUET
-  //   userCmd.doneTo = now;
-  // };
+  UserCommandManager.prototype.leftRight = function(action, angle) {
+    angle = action === 'left' ? -angle : angle;
+    var myCar = this.gameInstance.myCar;
+    var engine = this.gameInstance.engine;
+    var body = engine.bodies[engine.myCarBodyId];
+    body.turn(angle)
+  };
 
   UserCommandManager.prototype.generateUserCommand = function(now) {
     var userCmd = new Karma.UserCommand(this.gameInstance, now);
@@ -65,7 +44,8 @@
   };
 
   UserCommandManager.prototype.updatePos = function(now) {
-    if (!this.lastReceivedMyCar) {
+    if (!this.lastReceivedMyCar ||
+      this.gameInstance.myCar === null) {
       return;
     }
     this.setMyCar(this.lastReceivedMyCar);
@@ -74,12 +54,25 @@
       var userCmd = this.toAck[seq];
       var timeSec = Math.min(now - userCmd.ts, 1000 / config.userCommandsSentPerSecond) / 1000;
       var distance = timeSec * config.myCarSpeed;
+      var angle = timeSec * config.myCarTurnSpeed;
+      if (userCmd.actions.left === true) {
+        this.leftRight('left',  angle);
+      }
+      if (userCmd.actions.right === true) {
+        this.leftRight('right', angle);
+      }
       if (userCmd.actions.forward === true) {
         this.forwardBackward('forward',  distance);
       }
       if (userCmd.actions.backward === true) {
         this.forwardBackward('backward', distance);
       }
+      var engine = this.gameInstance.engine;
+      var body = engine.bodies[engine.myCarBodyId];
+      body.doMove();
+      this.gameInstance.myCar.x = body.x;
+      this.gameInstance.myCar.y = body.y;
+      this.gameInstance.myCar.r = body.r;
     }
   };
 

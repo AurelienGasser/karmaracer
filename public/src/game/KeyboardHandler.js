@@ -17,6 +17,8 @@
     this.gameInstance = gameInstance;
     this.forward = false;
     this.backward = false;
+    this.left = false;
+    this.right = false;
     var that = this;
     return this;
   }
@@ -34,24 +36,16 @@
         // ucm.forwardBackward('shoot', state);
         break;
       case KEY_LEFT:
-        // ucm.forwardBackward('left', state);
+        this.left = state === 'start';
         break;
       case KEY_RIGHT:
-        // ucm.forwardBackward('right', state);
+        this.right = state === 'start';
         break;
       case KEY_UP:
-        if (state === 'start') {
-          this.forward = true;
-        } else {
-          this.forward = false;
-        }
+        this.forward = state === 'start';
         break;
       case KEY_DOWN:
-        if (state === 'start') {
-            this.backward = true;
-          } else {
-            this.backward = false;
-        }
+        this.backward = state === 'start';
         break;
       case KEY_L:
         if (state == 'start') {

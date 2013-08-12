@@ -338,11 +338,13 @@
       ucm.generateUserCommand(now);
       this.tickCptDrive = 0;
     }
-  }
+  };
 
   Engine2DCanvas.prototype.tickMiniMap = function() {
-    this.draw();
-  }
+    if (this.interpData.ready) {
+      this.draw();
+    }
+  };
 
   Engine2DCanvas.prototype.tickGameCanvas = function() {
     var now = Date.now();
@@ -372,7 +374,7 @@
       $('#fps').html('fps: ' + this.fps);
       this.frames = 0;
     }
-  }
+  };
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));

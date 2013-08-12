@@ -3,7 +3,9 @@ G_userCommandCounter = 0;
 var UserCommand = function(gameInstance, ts) {
   this.actions = {
     forward:  gameInstance.keyboardHandler.forward,
-    backward: gameInstance.keyboardHandler.backward
+    backward: gameInstance.keyboardHandler.backward,
+    left:     gameInstance.keyboardHandler.left,
+    right:    gameInstance.keyboardHandler.right
   };
   this.ts = ts;
   this.active = false;

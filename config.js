@@ -42,7 +42,7 @@ var configSingleton = function() {
   config.FBScope = 'publish_actions';
   config.physics.dichotomyIterations = sharedConfig.physics.dichotomyIterations;
   config.myCarSpeed = 7.5; // units per second
-  config.myCarTurnSpeed = Math.PI / (256 * 5);
+  config.myCarTurnSpeed = Math.PI;
 
   console.info('run on host', config.host);
 

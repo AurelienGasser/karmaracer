@@ -7,32 +7,44 @@ var UserCommandManager = function(client) {
 }
 
 UserCommandManager.prototype.forwardBackward = function(userCmd, action) {
-  var client = this.client;
-  if (typeof client.player !== 'undefined' &&
-      typeof client.player.playerCar !== 'undefined' &&
-      !client.player.playerCar.dead &&
-      typeof client.player.playerCar.car !== 'undefined' &&
-      typeof client.gameServer !== 'undefined' &&
-      client.gameServer.doStep) {
-        var car = client.player.playerCar.car;
-        var distance = config.myCarSpeed / config.userCommandsSentPerSecond;
-        distance = action === 'forward' ? distance : -distance / 2;
-        car.accelerate(distance);
-  } else {
-    // player car is not ready for executing user command
-  }
+  var car = this.client.player.playerCar.car;
+  var distance = config.myCarSpeed / config.userCommandsSentPerSecond;
+  distance = action === 'forward' ? distance : -distance / 2;
+  car.accelerate(distance);
 }
 
-UserCommandManager.prototype.tryForwardBackward = function(userCmd, action) {
+UserCommandManager.prototype.leftRight = function(userCmd, action) {
+  var car = this.client.player.playerCar.car;
+  var angle = config.myCarTurnSpeed / config.userCommandsSentPerSecond;
+  angle = action === 'left' ? -angle : angle;
+  car.turn(angle);
+}
+
+UserCommandManager.prototype.tryExecute = function(userCmd, action) {
   var now = Date.now();
   var that = this;
   if (now < userCmd.ts + 1000 / config.userCommandsSentPerSecond) {
     // don't execute the command before it is finished
     process.nextTick(function() {
-      that.tryForwardBackward.bind(that)(userCmd, action);
+      that.tryExecute.bind(that)(userCmd, action);
     })
   } else {
-    this.forwardBackward(userCmd, action);
+    var client = this.client;
+    var player = client.player;
+    if (typeof player !== 'undefined' &&
+        typeof player.playerCar !== 'undefined' &&
+        !player.playerCar.dead &&
+        typeof player.playerCar.car !== 'undefined' &&
+        typeof client.gameServer !== 'undefined' &&
+        client.gameServer.doStep) {
+          if (action === 'forward' || action === 'backward') {
+            this.forwardBackward(userCmd, action);
+          } else {
+            this.leftRight(userCmd, action);
+          }
+    } else {
+      // player car is not ready for executing user command
+    }
     this.toAck = userCmd.seq;
   }
 }
@@ -43,11 +55,17 @@ UserCommandManager.prototype.receivedUserCmd = function(userCmd) {
     return;
   }
   this.currentSeq = userCmd.seq;
+  if (userCmd.actions.left) {
+    this.tryExecute(userCmd, 'left');
+  }
+  if (userCmd.actions.right) {
+    this.tryExecute(userCmd, 'right');
+  }
   if (userCmd.actions.forward) {
-    this.tryForwardBackward(userCmd, 'forward');
+    this.tryExecute(userCmd, 'forward');
   }
   if (userCmd.actions.backward) {
-    this.tryForwardBackward(userCmd, 'backward');
+    this.tryExecute(userCmd, 'backward');
   }
 }
 
