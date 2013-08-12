@@ -121,11 +121,11 @@ GameServerSocket.prototype.registerMethods = function(client) {
       var worldInfo = gameServer.engine.getWorldInfo();
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
       var configShared = {
-        physicalTicksPerSecond: CONFIG.physicalTicksPerSecond,
-        positionsSocketEmitsPerSecond: CONFIG.positionsSocketEmitsPerSecond,
-        myCarSpeed: CONFIG.myCarSpeed,
-        myCarTurnSpeed: CONFIG.myCarTurnSpeed,
-        userCommandRepeatsPerSecond: CONFIG.userCommandRepeatsPerSecond
+        physicalTicksPerSecond:         CONFIG.physicalTicksPerSecond,
+        positionsSocketEmitsPerSecond:  CONFIG.positionsSocketEmitsPerSecond,
+        myCarSpeed:                     CONFIG.myCarSpeed,
+        myCarTurnSpeed:                 CONFIG.myCarTurnSpeed,
+        userCommandsSentPerSecond:      CONFIG.userCommandsSentPerSecond
       };
       client.emit('init', {
         worldInfo: worldInfo,
@@ -164,7 +164,6 @@ GameServerSocket.prototype.registerMethods = function(client) {
   client.on('disconnect', function(socket) {
     try {
       console.info('client left:', client.id);
-      client.userCommandManager.cancelAllUserCommands();
       that.removeHomeClient(client);
       if (!KLib.isUndefined(client.gameServer)) {
         client.gameServer.removePlayer(client.player);
@@ -179,8 +178,9 @@ GameServerSocket.prototype.registerMethods = function(client) {
   });
 
   client.on('user_command', function(userCmd) {
+    var now = Date.now();
     try {
-      client.userCommandManager.onUserCmdReceived(userCmd);
+      client.userCommandManager.receivedUserCmd(userCmd);
     } catch (e) {
       console.error(e.stack);
     }

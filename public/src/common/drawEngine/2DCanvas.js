@@ -5,6 +5,7 @@
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.timer = new Date().getTime();
+    this.tickCptDrive = 0;
     this.frames = 0;
     this.fps = undefined; // will be defined by requestAnimFrame
     this.debugDraw = false;
@@ -324,19 +325,36 @@
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
-
+    var now = Date.now();
+    var ucm = this.gameInstance.userCommandManager;
+    if (!this.isMinimap) {
+      switch (this.gameInstance.config.userCommandsSentPerSecond) {
+        case 20:
+          if (++this.tickCptDrive == 3 && !this.isMiniMap && typeof ucm !== 'undefined') {
+            ucm.createUserCommand(now);
+            this.tickCptDrive = 0;
+          }
+          break;
+        // TODO other cases
+      }
+    }
     if (!this.gameInstance) {
       // welcome page
       // TODO: use another draw engine
       this.draw();
     } else {
-      this.getInterpData();
+      if (!this.isMiniMap) {
+        this.getInterpData();
+        // execute user commands to get precise position
+        if (typeof ucm != 'undefined') {
+          ucm.updatePos(now);
+        }
+      }
       if (this.interpData.ready) {
         this.draw();
       }
     }
     this.frames++;
-    var now = new Date().getTime();
     if (now - this.timer > 1000) {
       this.timer = now;
       this.fps = this.frames;

@@ -34,14 +34,14 @@ var configSingleton = function() {
   config.physicalTicksPerSecond = 30;
   config.positionsSocketEmitsPerSecond = 20;
   config.botManagerTicksPerSecond = 15;
-  config.userCommandRepeatsPerSecond = 100;
-  config.botsPerMap = 7;
+  config.userCommandsSentPerSecond = 20;
+  config.botsPerMap = 0;
   config.serverPath = __dirname;
   config.botDensity = 1 / 2300;
   config.noBots = process.env.NO_BOTS;
   config.FBScope = 'publish_actions';
   config.physics.dichotomyIterations = sharedConfig.physics.dichotomyIterations;
-  config.myCarSpeed = 0.01;
+  config.myCarSpeed = 7.5; // units per second
   config.myCarTurnSpeed = Math.PI / (256 * 5);
 
   console.info('run on host', config.host);

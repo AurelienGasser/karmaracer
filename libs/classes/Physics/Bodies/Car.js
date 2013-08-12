@@ -6,7 +6,7 @@ var config = require('../../../../config');
 var Car = function(playerCar) {
     KLib.extend(KBody, this);
     this.startPosition = {
-      x: 10.0,
+      x: 5.0,
       y: 11.5,
     };
     this.playerCar = playerCar;

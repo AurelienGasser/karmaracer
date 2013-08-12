@@ -15,32 +15,43 @@
 
   function KeyboardHandler(gameInstance) {
     this.gameInstance = gameInstance;
+    this.forward = false;
+    this.backward = false;
     var that = this;
     return this;
   }
 
 
   KeyboardHandler.prototype.handleKey = function(key, state) {
+    var now = Date.now();
     var ucm = this.gameInstance.userCommandManager;
     switch (key) {
       case KEY_B:
-        ucm.createUserCommand('break', state);
+        // ucm.forwardBackward('break', state);
         break;
       case KEY_SPACE:
       case KEY_S:
-        ucm.createUserCommand('shoot', state);
+        // ucm.forwardBackward('shoot', state);
         break;
       case KEY_LEFT:
-        ucm.createUserCommand('left', state);
+        // ucm.forwardBackward('left', state);
         break;
       case KEY_RIGHT:
-        ucm.createUserCommand('right', state);
+        // ucm.forwardBackward('right', state);
         break;
       case KEY_UP:
-        ucm.createUserCommand('forward', state);
+        if (state === 'start') {
+          this.forward = true;
+        } else {
+          this.forward = false;
+        }
         break;
       case KEY_DOWN:
-        ucm.createUserCommand('backward', state);
+        if (state === 'start') {
+            this.backward = true;
+          } else {
+            this.backward = false;
+        }
         break;
       case KEY_L:
         if (state == 'start') {

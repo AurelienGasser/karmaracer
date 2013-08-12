@@ -195,15 +195,6 @@
       }
     }
     if (this.gameInstance.myCar !== null) {
-      // execute user commands to get precise position
-      var ucc = this.gameInstance.userCommandManager;
-      var cc = ucc.currentCommands;
-      for (var action in cc) {
-        var userCmd = cc[action];
-        if (userCmd !== null) {
-          ucc.userCmdInnerFunctions[action](userCmd);
-        }
-      }
       // draw the car
       var myPos = this.scalePos(this.gameInstance.myCar);
       this._drawCar(ctx, this.gameInstance.myCar, myPos);

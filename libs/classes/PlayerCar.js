@@ -131,12 +131,6 @@ PlayerCar.prototype.getShared = function() {
   return share;
 }
 
-PlayerCar.prototype.updatePos = function() {
-  if (!this.dead && this.car !== null) {
-    return this.car.updatePos();
-  }
-}
-
 PlayerCar.prototype.receiveHit = function(damage) {
   this.life -= damage;
   this.gameServer.broadCastGameInfo();
