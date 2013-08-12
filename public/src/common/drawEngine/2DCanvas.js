@@ -323,32 +323,43 @@
     // this.drawCollisionPoints();
   };
 
-  Engine2DCanvas.prototype.tick = function() {
-    requestAnimFrame(this.tick.bind(this));
+  Engine2DCanvas.prototype.tryGenerateUserCmd = function(now) {
+    var maxCptDrive;
+    if (typeof this.maxCptDrive === 'undefined') {
+      if (typeof this.fps !== 'undefined') {
+        this.maxCptDrive = Math.round(this.fps / this.gameInstance.config.userCommandsSentPerSecond);
+      }
+      maxCptDrive = 3;
+    } else {
+      maxCptDrive = this.maxCptDrive;
+    }
+    if (this.tickCptDrive >= maxCptDrive) {
+      var ucm = this.gameInstance.userCommandManager;
+      ucm.generateUserCommand(now);
+      this.tickCptDrive = 0;
+    }
+  }
+
+  Engine2DCanvas.prototype.tickMiniMap = function() {
+    this.draw();
+  }
+
+  Engine2DCanvas.prototype.tickGameCanvas = function() {
     var now = Date.now();
     var ucm = this.gameInstance.userCommandManager;
-    if (!this.isMinimap) {
-      switch (this.gameInstance.config.userCommandsSentPerSecond) {
-        case 20:
-          if (++this.tickCptDrive == 3 && !this.isMiniMap && typeof ucm !== 'undefined') {
-            ucm.createUserCommand(now);
-            this.tickCptDrive = 0;
-          }
-          break;
-        // TODO other cases
-      }
+    ++this.tickCptDrive;
+    if (typeof ucm !== 'undefined') {
+      this.tryGenerateUserCmd(now);
     }
     if (!this.gameInstance) {
       // welcome page
       // TODO: use another draw engine
       this.draw();
     } else {
-      if (!this.isMiniMap) {
-        this.getInterpData();
-        // execute user commands to get precise position
-        if (typeof ucm != 'undefined') {
-          ucm.updatePos(now);
-        }
+      this.getInterpData();
+      // execute user commands to get precise position
+      if (typeof ucm != 'undefined') {
+        ucm.updatePos(now);
       }
       if (this.interpData.ready) {
         this.draw();
@@ -360,6 +371,15 @@
       this.fps = this.frames;
       $('#fps').html('fps: ' + this.fps);
       this.frames = 0;
+    }
+  }
+
+  Engine2DCanvas.prototype.tick = function() {
+    requestAnimFrame(this.tick.bind(this));
+    if (this.isMiniMap) {
+      this.tickMiniMap();
+    } else {
+      this.tickGameCanvas();
     }
   };
 

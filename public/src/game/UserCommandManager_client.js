@@ -53,7 +53,7 @@
   //   userCmd.doneTo = now;
   // };
 
-  UserCommandManager.prototype.createUserCommand = function(now) {
+  UserCommandManager.prototype.generateUserCommand = function(now) {
     var userCmd = new Karma.UserCommand(this.gameInstance, now);
     if (userCmd.active === false) {
       return;
