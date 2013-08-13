@@ -6,7 +6,6 @@ var Angle90MachineGun = require('./weapons/Angle90MachineGun');
 var KLib = require('./KLib');
 var CONFIG = require('./../../config');
 
-
 var WeaponsByClass = {
   1: MachineGun,
   2: MachineGun,
@@ -124,7 +123,8 @@ PlayerCar.prototype.getShared = function() {
   share.life = this.life;
   share.dead = this.dead;
   //weapon
-  share.shootingWithWeapon = this.weapon.name;
+  var now = Date.now();
+  share.shootingWithWeapon = (now - this.weapon.lastShot < 2 * 1000 / CONFIG.positionsSocketEmitsPerSecond) ? this.weapon.name : null;
   share.gunLife = this.weapon.weaponEnergy;
 
   return share;
