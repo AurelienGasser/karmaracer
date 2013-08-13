@@ -47,12 +47,10 @@ Weapon.prototype.shoot = function(playerCar) {
   var now = (new Date()).getTime();
   var canShoot = this.canShoot(playerCar, now);
   if (!KLib.isUndefined(playerCar)) {
+    this.removeEnergy(1);
     if (canShoot === true) {
-      this.removeEnergy(2);
       this.customShoot(playerCar);
       this.lastShot = now;
-    } else {
-      this.removeEnergy(1);
     }
   }
 };
