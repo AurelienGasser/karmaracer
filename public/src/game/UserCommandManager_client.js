@@ -7,13 +7,13 @@
     return this;
   }
 
-  UserCommandManager.prototype.forwardBackward = function(action, distance) {
+  UserCommandManager.prototype.forwardBackward = function(action, distance, fwdForce) {
     distance = action === 'forward' ? distance : distance / 2;
     var myCar = this.gameInstance.myCar;
     var engine = this.gameInstance.engine;
     var body = engine.bodies[engine.myCarBodyId];
     var mult = action === 'forward' ? 1 : -1;
-    body.accelerate(mult * distance);
+    body.accelerateWithForce(mult * distance, fwdForce);
   };
 
   UserCommandManager.prototype.leftRight = function(action, angle) {
@@ -22,6 +22,13 @@
     var engine = this.gameInstance.engine;
     var body = engine.bodies[engine.myCarBodyId];
     body.turn(angle);
+  };
+
+  UserCommandManager.prototype.turnToAngle = function(angle) {
+    var myCar = this.gameInstance.myCar;
+    var engine = this.gameInstance.engine;
+    var body = engine.bodies[engine.myCarBodyId];
+    body.turn(angle - body.r);
   };
 
   UserCommandManager.prototype.generateUserCommand = function(now) {
@@ -46,18 +53,21 @@
       var userCmd = this.toAck[seq];
       var timeSec = Math.min(now - userCmd.ts, 1000 / config.userCommandsSentPerSecond) / 1000;
       var distance = timeSec * config.myCarSpeed;
-      var angle = timeSec * config.myCarTurnSpeed;
+      var angleLeftRight = timeSec * config.myCarTurnSpeed;
+      var angle = userCmd.mousePos.angle;
+      var fwdForce = userCmd.mousePos.force;
+      this.turnToAngle(angle);
       if (userCmd.actions.left === true) {
-        this.leftRight('left',  angle);
+        this.leftRight('left',  angleLeftRight);
       }
       if (userCmd.actions.right === true) {
-        this.leftRight('right', angle);
+        this.leftRight('right', angleLeftRight);
       }
       if (userCmd.actions.forward === true) {
-        this.forwardBackward('forward',  distance);
+        this.forwardBackward('forward',  distance, fwdForce);
       }
       if (userCmd.actions.backward === true) {
-        this.forwardBackward('backward', distance);
+        this.forwardBackward('backward', distance, fwdForce);
       }
       var engine = this.gameInstance.engine;
       var body = engine.bodies[engine.myCarBodyId];

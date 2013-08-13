@@ -6,14 +6,11 @@
   };
 
   SteeringWheelController.prototype.init = function(gameInstance) {
-    this.m = $('<div id="SteeringWheelController-' + this.name + '" class="SteeringWheelController"/>');
+    this.m = $('<div id="SteeringWheelController-' + this.name + '" class="SteeringWheelController enable"/>');
     this.acc = $('<div id="SteeringWheelControllerAcc-' + this.name + '" class="SteeringWheelControllerAcc"/>');
     this.m.append(this.acc);
     $('body').append(this.m);
-    
-
     this.enable = false;
-
     this.gameInstance = gameInstance;
     this.gameInstance.steeringWheel = this;
     this.resize();
@@ -21,14 +18,10 @@
       w: this.acc.width(),
       h: this.acc.height()
     };
-
     this.force = 0;
     this.angle = 0;
-
     this.updateCenter();
-
     var that = this;
-
 
     window.onresize = function(e){
       that.resize();
@@ -40,13 +33,8 @@
       that.enable = jWheel.hasClass('enable');
     };
 
-    that.m.click(toogleEnable);
-
-
-
+    // that.m.click(toogleEnable);
     var interval = null;
-
-
 
     var send = function() {
       if (!that.enable) {
@@ -85,26 +73,20 @@
       return res;
     }
 
-
     var hover = function(e) {
-
+      // console.log('hover');
       var mousePosition = {
         x: e.pageX,
         y: e.pageY
       };
-
-      // alert(that.gameInstance.isMobile);
       if (that.gameInstance.isMobile) {
         mousePosition.x = e.originalEvent.touches[0].pageX;
         mousePosition.y = e.originalEvent.touches[0].pageY;
       }
-
       var x = mousePosition.x - that.mCenter.x;
       var y = mousePosition.y - that.mCenter.y;
-
       that.acc.css('left', mousePosition.x - that.m.position().left - (that.accSize.w / 2));
       that.acc.css('top', mousePosition.y - that.m.position().top - (that.accSize.h / 2));
-
       var force = {
         'x': x,
         'y': y
@@ -115,9 +97,11 @@
       if (that.gameInstance.isMobile) {
         // accHelper = 2;
       }
-      that.force = 0.25 + accHelper * distancePercentage;
+      that.force = accHelper * distancePercentage;
       that.angle = angle(force);
+      // console.log(that.force);
     };
+
     if (that.gameInstance.isMobile) {
       that.m.bind('touchstart', startAcceleration);
       that.m.bind('touchend', stopAcceleration);

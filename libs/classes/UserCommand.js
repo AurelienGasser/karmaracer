@@ -8,14 +8,18 @@ var UserCommand = function(gameInstance, ts) {
     right:    gameInstance.keyboardHandler.right,
     shoot:    gameInstance.keyboardHandler.shoot
   };
+  this.mousePos = {
+    force: gameInstance.steeringWheelController.force,
+    angle: gameInstance.steeringWheelController.angle
+  };
   this.ts = ts;
-  this.active = false;
-  for (var action in this.actions) {
-    if (this.actions[action] === true) {
-      this.active = true;
-      break;
-    }
-  }
+  this.active = true;
+  // for (var action in this.actions) {
+  //   if (this.actions[action] === true) {
+  //     this.active = true;
+  //     break;
+  //   }
+  // }
   if (!this.active) {
     return;
   } else {

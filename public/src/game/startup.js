@@ -18,12 +18,12 @@
                 if (typeof(Karma.MobileTerminalHandler) === 'function') {
                   var mobileHandler = new Karma.MobileTerminalHandler(Karma.gameInstance);
                   mobileHandler.init();
-                  new Karma.SteeringWheelController(Karma.gameInstance, 'pad', {
+                  Karma.gameInstance.steeringWheelController = Karma.SteeringWheelController(Karma.gameInstance, 'pad', {
                     w: '200px',
                     h: '200px'
                   });
                 } else {
-                  new Karma.SteeringWheelController(Karma.gameInstance, 'main', {
+                  Karma.gameInstance.steeringWheelController = new Karma.SteeringWheelController(Karma.gameInstance, 'main', {
                     w: '100%',
                     h: '100%'
                   });

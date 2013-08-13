@@ -22,6 +22,11 @@ Body_move.accelerate = function(ac) {
   this.moveTo(newpos);
 }
 
+Body_move.accelerateWithForce = function(ac, force) {
+  var force = Math.min(0.025, force) / 0.025;
+  this.accelerate(ac * force);
+}
+
 Body_move.accelerateAndTurn = function(ac, a) {
   var pos = this.getTransientPosition();
   var newpos = {

@@ -6,11 +6,11 @@ var UserCommandManager = function(client) {
   return this;
 }
 
-UserCommandManager.prototype.forwardBackward = function(userCmd, action) {
+UserCommandManager.prototype.forwardBackward = function(userCmd, action, fwdForce) {
   var car = this.client.player.playerCar.car;
   var distance = config.myCarSpeed / config.userCommandsSentPerSecond;
   distance = action === 'forward' ? distance : -distance / 2;
-  car.accelerate(distance);
+  car.accelerateWithForce(distance, fwdForce);
 }
 
 UserCommandManager.prototype.leftRight = function(userCmd, action) {
@@ -20,13 +20,18 @@ UserCommandManager.prototype.leftRight = function(userCmd, action) {
   car.turn(angle);
 }
 
-UserCommandManager.prototype.tryExecute = function(userCmd, action) {
+UserCommandManager.prototype.turnToAngle = function(angle) {
+  var car = this.client.player.playerCar.car;
+  car.turn(angle - car.r);
+}
+
+UserCommandManager.prototype.tryExecute = function(userCmd, action, fwdForce) {
   var now = Date.now();
   var that = this;
   if (now < userCmd.ts + 1000 / config.userCommandsSentPerSecond) {
     // don't execute the command before it is finished
     process.nextTick(function() {
-      that.tryExecute.bind(that)(userCmd, action);
+      that.tryExecute.bind(that)(userCmd, action, fwdForce);
     })
   } else {
     var client = this.client;
@@ -40,7 +45,7 @@ UserCommandManager.prototype.tryExecute = function(userCmd, action) {
           switch (action) {
             case 'forward':
             case 'backward':
-              this.forwardBackward(userCmd, action);
+              this.forwardBackward(userCmd, action, fwdForce);
               break;
             case 'left':
             case 'right':
@@ -63,6 +68,9 @@ UserCommandManager.prototype.receivedUserCmd = function(userCmd) {
     return;
   }
   this.currentSeq = userCmd.seq;
+  var fwdForce = userCmd.mousePos.force;
+  var angle = userCmd.mousePos.angle;
+  this.turnToAngle(angle);
   if (userCmd.actions.left) {
     this.tryExecute(userCmd, 'left');
   }
@@ -70,10 +78,10 @@ UserCommandManager.prototype.receivedUserCmd = function(userCmd) {
     this.tryExecute(userCmd, 'right');
   }
   if (userCmd.actions.forward) {
-    this.tryExecute(userCmd, 'forward');
+    this.tryExecute(userCmd, 'forward', fwdForce);
   }
   if (userCmd.actions.backward) {
-    this.tryExecute(userCmd, 'backward');
+    this.tryExecute(userCmd, 'backward', fwdForce);
   }
   if (userCmd.actions.shoot) {
     this.client.player.playerCar.shoot();
