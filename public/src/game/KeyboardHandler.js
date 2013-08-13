@@ -11,7 +11,8 @@
     KEY_L = 76,
     KEY_P = 80,
     KEY_B = 66,
-    KEY_S = 83;
+    KEY_S = 83,
+    KEY_SHIFT = 16;
 
   function KeyboardHandler(gameInstance) {
     this.gameInstance = gameInstance;
@@ -43,6 +44,7 @@
         this.right = state === 'start';
         break;
       case KEY_UP:
+      case KEY_SHIFT:
         this.forward = state === 'start';
         break;
       case KEY_DOWN:
@@ -71,6 +73,7 @@
         break;
       case KEY_UP:
       case KEY_DOWN:
+      case KEY_SHIFT:
         preventDefault = this.handleKey(event.keyCode, 'start');
         break;
       case KEY_ENTER:
