@@ -348,7 +348,7 @@
 
   Engine2DCanvas.prototype.tickGameCanvas = function() {
     var now = Date.now();
-    var ucm = this.gameInstance.userCommandManager;
+    var ucm = this.gameInstance ? this.gameInstance.userCommandManager : undefined;
     ++this.tickCptDrive;
     if (typeof ucm !== 'undefined') {
       this.tryGenerateUserCmd(now);
