@@ -25,7 +25,6 @@
     return this;
   }
 
-
   KeyboardHandler.prototype.handleKey = function(key, state) {
     var now = Date.now();
     var ucm = this.gameInstance.userCommandManager;

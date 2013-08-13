@@ -84,7 +84,10 @@ UserCommandManager.prototype.receivedUserCmd = function(userCmd) {
     this.tryExecute(userCmd, 'backward', fwdForce);
   }
   if (userCmd.actions.shoot) {
-    this.client.player.playerCar.shoot();
+    var playerCar = this.client.player.playerCar;
+    if (!playerCar.dead) {
+      playerCar.shoot();
+    }
   }
 }
 
