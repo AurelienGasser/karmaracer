@@ -19,6 +19,7 @@
     this.backward = false;
     this.left = false;
     this.right = false;
+    this.shoot = false;
     var that = this;
     return this;
   }
@@ -33,7 +34,7 @@
         break;
       case KEY_SPACE:
       case KEY_S:
-        // ucm.forwardBackward('shoot', state);
+        this.shoot = state === 'start';
         break;
       case KEY_LEFT:
         this.left = state === 'start';

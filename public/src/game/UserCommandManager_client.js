@@ -4,16 +4,8 @@
   function UserCommandManager(gameInstance) {
     this.gameInstance = gameInstance;
     this.toAck = {};
-      // shoot: function(userCmd) {
-      //   if (that.gameInstance.myCar !== null) {
-      //     if (that.gameInstance.myCar.gunLife.cur > 0) {
-      //       that.gameInstance.myCar.shootingWithWeapon = true;
-      //     }
-      //   }
-      // },
     return this;
   }
-
 
   UserCommandManager.prototype.forwardBackward = function(action, distance) {
     distance = action === 'forward' ? distance : distance / 2;
@@ -29,7 +21,7 @@
     var myCar = this.gameInstance.myCar;
     var engine = this.gameInstance.engine;
     var body = engine.bodies[engine.myCarBodyId];
-    body.turn(angle)
+    body.turn(angle);
   };
 
   UserCommandManager.prototype.generateUserCommand = function(now) {
@@ -73,6 +65,12 @@
       this.gameInstance.myCar.x = body.x;
       this.gameInstance.myCar.y = body.y;
       this.gameInstance.myCar.r = body.r;
+    }
+    if (this.gameInstance.keyboardHandler.shoot &&
+        this.gameInstance.myCar.gunLife.cur > 0) {
+      this.gameInstance.myCar.shootingWithWeapon = true;
+    } else {
+      this.gameInstance.myCar.shootingWithWeapon = false;
     }
   };
 

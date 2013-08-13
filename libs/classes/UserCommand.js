@@ -5,7 +5,8 @@ var UserCommand = function(gameInstance, ts) {
     forward:  gameInstance.keyboardHandler.forward,
     backward: gameInstance.keyboardHandler.backward,
     left:     gameInstance.keyboardHandler.left,
-    right:    gameInstance.keyboardHandler.right
+    right:    gameInstance.keyboardHandler.right,
+    shoot:    gameInstance.keyboardHandler.shoot
   };
   this.ts = ts;
   this.active = false;

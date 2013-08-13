@@ -37,10 +37,18 @@ UserCommandManager.prototype.tryExecute = function(userCmd, action) {
         typeof player.playerCar.car !== 'undefined' &&
         typeof client.gameServer !== 'undefined' &&
         client.gameServer.doStep) {
-          if (action === 'forward' || action === 'backward') {
-            this.forwardBackward(userCmd, action);
-          } else {
-            this.leftRight(userCmd, action);
+          switch (action) {
+            case 'forward':
+            case 'backward':
+              this.forwardBackward(userCmd, action);
+              break;
+            case 'left':
+            case 'right':
+              this.leftRight(userCmd, action);
+              break;
+            default:
+              console.error('Error: uncaught action', userCmd);
+              break;
           }
     } else {
       // player car is not ready for executing user command
@@ -66,6 +74,9 @@ UserCommandManager.prototype.receivedUserCmd = function(userCmd) {
   }
   if (userCmd.actions.backward) {
     this.tryExecute(userCmd, 'backward');
+  }
+  if (userCmd.actions.shoot) {
+    this.client.player.playerCar.shoot();
   }
 }
 
