@@ -68,9 +68,10 @@
     }
     if (this.gameInstance.keyboardHandler.shoot &&
         this.gameInstance.myCar.gunLife.cur > 0) {
-      this.gameInstance.myCar.shootingWithWeapon = true;
+          var player = this.gameInstance.gameInfo[this.gameInstance.myCar.id];
+          this.gameInstance.myCar.shootingWithWeapon = player.weaponName;
     } else {
-      this.gameInstance.myCar.shootingWithWeapon = false;
+      this.gameInstance.myCar.shootingWithWeapon = null;
     }
   };
 

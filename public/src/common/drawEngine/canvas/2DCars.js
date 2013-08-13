@@ -140,7 +140,7 @@
       ctx.drawImage(car.image, 0, 0, car.imageSize.w, car.imageSize.h, -size.w / 2, -size.h / 2, size.w, size.h);
 
       // gun flammes
-      if (c.shootingWithWeapon === true) {
+      if (c.shootingWithWeapon !== null) {
         this.drawGunFlame(ctx, c, size);
       }
       ctx.restore();

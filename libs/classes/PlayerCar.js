@@ -83,7 +83,6 @@ PlayerCar.prototype.reset = function() {
   this.dead = false;
   this.life = 100;
   this.maxLife = 100;
-  this.shootingWithWeapon = null;
 };
 
 PlayerCar.prototype.getGameInfo = function() {
@@ -125,7 +124,7 @@ PlayerCar.prototype.getShared = function() {
   share.life = this.life;
   share.dead = this.dead;
   //weapon
-  share.shootingWithWeapon = this.shootingWithWeapon;
+  share.shootingWithWeapon = this.weapon.name;
   share.gunLife = this.weapon.weaponEnergy;
 
   return share;
@@ -158,10 +157,6 @@ PlayerCar.prototype.getExperience = function(experience) {
 PlayerCar.prototype.updateWeapon = function() {
   var WeaponClass = WeaponsByClass[this.level];
   this.weapon = new WeaponClass(this.gameServer);
-  if (this.shootingWithWeapon) {
-    // when level up while shooting, directly update the current shooting weapon
-    this.weaponShootOn();
-  }
 }
 
 PlayerCar.prototype.levelUp = function() {
@@ -186,15 +181,6 @@ PlayerCar.prototype.levelDown = function() {
 PlayerCar.prototype.shoot = function() {
   this.weapon.shoot(this);
 }
-
-PlayerCar.prototype.weaponShootOn = function() {
-  this.shootingWithWeapon = this.weapon.name;
-};
-
-PlayerCar.prototype.weaponShootOff = function() {
-  this.shootingWithWeapon = null;
-};
-
 
 PlayerCar.prototype.rebornIn = function(seconds) {
   setTimeout(function() {

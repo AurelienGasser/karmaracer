@@ -1,8 +1,6 @@
 var Bullet = require('../Physics/Bodies/Bullet');
 var KLib = require('./../KLib');
 
-var WeaponMinLife = -2;
-
 var Weapon = function(gameServer) {
   this.gameServer = gameServer;
   this.engine = this.gameServer.engine;
@@ -36,39 +34,32 @@ Weapon.prototype.getProjectileVector = function(playerCar, angle) {
   return pos;
 };
 
-Weapon.prototype.canShoot = function(playerCar) {
-  var now = (new Date()).getTime();
-  if (this.weaponEnergy.cur <= 0) {
-    playerCar.weaponShootOff();
+Weapon.prototype.canShoot = function(playerCar, now) {
+  if (this.weaponEnergy.cur <= 0 ||
+    now - this.lastShot < this.lastShotInterval) {
     return false;
-  }
-  if (now - this.lastShot > this.lastShotInterval) {
-    if (this.weaponEnergy.cur > 0) {
-      playerCar.weaponShootOn();
-    }
-    this.lastShot = now;
-    return true;
   } else {
-    return false;
+    return true;
   }
 };
 
 Weapon.prototype.shoot = function(playerCar) {
-  var canShoot = this.canShoot(playerCar);
+  var now = (new Date()).getTime();
+  var canShoot = this.canShoot(playerCar, now);
   if (!KLib.isUndefined(playerCar)) {
     if (canShoot === true) {
-      if (this.weaponEnergy.cur > WeaponMinLife) {
-        this.weaponEnergy.cur -= 1;
-      }
-      playerCar.weaponShootOn();
+      this.removeEnergy(2);
       this.customShoot(playerCar);
+      this.lastShot = now;
     } else {
-      if (this.weaponEnergy.cur > WeaponMinLife) {
-        this.weaponEnergy.cur -= 0.25;
-      }
+      this.removeEnergy(1);
     }
   }
 };
+
+Weapon.prototype.removeEnergy = function(energy) {
+  this.weaponEnergy.cur = Math.max(-1, this.weaponEnergy.cur - energy);
+}
 
 Weapon.prototype.customShoot = function(playerCar) {
   this.addProjectile(playerCar);
