@@ -19,23 +19,19 @@
 
     var that = this;
     this.$gunZone.on('mousedown', function(e) {
-      var userCmd = new Karma.UserCommand('shoot', 'start', Date.now());
-      that.connection.emit('user_command', userCmd);
+      Karma.gameInstance.keyboardHandler.shoot = true;
     });
 
     this.$gunZone.on('mouseup', function(e) {
-      var userCmd = new Karma.UserCommand('shoot', 'end', Date.now());
-      that.connection.emit('user_command', userCmd);
+      Karma.gameInstance.keyboardHandler.shoot = false;
     });
 
     this.$gunZone.on('touchstart', function(e) {
-      var userCmd = new Karma.UserCommand('shoot', 'start', Date.now());
-      that.connection.emit('user_command', userCmd);
+      Karma.gameInstance.keyboardHandler.shoot = true;
     });
 
     this.$gunZone.on('touchend', function(e) {
-      var userCmd = new Karma.UserCommand('shoot', 'end', Date.now());
-      that.connection.emit('user_command', userCmd);
+      Karma.gameInstance.keyboardHandler.shoot = false;
     });
 
   };
