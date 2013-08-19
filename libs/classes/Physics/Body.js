@@ -30,7 +30,7 @@ Body.prototype.initialize = function(engine, position, size, reuseId) {
   this.isStatic = false;
   this.isBullet = false;
   this.shareCollisionInfo = engine.shareCollisionInfo;
-  this.moveToPosition = this.getPositionAndAngle();
+  this.moveToPosition = null;
   this.oldPosition = this.getPositionAndAngle();
 }
 
