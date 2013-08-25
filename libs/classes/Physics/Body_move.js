@@ -38,6 +38,9 @@ Body_move.accelerateAndTurn = function(ac, a) {
 }
 
 Body_move.turn = function(angleToAdd) {
+  if (angleToAdd === 0) {
+    return;
+  }
   var pos = this.getTransientPosition();
   this.moveTo({
     r: (pos.r + angleToAdd) % (Math.PI * 2)
