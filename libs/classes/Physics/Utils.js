@@ -67,7 +67,9 @@ Utils.vectorCrossProduct = function(v, w) {
 }
 
 function getScore(source, p) {
-  return Math.abs(source.x - p.x) * Math.abs(source.y - p.y);
+  var diffx = Math.abs(source.x - p.x);
+  var diffy = Math.abs(source.y - p.y);
+  return Math.sqrt(diffx * diffx + diffy * diffy);
 }
 
 Utils.getClosestPoint = function(source, points) {
