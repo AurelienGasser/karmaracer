@@ -8,10 +8,17 @@ var UserCommand = function(gameInstance, ts) {
     right:    gameInstance.keyboardHandler.right,
     shoot:    gameInstance.keyboardHandler.shoot
   };
-  this.mousePos = {
-    force: gameInstance.steeringWheelController.force,
-    angle: gameInstance.steeringWheelController.angle
-  };
+  if ($('#use_mouse_for_direction').is(':checked')) {
+    this.mousePos = {
+      force: gameInstance.steeringWheelController.force,
+      angle: gameInstance.steeringWheelController.angle
+    };
+  } else {
+    this.mousePos = {
+      force: 1,
+      angle: gameInstance.myCar.r || 0
+    };
+  }
   this.ts = ts;
   this.active = true;
   // for (var action in this.actions) {
