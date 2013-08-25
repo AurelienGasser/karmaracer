@@ -221,12 +221,6 @@ Engine_collisions.bulletCollision = function(projectile) {
     };
   }
   // bullet necesarily collides with a wall
-  pointsAndBullets.push({
-    body: {
-      name: 'outsideWall'
-    },
-    point: this.bulletCollideWall(projectile)
-  });
   return PhysicsUtils.getClosestPoint(projectile, pointsAndBullets);
 };
 
