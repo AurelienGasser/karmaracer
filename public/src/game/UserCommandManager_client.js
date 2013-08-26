@@ -129,7 +129,7 @@
     } else {
       this.lastReceivedMyCar = dup(myCar);
       for (var seq in this.toAck) {
-        if (seq <= myCar.ack) {
+        if (seq <= myCar.ackd) {
           delete this.toAck[seq];
         }
       }

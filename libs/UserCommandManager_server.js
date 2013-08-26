@@ -25,13 +25,13 @@ UserCommandManager.prototype.turnToAngle = function(angle) {
   car.turn(angle - car.r);
 }
 
-UserCommandManager.prototype.tryExecute = function(userCmd, action, fwdForce) {
+UserCommandManager.prototype.tryExecute = function(userCmd) {
   var now = Date.now();
   var that = this;
   if (now < userCmd.ts + 1000 / config.userCommandsSentPerSecond) {
     // don't execute the command before it is finished
     process.nextTick(function() {
-      that.tryExecute.bind(that)(userCmd, action, fwdForce);
+      that.tryExecute.bind(that)(userCmd);
     })
   } else {
     var client = this.client;
@@ -42,18 +42,20 @@ UserCommandManager.prototype.tryExecute = function(userCmd, action, fwdForce) {
         typeof player.playerCar.car !== 'undefined' &&
         typeof client.gameServer !== 'undefined' &&
         client.gameServer.doStep) {
-          switch (action) {
-            case 'forward':
-            case 'backward':
-              this.forwardBackward(userCmd, action, fwdForce);
-              break;
-            case 'left':
-            case 'right':
-              this.leftRight(userCmd, action);
-              break;
-            default:
-              console.error('Error: uncaught action', userCmd);
-              break;
+          var fwdForce = userCmd.mousePos.force;
+          var angle = userCmd.mousePos.angle;
+          this.turnToAngle(angle);
+          if (userCmd.actions.left) {
+            this.leftRight(userCmd, 'left');
+          }
+          if (userCmd.actions.right) {
+            this.leftRight(userCmd, 'right');
+          }
+          if (userCmd.actions.forward) {
+            this.forwardBackward(userCmd, 'forward', fwdForce);
+          }
+          if (userCmd.actions.backward) {
+            this.forwardBackward(userCmd, 'backward', fwdForce);
           }
     } else {
       // player car is not ready for executing user command
@@ -68,21 +70,7 @@ UserCommandManager.prototype.receivedUserCmd = function(userCmd) {
     return;
   }
   this.currentSeq = userCmd.seq;
-  var fwdForce = userCmd.mousePos.force;
-  var angle = userCmd.mousePos.angle;
-  this.turnToAngle(angle);
-  if (userCmd.actions.left) {
-    this.tryExecute(userCmd, 'left');
-  }
-  if (userCmd.actions.right) {
-    this.tryExecute(userCmd, 'right');
-  }
-  if (userCmd.actions.forward) {
-    this.tryExecute(userCmd, 'forward', fwdForce);
-  }
-  if (userCmd.actions.backward) {
-    this.tryExecute(userCmd, 'backward', fwdForce);
-  }
+  this.tryExecute(userCmd);
   if (userCmd.actions.shoot) {
     var playerCar = this.client.player.playerCar;
     if (!playerCar.dead) {

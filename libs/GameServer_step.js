@@ -18,7 +18,7 @@ GameServer_step.initStep = function() {
   this.tickCounter = 0;
   this.tickTs = new Date();
   this.snapshot = new Snapshot(this);
-  this.ack = {};
+  this.ackd = {};
 }
 
 GameServer_step.tryStep = function() {
@@ -67,7 +67,7 @@ GameServer_step.step = function() {
       this.engine.step();
       this.snapshot.update();
       for (var playerId in this.players) {
-        this.ack[playerId] = this.players[playerId].client.userCommandManager.toAck;
+        this.ackd[playerId] = this.players[playerId].client.userCommandManager.toAck;
       }
       start = registerDateDiff(timer, 'Physics', start);
     }
