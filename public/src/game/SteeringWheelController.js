@@ -74,7 +74,6 @@
     }
 
     var hover = function(e) {
-      // console.log('hover');
       var mousePosition = {
         x: e.pageX,
         y: e.pageY
@@ -99,7 +98,6 @@
       }
       that.force = accHelper * distancePercentage;
       that.angle = angle(force);
-      // console.log(that.force);
     };
 
     if (that.gameInstance.isMobile) {
