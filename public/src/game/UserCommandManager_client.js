@@ -43,15 +43,20 @@
   };
 
   UserCommandManager.prototype.updatePos = function(now) {
+    var config = this.gameInstance.config;
+    var engine = this.gameInstance.engine;
+    var body = engine.bodies[engine.myCarBodyId];
     if (!this.lastReceivedMyCar ||
       this.gameInstance.myCar === null) {
       return;
     }
     this.setMyCar(this.lastReceivedMyCar);
-    var config = this.gameInstance.config;
     for (var seq in this.toAck) {
       var userCmd = this.toAck[seq];
-      var timeSec = Math.min(now - userCmd.ts, 1000 / config.userCommandsSentPerSecond) / 1000;
+      var timeDelta = now - userCmd.ts;
+      var fullCmdDuration = 1000 / config.userCommandsSentPerSecond;
+      var isSmallDelta = timeDelta < fullCmdDuration;
+      var timeSec = Math.min(timeDelta, fullCmdDuration) / 1000;
       var distance = timeSec * config.myCarSpeed;
       var angleLeftRight = timeSec * config.myCarTurnSpeed;
       var angle = userCmd.mousePos.angle;
@@ -69,9 +74,7 @@
       if (userCmd.actions.backward === true) {
         this.forwardBackward('backward', distance, fwdForce);
       }
-      var engine = this.gameInstance.engine;
-      var body = engine.bodies[engine.myCarBodyId];
-      body.doMove();
+      body.doMove(isSmallDelta);
       this.gameInstance.myCar.x = body.x;
       this.gameInstance.myCar.y = body.y;
       this.gameInstance.myCar.r = body.r;

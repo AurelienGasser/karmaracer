@@ -99,7 +99,7 @@ function dup(pos) {
   }
 }
 
-Body_move.doMove = function() {
+Body_move.doMove = function(skipDichotomie) {
   if (!this.moveToPosition) {
     return;
   }
@@ -111,7 +111,7 @@ Body_move.doMove = function() {
   var collision = this.engine.checkCollisions(this);
   if (collision) {
     var movedDicho = false;
-    if (sharedConfig.physics.dichotomyIterations != 0) {
+    if (sharedConfig.physics.dichotomyIterations != 0 && skipDichotomie !== true) {
       this.moveToDichotomie(dup(this.oldPosition), pos);
       var before = this.oldPosition;
       var after = this.getPositionAndAngle();
