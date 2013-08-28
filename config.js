@@ -15,7 +15,6 @@ var configSingleton = function() {
       config.appName = 'karmaracer';
       config.gameMaxLevel = 8;
       config.port = 443;
-      console.info('fb host is prod', config.host);
       break;
     case "dev":
       config.appID = '156724717828757';
@@ -24,9 +23,9 @@ var configSingleton = function() {
       config.appName = 'karmaracer_dev';
       config.gameMaxLevel = 3;
       config.port = 443;
-      console.info('fb host is dev', config.host);
       break;
   }
+  console.info('fb host is', config.env, config.host);
   config.physicalTicksPerSecond = 30;
   config.positionsSocketEmitsPerSecond = 20;
   config.botManagerTicksPerSecond = 15;
