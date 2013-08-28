@@ -3,15 +3,10 @@ var sharedConfig = require('./config_shared');
 
 var configSingleton = function() {
   var config = {
-    host: os.hostname(),
-    physics: {}
+    host:     os.hostname(),
+    physics:  {},
+    env:      process.env.NODE_ENV
   }
-  if (config.host === 'ks3096106.kimsufi.com') {
-    config.env = 'prod';
-  } else {
-    config.env = 'dev';
-  }
-
   switch (config.env) {
     case "prod":
       config.appID = '512708015460560';

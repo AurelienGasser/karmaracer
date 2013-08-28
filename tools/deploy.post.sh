@@ -2,4 +2,4 @@
 npm install;
 rm out.log;rm err.log;
 grunt;
-forever start -append -l karmaracer.log -o out.log -e err.log server.js
+NODE_ENV=prod forever start -append -l karmaracer.log -o out.log -e err.log server.js
