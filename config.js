@@ -14,6 +14,7 @@ var configSingleton = function() {
       config.callbackURL = 'https://karma.origamix.fr/auth/facebook/callback';
       config.appName = 'karmaracer';
       config.gameMaxLevel = 8;
+      config.port = 443;
       console.info('fb host is prod', config.host);
       break;
     case "dev":
@@ -22,10 +23,10 @@ var configSingleton = function() {
       config.callbackURL = 'https://localhost/auth/facebook/callback';
       config.appName = 'karmaracer_dev';
       config.gameMaxLevel = 3;
+      config.port = 443;
       console.info('fb host is dev', config.host);
       break;
   }
-
   config.physicalTicksPerSecond = 30;
   config.positionsSocketEmitsPerSecond = 20;
   config.botManagerTicksPerSecond = 15;

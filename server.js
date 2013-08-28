@@ -4,7 +4,6 @@ var fs = require('fs');
 var sys = require("util");
 var memwatch = require('memwatch');
 var os = require('os');
-
 var CONFIG = require('./config');
 
 // memwatch.on('leak', function(info) {
@@ -34,7 +33,7 @@ var ssl_options = {
 
 const https = require('https');
 
-var server = https.createServer(ssl_options, app).listen(443);
+var server = https.createServer(ssl_options, app).listen(CONFIG.port);
 
 server.on('error', function(e) {
   console.error('Critical Server Error:', e);
