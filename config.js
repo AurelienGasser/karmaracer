@@ -13,7 +13,7 @@ var configSingleton = function() {
       config.appSecret = '208a70456e24df5d25f4e136aa83a930';
       config.callbackURL = 'https://karma.origamix.fr/auth/facebook/callback';
       config.appName = 'karmaracer';
-      config.gameMaxLevel = 8;
+      config.gameMaxLevel = 9;
       config.port = 443;
       break;
     case "preprod":
