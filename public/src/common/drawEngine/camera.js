@@ -11,7 +11,7 @@
       "x": 0,
       "y": 0
     };
-    this.scale = 1.3;
+    this.scale = 1.5;
     this.realWorldSize = {
       "w": 0,
       "h": 0
