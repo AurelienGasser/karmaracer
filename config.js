@@ -16,6 +16,14 @@ var configSingleton = function() {
       config.gameMaxLevel = 8;
       config.port = 443;
       break;
+    case "preprod":
+      config.appID = '156724717828757';
+      config.appSecret = 'b154448258775abf1cebc39eaa8df713';
+      config.appName = 'karmaracer';
+      config.gameMaxLevel = 8;
+      config.port = 4430;
+      config.callbackURL = 'http://karma.origamix.fr:' + config.port + '/auth/facebook/callback';
+      break;
     case "dev":
       config.appID = '156724717828757';
       config.appSecret = 'b154448258775abf1cebc39eaa8df713';
