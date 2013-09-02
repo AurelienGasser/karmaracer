@@ -2,6 +2,7 @@
   "use strict";
 
   function UserCommandManager(gameInstance) {
+    this.G_userCommandCounter = 0;
     this.gameInstance = gameInstance;
     this.toAck = {};
     return this;
@@ -42,6 +43,7 @@
       return;
     }
     if (this.gameInstance.socketManager.getConnection()) {
+      userCmd.seq = ++this.G_userCommandCounter;
       this.gameInstance.socketManager.getConnection().emit('user_command', userCmd);
     }
     this.toAck[userCmd.seq] = userCmd;

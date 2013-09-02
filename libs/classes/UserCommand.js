@@ -1,5 +1,3 @@
-G_userCommandCounter = 0;
-
 var UserCommand = function(gameInstance, ts) {
   this.actions = {
     forward:  gameInstance.keyboardHandler.forward,
@@ -21,17 +19,6 @@ var UserCommand = function(gameInstance, ts) {
   }
   this.ts = ts;
   this.active = true;
-  // for (var action in this.actions) {
-  //   if (this.actions[action] === true) {
-  //     this.active = true;
-  //     break;
-  //   }
-  // }
-  if (!this.active) {
-    return;
-  } else {
-    this.seq = ++G_userCommandCounter;
-  }
 }
 
 UserCommand.prototype.isNotMoving = function() {
