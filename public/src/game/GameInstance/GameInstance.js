@@ -24,7 +24,7 @@
     this.drawEngine = null;
 
     this.explosionManager = new Karma.ExplosionsManager(this);
-    this.clock = new Karma.Clock();
+    this.clockSync = new Karma.ClockSync();
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
 
     this.setUIEvents();

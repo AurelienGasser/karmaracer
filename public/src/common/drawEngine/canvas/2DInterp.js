@@ -31,7 +31,7 @@
     var stepNumbers = Object.keys(snapshots);
     var now = Date.now();
     var numSnaps = stepNumbers.length;
-    var serverTs = this.gameInstance.clock.getServerTsForClientTs(Date.now());
+    var serverTs = this.gameInstance.clockSync.getServerTsForClientTs(Date.now());
     if (serverTs === null) {
       // clock not started yet, cannot draw
       return;

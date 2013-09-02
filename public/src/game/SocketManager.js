@@ -177,7 +177,7 @@
       if (!err) {
         res.clientSentTs     = sentTs;
         res.clientReceivedTs = Date.now();
-        that.gameInstance.clock.pong(res);
+        that.gameInstance.clockSync.pong(res);
       }
     });
   };
