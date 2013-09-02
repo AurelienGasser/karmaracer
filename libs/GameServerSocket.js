@@ -56,6 +56,7 @@ GameServerSocket.prototype.registerMethods = function(client) {
 
   client.on('ping', function(data, callback) {
     data.receive = Date.now();
+    client.userCommandManager.clockSyncDifference = data.difference;
     data.transmit = Date.now();
     callback(null, data);
   });

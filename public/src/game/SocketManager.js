@@ -172,11 +172,15 @@
 
   SocketManager.prototype.ping = function() {
     var that = this;
-    var original = Date.now();
-    this.connection.emit('ping', { original: original }, function(err, res) {
+    var clock = that.gameInstance.clockSync;
+    var req = {
+      original:   Date.now(),
+      difference: clock.difference
+    };
+    this.connection.emit('ping', req, function(err, res) {
       if (!err) {
         res.returned = Date.now();
-        that.gameInstance.clockSync.pong(res);
+        clock.pong(res);
       }
     });
   };
