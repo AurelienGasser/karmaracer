@@ -34,4 +34,26 @@ var UserCommand = function(gameInstance, ts) {
   }
 }
 
+UserCommand.prototype.isNotMoving = function() {
+  return this.actions.forward === false && this.actions.backward === false;
+}
+
+UserCommand.prototype.isEqual = function(userCmd) {
+  if (typeof userCmd === 'undefined') {
+    return false;
+  }
+  for (var action in this.actions) {
+    if (this.actions[action] !== userCmd.actions[action]) {
+      return false;
+    }
+  }
+  if (this.mousePos.force !== userCmd.mousePos.force) {
+    return false;
+  }
+  if (this.mousePos.angle !== userCmd.mousePos.angle) {
+    return false;
+  }
+  return true;
+}
+
 module.exports = UserCommand;

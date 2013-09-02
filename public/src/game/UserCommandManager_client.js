@@ -33,6 +33,11 @@
 
   UserCommandManager.prototype.generateUserCommand = function(now) {
     var userCmd = new Karma.UserCommand(this.gameInstance, now);
+    // don't send the same "idle" user command twice in a row
+    if (userCmd.isNotMoving() && userCmd.isEqual(this.lastUserCmd)) {
+      userCmd.active = false;
+    }
+    this.lastUserCmd = userCmd;
     if (userCmd.active === false) {
       return;
     }
