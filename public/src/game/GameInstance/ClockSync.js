@@ -2,36 +2,36 @@
   "use strict";
 
   var ClockSync = function() {
-    this.ping = undefined;
-    this.serverTs = undefined;
-    this.clientSentTs = undefined;
-    this.clientReceivedTs = undefined;
     return this;
   };
 
   ClockSync.prototype.pong = function(data) {
-    var clientSentTs      = data.clientSentTs;
-    var clientReceivedTs  = data.clientReceivedTs;
-    var serverReceivedTs  = data.serverReceivedTs;
-    var ping = clientReceivedTs - clientSentTs;
+    var original = data.original;
+    var receive  = data.receive;
+    var transmit = data.transmit;
+    var returned = data.returned;
+
+    var sending = receive - original;
+    var receiving = returned - transmit;
+    var roundtrip = sending + receiving;
+    var oneway = roundtrip / 2;
+    var difference = sending - oneway;
+
     // update clock only if this packet is the most recently sent
-    if (typeof this.clientSentTs === 'undefined' ||
-      clientSentTs > this.clientSentTs) {
-      this.ping = ping;
-      // server time was this.serverTs when client time was this.clientReceivedTs
-      this.serverTs = Math.floor(serverReceivedTs + this.ping / 2);
-      this.clientReceivedTs = clientReceivedTs;
-      this.clientSentTs = clientSentTs;
-      $('#ping').html('ping: ' + this.ping + 'ms');
+    if (typeof this.original === 'undefined' ||
+      original > this.original) {
+      this.original = original;
+      this.roundtrip = roundtrip;
+      this.difference = difference;
+      $('#ping').html('ping: ' + this.roundtrip + 'ms');
     }
   };
 
   ClockSync.prototype.getServerTsForClientTs = function(clientTs) {
-    if (typeof this.serverTs !== 'undefined') {
-      return this.serverTs + (clientTs - this.clientReceivedTs);
-    } else {
+    if (typeof this.difference === 'undefined') {
       return null;
     }
+    return clientTs + this.difference;
   };
 
   Karma.ClockSync = ClockSync;
