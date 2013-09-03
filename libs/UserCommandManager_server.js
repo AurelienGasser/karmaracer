@@ -34,12 +34,7 @@ UserCommandManager.prototype.delayExecution = function(userCmd) {
 
 UserCommandManager.prototype.tryExecute = function(userCmd) {
   var now = Date.now();
-  if (typeof this.clockSyncDifference === 'undefined') {
-    // Server clock is not syncd with client yet: can't know when to execute
-    this.delayExecution(userCmd);
-    return;
-  }
-  var ts = userCmd.ts + this.clockSyncDifference;
+  var ts = userCmd.ts + userCmd.clockSyncDifference;
   if (now < ts + 1000 / config.userCommandsSentPerSecond) {
     // don't execute the command before it is finished
     this.delayExecution(userCmd);

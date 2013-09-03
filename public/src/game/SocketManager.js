@@ -174,8 +174,7 @@
     var that = this;
     var clock = that.gameInstance.clockSync;
     var req = {
-      original:   Date.now(),
-      difference: clock.difference
+      original:   Date.now()
     };
     this.connection.emit('ping', req, function(err, res) {
       if (!err) {

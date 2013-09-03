@@ -1,4 +1,5 @@
-var UserCommand = function(gameInstance, ts) {
+var UserCommand = function(gameInstance, ts, clockSyncDifference) {
+  this.clockSyncDifference = gameInstance.clockSync.difference;
   this.actions = {
     forward:  gameInstance.keyboardHandler.forward,
     backward: gameInstance.keyboardHandler.backward,

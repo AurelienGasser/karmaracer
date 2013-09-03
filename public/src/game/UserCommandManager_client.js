@@ -33,6 +33,10 @@
   };
 
   UserCommandManager.prototype.generateUserCommand = function(now) {
+    if (typeof this.gameInstance.clockSync.difference === 'undefined') {
+      // not synced with server yet
+      return;
+    }
     var userCmd = new Karma.UserCommand(this.gameInstance, now);
     // don't send the same "idle" user command twice in a row
     if (userCmd.isNotMoving() && userCmd.isEqual(this.lastUserCmd)) {
