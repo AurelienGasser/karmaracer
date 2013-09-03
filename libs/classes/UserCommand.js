@@ -22,8 +22,13 @@ var UserCommand = function(gameInstance, ts, clockSyncDifference) {
   this.active = true;
 }
 
-UserCommand.prototype.isNotMoving = function() {
-  return this.actions.forward === false && this.actions.backward === false;
+UserCommand.prototype.isIdle = function() {
+  for (var action in this.actions) {
+    if (this.actions[action] === true) {
+      return false;
+    }
+  }
+  return true;
 }
 
 UserCommand.prototype.isEqual = function(userCmd) {
