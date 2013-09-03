@@ -6,7 +6,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:tibastral/karmaracer.git"
+    "url": "git@github.com:momow/karmaracer.git"
   },
   "dependencies": {
     "express": ">=3.0.6",
