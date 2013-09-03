@@ -39,7 +39,7 @@ UserCommandManager.prototype.tryExecute = function(userCmd) {
     this.delayExecution(userCmd);
     return;
   }
-  var ts = userCmd.ts - this.clockSyncDifference;
+  var ts = userCmd.ts + this.clockSyncDifference;
   if (now < ts + 1000 / config.userCommandsSentPerSecond) {
     // don't execute the command before it is finished
     this.delayExecution(userCmd);
