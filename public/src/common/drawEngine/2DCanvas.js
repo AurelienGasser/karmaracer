@@ -324,16 +324,7 @@
   };
 
   Engine2DCanvas.prototype.tryGenerateUserCmd = function(now) {
-    var maxCptDrive;
-    if (typeof this.maxCptDrive === 'undefined') {
-      if (typeof this.fps !== 'undefined') {
-        this.maxCptDrive = Math.round(this.fps / this.gameInstance.config.userCommandsSentPerSecond);
-      }
-      maxCptDrive = 3;
-    } else {
-      maxCptDrive = this.maxCptDrive;
-    }
-    if (this.tickCptDrive >= maxCptDrive) {
+    if (this.tickCptDrive >= 3) {
       var ucm = this.gameInstance.userCommandManager;
       ucm.generateUserCommand(now);
       this.tickCptDrive = 0;
