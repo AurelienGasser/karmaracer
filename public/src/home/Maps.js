@@ -25,6 +25,10 @@
       for (var i = 0; i < maps.length; i++) {
         var o = [];
         var m = maps[i];
+        if (m === 'longmap') {
+          // don't display
+          continue;
+        }
         o.push('<li id="map-', m, '">');
         var link = 'game.' + m;
         o.push('<a class="mapLink" href="', link, '" data-map="', m, '"><div class="box"><div class="name">', m, '</div><div class="miniMap"></div>');
