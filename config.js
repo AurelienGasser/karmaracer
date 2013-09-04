@@ -44,7 +44,7 @@ var configSingleton = function() {
   config.noBots = process.env.NO_BOTS;
   config.FBScope = 'publish_actions';
   config.physics.dichotomyIterations = sharedConfig.physics.dichotomyIterations;
-  config.myCarSpeed = 75; // units per second
+  config.myCarSpeed = 20; // units per second
   config.myCarTurnSpeed = Math.PI * 3;
 
   console.info('run on host', config.host);
