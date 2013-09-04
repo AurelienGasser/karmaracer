@@ -90,6 +90,7 @@
       this.gameInstance.myCar.y = body.y;
       this.gameInstance.myCar.r = body.r;
     }
+    console.log(Date.now(), this.gameInstance.myCar.x);
     if (this.gameInstance.keyboardHandler.shoot &&
         this.gameInstance.myCar.gunLife.cur > 0) {
           var player = this.gameInstance.gameInfo[this.gameInstance.myCar.id];
