@@ -24,6 +24,9 @@
       this.roundtrip = roundtrip;
       this.difference = difference;
       $('#ping').html('ping: ' + this.roundtrip + 'ms');
+      if (typeof Karma.plotPush !== 'undefined') {
+        Karma.plotPush('ping', this.roundtrip);
+      }
     }
   };
 

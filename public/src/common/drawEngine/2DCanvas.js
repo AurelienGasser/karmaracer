@@ -363,6 +363,9 @@
       this.timer = now;
       this.fps = this.frames;
       $('#fps').html('fps: ' + this.fps);
+      if (typeof Karma.plotPush !== 'undefined') {
+        Karma.plotPush('fps', this.fps);
+      }
       this.frames = 0;
     }
   };

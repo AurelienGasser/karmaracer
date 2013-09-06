@@ -49,6 +49,9 @@ html
         div
           input#use_mouse_for_direction.nativeTouchEnabled(type="checkbox", checked="checked")
           label.nativeTouchEnabled(for="use_mouse_for_direction") Use mouse for direction
+        div
+          input#show_debug_plot.nativeTouchEnabled(type="checkbox")
+          label.nativeTouchEnabled(for="show_debug_plot") Show debug plot
     canvas#game-canvas
     img#loadingImage(src='/images/loading.gif')
     div#loadingInfo
@@ -58,3 +61,5 @@ html
       div#chat_input_wrapper
         div#chat_input_label
         input#chat_input(type="text", autocapitalize="off", autocorrect="off", autocomplete="off")
+    #plot
+
