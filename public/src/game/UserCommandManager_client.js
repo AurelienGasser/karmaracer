@@ -5,7 +5,7 @@
     this.G_userCommandCounter = 0;
     this.gameInstance = gameInstance;
     this.toAck = {};
-    this.nbUserCmdsSec = 0
+    this.nbUserCmdsSec = 0;
     this.userCmdTs = Date.now();
     if (typeof Karma.plotPush !== 'undefined') {
       var that = this;
