@@ -7,8 +7,9 @@
     // be fetched from a server
 
     var series = {
-      ping: [],
-      fps:  []
+      ping:           [],
+      fps:            [],
+      user_commands:  []
     };
     var totalPoints = 300;
 
@@ -34,11 +35,26 @@
     var plotPush = function(serie, y) {
       series[serie] = series[serie].slice(1);
       series[serie].push(y);
-      if (!$('#show_debug_plot').is(':checked')) {
-        return;
+      // update other series:
+      for (var _serie in series) {
+        if (serie != _serie) {
+          var lastY = series[_serie][totalPoints - 1];
+          series[_serie] = series[_serie].slice(1);
+          series[_serie].push(lastY);
+        }
       }
-      plot.setData(getPlotData());
-      plot.draw();
+      if ($('#show_debug_plot').is(':checked')) {
+        plot.setData(getPlotData());
+        plot.draw();
+      }
+    };
+
+    var initSeries = function() {
+      for (var serie in series) {
+        for (var i = 0; i < totalPoints; ++i) {
+          series[serie].push(0);
+        }
+      }
     };
 
     $('#show_debug_plot').change(function() {
@@ -48,14 +64,6 @@
         $('#plot').hide();
       }
     });
-
-    var initSeries = function() {
-      for (var serie in series) {
-        for (var i = 0; i < totalPoints; ++i) {
-          series[serie].push(0);
-        }
-      }
-    };
 
     initSeries();
 

@@ -5,6 +5,15 @@
     this.G_userCommandCounter = 0;
     this.gameInstance = gameInstance;
     this.toAck = {};
+    this.nbUserCmdsSec = 0
+    this.userCmdTs = Date.now();
+    if (typeof Karma.plotPush !== 'undefined') {
+      var that = this;
+      setInterval(function() {
+        Karma.plotPush('user_commands', that.nbUserCmdsSec);
+        that.nbUserCmdsSec = 0;
+      }, 1000);
+    }
     return this;
   }
 
@@ -51,6 +60,7 @@
       this.gameInstance.socketManager.getConnection().emit('user_command', userCmd);
     }
     this.toAck[userCmd.seq] = userCmd;
+    ++this.nbUserCmdsSec;
   };
 
   UserCommandManager.prototype.updatePos = function(now) {
