@@ -31,7 +31,7 @@
   var plotPush = function(serie, y) {
     series[serie] = series[serie].slice(1);
     series[serie].push(y);
-    // update other series:
+    // update other series
     for (var _serie in series) {
       if (serie != _serie) {
         var lastY = series[_serie][totalPoints - 1];
@@ -53,17 +53,9 @@
     }
   };
 
-  $('#show_debug_plot').change(function() {
-    if ($('#show_debug_plot').is(':checked')) {
-      $('#plot').show();
-    } else {
-      $('#plot').hide();
-    }
-  });
+  initSeries();
 
   $(function() {
-
-    initSeries();
 
     plot = $.plot("#plot", getPlotData(), {
       series: {
@@ -77,6 +69,14 @@
         show: false
       },
       legend: { position: "nw" }
+    });
+
+    $('#show_debug_plot').change(function() {
+      if ($('#show_debug_plot').is(':checked')) {
+        $('#plot').show();
+      } else {
+        $('#plot').hide();
+      }
     });
 
     Karma.plotPush = plotPush;
