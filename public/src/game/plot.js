@@ -8,7 +8,7 @@
     ping:           { yaxis: 1, data: [] },
     fps:            { yaxis: 1, data: [] },
     user_commands:  { yaxis: 2, data: [] },
-    delta:          { yaxis: 3, data: [] },
+    delta:          { yaxis: 3, data: [] }
   };
   var yaxes = [{
     min: 0, // 1
