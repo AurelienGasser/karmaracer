@@ -71,6 +71,8 @@
       this.gameInstance.myCar === null) {
       return;
     }
+    var oldX = this.gameInstance.myCar.x;
+    var oldY = this.gameInstance.myCar.y;
     this.setMyCar(this.lastReceivedMyCar);
     for (var seq in this.toAck) {
       var userCmd = this.toAck[seq];
@@ -99,6 +101,14 @@
       this.gameInstance.myCar.x = body.x;
       this.gameInstance.myCar.y = body.y;
       this.gameInstance.myCar.r = body.r;
+    }
+    var newX = this.gameInstance.myCar.x;
+    var newY = this.gameInstance.myCar.y;
+    var deltaX = oldX - newX;
+    var deltaY = oldY - newY;
+    var delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+    if (typeof Karma.plotPush !== 'undefined') {
+      Karma.plotPush('delta', delta);
     }
     if (this.gameInstance.keyboardHandler.shoot &&
         this.gameInstance.myCar.gunLife.cur > 0) {

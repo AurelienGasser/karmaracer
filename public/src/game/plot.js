@@ -1,12 +1,19 @@
 (function() {
   "use strict";
 
+  // settings
+  var minY = 0;
+  var maxY = 0.3;
+  var display = ['delta'];
+  // end settings
+
   var plot;
   var totalPoints = 300;
   var series = {
     ping:           [],
     fps:            [],
-    user_commands:  []
+    user_commands:  [],
+    delta:          []
   };
 
   var getSeriePlotData = function(data) {
@@ -17,13 +24,19 @@
     return data2;
   };
 
+  var shouldDisplay = function(serie) {
+    return display.indexOf(serie) != -1;
+  }
+
   var getPlotData = function() {
     var res = [];
     for (var serie in series) {
-      res.push({
-        label: serie,
-        data:  getSeriePlotData(series[serie])
-      });
+      if (shouldDisplay(serie)) {
+        res.push({
+          label: serie,
+          data:  getSeriePlotData(series[serie])
+        });
+      }
     }
     return res;
   };
@@ -62,8 +75,8 @@
         shadowSize: 0  // Drawing is faster without shadows
       },
       yaxis: {
-        min: 0,
-        max: 100
+        min: minY,
+        max: maxY
       },
       xaxis: {
         show: false
