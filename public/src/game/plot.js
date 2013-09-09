@@ -2,13 +2,15 @@
   "use strict";
 
   // settings
-  var display = ['ping', 'fps', 'user_commands', 'delta'];
+  var display = ['delta', 'ack', 'delta_time'];
   var totalPoints = 300;
   var series = {
     ping:           { yaxis: 1, data: [] },
     fps:            { yaxis: 1, data: [] },
     user_commands:  { yaxis: 2, data: [] },
-    delta:          { yaxis: 3, data: [] }
+    delta:          { yaxis: 3, data: [] },
+    ack:            { yaxis: 4, data: [] },
+    delta_time:     { yaxis: 5, data: [] }
   };
   var yaxes = [{
     min: 0, // 1
@@ -19,6 +21,12 @@
   }, {
     min: 0, // 3
     max: 0.3
+  }, {
+    min: 0, // 4
+    max: 5
+  }, {
+    min: 0, // 5
+    max: 10
   }];
   // end settings
 

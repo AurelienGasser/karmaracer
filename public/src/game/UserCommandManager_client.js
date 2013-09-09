@@ -167,6 +167,9 @@
           delete this.toAck[seq];
         }
       }
+      if (typeof Karma.plotPush !== 'undefined') {
+        Karma.plotPush('ack', Object.keys(this.toAck).length);
+      }
     }
   };
 
