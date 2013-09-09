@@ -2,19 +2,27 @@
   "use strict";
 
   // settings
-  var minY = 0;
-  var maxY = 0.3;
-  var display = ['delta'];
+  var display = ['ping', 'fps', 'user_commands', 'delta'];
+  var totalPoints = 300;
+  var series = {
+    ping:           { yaxis: 1, data: [] },
+    fps:            { yaxis: 1, data: [] },
+    user_commands:  { yaxis: 2, data: [] },
+    delta:          { yaxis: 3, data: [] },
+  };
+  var yaxes = [{
+    min: 0, // 1
+    max: 100
+  }, {
+    min: 0, // 2
+    max: 30
+  }, {
+    min: 0, // 3
+    max: 0.3
+  }];
   // end settings
 
   var plot;
-  var totalPoints = 300;
-  var series = {
-    ping:           [],
-    fps:            [],
-    user_commands:  [],
-    delta:          []
-  };
 
   var getSeriePlotData = function(data) {
     var data2 = [];
@@ -33,8 +41,9 @@
     for (var serie in series) {
       if (shouldDisplay(serie)) {
         res.push({
+          yaxis: series[serie].yaxis,
           label: serie,
-          data:  getSeriePlotData(series[serie])
+          data:  getSeriePlotData(series[serie].data)
         });
       }
     }
@@ -42,14 +51,14 @@
   };
 
   var plotPush = function(serie, y) {
-    series[serie] = series[serie].slice(1);
-    series[serie].push(y);
+    series[serie].data = series[serie].data.slice(1);
+    series[serie].data.push(y);
     // update other series
     for (var _serie in series) {
       if (serie != _serie) {
-        var lastY = series[_serie][totalPoints - 1];
-        series[_serie] = series[_serie].slice(1);
-        series[_serie].push(lastY);
+        var lastY = series[_serie].data[totalPoints - 1];
+        series[_serie].data = series[_serie].data.slice(1);
+        series[_serie].data.push(lastY);
       }
     }
     if ($('#show_debug_plot').is(':checked')) {
@@ -61,7 +70,7 @@
   var initSeries = function() {
     for (var serie in series) {
       for (var i = 0; i < totalPoints; ++i) {
-        series[serie].push(0);
+        series[serie].data.push(0);
       }
     }
   };
@@ -74,10 +83,7 @@
       series: {
         shadowSize: 0  // Drawing is faster without shadows
       },
-      yaxis: {
-        min: minY,
-        max: maxY
-      },
+      yaxes: yaxes,
       xaxis: {
         show: false
       },
