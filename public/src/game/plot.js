@@ -26,7 +26,7 @@
 
   var shouldDisplay = function(serie) {
     return display.indexOf(serie) != -1;
-  }
+  };
 
   var getPlotData = function() {
     var res = [];
