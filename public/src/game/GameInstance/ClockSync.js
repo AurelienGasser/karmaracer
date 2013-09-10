@@ -23,14 +23,7 @@
       this.original = original;
       this.roundtrip = roundtrip;
       this.difference = difference;
-      if (typeof Karma.plotPush !== 'undefined') {
-        Karma.plotPush('delta_time', this.difference % 100);
-      }
-
       $('#ping').html('ping: ' + this.roundtrip + 'ms');
-      if (typeof Karma.plotPush !== 'undefined') {
-        Karma.plotPush('ping', this.roundtrip);
-      }
     }
   };
 

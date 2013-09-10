@@ -5,15 +5,7 @@
     this.G_userCommandCounter = 0;
     this.gameInstance = gameInstance;
     this.toAck = {};
-    this.nbUserCmdsSec = 0;
     this.userCmdTs = Date.now();
-    if (typeof Karma.plotPush !== 'undefined') {
-      var that = this;
-      setInterval(function() {
-        Karma.plotPush('user_commands', that.nbUserCmdsSec);
-        that.nbUserCmdsSec = 0;
-      }, 1000);
-    }
     return this;
   }
 
@@ -60,7 +52,6 @@
       this.gameInstance.socketManager.getConnection().emit('user_command', userCmd);
     }
     this.toAck[userCmd.seq] = userCmd;
-    ++this.nbUserCmdsSec;
   };
 
   UserCommandManager.prototype.updatePos = function(now) {
@@ -71,8 +62,6 @@
       this.gameInstance.myCar === null) {
       return;
     }
-    var oldX = this.gameInstance.myCar.x;
-    var oldY = this.gameInstance.myCar.y;
     this.setMyCar(this.lastReceivedMyCar);
     for (var seq in this.toAck) {
       var userCmd = this.toAck[seq];
@@ -101,14 +90,6 @@
       this.gameInstance.myCar.x = body.x;
       this.gameInstance.myCar.y = body.y;
       this.gameInstance.myCar.r = body.r;
-    }
-    var newX = this.gameInstance.myCar.x;
-    var newY = this.gameInstance.myCar.y;
-    var deltaX = oldX - newX;
-    var deltaY = oldY - newY;
-    var delta = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
-    if (typeof Karma.plotPush !== 'undefined') {
-      Karma.plotPush('delta', delta);
     }
     if (this.gameInstance.keyboardHandler.shoot &&
         this.gameInstance.myCar.gunLife.cur > 0) {
@@ -150,13 +131,6 @@
       y: myCar.y,
       r: myCar.r
     };
-    // var diffx = myCar.x - this.gameInstance.myCar.x;
-    // var diffy = myCar.y - this.gameInstance.myCar.y;
-    // var diffr = myCar.r - this.gameInstance.myCar.r;
-    // var diff = Math.sqrt(diffx  * diffx + diffy * diffy);
-    // if (Math.abs(diff) > 0.3 ||
-    //     Math.abs(diffr) > Math.PI / 8 ||
-    //     Math.abs(diffr) > 2 * Math.PI - Math.PI / 8) {
     if (!this.gameInstance.myCar) {
       this.setMyCar(myCar);
       this.lastReceivedMyCar = dup(myCar);
@@ -166,9 +140,6 @@
         if (seq <= myCar.ackd) {
           delete this.toAck[seq];
         }
-      }
-      if (typeof Karma.plotPush !== 'undefined') {
-        Karma.plotPush('ack', Object.keys(this.toAck).length);
       }
     }
   };
