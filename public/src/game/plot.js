@@ -26,7 +26,7 @@
     max: 5
   }, {
     min: 0, // 5
-    max: 10
+    max: 100
   }];
   // end settings
 
