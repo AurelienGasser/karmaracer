@@ -54,7 +54,7 @@
         that.connection.emit('enter_map', G_mapName);
         announce($.i18n.prop('game_startmessage') + '</br>' + Karma.TopBar.getHelps(), 'blue');
       }
-      setInterval(that.ping.bind(that), 1000);
+      // setInterval(that.ping.bind(that), 1000);
       that.ping();
     });
 
