@@ -9,30 +9,6 @@
     return this;
   }
 
-  UserCommandManager.prototype.forwardBackward = function(action, distance, fwdForce) {
-    distance = action === 'forward' ? distance : distance / 2;
-    var myCar = this.gameInstance.myCar;
-    var engine = this.gameInstance.engine;
-    var body = engine.bodies[engine.myCarBodyId];
-    var mult = action === 'forward' ? 1 : -1;
-    body.accelerateWithForce(mult * distance, fwdForce);
-  };
-
-  UserCommandManager.prototype.leftRight = function(action, angle) {
-    angle = action === 'left' ? -angle : angle;
-    var myCar = this.gameInstance.myCar;
-    var engine = this.gameInstance.engine;
-    var body = engine.bodies[engine.myCarBodyId];
-    body.turn(angle);
-  };
-
-  UserCommandManager.prototype.turnToAngle = function(angle) {
-    var myCar = this.gameInstance.myCar;
-    var engine = this.gameInstance.engine;
-    var body = engine.bodies[engine.myCarBodyId];
-    body.turn(angle - body.r);
-  };
-
   UserCommandManager.prototype.generateUserCommand = function(now) {
     if (typeof this.gameInstance.clockSync.difference === 'undefined') {
       // not synced with server yet
@@ -56,6 +32,7 @@
 
   UserCommandManager.prototype.updatePos = function(now) {
     var config = this.gameInstance.config;
+    var fullCmdDuration = 1000 / config.userCommandsSentPerSecond;
     var engine = this.gameInstance.engine;
     var body = engine.bodies[engine.myCarBodyId];
     if (!this.lastReceivedMyCar ||
@@ -66,26 +43,11 @@
     for (var seq in this.toAck) {
       var userCmd = this.toAck[seq];
       var timeDelta = now - userCmd.ts;
-      var fullCmdDuration = 1000 / config.userCommandsSentPerSecond;
       var isSmallDelta = timeDelta < fullCmdDuration;
       var timeSec = Math.min(timeDelta, fullCmdDuration) / 1000;
       var distance = timeSec * config.myCarSpeed;
       var angleLeftRight = timeSec * config.myCarTurnSpeed;
-      var angle = userCmd.mousePos.angle;
-      var fwdForce = userCmd.mousePos.force;
-      this.turnToAngle(angle);
-      if (userCmd.actions.left === true) {
-        this.leftRight('left',  angleLeftRight);
-      }
-      if (userCmd.actions.right === true) {
-        this.leftRight('right', angleLeftRight);
-      }
-      if (userCmd.actions.forward === true) {
-        this.forwardBackward('forward',  distance, fwdForce);
-      }
-      if (userCmd.actions.backward === true) {
-        this.forwardBackward('backward', distance, fwdForce);
-      }
+      userCmd.execute(body, angleLeftRight, distance);
       body.doMove(isSmallDelta);
       this.gameInstance.myCar.x = body.x;
       this.gameInstance.myCar.y = body.y;

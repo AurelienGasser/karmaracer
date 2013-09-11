@@ -1,28 +1,9 @@
 var config = require('../config');
-var ucu = require('./classes/UserCommandUtils');
+var UserCommand = require('./classes/UserCommand');
 
 var UserCommandManager = function(client) {
   this.client = client;
   return this;
-}
-
-UserCommandManager.prototype.forwardBackward = function(userCmd, action, fwdForce) {
-  var car = this.client.player.playerCar.car;
-  var distance = config.myCarSpeed / config.userCommandsSentPerSecond;
-  distance = action === 'forward' ? distance : -distance / 2;
-  car.accelerateWithForce(distance, fwdForce);
-}
-
-UserCommandManager.prototype.leftRight = function(userCmd, action) {
-  var car = this.client.player.playerCar.car;
-  var angle = config.myCarTurnSpeed / config.userCommandsSentPerSecond;
-  angle = action === 'left' ? -angle : angle;
-  car.turn(angle);
-}
-
-UserCommandManager.prototype.turnToAngle = function(angle) {
-  var car = this.client.player.playerCar.car;
-  car.turn(angle - car.r);
 }
 
 UserCommandManager.prototype.delayExecution = function(userCmd) {
@@ -46,27 +27,15 @@ UserCommandManager.prototype.tryExecute = function(userCmd) {
 UserCommandManager.prototype.execute = function(userCmd) {
   var client = this.client;
   var player = client.player;
+  var body = player.playerCar.car;
+  var distance = config.myCarSpeed / config.userCommandsSentPerSecond;
   if (typeof player !== 'undefined' &&
       typeof player.playerCar !== 'undefined' &&
       !player.playerCar.dead &&
       typeof player.playerCar.car !== 'undefined' &&
       typeof client.gameServer !== 'undefined' &&
       client.gameServer.doStep) {
-        var fwdForce = userCmd.mousePos.force;
-        var angle = userCmd.mousePos.angle;
-        this.turnToAngle(angle);
-        if (userCmd.actions.left) {
-          this.leftRight(userCmd, 'left');
-        }
-        if (userCmd.actions.right) {
-          this.leftRight(userCmd, 'right');
-        }
-        if (userCmd.actions.forward) {
-          this.forwardBackward(userCmd, 'forward', fwdForce);
-        }
-        if (userCmd.actions.backward) {
-          this.forwardBackward(userCmd, 'backward', fwdForce);
-        }
+        UserCommand.prototype.execute.bind(userCmd)(body, userCmd.mousePos.angle, distance);
   } else {
     // player car is not ready for executing user command
   }

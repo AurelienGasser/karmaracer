@@ -2,7 +2,6 @@ module.exports = function(grunt) {
   var browserify_src_path = 'libs/shared_browserify.js';
   var browserify_dest_path = 'public/dist/shared.js';
   var browserify_deps = [
-    'libs/classes/UserCommandUtils.js',
     'libs/classes/UserCommand.js',
     'libs/classes/Physics/Body.js',
     'libs/classes/Physics/Body_cache.js',

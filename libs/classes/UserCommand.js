@@ -49,4 +49,20 @@ UserCommand.prototype.isEqual = function(userCmd) {
   return true;
 }
 
+UserCommand.prototype.execute = function(body, angleLeftRight, distance) {
+  body.turn(this.mousePos.angle - body.r);
+  if (this.actions.left === true) {
+    body.turn(angleLeftRight);
+  }
+  if (this.actions.right === true) {
+    body.turn(-angleLeftRight);
+  }
+  if (this.actions.forward === true) {
+    body.accelerateWithForce(distance, this.mousePos.force);
+  }
+  if (this.actions.backward === true) {
+    body.accelerateWithForce(-distance / 2, this.mousePos.force);
+  }
+};
+
 module.exports = UserCommand;
