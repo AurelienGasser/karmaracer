@@ -40,6 +40,9 @@
       return;
     }
     this.setMyCar(this.lastReceivedMyCar);
+    var oldX = this.gameInstance.myCar.x;
+    var oldY = this.gameInstance.myCar.y;
+    var oldR = this.gameInstance.myCar.r;
     for (var seq in this.toAck) {
       var userCmd = this.toAck[seq];
       var timeDelta = now - userCmd.ts;
@@ -52,6 +55,15 @@
       this.gameInstance.myCar.x = body.x;
       this.gameInstance.myCar.y = body.y;
       this.gameInstance.myCar.r = body.r;
+      var newX = this.gameInstance.myCar.x;
+      var newY = this.gameInstance.myCar.y;
+      var newR = this.gameInstance.myCar.r;
+      if (!isSmallDelta) {
+        console.log(userCmd.seq + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
+      }
+      oldX = this.gameInstance.myCar.x;
+      oldY = this.gameInstance.myCar.y;
+      oldR = this.gameInstance.myCar.r;
     }
     if (this.gameInstance.keyboardHandler.shoot &&
         this.gameInstance.myCar.gunLife.cur > 0) {

@@ -35,7 +35,14 @@ UserCommandManager.prototype.execute = function(userCmd) {
       typeof player.playerCar.car !== 'undefined' &&
       typeof client.gameServer !== 'undefined' &&
       client.gameServer.doStep) {
+        var oldX = body.x;
+        var oldY = body.y;
+        var oldR = body.r;
         UserCommand.prototype.execute.bind(userCmd)(body, userCmd.mousePos.angle, distance);
+        var newX = body.x;
+        var newY = body.y;
+        var newR = body.r;
+        console.log(userCmd.seq + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
   } else {
     // player car is not ready for executing user command
   }
