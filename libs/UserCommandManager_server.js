@@ -42,7 +42,8 @@ UserCommandManager.prototype.execute = function(userCmd) {
         var newX = body.x;
         var newY = body.y;
         var newR = body.r;
-        console.log(userCmd.seq + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
+        console.log(('000' + userCmd.seq).slice(-3) + ',' + userCmd.actions.forward + ',' + userCmd.actions.left + ',' + userCmd.actions.right + ',' +
+        userCmd.mousePos.force + ',' + userCmd.mousePos.angle + ',' + userCmd.ts + ',' + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
   } else {
     // player car is not ready for executing user command
   }
