@@ -59,7 +59,8 @@
       var newY = this.gameInstance.myCar.y;
       var newR = this.gameInstance.myCar.r;
       if (!isSmallDelta) {
-        console.log(userCmd.seq + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
+        console.log(userCmd.seq + ',' + userCmd.actions.forward + ',' + userCmd.actions.left + ',' + userCmd.actions.right + ',' +
+        userCmd.mousePos.force + ',' + userCmd.mousePos.angle + ',' + userCmd.ts + ',' + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
       }
       oldX = this.gameInstance.myCar.x;
       oldY = this.gameInstance.myCar.y;
