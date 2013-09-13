@@ -41,6 +41,7 @@
       return;
     }
     this.setMyCar(this.lastReceivedMyCar);
+    console.log('setting: ' + this.lastReceivedMyCar.x + ',' + this.lastReceivedMyCar.y + ',' + this.lastReceivedMyCar.r);
     var oldX = this.gameInstance.myCar.x;
     var oldY = this.gameInstance.myCar.y;
     var oldR = this.gameInstance.myCar.r;
@@ -111,6 +112,7 @@
       this.lastReceivedMyCar = dup(myCar);
     } else {
       this.lastReceivedMyCar = dup(myCar);
+      console.log('saving', myCar.ackd + ': ' + this.lastReceivedMyCar.x + ',' + this.lastReceivedMyCar.y + ',' + this.lastReceivedMyCar.r);
       for (var seq in this.toAck) {
         if (seq <= myCar.ackd) {
           delete this.toAck[seq];
