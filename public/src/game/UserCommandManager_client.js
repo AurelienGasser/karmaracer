@@ -31,7 +31,6 @@
   };
 
   UserCommandManager.prototype.updatePos = function(now) {
-    console.log('---');
     var config = this.gameInstance.config;
     var fullCmdDuration = 1000 / config.userCommandsSentPerSecond;
     var engine = this.gameInstance.engine;
