@@ -31,6 +31,7 @@
   };
 
   UserCommandManager.prototype.updatePos = function(now) {
+    console.log('---');
     var config = this.gameInstance.config;
     var fullCmdDuration = 1000 / config.userCommandsSentPerSecond;
     var engine = this.gameInstance.engine;
@@ -58,10 +59,9 @@
       var newX = this.gameInstance.myCar.x;
       var newY = this.gameInstance.myCar.y;
       var newR = this.gameInstance.myCar.r;
-      if (!isSmallDelta) {
-        console.log(userCmd.seq + ',' + userCmd.actions.forward + ',' + userCmd.actions.left + ',' + userCmd.actions.right + ',' +
-        userCmd.mousePos.force + ',' + userCmd.mousePos.angle + ',' + userCmd.ts + ',' + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
-      }
+      var v = (isSmallDelta ? 'small,' : '');
+      console.log(v + ('000' + userCmd.seq).slice(-3) + ',' + userCmd.actions.forward + ',' + userCmd.actions.left + ',' + userCmd.actions.right + ',' +
+      userCmd.mousePos.force + ',' + userCmd.mousePos.angle + ',' + userCmd.ts + ',' + ',' + oldX + ',' + oldY + ',' + oldR + ',' + newX + ',' + newY + ',' + newR);
       oldX = this.gameInstance.myCar.x;
       oldY = this.gameInstance.myCar.y;
       oldR = this.gameInstance.myCar.r;
