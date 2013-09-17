@@ -50,7 +50,7 @@ UserCommand.prototype.isEqual = function(userCmd) {
 }
 
 UserCommand.prototype.execute = function(body, angleLeftRight, distance) {
-  body.turn(this.mousePos.angle - body.r);
+  body.turn(this.mousePos.angle - body.getTransientPosition().r);
   if (this.actions.left === true) {
     body.turn(-angleLeftRight);
   }
