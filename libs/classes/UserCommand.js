@@ -52,10 +52,10 @@ UserCommand.prototype.isEqual = function(userCmd) {
 UserCommand.prototype.execute = function(body, angleLeftRight, distance) {
   body.turn(this.mousePos.angle - body.r);
   if (this.actions.left === true) {
-    body.turn(angleLeftRight);
+    body.turn(-angleLeftRight);
   }
   if (this.actions.right === true) {
-    body.turn(-angleLeftRight);
+    body.turn(angleLeftRight);
   }
   if (this.actions.forward === true) {
     body.accelerateWithForce(distance, this.mousePos.force);

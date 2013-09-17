@@ -28,6 +28,7 @@ UserCommandManager.prototype.execute = function(userCmd) {
   var client = this.client;
   var player = client.player;
   var body = player.playerCar.car;
+  var angle2 = config.myCarTurnSpeed / config.userCommandsSentPerSecond;
   var distance = config.myCarSpeed / config.userCommandsSentPerSecond;
   if (typeof player !== 'undefined' &&
       typeof player.playerCar !== 'undefined' &&
@@ -35,7 +36,7 @@ UserCommandManager.prototype.execute = function(userCmd) {
       typeof player.playerCar.car !== 'undefined' &&
       typeof client.gameServer !== 'undefined' &&
       client.gameServer.doStep) {
-        UserCommand.prototype.execute.bind(userCmd)(body, userCmd.mousePos.angle, distance);
+        UserCommand.prototype.execute.bind(userCmd)(body, angle2, distance);
   } else {
     // player car is not ready for executing user command
   }
