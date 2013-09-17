@@ -139,12 +139,11 @@
 
   function getHelps() {
     var helps = [];
-    helps.push(createHelp('&#8593;&nbsp;&#8595;', $.i18n.prop('topbar_help_arrows_updown')));
-    helps.push(createHelp('&#8592;&nbsp;&#8594;', $.i18n.prop('topbar_help_arrows_leftright')));
-    helps.push(createHelp('&#60;space&#62 / S', $.i18n.prop('topbar_help_space_shoot')));
+    helps.push(createHelp('&#8593;&nbsp; ' + $.i18n.prop('topbar_help_arrows_or_shift'), $.i18n.prop('topbar_help_arrows_up')));
+    helps.push(createHelp('&#8595;', $.i18n.prop('topbar_help_arrows_down')));
+    helps.push(createHelp($.i18n.prop('topbar_help_mouse'), $.i18n.prop('topbar_help_arrows_leftright')));
+    helps.push(createHelp('&#60;space&#62 ' + $.i18n.prop('topbar_help_or') + ' S', $.i18n.prop('topbar_help_space_shoot')));
     helps.push(createHelp('L / P', $.i18n.prop('topbar_help_zoomdezoom')));
-    // helps.push(createHelp('B', 'break'));
-    helps.push(createHelp('Mouse Click', 'drive'));
 
     var o = [];
     for (var i = 0; i < helps.length; i++) {
