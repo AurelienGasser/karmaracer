@@ -1,3 +1,4 @@
+var cookieParser = require('cookie-parser');
 var express = require('express');
 var passport = require('passport');
 var KLib = require('./classes/KLib');
@@ -20,7 +21,7 @@ var setup = function(app, io, renderMethod) {
 
   io.set('authorization', function(data, accept) {
     // accept(null, true);
-    var parseCookie = express.cookieParser();
+    var parseCookie = cookieParser();
     if (data.headers.cookie) {
       // if there is, parse the cookie
       var cookie = require('cookie');

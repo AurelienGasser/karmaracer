@@ -1,3 +1,4 @@
+var cookieParser = require('cookie-parser');
 var CONFIG = require('./config');
 
 var express = require('express');
@@ -24,7 +25,7 @@ app.configure(function(callback) {
   // app.set('views', __dirname + '/views');
 
   // app.use(express.logger());
-  app.use(express.cookieParser());
+  app.use(cookieParser());
   app.use(express.bodyParser());
   app.use(express.methodOverride());
 
