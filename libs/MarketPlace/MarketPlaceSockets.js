@@ -4,8 +4,7 @@ var CarController = require('./../db/CarController');
 
 
 module.exports = function(client) {
-
-  var user = client.handshake.session.user;
+  var user = client.client;
   if (!KLib.isUndefined(user)) {
 
     client.on('getCars', function(callback) {
