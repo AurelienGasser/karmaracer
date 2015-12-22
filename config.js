@@ -3,37 +3,30 @@ var sharedConfig = require('./config_shared');
 
 var configSingleton = function() {
   var config = {
-    host:     os.hostname(),
     physics:  {},
     env:      process.env.NODE_ENV
   }
   switch (config.env) {
-    case "prod":
+    case "production":
+			config.host = 'https://karmaracer.herokuapp.com';
       config.appID = '512708015460560';
       config.appSecret = '208a70456e24df5d25f4e136aa83a930';
-      config.callbackURL = 'https://karma.origamix.fr/auth/facebook/callback';
       config.appName = 'karmaracer';
       config.gameMaxLevel = 9;
       config.port = 443;
       break;
-    case "preprod":
+    case "local":
+		default:
+      config.host = 'https://localhost';
       config.appID = '156724717828757';
       config.appSecret = 'b154448258775abf1cebc39eaa8df713';
-      config.appName = 'karmaracer';
-      config.gameMaxLevel = 8;
-      config.port = 4430;
-      config.callbackURL = 'http://karma.origamix.fr:' + config.port + '/auth/facebook/callback';
-      break;
-    case "dev":
-      config.appID = '156724717828757';
-      config.appSecret = 'b154448258775abf1cebc39eaa8df713';
-      config.callbackURL = 'https://localhost/auth/facebook/callback';
       config.appName = 'karmaracer_dev';
       config.gameMaxLevel = 3;
       config.port = 443;
       break;
   }
   console.info('fb host is', config.env, config.host);
+  config.callbackURL = config.host + '/auth/facebook/callback';
   config.physicalTicksPerSecond = 30;
   config.positionsSocketEmitsPerSecond = 20;
   config.botManagerTicksPerSecond = 15;
@@ -47,7 +40,7 @@ var configSingleton = function() {
   config.myCarSpeed = 11; // units per second
   config.myCarTurnSpeed = Math.PI * 2;
 
-  console.info('run on host', config.host);
+  console.info('run on host', config.host, '(' + os.hostname() + ')');
 
   return config;
 
