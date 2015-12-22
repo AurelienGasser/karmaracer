@@ -2,4 +2,4 @@
 
 Karma Racer is an online multi-player car game, written in HTML / JavaScript / node.js
 
-[**Try it !**](http://karmaracer.herokuapp.com)
+[**Try it !**](https://karmaracer.herokuapp.com)
