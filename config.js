@@ -13,7 +13,7 @@ var configSingleton = function() {
       config.appSecret = '208a70456e24df5d25f4e136aa83a930';
       config.appName = 'karmaracer';
       config.gameMaxLevel = 9;
-      config.port = 443;
+      config.port = process.env.PORT;
       break;
     case "local":
 		default:
