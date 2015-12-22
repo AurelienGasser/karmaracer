@@ -29,7 +29,7 @@ var setup = function(app, io, renderMethod) {
       var connect = require('connect');
       // note that you will need to use the same key to grad the
       // session id, as you specified in the Express setup.
-      data.sessionID = connect.utils.parseSignedCookie(data.cookie['session.sid'], sessionSecret);
+      data.sessionID = cookieParser.signedCookie(data.cookie['session.sid'], sessionSecret);
       sessionStore.get(data.sessionID, function(err, session) {
         if (err || !session) {
           // if we cannot grab a session, turn down the connection
