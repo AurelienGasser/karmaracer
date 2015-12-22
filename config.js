@@ -3,9 +3,29 @@ var sharedConfig = require('./config_shared');
 
 var configSingleton = function() {
   var config = {
+    host: 'https://localhost',
+    port: 443,
+    env: process.env.NODE_ENV,
+    appID: '156724717828757',
+    appName: 'karmaracer_dev',
+    appSecret: 'b154448258775abf1cebc39eaa8df713',
+		mongoUri: "mongodb://127.0.0.1:27017",
+    gameMaxLevel: 3,
     physics:  {},
-    env:      process.env.NODE_ENV
-  }
+	  physicalTicksPerSecond: 30,
+	  positionsSocketEmitsPerSecond: 20,
+	  botManagerTicksPerSecond: 15,
+	  userCommandsSentPerSecond: 20,
+	  botsPerMap: 7,
+	  serverPath: __dirname,
+	  botDensity: 1 / 2300,
+	  noBots: process.env.NO_BOTS,
+	  FBScope: 'publish_actions',
+	  physics:ichotomyIterations = sharedConfig.physics.dichotomyIterations,
+	  myCarSpeed: 11, // units per second
+	  myCarTurnSpeed: Math.PI * 2
+  };
+	
   switch (config.env) {
     case "production":
 			config.host = 'https://karmaracer.herokuapp.com';
@@ -14,32 +34,11 @@ var configSingleton = function() {
       config.appName = 'karmaracer';
       config.gameMaxLevel = 9;
       config.port = process.env.PORT;
-      break;
-    case "local":
-		default:
-      config.host = 'https://localhost';
-      config.appID = '156724717828757';
-      config.appSecret = 'b154448258775abf1cebc39eaa8df713';
-      config.appName = 'karmaracer_dev';
-      config.gameMaxLevel = 3;
-      config.port = 443;
+			config.mongoUri = process.env.MONGOLAB_URI;
       break;
   }
   console.info('fb host is', config.env, config.host);
   config.callbackURL = config.host + '/auth/facebook/callback';
-  config.physicalTicksPerSecond = 30;
-  config.positionsSocketEmitsPerSecond = 20;
-  config.botManagerTicksPerSecond = 15;
-  config.userCommandsSentPerSecond = 20;
-  config.botsPerMap = 7;
-  config.serverPath = __dirname;
-  config.botDensity = 1 / 2300;
-  config.noBots = process.env.NO_BOTS;
-  config.FBScope = 'publish_actions';
-  config.physics.dichotomyIterations = sharedConfig.physics.dichotomyIterations;
-  config.myCarSpeed = 11; // units per second
-  config.myCarTurnSpeed = Math.PI * 2;
-
   console.info('run on host', config.host, '(' + os.hostname() + ')');
 
   return config;
