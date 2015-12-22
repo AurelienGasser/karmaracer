@@ -3,9 +3,10 @@ var passport = require('passport');
 var KLib = require('./classes/KLib');
 var FacebookStrategy = require('passport-facebook').Strategy;
 var graph = require('fbgraph');
+var session = require('express-session');
 var CONFIG = require('./../config');
 
-var MemoryStore = express.session.MemoryStore,
+var MemoryStore = session.MemoryStore,
   sessionStore = new MemoryStore();
 var sessionSecret = 'grand mere',
   sessionKey = 'session.sid',
@@ -15,40 +16,37 @@ var sessionSecret = 'grand mere',
     secret: sessionSecret
   };
 
-
 var setup = function(app, io, renderMethod) {
 
-  io.configure(function() {
-    io.set('authorization', function(data, accept) {
-      // accept(null, true);
-      var parseCookie = express.cookieParser();
-      if (data.headers.cookie) {
-        // if there is, parse the cookie
-        var cookie = require('cookie');
-        data.cookie = cookie.parse(decodeURIComponent(data.headers.cookie));
-        var connect = require('connect');
-        // note that you will need to use the same key to grad the
-        // session id, as you specified in the Express setup.
-        data.sessionID = connect.utils.parseSignedCookie(data.cookie['session.sid'], sessionSecret);
-        sessionStore.get(data.sessionID, function(err, session) {
-          if (err || !session) {
-            // if we cannot grab a session, turn down the connection
-            accept('Error', false);
-          } else {
-            // save the session data and accept the connection
-            data.session = session;
-            // if (KLib.isUndefined(data.session.fbid)) {
-            //   return accept('No FB Id', false);
-            // }
-            accept(null, true);
-          }
-        });
-      } else {
-        // if there isn't, turn down the connection with a message
-        // and leave the function.
-        return accept('No cookie transmitted.', false);
-      }
-    });
+  io.set('authorization', function(data, accept) {
+    // accept(null, true);
+    var parseCookie = express.cookieParser();
+    if (data.headers.cookie) {
+      // if there is, parse the cookie
+      var cookie = require('cookie');
+      data.cookie = cookie.parse(decodeURIComponent(data.headers.cookie));
+      var connect = require('connect');
+      // note that you will need to use the same key to grad the
+      // session id, as you specified in the Express setup.
+      data.sessionID = connect.utils.parseSignedCookie(data.cookie['session.sid'], sessionSecret);
+      sessionStore.get(data.sessionID, function(err, session) {
+        if (err || !session) {
+          // if we cannot grab a session, turn down the connection
+          accept('Error', false);
+        } else {
+          // save the session data and accept the connection
+          data.session = session;
+          // if (KLib.isUndefined(data.session.fbid)) {
+          //   return accept('No FB Id', false);
+          // }
+          accept(null, true);
+        }
+      });
+    } else {
+      // if there isn't, turn down the connection with a message
+      // and leave the function.
+      return accept('No cookie transmitted.', false);
+    }
   });
 
   passport.use(new FacebookStrategy({
@@ -214,7 +212,6 @@ var setup = function(app, io, renderMethod) {
   }), setupFBUser);
 }
 
-
 var reloadUserFromDbIfAuthenticated = function(req, res, next) {
   var UserController = require('./db/UserController');
   if (req.session.user) {
@@ -226,7 +223,6 @@ var reloadUserFromDbIfAuthenticated = function(req, res, next) {
     return next();
   }
 }
-
 
   function ensureAuthenticated(req, res, next) {
     if (req.session.user) {

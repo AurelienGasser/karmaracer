@@ -1,39 +1,23 @@
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var errorHandler = require('errorhandler');
 var express = require('express');
-var KLib = require('./libs/classes/KLib');
 var fs = require('fs');
-var sys = require("util");
-var memwatch = require('memwatch');
-var os = require('os');
-var CONFIG = require('./config');
-
-// memwatch.on('leak', function(info) {
-//   console.info('LEAK', info);
-// });
-
-// memwatch.on('stats', function(stats) {
-//   console.info('HEAP STATS', stats);
-// });
-
-var app = express();
-var os = require("os");
-var hostname = os.hostname();
-
-app.configure('local', function() {});
-// app.listen(8080);
-
 var http = require('http');
+var methodOverride = require('method-override');
+var os = require('os');
+var passport = require('passport');
+var session = require('express-session');
+var socketio = require('socket.io');
+var sys = require("util");
 
+var auth = require('./libs/authentication');
+var CONFIG = require('./config');
+var KLib = require('./libs/classes/KLib');
 
-// REQUIRED FOR SSL
-var sslServer = CONFIG.env;
-var ssl_options = {
-  key: fs.readFileSync(__dirname + '/keys/' + sslServer + '.key'),
-  cert: fs.readFileSync(__dirname + '/keys/' + sslServer + '.crt')
-};
-
-const https = require('https');
-
-var server = https.createServer(ssl_options, app).listen(CONFIG.port);
+var hostname = os.hostname();
+var app = express();
+var server = http.createServer(app).listen(CONFIG.port);
 
 server.on('error', function(e) {
   console.error('Critical Server Error:', e);
@@ -41,37 +25,30 @@ server.on('error', function(e) {
   process.exit(1)
 });
 
-var io = require('socket.io').listen(server);
+var io = socketio.listen(server);
 io.set('log level', 0);
 
-var passport = require('passport');
-var auth = require('./libs/authentication');
+app.set('view engine', 'jade');
+app.set('views', __dirname + '/views');
 
-app.configure(function(callback) {
+app.use(cookieParser());
+app.use(bodyParser());
+app.use(methodOverride());
 
-  app.set('view engine', 'jade');
-  app.set('views', __dirname + '/views');
+app.use(session(auth.sessionOptions));
 
-  // app.use(express.logger());
-  app.use(express.cookieParser());
-  app.use(express.bodyParser());
-  app.use(express.methodOverride());
+app.use(passport.initialize());
+app.use(passport.session());
 
-  app.use(express.session(auth.sessionOptions));
+// app.use(auth.reloadUserFromDb);
 
-  app.use(passport.initialize());
-  app.use(passport.session());
-  app.use(app.router);
-  // app.use(auth.reloadUserFromDb);
+app.use(errorHandler({
+  dumpExceptions: true,
+  showStack: true
+}));
 
+app.use(express.static(__dirname + '/public'));
 
-  app.use(express.errorHandler({
-    dumpExceptions: true,
-    showStack: true
-  }));
-
-  app.use(express.static(__dirname + '/public'));
-});
 
 
 var supportedLanguages = ['fr', 'en'];

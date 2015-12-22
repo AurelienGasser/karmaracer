@@ -1,5 +1,4 @@
 var KLib = require('./classes/KLib');
-var memwatch = require('memwatch');
 
 var MemLeakLog = function(name) {
     this.name = name;
@@ -7,14 +6,6 @@ var MemLeakLog = function(name) {
     this.debug = {};
     this.logAll = false;
     this.enable = true;
-
-    memwatch.on('stats', function(stats) {
-      // console.info('MEM STATS', stats);
-    });
-
-    memwatch.on('leak', function(info) {
-      // console.info('MEM LEAK', info);
-    });
   }
 
 
@@ -37,7 +28,6 @@ MemLeakLog.prototype.save = function() {
   if (!this.enable){
     return;
   }
-  this.hd = new memwatch.HeapDiff();
 }
 
 MemLeakLog.prototype.diff = function() {
