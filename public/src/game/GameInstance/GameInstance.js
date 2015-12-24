@@ -23,7 +23,6 @@
 
     this.drawEngine = null;
 
-    this.explosionManager = new Karma.ExplosionsManager(this);
     this.clockSync = new Karma.ClockSync();
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
 
@@ -58,7 +57,6 @@
     };
     this.loadCars();
     this.drawEngine = Karma.getDrawEngine(false, 'game-canvas', defaultDrawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, canvasReady);
-    this.explosionManager.start();
 
     if (that.isMobile === false) {
       new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that);

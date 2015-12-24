@@ -4,8 +4,7 @@
     var canvas = document.getElementById(canvasId);
     switch (drawEngineType) {
       case 'WEBGL':
-        var gl = WebGLUtils.setupWebGL(canvas, { antialias: false });
-        return new Karma.EngineWebGL(isMinimap, gameInstance, canvas, canvasId, gl, callback);
+        return new Karma.EngineWebGL(gameInstance, canvas, canvasId);
       case 'CANVAS':
       default:
         return new Karma.Engine2DCanvas(isMinimap, canvas, canvasId, items, worldInfo, gScale, gameInstance, connection, callback);

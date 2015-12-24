@@ -1,17 +1,11 @@
-(function() {
+(function(Engine2DCanvas) {
   "use strict";
 
-
-  var ExplosionsManager = function(gameInstance) {
-    this.gameInstance = gameInstance;
+  Engine2DCanvas.prototype.initExplosions = function() {
+    setInterval(this.tickExplosions.bind(this), 60);
   };
 
-  ExplosionsManager.prototype.start = function() {
-    setInterval(this.tick.bind(this), 60);
-  };
-
-
-  ExplosionsManager.prototype.reduceExplosionsAlpha = function() {
+  Engine2DCanvas.prototype.reduceExplosionsAlpha = function() {
     var that = this;
     for (var explosionId in that.gameInstance.items.explosions) {
       that.gameInstance.items.explosions[explosionId].alpha -= 0.05;
@@ -21,10 +15,9 @@
     }
   };
 
-
-  ExplosionsManager.prototype.addExplosion = function(explosion) {
+  Engine2DCanvas.prototype.addExplosion = function(explosion) {
     var explosionId = Math.random();
-    this.gameInstance.drawEngine.gScale(explosion);
+    this.gScale(explosion);
     this.gameInstance.items.explosions[explosionId] = {
       x: explosion.x,
       y: explosion.y,
@@ -33,14 +26,8 @@
     };
   };
 
-
-  ExplosionsManager.prototype.tick = function() {
+  Engine2DCanvas.prototype.tickExplosions = function() {
     this.reduceExplosionsAlpha();
   };
 
-
-  Karma.ExplosionsManager = ExplosionsManager;
-
-
-
-}());
+}(Karma.Engine2DCanvas));

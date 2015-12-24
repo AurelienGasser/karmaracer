@@ -165,7 +165,7 @@
     });
 
     this.connection.on('explosion', function(explosion) {
-      gameInstance.explosionManager.addExplosion(explosion);
+      gameInstance.drawEngine.addExplosion(explosion);
     });
     //
   }
