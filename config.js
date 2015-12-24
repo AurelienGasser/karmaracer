@@ -3,7 +3,7 @@ var sharedConfig = require('./config_shared');
 
 var configSingleton = function() {
   var config = {
-    host: 'https://localhost',
+    host: 'http://localhost',
     port: 80,
     env: process.env.NODE_ENV,
     appID: '156724717828757',
