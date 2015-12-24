@@ -9,6 +9,7 @@
     this.$container.append(this.$canvas);
     this.canvas = this.$canvas[0];
     this.gameInstance = gameInstance;
+    
     if (!this.gameInstance){
       this.gameInstance = null;
     }
@@ -28,13 +29,11 @@
 
   MiniMap.prototype.getMap = function(mapName, callback) {
     var that = this;
-
     var getMiniMap = function(err, worldInfo) {
-      that.drawEngine = Karma.getDrawEngine(that.canvasID, 'CANVAS', that.items, worldInfo, 4, that.gameInstance, that.connection,function(drawEngine) {
+      that.drawEngine = Karma.getDrawEngine(true, that.canvasID, 'CANVAS', that.items, worldInfo, 4, that.gameInstance, that.connection,function(drawEngine) {
         that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
         that.drawEngine.resize();
         that.drawEngine.tick();
-        that.drawEngine.isMiniMap = true;
       });
       if (KLib.isFunction(callback)) {
         return callback(null);

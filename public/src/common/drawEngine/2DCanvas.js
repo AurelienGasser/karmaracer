@@ -1,7 +1,8 @@
 (function() {
   "use strict";
 
-  function Engine2DCanvas(canvas, canvasID, items, worldInfo, gScale, gameInstance, connection, callback) {
+  function Engine2DCanvas(isMinimap, canvas, canvasID, items, worldInfo, gScale, gameInstance, connection, callback) {
+    this.isMinimap = isMinimap;
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.timer = new Date().getTime();
@@ -10,7 +11,6 @@
     this.fps = undefined; // will be defined by requestAnimFrame
     this.debugDraw = false;
     this.carFlameTicks = {};
-    this.isMiniMap = false;
     this.interpData = {
       ready: false
     };
@@ -125,7 +125,6 @@
     this.canvas.height = this.$canvas.height();
     this.camera = new Karma.Camera(this.ctx, '#' + this.canvasID);
     this.camera.setWorldSize(this.worldInfo.size);
-    this.loadCars();
     this.explosionImage = new Image();
     this.explosionImage.src = '/sprites/explosion.png';
     this.rocketImage = new Image();
@@ -153,7 +152,7 @@
   };
 
   Engine2DCanvas.prototype.updateCameraCenter = function() {
-    if (this.isMiniMap === false && this.gameInstance) {
+    if (this.isMinimap === false && this.gameInstance) {
       var newCenter = this.oldCenter;
       if (this.gameInstance.myCar) {
         var pos = this.scalePos(this.gameInstance.myCar);
@@ -181,7 +180,7 @@
   var explosionHeight = 51;
 
   Engine2DCanvas.prototype.drawExplosions = function(ctx) {
-    if (this.isMiniMap === true) {
+    if (this.isMinimap === true) {
       return;
     }
     if (this.items.explosions !== null) {
@@ -317,7 +316,7 @@
     // this.drawRockets(this.ctx);
     this.drawProjectiles(this.ctx);
 
-    if (this.gameInstance !== null && this.isMiniMap === false) {
+    if (this.gameInstance !== null && this.isMinimap === false) {
       this.gameInstance.pointsManager.draw(this.ctx, this.gScaleValue);
     }
     // this.drawCollisionPoints();
@@ -332,6 +331,7 @@
   };
 
   Engine2DCanvas.prototype.tickMiniMap = function() {
+    this.getInterpData();     // todo: remove
     if (this.interpData.ready) {
       this.draw();
     }
@@ -369,7 +369,7 @@
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
-    if (this.isMiniMap) {
+    if (this.isMinimap) {
       this.tickMiniMap();
     } else {
       this.tickGameCanvas();

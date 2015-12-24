@@ -1,34 +1,6 @@
 (function(Engine2DCanvas) {
   "use strict";
 
-  Engine2DCanvas.prototype.loadCars = function() {
-    var that = this;
-
-    var getCarFromDB = function(carDB) {
-      carDB.image = new Image();
-      carDB.image.src = carDB.path;
-      return carDB;
-    };
-
-    var registerCar = function(car) {
-      that.cars[car.name] = car;
-    };
-
-    this.cars = {};
-
-    if (!KLib.isUndefined(this.connection)) {
-      this.connection.emit('getCars', function(err, cars) {
-        if (err) {
-          Karma.Log.error(err);
-          return;
-        }
-        for (var i = 0; i < cars.length; i++) {
-          registerCar(getCarFromDB(cars[i]));
-        }
-      });
-    }
-  };
-
   Engine2DCanvas.prototype.drawLifeBar = function(ctx, c, player, w) {
     ctx.save();
     ctx.translate(-w / 2, -40);
@@ -122,7 +94,7 @@
       // we don't have enough data to draw this car
       return;
     }
-    var car = this.cars[player.carImageName];
+    var car = this.gameInstance.cars[player.carImageName];
     c.playerName = player.playerName;
     c.w = car.w;
     c.h = car.h;
@@ -130,7 +102,7 @@
       w: this.gScaleValue * c.w,
       h: this.gScaleValue * c.h
     };
-    if (this.isMiniMap === true) {
+    if (this.isMinimap === true) {
       this.drawCarForMiniMap(ctx, c, player, pos);
     } else {
       ctx.save();
@@ -183,7 +155,7 @@
                 // we don't have enough data to draw this car
                 continue;
               }
-              var carImage = this.cars[player.carImageName];
+              var carImage = this.gameInstance.cars[player.carImageName];
               car.w = carImage.w;
               car.h = carImage.h;
               this.gameInstance.engine.replaceCarBody(car);

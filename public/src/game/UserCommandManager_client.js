@@ -76,7 +76,7 @@
       return;
     }
     this.gameInstance.myCar = dup(myCar);
-    var carImage = this.gameInstance.drawEngine.cars[player.carImageName];
+    var carImage = this.gameInstance.cars[player.carImageName];
     myCar.w = carImage.w;
     myCar.h = carImage.h;
     var engine = this.gameInstance.engine;
