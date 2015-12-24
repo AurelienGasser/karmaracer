@@ -12,12 +12,12 @@ var socketio = require('socket.io');
 var sys = require("util");
 
 var auth = require('./libs/authentication');
-var CONFIG = require('./config');
+var config = require('./config');
 var KLib = require('./libs/classes/KLib');
 
 var hostname = os.hostname();
 var app = express();
-var server = http.createServer(app).listen(CONFIG.port);
+var server = http.createServer(app).listen(config.port);
 
 server.on('error', function(e) {
   console.error('Critical Server Error:', e);
@@ -116,6 +116,12 @@ app.get('/privacy', function(req, res) {
 app.get('/tos', function(req, res) {
   index(req, res, "tos.jade", "CANVAS");
 });
+
+if (config.env == 'local') {
+  app.get('/test-client', function(req, res) {
+    res.render('test-client.jade');    
+  });  
+}
 
 app.io = io;
 

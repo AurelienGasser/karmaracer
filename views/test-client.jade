@@ -1,0 +1,109 @@
+doctype strict
+html
+  head
+    title Karma Racer Race for your Soul!
+    meta(http-equiv='content-type', content='text/html; charset=utf-8')
+    link(rel="icon", type="image/png", href="/favicon.png")
+    link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
+    meta(name="viewport", content="initial-scale=0.5, maximum-scale=1.0, user-scalable=0.0")
+    meta(name="apple-mobile-web-app-capable", content="yes")
+    script(type='text/javascript').
+      var G_mapName = 'hd';
+      var G_defaultDrawEngineType = 'WEBGL';
+      var G_MOBILE_DEVICE = false;
+      var G_fbid = '';
+      var G_locale = 'en';
+      var GKarmaOptions = {'playerName' : 'player'};
+    script(type='text/javascript', src='/socket.io/socket.io.js')
+    script(type='text/javascript', src='/src/vendor/common/jquery-1.9.0.min.js')
+    script(type='text/javascript', src='/src/vendor/common/jquery-cookie.js')
+    script(type='text/javascript', src='/src/vendor/common/jquery-mousewheel.js')
+    script(type='text/javascript', src='/src/vendor/common/jquery.flot.min.js')
+    script(type='text/javascript', src='/src/vendor/common/jquery.i18n.properties.min.js')
+    script(type='text/javascript', src='/src/vendor/common/modernizr.min.js')
+    script(type='text/javascript', src='/src/vendor/common/underscore.js')
+    
+    script(type='text/javascript', src='/src/vendor/webgl/webgl-utils.js')
+    script(type='text/javascript', src='/src/vendor/webgl/gl-matrix-min.js')
+    
+    script(type='text/javascript', src='/src/common/startup.js')
+    script(type='text/javascript', src='/src/common/KLib.js')
+    script(type='text/javascript', src='/src/common/ChatController/ChatController.js')
+    script(type='text/javascript', src='/src/common/drawEngine/2DCanvas.js')
+    script(type='text/javascript', src='/src/common/drawEngine/camera.js')
+    script(type='text/javascript', src='/src/common/drawEngine/canvas/2DBodies.js')
+    script(type='text/javascript', src='/src/common/drawEngine/canvas/2DCars.js')
+    script(type='text/javascript', src='/src/common/drawEngine/canvas/2DDebug.js')
+    script(type='text/javascript', src='/src/common/drawEngine/canvas/2DInterp.js')
+    script(type='text/javascript', src='/src/common/drawEngine/drawEngineFactory.js')
+    script(type='text/javascript', src='/src/common/drawEngine/webgl.js')
+    script(type='text/javascript', src='/src/common/fb/login.js')
+    script(type='text/javascript', src='/src/common/googleanalytics.js')
+    script(type='text/javascript', src='/src/common/i18n/i18n.js')
+    script(type='text/javascript', src='/src/common/loading.js')
+    script(type='text/javascript', src='/src/common/LocalStorage.js')
+    script(type='text/javascript', src='/src/common/log/Log.js')
+    script(type='text/javascript', src='/src/common/miniMap/MiniMap.js')
+    script(type='text/javascript', src='/src/common/topBar/topBar.js')
+    
+    script(type='text/javascript', src='/dist/shared.js')    
+    
+    script(type='text/javascript', src='/src/game/startup.js')
+    script(type='text/javascript', src='/src/game/GunViewer.js')
+    script(type='text/javascript', src='/src/game/KeyboardHandler.js')
+    script(type='text/javascript', src='/src/game/ScoreTable.js')
+    script(type='text/javascript', src='/src/game/SocketManager.js')
+    script(type='text/javascript', src='/src/game/SteeringWheelController.js')
+    script(type='text/javascript', src='/src/game/UserCommandManager_client.js')
+    script(type='text/javascript', src='/src/game/options.js')
+    script(type='text/javascript', src='/src/game/plot.js')
+    script(type='text/javascript', src='/src/game/GameInstance/ClockSync.js')
+    script(type='text/javascript', src='/src/game/GameInstance/ExplosionsManager.js')
+    script(type='text/javascript', src='/src/game/GameInstance/GameInstance.js')
+    script(type='text/javascript', src='/src/game/GameInstance/PointsManager.js')
+    script(type='text/javascript', src='/src/game/GameInstance/sound.js')
+  
+    link(rel='stylesheet', href='/dist/all_game.css')
+  body
+    div#fb-root
+    #debug
+      #camera-debug
+      #fps
+      #ping
+      #high-score
+      #debug-sockets.info sockets
+      #socketps.info
+    #options-container
+      #options-bar
+        #options-bar-text Options
+        #options-expanded
+        #options-folded
+      div(style="clear: both")
+      #options
+        div#botMenu
+        div
+          input#interpolate.nativeTouchEnabled(type="checkbox", autocomplete="off", checked="checked")
+          label.nativeTouchEnabled(for="interpolate") Ennemies interpolation
+        div
+          input#show_local_physics_engine_bodies.nativeTouchEnabled(type="checkbox")
+          label.nativeTouchEnabled(for="show_local_physics_engine_bodies") Show local physics engine bodies
+        div
+          input#show_most_up_to_date_myCar.nativeTouchEnabled(type="checkbox")
+          label.nativeTouchEnabled(for="show_most_up_to_date_myCar") Show most up to date myCar
+        div
+          input#use_mouse_for_direction.nativeTouchEnabled(type="checkbox", checked="checked")
+          label.nativeTouchEnabled(for="use_mouse_for_direction") Use mouse for direction
+        div
+          input#show_debug_plot.nativeTouchEnabled(type="checkbox")
+          label.nativeTouchEnabled(for="show_debug_plot") Show debug plot
+    canvas#game-canvas
+    img#loadingImage(src='/images/loading.gif')
+    div#loadingInfo
+    #chat
+      div#chat_msgs_wrapper
+        ul#chat_msgs
+      div#chat_input_wrapper
+        div#chat_input_label
+        input#chat_input(type="text", autocapitalize="off", autocorrect="off", autocomplete="off")
+    #plot
+
