@@ -132,7 +132,9 @@
     this.gunFlameImage = new Image();
     this.gunFlameImage.src = '/sprites/gun_flame.png';
     this.$window = $(window);
-    this.initExplosions();
+    if (!this.isMinimap) {
+      this.initExplosions();      
+    }
   };
 
   Engine2DCanvas.prototype.loaded = function() {
