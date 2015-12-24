@@ -5,7 +5,7 @@ var configSingleton = function() {
   var config = {
     host: 'http://localhost',
     port: 80,
-    env: process.env.NODE_ENV,
+    env: process.env.NODE_ENV || 'local',
     appID: '156724717828757',
     appName: 'karmaracer_dev',
     appSecret: 'b154448258775abf1cebc39eaa8df713',
@@ -35,7 +35,7 @@ var configSingleton = function() {
       config.appName = 'karmaracer';
       config.gameMaxLevel = 9;
 			config.mongoUri = process.env.MONGOLAB_URI;
-      break;
+      break;		
   }
   console.info('fb host is', config.env, config.host);
   config.callbackURL = config.host + '/auth/facebook/callback';
