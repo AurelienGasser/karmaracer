@@ -123,7 +123,8 @@ module.exports = function(grunt) {
         console: true,
         Karma: true,
         KLib: true,
-        requestAnimFrame: true
+        requestAnimFrame: true,
+        WebGLUtils: true
       }
     }
   };
