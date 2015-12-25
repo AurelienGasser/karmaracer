@@ -1,7 +1,7 @@
 (function() {
   "use strict";
 
-  var MiniMap = function($container, mapName, connection, items, gameInstance) {
+  var Minimap = function($container, mapName, connection, items, gameInstance) {
     this.$container = $container;
     this.connection = connection;
     this.canvasID = 'minimap-' + mapName;
@@ -26,29 +26,32 @@
 
     this.getMap(mapName, function(err, map) {});
   };
-
-  MiniMap.prototype.getMap = function(mapName, callback) {
-    var that = this;
-    var getMiniMap = function(err, worldInfo) {
-      that.drawEngine = Karma.getDrawEngine(true, that.canvasID, 'CANVAS', that.items, worldInfo, 4, that.gameInstance, that.connection,function(drawEngine) {
-        that.drawEngine.canvasSize = that.drawEngine.worldInfo.size;
-        that.drawEngine.resize();
-        that.drawEngine.tick();
-      });
-      if (KLib.isFunction(callback)) {
-        return callback(null);
-      }
-    };
-
-    this.connection.emit('getMiniMap', {
-      'name': mapName
-    }, getMiniMap);
-
-
+  
+  Minimap.prototype.onDrawEngineReady = function(err, drawEngine) {
+    if (err) {
+      console.log('cannot display minimap');
+    } else {
+      this.drawEngine = drawEngine;
+      this.drawEngine.canvasSize = this.drawEngine.worldInfo.size;
+      this.drawEngine.resize();
+      this.drawEngine.tick();            
+    }    
+  };
+  
+  Minimap.prototype.onWorldInfoReady = function(err, worldInfo) {
+    if (err) {
+      console.log('cannot create minimap');
+    } else {
+      Karma.getDrawEngine(true, this.canvasID, 'CANVAS', this.items, worldInfo, 4, this.gameInstance, this.connection, this.onDrawEngineReady.bind(this));
+    }
   };
 
-  Karma.MiniMap = MiniMap;
+  Minimap.prototype.getMap = function(mapName, callback) {
+    this.connection.emit('getMinimap', {
+      'name': mapName
+    }, this.onWorldInfoReady.bind(this));
+  };
 
-
+  Karma.Minimap = Minimap;
 
 }());

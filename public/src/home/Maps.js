@@ -40,7 +40,7 @@
         $li.hide();
         $ul.append($li);
         $li.fadeIn(1000);
-        new Karma.MiniMap($li.find('a div.miniMap'), m, connection);
+        new Karma.Minimap($li.find('a div.miniMap'), m, connection);
       }
       registerMaps();
     }

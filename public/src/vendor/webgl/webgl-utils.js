@@ -151,10 +151,15 @@ var create3DContext = function(canvas, opt_attribs) {
     }
   }
   return context;
-}
+};
+
+var degToRad = function(degrees) {
+  return degrees * Math.PI / 180;
+};
 
 return {
   create3DContext: create3DContext,
-  setupWebGL: setupWebGL
+  setupWebGL: setupWebGL,
+  degToRad: degToRad
 };
 }();

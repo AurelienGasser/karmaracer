@@ -1,17 +1,14 @@
 (function() {
   "use strict";
 
-  // function degToRad(degrees) {
-  //   return degrees * Math.PI / 180;
-  // }
-
   function EngineWebGL(gameInstance, canvas, canvasID) {
     this.gameInstance = gameInstance;
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.gl = WebGLUtils.setupWebGL(canvas, { antialias: false });
-    this.camera = new Karma.Camera(null, this.canvasID);  
+    
     return this;
+    // this.camera = new Karma.Camera(null, this.canvasID);
     // this.tabItems = ['road', 'grass', 'car'];
     // this.tabTextures = {
     //   grass: null,
@@ -43,6 +40,10 @@
     // this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     // this.gl.enable(this.gl.DEPTH_TEST);
   }
+  
+  EngineWebGL.prototype.init = function(callback) {
+    callback();
+  };
 
   // EngineWebGL.prototype.initShaders = function() {
   //   // var fragmentShader = this.getShader("shader-fs");
@@ -253,26 +254,27 @@
   };
 
   EngineWebGL.prototype.tick = function() {
+    console.log('tick');
     requestAnimFrame(this.tick.bind(this));
     this.drawScene();
   };
 
-  // EngineWebGL.prototype.mvPushMatrix = function() {
-  //   var copy = mat4.clone(this.mvMatrix);
-  //   this.mvMatrixStack.push(copy);
-  // }
-  //
-  // EngineWebGL.prototype.mvPopMatrix = function() {
-  //   if (this.mvMatrixStack.length == 0) {
-  //     throw "Invalid popMatrix!";
-  //   }
-  //   this.mvMatrix = this.mvMatrixStack.pop();
-  // }
-  //
-  // EngineWebGL.prototype.setMatrixUniforms = function() {
-  //   this.gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, this.pMatrix);
-  //   this.gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
-  // }
+  EngineWebGL.prototype.mvPushMatrix = function() {
+    var copy = mat4.clone(this.mvMatrix);
+    this.mvMatrixStack.push(copy);
+  };
+
+  EngineWebGL.prototype.mvPopMatrix = function() {
+    if (this.mvMatrixStack.length === 0) {
+      throw "Invalid popMatrix!";
+    }
+    this.mvMatrix = this.mvMatrixStack.pop();
+  };
+
+  EngineWebGL.prototype.setMatrixUniforms = function() {
+    this.gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, this.pMatrix);
+    this.gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, this.mvMatrix);
+  };
 
   EngineWebGL.prototype.drawScene = function() {
     var cameraHeight = this.gameInstance.drawEngine.camera.scale * 600;
@@ -302,7 +304,7 @@
     }
     for (var i in this.walls) {
       // this.mvPushMatrix();
-      // mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
+      // mat4.rotate(this.mvMatrix, this.mvMatrix, WebGLUtils.degToRad(-this.pitch), [1, 0, 0]);
       // mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
       // mat4.translate(this.mvMatrix, [-this.gameInstance.mycar.x, 0, this.gameInstance.mycar.y]);
       // mat4.translate(this.mvMatrix, [this.walls[i].x, 0, -this.walls[i].y]);
@@ -333,7 +335,7 @@
       //   continue;
       // }
       // this.mvPushMatrix();
-      // mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
+      // mat4.rotate(this.mvMatrix, this.mvMatrix, WebGLUtils.degToRad(-this.pitch), [1, 0, 0]);
       // mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
       // mat4.translate(this.mvMatrix, [-this.gameInstance.mycar.x, 0, this.gameInstance.mycar.y]);
       // this.gl.activeTexture(this.gl.TEXTURE0);
@@ -354,31 +356,32 @@
   };
 
   EngineWebGL.prototype.drawCars = function(cameraHeight) {
+    console.log('drawCars');
     if (!this.gameInstance || !this.gameInstance.cars) {
       return;
     }
     _.each(this.gameInstance.cars, function(car) {
-      // var item = 'car';
-      // this.mvPushMatrix();
-      // mat4.rotate(this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
-      // mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
-      // mat4.translate(this.mvMatrix, [-this.gameInstance.mycar.x    , 0  , this.gameInstance.mycar.y]);
-      // mat4.translate(this.mvMatrix, [+car.x, 0  , -car.y]);
-      // mat4.rotate(this.mvMatrix, car.r, [0, 1, 0]);
-      // this.gl.activeTexture(this.gl.TEXTURE0);
-      // this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
-      // this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
-      // this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-      // this.gl.enable(this.gl.BLEND);
-      // this.gl.disable(this.gl.DEPTH_TEST);
-      // this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
-      // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexTextureCoordBuffer[item]);
-      // this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.worldVertexTextureCoordBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-      // this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexPositionBuffer[item]);
-      // this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.worldVertexPositionBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-      // this.setMatrixUniforms();
-      // this.gl.drawArrays(this.gl.TRIANGLES, 0, this.worldVertexPositionBuffer[item].numItems);
-      // this.mvPopMatrix();
+      var item = 'car';
+      this.mvPushMatrix();
+      mat4.rotate(this.mvMatrix, WebGLUtils.degToRad(-this.pitch), [1, 0, 0]);
+      mat4.translate(this.mvMatrix, [0, -cameraHeight, 0]);
+      mat4.translate(this.mvMatrix, [-this.gameInstance.mycar.x    , 0  , this.gameInstance.mycar.y]);
+      mat4.translate(this.mvMatrix, [+car.x, 0  , -car.y]);
+      mat4.rotate(this.mvMatrix, car.r, [0, 1, 0]);
+      this.gl.activeTexture(this.gl.TEXTURE0);
+      this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
+      this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
+      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+      this.gl.enable(this.gl.BLEND);
+      this.gl.disable(this.gl.DEPTH_TEST);
+      this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexTextureCoordBuffer[item]);
+      this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.worldVertexTextureCoordBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
+      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexPositionBuffer[item]);
+      this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.worldVertexPositionBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
+      this.setMatrixUniforms();
+      this.gl.drawArrays(this.gl.TRIANGLES, 0, this.worldVertexPositionBuffer[item].numItems);
+      this.mvPopMatrix();
     }.bind(this));
   };
 

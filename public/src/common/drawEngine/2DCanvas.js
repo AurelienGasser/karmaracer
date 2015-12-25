@@ -29,9 +29,9 @@
     this.setGScale(gScale);
     this.$canvas = $(canvas);
     this.$canvas.focus();
-    this.init();
     this.loaded();
-    this.loadImages(callback);
+    
+    return this;
   }
 
   Engine2DCanvas.prototype.setGScale = function(gScaleValue) {
@@ -125,7 +125,7 @@
     }
   };
 
-  Engine2DCanvas.prototype.init = function() {
+  Engine2DCanvas.prototype.init = function(callback) {
     this.ctx = this.canvas.getContext('2d');
     this.ctx.font = '10px Trebuchet MS';
     this.canvas.width = this.$canvas.width();
@@ -142,6 +142,7 @@
     if (!this.isMinimap) {
       this.initExplosions();      
     }
+    this.loadImages(callback);    
   };
 
   Engine2DCanvas.prototype.loaded = function() {
@@ -339,7 +340,7 @@
     }
   };
 
-  Engine2DCanvas.prototype.tickMiniMap = function() {
+  Engine2DCanvas.prototype.tickMinimap = function() {
     this.getInterpData();     // todo: remove
     if (this.interpData.ready) {
       this.draw();
@@ -379,7 +380,7 @@
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
     if (this.isMinimap) {
-      this.tickMiniMap();
+      this.tickMinimap();
     } else {
       this.tickGameCanvas();
     }

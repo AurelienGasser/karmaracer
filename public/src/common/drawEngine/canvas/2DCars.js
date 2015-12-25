@@ -61,7 +61,7 @@
     this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
   };
 
-  Engine2DCanvas.prototype.drawCarForMiniMap = function(ctx, c, player, pos) {
+  Engine2DCanvas.prototype.drawCarForMinimap = function(ctx, c, player, pos) {
     ctx.strokeStyle = 'white';
     var mycar = this.gameInstance.myCar;
     if (mycar !== null && c.id === mycar.id) {
@@ -103,7 +103,7 @@
       h: this.gScaleValue * c.h
     };
     if (this.isMinimap === true) {
-      this.drawCarForMiniMap(ctx, c, player, pos);
+      this.drawCarForMinimap(ctx, c, player, pos);
     } else {
       ctx.save();
       ctx.translate(pos.x, pos.y);

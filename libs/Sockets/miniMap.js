@@ -2,7 +2,7 @@ var KLib = require('./../classes/KLib');
 
 var miniMap = function(gamerServerSocket, client) {
   var that = this;
-  client.on('getMiniMap', function(data, callback) {
+  client.on('getMinimap', function(data, callback) {
     var gameServer = gamerServerSocket.mapManager.gameServers[data.name];
     if (KLib.isUndefined(gameServer)){
       return callback(new Error("map name not available : " + data.name));

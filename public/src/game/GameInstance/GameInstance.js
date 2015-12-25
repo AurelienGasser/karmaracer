@@ -47,20 +47,23 @@
     this.gameInfo = null; // is set from sockets
 
     var defaultDrawEngineType = 'CANVAS';
-    var canvasReady = function() {
-      $('#loadingtext').html('');      
-      that.userCommandManager = new Karma.UserCommandManager_client(that);
-      that.keyboardHandler = new Karma.KeyboardHandler(that);
-      document.onkeydown = that.keyboardHandler.handleKeyDown.bind(that.keyboardHandler);
-      document.onkeyup = that.keyboardHandler.handleKeyUp.bind(that.keyboardHandler);
-      that.drawEngine.tick();
-    };
-    this.loadCars();
-    this.drawEngine = Karma.getDrawEngine(false, 'game-canvas', defaultDrawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, canvasReady);
+    
+    this.loadCars();    
+    Karma.getDrawEngine(false, 'game-canvas', defaultDrawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, this.onDrawEngineReady.bind(this));
 
     if (that.isMobile === false) {
-      new Karma.MiniMap($('body'), G_mapName, that.socketManager.connection, that.items, that);
+      new Karma.Minimap($('body'), G_mapName, that.socketManager.connection, that.items, that);
     }
+  };
+  
+  GameInstance.prototype.onDrawEngineReady = function(err, drawEngine) {
+    this.drawEngine = drawEngine;
+    $('#loadingtext').html('');      
+    this.userCommandManager = new Karma.UserCommandManager_client(this);
+    this.keyboardHandler = new Karma.KeyboardHandler(this);
+    document.onkeydown = this.keyboardHandler.handleKeyDown.bind(this.keyboardHandler);
+    document.onkeyup = this.keyboardHandler.handleKeyUp.bind(this.keyboardHandler);
+    this.drawEngine.tick();    
   };
   
   GameInstance.prototype.loadCars = function() {
