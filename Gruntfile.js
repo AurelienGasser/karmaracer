@@ -117,15 +117,18 @@ module.exports = function(grunt) {
       browser: true,
       // more options here if you want to override JSHint defaults
       globals: {
-        jQuery: true,
         $: true,
         _: true,
-        console: true,
         Karma: true,
         KLib: true,
+        setupWebGL: true,
+        alert: true,
+        console: true,
+        createProgramFromScripts: true,
+        degToRad: true,
+        jQuery: true,
         mat4: true,
-        requestAnimFrame: true,
-        WebGLUtils: true
+        requestAnimFrame: true
       }
     }
   };

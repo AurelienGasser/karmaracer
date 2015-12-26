@@ -12,7 +12,18 @@
     KEY_P = 80,
     KEY_B = 66,
     KEY_S = 83,
-    KEY_SHIFT = 16;
+    KEY_D = 68,
+    KEY_0 = 48,
+    KEY_1 = 49,
+    KEY_2 = 50,
+    KEY_3 = 51,
+    KEY_4 = 52,
+    KEY_5 = 53,
+    KEY_6 = 54,
+    KEY_7 = 55,
+    KEY_8 = 56,
+    KEY_9 = 57,
+  KEY_SHIFT = 16;
 
   function KeyboardHandler(gameInstance) {
     this.gameInstance = gameInstance;
@@ -29,11 +40,34 @@
     var now = Date.now();
     var ucm = this.gameInstance.userCommandManager;
     switch (key) {
+      case KEY_1:
+        this.gameInstance.drawEngine.camera.x -= 1;
+        break;
+      case KEY_2:
+        this.gameInstance.drawEngine.camera.x += 1;
+        break;
+      case KEY_3:
+        this.gameInstance.drawEngine.camera.y -= 1;
+        break;
+      case KEY_4:
+        this.gameInstance.drawEngine.camera.y += 1;
+        break;
+      case KEY_5:
+        this.gameInstance.drawEngine.camera.z -= 1;
+        break;
+      case KEY_6:
+        this.gameInstance.drawEngine.camera.z += 1;
+        break;
+      case KEY_7:
+        this.gameInstance.drawEngine.camera.pitch -= 1;
+        break;
+      case KEY_8:
+        this.gameInstance.drawEngine.camera.pitch += 1;
+        break;
       case KEY_B:
         // ucm.forwardBackward('break', state);
         break;
       case KEY_SPACE:
-      case KEY_S:
         this.shoot = state === 'start';
         break;
       case KEY_LEFT:

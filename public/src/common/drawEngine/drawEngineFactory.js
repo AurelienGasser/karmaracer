@@ -8,7 +8,7 @@
     
     switch (drawEngineType) {
       case 'WEBGL':
-        engine = new Karma.EngineWebGL(gameInstance, canvas, canvasId);
+        engine = new Karma.EngineWebGL(gameInstance, canvas, canvasId, worldInfo);
         break;
       case 'CANVAS':
         engine = new Karma.Engine2DCanvas(isMinimap, canvas, canvasId, items, worldInfo, gScale, gameInstance, connection);

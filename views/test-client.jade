@@ -7,6 +7,27 @@ html
     link(rel="apple-touch-icon", href="/images/logos/logo-114.png")
     meta(name="viewport", content="initial-scale=0.5, maximum-scale=1.0, user-scalable=0.0")
     meta(name="apple-mobile-web-app-capable", content="yes")
+    script(id="shader-fs", type="x-shader/x-fragment").
+       #ifdef GL_ES
+         precision highp float;
+       #endif
+       // varying vec2 vTextureCoord;
+       // uniform sampler2D uSampler;
+       uniform vec4 u_color;
+       void main() {
+         gl_FragColor = u_color;
+             // gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+       }
+    script(id="shader-vs", type="x-shader/x-vertex").
+        attribute vec3 aVertexPosition;
+         // attribute vec2 aTextureCoord;
+         uniform mat4 uMVMatrix;
+         uniform mat4 uPMatrix;
+         // varying vec2 vTextureCoord;
+        void main() {
+          gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+         //-     vTextureCoord = aTextureCoord;
+        }
     script(type='text/javascript').
       var G_mapName = 'hd';
       var G_defaultDrawEngineType = 'WEBGL';
