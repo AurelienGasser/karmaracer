@@ -7,7 +7,7 @@
     this.canvasID = canvasID;
     this.worldInfo = worldInfo;
     this.gl = setupWebGL(canvas, { antialiasing: false });
-    this.camera = { pitch: 20, x: 50, y: 0, z: 50 };
+    this.camera = { pitch: 83, x: 3, y: 0, z: 1 };
     
     var gl = this.gl;        
 
@@ -83,8 +83,8 @@
     
     mat4.perspective(this.pMatrix, degToRad(45), this.canvas.clientWidth / this.canvas.clientHeight, 1, 1000);
     mat4.identity(this.mvMatrix);
-    mat4.translate(this.mvMatrix, this.mvMatrix, [-this.camera.x, -this.camera.y, -this.camera.z]);
     mat4.rotate(this.mvMatrix, this.mvMatrix, -degToRad(this.camera.pitch), [1, 0, 0]);
+    mat4.translate(this.mvMatrix, this.mvMatrix, [-this.camera.x, -this.camera.y, -this.camera.z]);
     // this.drawCars(cameraHeight);
     this.drawMap();
   };  
@@ -97,93 +97,155 @@
     // this.drawGround(cameraHeight);
     // this.drawWalls(cameraHeight);
     this.drawOutsideWalls();
+    this.drawGround();
+    this.drawMyCar();
+  };
+  
+  EngineWebGL.prototype.drawMyCar = function() {
+    var myCar = this.gameInstance.myCar;
+    
+    if (!myCar) {
+      return;
+    }
+
+    this.drawBox([myCar.x, myCar.y, 0.5], [1, 1, 1], [0, 0, 1]);    
+  };
+
+  EngineWebGL.prototype.drawGround = function() {
+    var s = this.worldInfo.size;
+    var worldWidth = s.w;
+    var worldHeight = s.h;
+    var gl = this.gl;
+    
+    this.mvPushMatrix();
+    mat4.translate(this.mvMatrix, this.mvMatrix, [worldWidth / 2, worldHeight / 2, 0]);
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+            -worldWidth/2, -worldHeight/2, 0,
+             worldWidth/2,  worldHeight/2, 0,
+            -worldWidth/2,  worldHeight/2, 0,
+            -worldWidth/2, -worldHeight/2, 0,
+             worldWidth/2,  worldHeight/2, 0,
+             worldWidth/2, -worldHeight/2, 0]),
+        this.gl.STATIC_DRAW);
+                
+    this.drewRectangles(1, [0, 1, 0]);      
+    this.mvPopMatrix();    
   };
   
   EngineWebGL.prototype.drawOutsideWalls = function() {
     var s = this.worldInfo.size;
-    var w = s.w;
-    var h = s.h;
+    var worldWidth = s.w;
+    var worldHeight = s.h;
+    var wh = 2; // wall height    
     var gl = this.gl;
-    var x = 1.0;
-    var y = 1.0;
     
     // mat4.translate(this.mvMatrix, this.mvMatrix, [0, 0, +1.000]);
     // mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(90), [1, 0, 0]);
-    var wallThickness = 1;
-    var t = wallThickness;
-    this.drawOutsideWall(-t, -t, w + 2*t, t);
-    // this.drawOutsideWall(-t, h, w + 2*t, t);
-    this.drawOutsideWall(-t, 0, t, h);
-    this.drawOutsideWall(w, 0, t, h);
-    
-    // this.mvPopMatrix();
+
+    this.drawOutsideWall({ x: worldWidth / 2, y: 0, z: wh / 2 }, { x: worldWidth, y: 0, z: wh });
+    this.drawOutsideWall({ x: worldWidth / 2, y: worldHeight, z: wh / 2 }, { x: worldWidth, y: 0, z: wh });
+    this.drawOutsideWall({ x: 0, y: worldHeight / 2, z: wh / 2 }, { x: 0, y: worldHeight, z: wh });
+    this.drawOutsideWall({ x: worldWidth, y: worldHeight / 2, z: wh / 2 }, { x: 0, y: worldHeight, z: wh });
   };
   
-  EngineWebGL.prototype.drawOutsideWall = function(x, y, w, h) {
-    var gl = this.gl;
+  EngineWebGL.prototype.drawOutsideWall = function(pos, size) {
+    var gl = this.gl;    
     this.mvPushMatrix();
-    var wh = 2; // wall height
-
-    mat4.translate(this.mvMatrix, this.mvMatrix, [x, y, 0]);
-    mat4.translate(this.mvMatrix, this.mvMatrix, [w/2, h/2, 0]);
-    
-    // top
+    mat4.translate(this.mvMatrix, this.mvMatrix, [pos.x, pos.y, pos.z]);
     this.gl.bufferData(
         this.gl.ARRAY_BUFFER,
         new Float32Array([
-            -w/2, -h/2, wh,
-             w/2, -h/2, wh,
-            -w/2,  h/2, wh,
-            -w/2,  h/2, wh,
-             w/2, -h/2, wh,
-             w/2,  h/2, wh]),
+            -size.x/2, -size.y/2,  size.z/2,
+             size.x/2,  size.y/2,  size.z/2,
+            -size.x/2, -size.y/2, -size.z/2,
+            -size.x/2, -size.y/2, -size.z/2,
+             size.x/2,  size.y/2,  size.z/2,
+             size.x/2,  size.y/2, -size.z/2]),
         this.gl.STATIC_DRAW);
         
-    this.drewRectangle([1, 0, 0]);
-      
-    // bottom
-    this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([
-            -w/2, -h/2, 0,
-             w/2, -h/2, 0,
-            -w/2,  h/2, 0,
-            -w/2,  h/2, 0,
-             w/2, -h/2, 0,
-             w/2,  h/2, 0]),
-        this.gl.STATIC_DRAW);
-        
-    this.drewRectangle([1, 0, 0]);
-
-    // side
-    this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([
-            -w/2, -h/2, wh,
-             w/2, -h/2, wh,
-            -w/2, -h/2, 0,
-            -w/2, -h/2, 0,
-             w/2, -h/2, wh,
-             w/2, -h/2, 0]),
-        this.gl.STATIC_DRAW);
-        
-    this.drewRectangle([0, 1, 0]);
-    
+    this.drewRectangles(1, [1, 0, 0]);      
     this.mvPopMatrix();
   };
   
-  EngineWebGL.prototype.drewRectangle = function(color) {
+  
+  EngineWebGL.prototype.drawBox = function(pos, size, color) {
+    var gl = this.gl;    
+    this.mvPushMatrix();
+    mat4.translate(this.mvMatrix, this.mvMatrix, [pos[0], pos[1], pos[2]]);
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+            // top
+            -size[0]/2, -size[1]/2, size[2]/2,
+             size[0]/2,  size[1]/2, size[2]/2,
+            -size[0]/2,  size[1]/2, size[2]/2,
+            -size[0]/2, -size[1]/2, size[2]/2,
+             size[0]/2,  size[1]/2, size[2]/2,
+             size[0]/2, -size[1]/2, size[2]/2,
+            // side 1
+            -size[0]/2, -size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2,  size[2]/2,
+            -size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2, -size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2,  size[2]/2,
+            -size[0]/2, -size[1]/2,  size[2]/2,
+            // side 2
+             size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+             size[0]/2, -size[1]/2,  size[2]/2,
+            // side 3
+            -size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+            -size[0]/2,  size[1]/2,  size[2]/2,
+            // side 4
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2,  size[2]/2,
+             size[0]/2, -size[1]/2, -size[2]/2,
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2,  size[2]/2,
+            -size[0]/2, -size[1]/2,  size[2]/2,
+            // bottom
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2, -size[2]/2
+        
+        
+        ]),
+        this.gl.STATIC_DRAW);
+        
+    this.drewRectangles(6, color);      
+    this.mvPopMatrix();
+  };
+  
+  EngineWebGL.prototype.drewRectangles = function(num, color) {
     var gl = this.gl;
     var colorLocation = gl.getUniformLocation(this.shaderProgram, "u_color");    
     gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
     gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, 3, gl.FLOAT, false, 0, 0);
     this.setMatrixUniforms();
     gl.uniform4f(colorLocation, color[0], color[1], color[2], 0); 
-    gl.drawArrays(gl.TRIANGLES, 0, 6);      
+    gl.drawArrays(gl.TRIANGLES, 0, num * 6, gl.UNSIGNED_SHORT, 0);
   };  
 
   EngineWebGL.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
+    var ucm = this.gameInstance.userCommandManager;
+    if (ucm) {
+      ucm.generateUserCommand(Date.now());      
+      ucm.updatePos();
+    }
+    
     this.drawScene();
   };
 
@@ -234,35 +296,35 @@
     }
   };
 
-  EngineWebGL.prototype.drawGround = function(cameraHeight) {
-    if (!this.tabItems) {
-      return;
-    }
-    for (var i in this.tabItems) {
-      var item = this.tabItems[i];
-      if (item == 'car') {
-        continue;
-      }
-      this.mvPushMatrix();
-      mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [0, -cameraHeight, 0]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [-this.gameInstance.myCar.x, 0, this.gameInstance.myCar.y]);
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
-      this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
-      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-      // this.gl.enable(this.gl.BLEND);
-      // this.gl.disable(this.gl.DEPTH_TEST);
-      this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexTextureCoordBuffer[item]);
-      this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.worldVertexTextureCoordBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexPositionBuffer[item]);
-      this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.worldVertexPositionBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-      this.setMatrixUniforms();
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, this.worldVertexPositionBuffer[item].numItems);
-      this.mvPopMatrix();
-    }
-  };
+  // EngineWebGL.prototype.drawGround = function(cameraHeight) {
+  //   if (!this.tabItems) {
+  //     return;
+  //   }
+  //   for (var i in this.tabItems) {
+  //     var item = this.tabItems[i];
+  //     if (item == 'car') {
+  //       continue;
+  //     }
+  //     this.mvPushMatrix();
+  //     mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
+  //     mat4.translate(this.mvMatrix, this.mvMatrix, [0, -cameraHeight, 0]);
+  //     mat4.translate(this.mvMatrix, this.mvMatrix, [-this.gameInstance.myCar.x, 0, this.gameInstance.myCar.y]);
+  //     this.gl.activeTexture(this.gl.TEXTURE0);
+  //     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
+  //     this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
+  //     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
+  //     // this.gl.enable(this.gl.BLEND);
+  //     // this.gl.disable(this.gl.DEPTH_TEST);
+  //     this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
+  //     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexTextureCoordBuffer[item]);
+  //     this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.worldVertexTextureCoordBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
+  //     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexPositionBuffer[item]);
+  //     this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.worldVertexPositionBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
+  //     this.setMatrixUniforms();
+  //     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.worldVertexPositionBuffer[item].numItems);
+  //     this.mvPopMatrix();
+  //   }
+  // };
 
   EngineWebGL.prototype.drawCars = function(cameraHeight) {
     if (!this.gameInstance || !this.gameInstance.cars) {

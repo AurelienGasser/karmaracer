@@ -23,9 +23,10 @@
     if (userCmd.active === false) {
       return;
     }
-    if (this.gameInstance.socketManager.getConnection()) {
+    var conn = this.gameInstance.socketManager.getConnection();
+    if (conn) {
       userCmd.seq = ++this.G_userCommandCounter;
-      this.gameInstance.socketManager.getConnection().emit('user_command', userCmd);
+      conn.emit('user_command', userCmd);
     }
     this.toAck[userCmd.seq] = userCmd;
   };
