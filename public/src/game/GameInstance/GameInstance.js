@@ -92,6 +92,21 @@
       });
     }
   };
+  
+  GameInstance.prototype.tick = function() {
+    var ucm = this.userCommandManager;
+    if (ucm) {
+      
+      var now = Date.now();
+      this.tickCptDrive = this.tickCptDrive === undefined ? 0 : this.tickCptDrive + 1;    
+      if (this.tickCptDrive >= 3) {
+        ucm.generateUserCommand(now);
+        this.tickCptDrive = 0;
+      }
+      this.interpolator.getInterpData();
+      ucm.updatePos(now);
+    }        
+  };
 
   Karma.GameInstance = GameInstance;
 

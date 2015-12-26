@@ -14,7 +14,6 @@
     this.canvasID = canvasID;
     this.gameInstance = gameInstance;    
     this.timer = new Date().getTime();
-    this.tickCptDrive = 0;
     this.frames = 0;
     this.fps = undefined; // will be defined by requestAnimFrame
     this.debugDraw = false;
@@ -330,16 +329,7 @@
     // this.drawCollisionPoints();
   };
 
-  Engine2DCanvas.prototype.tryGenerateUserCmd = function(now) {
-    if (this.tickCptDrive >= 3) {
-      var ucm = this.gameInstance.userCommandManager;
-      ucm.generateUserCommand(now);
-      this.tickCptDrive = 0;
-    }
-  };
-
   Engine2DCanvas.prototype.tickMinimap = function() {
-    this.interpolator.getInterpData();     // todo: remove
     if (this.interpolator.interpData.ready) {
       this.draw();
     }
@@ -347,25 +337,14 @@
 
   Engine2DCanvas.prototype.tickGameCanvas = function() {
     var now = Date.now();
-    var ucm = this.gameInstance ? this.gameInstance.userCommandManager : undefined;
-    ++this.tickCptDrive;
-    if (typeof ucm !== 'undefined') {
-      this.tryGenerateUserCmd(now);
-    }
-    if (!this.gameInstance) {
-      // welcome page
-      // TODO: use another draw engine
-      this.draw();
-    } else {
-      this.interpolator.getInterpData();
-      // execute user commands to get precise position
-      if (typeof ucm != 'undefined') {
-        ucm.updatePos(now);
-      }
+    if (this.gameInstance) {
       if (this.interpolator.interpData.ready) {
         this.draw();
       }
+    } else {
+      this.draw();
     }
+    
     this.frames++;
     if (now - this.timer > 1000) {
       this.timer = now;
@@ -377,6 +356,9 @@
 
   Engine2DCanvas.prototype.tick = function() {
     requestAnimFrame(this.tick.bind(this));
+    if (this.gameInstance) {
+      this.gameInstance.tick();    
+    }
     if (this.isMinimap) {
       this.tickMinimap();
     } else {

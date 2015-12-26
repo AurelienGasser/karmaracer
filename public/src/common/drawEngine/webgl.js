@@ -65,6 +65,14 @@
     this.shaderProgram.uMVMatrix = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");    
   };
   
+  EngineWebGL.prototype.tick = function() {
+    requestAnimFrame(this.tick.bind(this));
+    if (this.gameInstance) {
+      this.gameInstance.tick();
+    }
+    this.drawScene();
+  };
+
   EngineWebGL.prototype.drawScene = function() {    
     var gl = this.gl;
     
@@ -237,17 +245,6 @@
     gl.uniform4f(colorLocation, color[0], color[1], color[2], 0); 
     gl.drawArrays(gl.TRIANGLES, 0, num * 6, gl.UNSIGNED_SHORT, 0);
   };  
-
-  EngineWebGL.prototype.tick = function() {
-    requestAnimFrame(this.tick.bind(this));
-    var ucm = this.gameInstance.userCommandManager;
-    if (ucm) {
-      ucm.generateUserCommand(Date.now());      
-      ucm.updatePos();
-    }
-    
-    this.drawScene();
-  };
 
   EngineWebGL.prototype.mvPushMatrix = function() {
     var copy = mat4.clone(this.mvMatrix);
