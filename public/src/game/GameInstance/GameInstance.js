@@ -3,7 +3,6 @@
   "use strict";
 
   function GameInstance() {
-
     this.config = undefined; // will be defined by onInitReceived
     this.snapshots = {};
     this.items = {};
@@ -24,8 +23,9 @@
     this.drawEngine = null;
 
     this.clockSync = new Karma.ClockSync();
+    this.interpolator = new Karma.Interpolator(this);
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
-
+    
     this.setUIEvents();
     this.isMobile = false;
 
@@ -46,7 +46,7 @@
     this.rockets = [];
     this.gameInfo = null; // is set from sockets
 
-    var defaultDrawEngineType = 'CANVAS';
+    var defaultDrawEngineType = window.G_defaultDrawEngineType;
     
     this.loadCars();    
     Karma.getDrawEngine(false, 'game-canvas', defaultDrawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, this.onDrawEngineReady.bind(this));

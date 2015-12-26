@@ -12,19 +12,17 @@
     this.isMinimap = isMinimap;
     this.canvas = canvas;
     this.canvasID = canvasID;
+    this.gameInstance = gameInstance;    
     this.timer = new Date().getTime();
     this.tickCptDrive = 0;
     this.frames = 0;
     this.fps = undefined; // will be defined by requestAnimFrame
     this.debugDraw = false;
     this.carFlameTicks = {};
-    this.interpData = {
-      ready: false
-    };
+    this.interpolator = this.gameInstance.interpolator;
 
     this.items = items;
     this.worldInfo = worldInfo;
-    this.gameInstance = gameInstance;
     this.connection = connection;
     this.setGScale(gScale);
     this.$canvas = $(canvas);
@@ -341,8 +339,8 @@
   };
 
   Engine2DCanvas.prototype.tickMinimap = function() {
-    this.getInterpData();     // todo: remove
-    if (this.interpData.ready) {
+    this.interpolator.getInterpData();     // todo: remove
+    if (this.interpolator.interpData.ready) {
       this.draw();
     }
   };
@@ -359,12 +357,12 @@
       // TODO: use another draw engine
       this.draw();
     } else {
-      this.getInterpData();
+      this.interpolator.getInterpData();
       // execute user commands to get precise position
       if (typeof ucm != 'undefined') {
         ucm.updatePos(now);
       }
-      if (this.interpData.ready) {
+      if (this.interpolator.interpData.ready) {
         this.draw();
       }
     }

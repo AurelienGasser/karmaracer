@@ -80,9 +80,10 @@
   };
 
   Engine2DCanvas.prototype.interpPosOfCar = function(carIndex) {
-    var carBefore = this.interpData.snapBefore.cars[carIndex];
-    var carAfter = this.interpData.snapAfter.cars[carIndex];
-    return this.interpPos(carBefore, carAfter, this.interpData.interpPercent);
+    var interpData = this.interpolator.interpData;
+    var carBefore = interpData.snapBefore.cars[carIndex];
+    var carAfter = interpData.snapAfter.cars[carIndex];
+    return this.interpolator.interpPos(carBefore, carAfter, interpData.interpPercent);
   };
 
   Engine2DCanvas.prototype._drawCar = function(ctx, c, pos) {
@@ -136,18 +137,19 @@
     if (this.gameInstance === null) {
       return;
     }
+    var interpData = this.interpolator.interpData;
     ctx.font = '10px Trebuchet MS';
-    var cars = this.interpData.snapAfter.cars;
+    var cars = interpData.snapAfter.cars;
     var str = "";
     for (var i in cars) {
       str += " " + cars[i].id;
     }
     if (cars !== null) {
       for (var j in cars) {
-        if (typeof this.interpData.snapBefore.cars[j] !== 'undefined' &&
-            typeof this.interpData.snapAfter.cars[j] !== 'undefined') {
+        if (typeof interpData.snapBefore.cars[j] !== 'undefined' &&
+            typeof interpData.snapAfter.cars[j] !== 'undefined') {
               var car = this.interpPosOfCar(j);
-              var id = this.interpData.snapAfter.cars[j].id;
+              var id = interpData.snapAfter.cars[j].id;
               car.id = id;
 
               var player = this.gameInstance.gameInfo[id];

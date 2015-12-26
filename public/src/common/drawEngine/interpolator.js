@@ -1,7 +1,15 @@
-(function(Engine2DCanvas) {
+(function() {
   "use strict";
+  
+  function Interpolator(gameInstance) {
+    this.gameInstance = gameInstance;
+    this.interpData = {
+      ready: false
+    };
+    return this;
+  }
 
-  Engine2DCanvas.prototype.interpPos = function(beforePos, afterPos, interpPercent) {
+  Interpolator.prototype.interpPos = function(beforePos, afterPos, interpPercent) {
     if (interpPercent > 1 || !$('#interpolate').is(':checked')) {
       // we can't interpolate out of bounds !
       return {
@@ -25,7 +33,7 @@
     };
   };
 
-  Engine2DCanvas.prototype.getInterpData = function() {
+  Interpolator.prototype.getInterpData = function() {
     var interpolation = 100;
     if (!this.gameInstance) {
       return;
@@ -76,4 +84,7 @@
       this.interpData.snapAfter = snapshots[stepNumbers[numSnaps - 1]];
     }
   };
-}(Karma.Engine2DCanvas));
+  
+  Karma.Interpolator = Interpolator;
+  
+}());
