@@ -18,7 +18,7 @@
                 if (typeof(Karma.MobileTerminalHandler) === 'function') {
                   var mobileHandler = new Karma.MobileTerminalHandler(Karma.gameInstance);
                   mobileHandler.init();
-                  Karma.gameInstance.steeringWheelController = Karma.SteeringWheelController(Karma.gameInstance, 'pad', {
+                  Karma.gameInstance.steeringWheelController = new Karma.SteeringWheelController(Karma.gameInstance, 'pad', {
                     w: '200px',
                     h: '200px'
                   });

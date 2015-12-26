@@ -27,6 +27,9 @@
 
   Engine2DCanvas.prototype.getInterpData = function() {
     var interpolation = 100;
+    if (!this.gameInstance) {
+      return;
+    }
     var snapshots = this.gameInstance.snapshots;
     var stepNumbers = Object.keys(snapshots);
     var now = Date.now();
