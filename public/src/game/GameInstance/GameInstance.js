@@ -46,10 +46,15 @@
     this.rockets = [];
     this.gameInfo = null; // is set from sockets
 
-    var defaultDrawEngineType = window.G_defaultDrawEngineType;
+    var drawEngineType = window.G_defaultDrawEngineType;
     
-    this.loadCars();    
-    Karma.getDrawEngine(false, 'game-canvas', defaultDrawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, this.onDrawEngineReady.bind(this));
+    this.loadCars();
+    
+    if (drawEngineType == 'WEBGL' && $('#use_mouse_for_direction').is(':checked')) {
+      $('#use_mouse_for_direction').attr('checked', false);
+    }
+    
+    Karma.getDrawEngine(false, 'game-canvas', drawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, this.onDrawEngineReady.bind(this));
 
     if (that.isMobile === false) {
       new Karma.Minimap($('body'), G_mapName, that.socketManager.connection, that.items, that);

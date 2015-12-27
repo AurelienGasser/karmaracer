@@ -50,90 +50,79 @@
     
     this.drawBox([c.x, c.y, carHeight / 2, c.r], [car.w, car.h, carHeight], [1, 0, 1]);
 
-    if (false) {
-      // gun flammes
-      if (c.shootingWithWeapon !== null) {
-        this.drawGunFlame(ctx, c, size);
-      }
-      //name
-      var textSize = ctx.measureText(c.playerName);
-      var textPad = 25;
-      ctx.save();
-      ctx.translate(pos.x, pos.y);
-      ctx.fillStyle = 'white';
-      ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
-      this.drawLifeBar(ctx, c, player, size.w);
-      ctx.restore();
-
-      // bullet
-      this.drawBullet(c, ctx, pos);      
-    }
+    // // gun flammes
+    // if (c.shootingWithWeapon !== null) {
+    //   this.drawGunFlame(ctx, c, size);
+    // }
+    // //name
+    // var textSize = ctx.measureText(c.playerName);
+    // var textPad = 25;
+    // ctx.save();
+    // ctx.translate(pos.x, pos.y);
+    // ctx.fillStyle = 'white';
+    // ctx.fillText(c.playerName, -textSize.width / 2, -textPad);
+    // this.drawLifeBar(ctx, c, player, size.w);
+    // ctx.restore();
+    //
+    // // bullet
+    // this.drawBullet(c, ctx, pos);
   };
 
   EngineWebGL.prototype.drawLifeBar = function(ctx, c, player, w) {
-    
-    return;
-    return;    
-    ctx.save();
-    ctx.translate(-w / 2, -40);
-    var maxLifeSize = w;
-    ctx.fillStyle = '#0F0';
-    ctx.fillRect(0, 0, maxLifeSize, 5);
-    ctx.fillStyle = '#F00';
-    var ratioSize = maxLifeSize * (c.life / player.maxLife);
-    ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
-    ctx.restore();
+    // ctx.save();
+    // ctx.translate(-w / 2, -40);
+    // var maxLifeSize = w;
+    // ctx.fillStyle = '#0F0';
+    // ctx.fillRect(0, 0, maxLifeSize, 5);
+    // ctx.fillStyle = '#F00';
+    // var ratioSize = maxLifeSize * (c.life / player.maxLife);
+    // ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
+    // ctx.restore();
   };
 
 
   var maxFlameTick = 12;
 
   EngineWebGL.prototype.drawSingleGunFlame = function(ctx, car, angle, distance, size) {
-    
-    return;
-    return;
-    var ratio = 1.5;
-    ctx.rotate(angle);
-    var w = size.w / 2;
-    var h = size.h / 2;
-    if (car.flame > maxFlameTick / 2) {
-      ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2, w, h);
-    } else {
-      ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2 / ratio, w / ratio, h / ratio);
-    }
-    ctx.rotate(-angle);
+    // var ratio = 1.5;
+    // ctx.rotate(angle);
+    // var w = size.w / 2;
+    // var h = size.h / 2;
+    // if (car.flame > maxFlameTick / 2) {
+    //   ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2, w, h);
+    // } else {
+    //   ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2 / ratio, w / ratio, h / ratio);
+    // }
+    // ctx.rotate(-angle);
   };
 
   EngineWebGL.prototype.drawGunFlame = function(ctx, car, size) {
-
-    return;
-    return;
-    if (KLib.isUndefined(this.carFlameTicks[car.id])) {
-      this.carFlameTicks[car.id] = 0;
-    }
-    car.flame = this.carFlameTicks[car.id];
-
-    var w = size.w;
-
-    switch (car.shootingWithWeapon) {
-      case '90AngleMachineGun':
-        this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-        this.drawSingleGunFlame(ctx, car, Math.PI / 2, w / 4, size);
-        this.drawSingleGunFlame(ctx, car, -Math.PI / 2, w / 4, size);
-        break;
-      case 'SuperMachineGun':
-        this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-        this.drawSingleGunFlame(ctx, car, Math.PI / 4, w / 4, size);
-        this.drawSingleGunFlame(ctx, car, -Math.PI / 4, w / 4, size);
-        break;
-      case 'MachineGun':
-        this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-        break;
-      default:
-        this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-        break;
-    }
-    this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
+    // if (KLib.isUndefined(this.carFlameTicks[car.id])) {
+    //   this.carFlameTicks[car.id] = 0;
+    // }
+    // car.flame = this.carFlameTicks[car.id];
+    //
+    // var w = size.w;
+    //
+    // switch (car.shootingWithWeapon) {
+    //   case '90AngleMachineGun':
+    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
+    //     this.drawSingleGunFlame(ctx, car, Math.PI / 2, w / 4, size);
+    //     this.drawSingleGunFlame(ctx, car, -Math.PI / 2, w / 4, size);
+    //     break;
+    //   case 'SuperMachineGun':
+    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
+    //     this.drawSingleGunFlame(ctx, car, Math.PI / 4, w / 4, size);
+    //     this.drawSingleGunFlame(ctx, car, -Math.PI / 4, w / 4, size);
+    //     break;
+    //   case 'MachineGun':
+    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
+    //     break;
+    //   default:
+    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
+    //     break;
+    // }
+    // this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
   };
 
 }(Karma.EngineWebGL));

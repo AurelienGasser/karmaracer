@@ -1,3 +1,10 @@
+// o--------------->
+// |  map  |       x
+// |_______|
+// |
+// |
+// v y
+
 (function() {
   "use strict";
 
@@ -17,8 +24,10 @@
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
-    this.pMatrix = mat4.create();    
+    this.pMatrix = mat4.create();
     this.mvMatrix = mat4.create();
+    this.flipMatrix = mat4.create(); // invert the y axis
+    this.flipMatrix[0] = -1;
 
     this.mvMatrixStack = [];
 
@@ -64,6 +73,7 @@
     gl.enableVertexAttribArray(this.shaderProgram.vertexPositionAttribute);
     this.shaderProgram.uPMatrix = gl.getUniformLocation(this.shaderProgram, "uPMatrix");
     this.shaderProgram.uMVMatrix = gl.getUniformLocation(this.shaderProgram, "uMVMatrix");    
+    this.shaderProgram.flipMatrix = gl.getUniformLocation(this.shaderProgram, "flipMatrix");    
   };
   
   EngineWebGL.prototype.tick = function() {
@@ -92,7 +102,18 @@
     
     mat4.perspective(this.pMatrix, degToRad(45), this.canvas.clientWidth / this.canvas.clientHeight, 1, 1000);
     mat4.identity(this.mvMatrix);
+    if (this.gameInstance && this.gameInstance.myCar) {
+      var distFromCamera = 1.5;
+      var r = this.gameInstance.myCar.r;
+      this.camera.x = this.gameInstance.myCar.x - distFromCamera * Math.cos(r);
+      this.camera.y = this.gameInstance.myCar.y - distFromCamera * Math.sin(r);
+      this.camera.r = r;
+    }
     mat4.rotate(this.mvMatrix, this.mvMatrix, -degToRad(this.camera.pitch), [1, 0, 0]);
+    if (this.camera.r !== undefined) {
+      mat4.rotate(this.mvMatrix, this.mvMatrix, Math.PI / 2, [0, 0, 1]);      
+      mat4.rotate(this.mvMatrix, this.mvMatrix, -this.camera.r, [0, 0, 1]);      
+    }
     mat4.translate(this.mvMatrix, this.mvMatrix, [-this.camera.x, -this.camera.y, -this.camera.z]);
     this.drawMap();
     this.drawMyCar();    
@@ -102,72 +123,6 @@
   EngineWebGL.prototype.init = function(callback) {
     callback();
   };
-
-  EngineWebGL.prototype.drawMap = function() {
-    // this.drawGround(cameraHeight);
-    // this.drawWalls(cameraHeight);
-    this.drawOutsideWalls();
-    this.drawGround();
-  };
-
-  EngineWebGL.prototype.drawGround = function() {
-    var s = this.worldInfo.size;
-    var worldWidth = s.w;
-    var worldHeight = s.h;
-    var gl = this.gl;
-    
-    this.mvPushMatrix();
-    mat4.translate(this.mvMatrix, this.mvMatrix, [worldWidth / 2, worldHeight / 2, 0]);
-    this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([
-            -worldWidth/2, -worldHeight/2, 0,
-             worldWidth/2,  worldHeight/2, 0,
-            -worldWidth/2,  worldHeight/2, 0,
-            -worldWidth/2, -worldHeight/2, 0,
-             worldWidth/2,  worldHeight/2, 0,
-             worldWidth/2, -worldHeight/2, 0]),
-        this.gl.STATIC_DRAW);
-                
-    this.drewRectangles(1, [0, 1, 0]);      
-    this.mvPopMatrix();    
-  };
-  
-  EngineWebGL.prototype.drawOutsideWalls = function() {
-    var s = this.worldInfo.size;
-    var worldWidth = s.w;
-    var worldHeight = s.h;
-    var wh = 2; // wall height    
-    var gl = this.gl;
-    
-    // mat4.translate(this.mvMatrix, this.mvMatrix, [0, 0, +1.000]);
-    // mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(90), [1, 0, 0]);
-
-    this.drawOutsideWall({ x: worldWidth / 2, y: 0, z: wh / 2 }, { x: worldWidth, y: 0, z: wh });
-    this.drawOutsideWall({ x: worldWidth / 2, y: worldHeight, z: wh / 2 }, { x: worldWidth, y: 0, z: wh });
-    this.drawOutsideWall({ x: 0, y: worldHeight / 2, z: wh / 2 }, { x: 0, y: worldHeight, z: wh });
-    this.drawOutsideWall({ x: worldWidth, y: worldHeight / 2, z: wh / 2 }, { x: 0, y: worldHeight, z: wh });
-  };
-  
-  EngineWebGL.prototype.drawOutsideWall = function(pos, size) {
-    var gl = this.gl;    
-    this.mvPushMatrix();
-    mat4.translate(this.mvMatrix, this.mvMatrix, [pos.x, pos.y, pos.z]);
-    this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([
-            -size.x/2, -size.y/2,  size.z/2,
-             size.x/2,  size.y/2,  size.z/2,
-            -size.x/2, -size.y/2, -size.z/2,
-            -size.x/2, -size.y/2, -size.z/2,
-             size.x/2,  size.y/2,  size.z/2,
-             size.x/2,  size.y/2, -size.z/2]),
-        this.gl.STATIC_DRAW);
-        
-    this.drewRectangles(1, [1, 0, 0]);      
-    this.mvPopMatrix();
-  };
-  
   
   EngineWebGL.prototype.drawBox = function(pos, size, color) {
     var gl = this.gl;    
@@ -254,6 +209,7 @@
   EngineWebGL.prototype.setMatrixUniforms = function() {
     this.gl.uniformMatrix4fv(this.shaderProgram.uPMatrix, false, this.pMatrix);
     this.gl.uniformMatrix4fv(this.shaderProgram.uMVMatrix, false, this.mvMatrix);
+    this.gl.uniformMatrix4fv(this.shaderProgram.flipMatrix, false, this.flipMatrix);
   };
  
  
