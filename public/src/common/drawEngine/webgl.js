@@ -217,62 +217,6 @@
  // UNUSED
   
   
-  EngineWebGL.prototype.drawWalls = function(cameraHeight) {
-    if (!this.walls) {
-      return;
-    }
-    for (var i in this.walls) {
-      this.mvPushMatrix();
-      mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [-this.gameInstance.myCar.x, 0, this.gameInstance.myCar.y]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [this.walls[i].x, 0, -this.walls[i].y]);
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.road);
-      this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
-      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-      // this.gl.enable(this.gl.BLEND);
-      // this.gl.disable(this.gl.DEPTH_TEST);
-      this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.wallVertexTextureCoordBuffer[i]);
-      this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.wallVertexTextureCoordBuffer[i].itemSize, this.gl.FLOAT, false, 0, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.wallVertexPositionBuffer[i]);
-      this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.wallVertexPositionBuffer[i].itemSize, this.gl.FLOAT, false, 0, 0);
-      this.setMatrixUniforms();
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, this.wallVertexPositionBuffer[i].numItems);
-      this.mvPopMatrix();
-    }
-  };
-
-  // EngineWebGL.prototype.drawGround = function(cameraHeight) {
-  //   if (!this.tabItems) {
-  //     return;
-  //   }
-  //   for (var i in this.tabItems) {
-  //     var item = this.tabItems[i];
-  //     if (item == 'car') {
-  //       continue;
-  //     }
-  //     this.mvPushMatrix();
-  //     mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
-  //     mat4.translate(this.mvMatrix, this.mvMatrix, [0, -cameraHeight, 0]);
-  //     mat4.translate(this.mvMatrix, this.mvMatrix, [-this.gameInstance.myCar.x, 0, this.gameInstance.myCar.y]);
-  //     this.gl.activeTexture(this.gl.TEXTURE0);
-  //     this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
-  //     this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
-  //     this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-  //     // this.gl.enable(this.gl.BLEND);
-  //     // this.gl.disable(this.gl.DEPTH_TEST);
-  //     this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
-  //     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexTextureCoordBuffer[item]);
-  //     this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.worldVertexTextureCoordBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-  //     this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexPositionBuffer[item]);
-  //     this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.worldVertexPositionBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-  //     this.setMatrixUniforms();
-  //     this.gl.drawArrays(this.gl.TRIANGLES, 0, this.worldVertexPositionBuffer[item].numItems);
-  //     this.mvPopMatrix();
-  //   }
-  // };
-
   EngineWebGL.prototype.initTexture = function() {
     console.log('init texture');
     for (var i in this.tabItems) {
