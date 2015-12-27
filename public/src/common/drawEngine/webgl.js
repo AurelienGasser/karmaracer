@@ -6,6 +6,7 @@
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.worldInfo = worldInfo;
+    this.interpolator = gameInstance.interpolator;
     this.gl = setupWebGL(canvas, { antialiasing: false });
     this.camera = { pitch: 83, x: 3, y: 0, z: 1 };
     
@@ -93,8 +94,9 @@
     mat4.identity(this.mvMatrix);
     mat4.rotate(this.mvMatrix, this.mvMatrix, -degToRad(this.camera.pitch), [1, 0, 0]);
     mat4.translate(this.mvMatrix, this.mvMatrix, [-this.camera.x, -this.camera.y, -this.camera.z]);
-    // this.drawCars(cameraHeight);
     this.drawMap();
+    this.drawMyCar();    
+    this.drawCars();
   };  
   
   EngineWebGL.prototype.init = function(callback) {
@@ -106,17 +108,6 @@
     // this.drawWalls(cameraHeight);
     this.drawOutsideWalls();
     this.drawGround();
-    this.drawMyCar();
-  };
-  
-  EngineWebGL.prototype.drawMyCar = function() {
-    var myCar = this.gameInstance.myCar;
-    
-    if (!myCar) {
-      return;
-    }
-
-    this.drawBox([myCar.x, myCar.y, 0.5], [1, 1, 1], [0, 0, 1]);    
   };
 
   EngineWebGL.prototype.drawGround = function() {
@@ -181,7 +172,9 @@
   EngineWebGL.prototype.drawBox = function(pos, size, color) {
     var gl = this.gl;    
     this.mvPushMatrix();
+
     mat4.translate(this.mvMatrix, this.mvMatrix, [pos[0], pos[1], pos[2]]);
+    mat4.rotate(this.mvMatrix, this.mvMatrix, pos[3] || 0, [0, 0, 1]);
     this.gl.bufferData(
         this.gl.ARRAY_BUFFER,
         new Float32Array([
@@ -322,37 +315,6 @@
   //     this.mvPopMatrix();
   //   }
   // };
-
-  EngineWebGL.prototype.drawCars = function(cameraHeight) {
-    if (!this.gameInstance || !this.gameInstance.cars) {
-      return;
-    }
-    for (var i in this.gameInstance.cars) {
-      var car = this.gameInstance.cars[i];
-      var item = 'car';
-      this.mvPushMatrix();
-      mat4.rotate(this.mvMatrix, this.mvMatrix, degToRad(-this.pitch), [1, 0, 0]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [0, -cameraHeight, 0]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [-this.gameInstance.myCar.x    , 0  , this.gameInstance.myCar.y]);
-      mat4.translate(this.mvMatrix, this.mvMatrix, [+car.x, 0  , -car.y]);
-      mat4.rotate(this.mvMatrix, this.mvMatrix, car.r, [0, 1, 0]);
-      this.gl.activeTexture(this.gl.TEXTURE0);
-      this.gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures[item]);
-      this.gl.uniform1i(this.shaderProgram.samplerUniform, 0);
-      this.gl.blendFunc(this.gl.SRC_ALPHA, this.gl.ONE);
-      // this.gl.enable(this.gl.BLEND);
-      // this.gl.disable(this.gl.DEPTH_TEST);
-      this.gl.uniform1f(this.shaderProgram.alphaUniform, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexTextureCoordBuffer[item]);
-      this.gl.vertexAttribPointer(this.shaderProgram.textureCoordAttribute, this.worldVertexTextureCoordBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.worldVertexPositionBuffer[item]);
-      this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, this.worldVertexPositionBuffer[item].itemSize, this.gl.FLOAT, false, 0, 0);
-      this.setMatrixUniforms();
-      this.gl.drawArrays(this.gl.TRIANGLES, 0, this.worldVertexPositionBuffer[item].numItems);
-      this.mvPopMatrix();
-    }
-  };
-
 
   EngineWebGL.prototype.initTexture = function() {
     console.log('init texture');
