@@ -117,11 +117,9 @@ app.get('/tos', function(req, res) {
   index(req, res, "tos.jade", "CANVAS");
 });
 
-if (config.env == 'local') {
-  app.get('/test-client', function(req, res) {
-    res.render('test-client.jade');    
-  });  
-}
+app.get('/webgl', function(req, res) {
+  res.render('test-client.jade');    
+});  
 
 app.io = io;
 
