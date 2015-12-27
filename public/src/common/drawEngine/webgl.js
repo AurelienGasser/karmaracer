@@ -130,6 +130,7 @@
 
     mat4.translate(this.mvMatrix, this.mvMatrix, [pos[0], pos[1], pos[2]]);
     mat4.rotate(this.mvMatrix, this.mvMatrix, pos[3] || 0, [0, 0, 1]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     this.gl.bufferData(
         this.gl.ARRAY_BUFFER,
         new Float32Array([

@@ -52,6 +52,7 @@
     var gl = this.gl;    
     this.mvPushMatrix();
     mat4.translate(this.mvMatrix, this.mvMatrix, [pos.x, pos.y, pos.z]);
+    this.gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     this.gl.bufferData(
         this.gl.ARRAY_BUFFER,
         new Float32Array([
