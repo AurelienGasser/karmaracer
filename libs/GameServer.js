@@ -86,33 +86,38 @@ GameServer.prototype.sendPositionsToPlayers = function() {
   }
   var projectiles = this.weaponsManager.getGraphicProjectiles();
   for (var i in this.players) {
-    var p = this.players[i];
-    var playerCar = p.playerCar;
-    var myCar;
-    var allCurrentCars = this.carManager.getShared();
-    if (playerCar.dead) {
-      myCar = null;
-    } else {
-      for (var i in allCurrentCars) {
-        var car = allCurrentCars[i];
-        if (car.id === playerCar.id) {
-          myCar = car;
-          break;
-        }
-      }
-      if (!myCar) {
-        console.error('sendPositionsToPlayers: Error retrieving player car');
-      }
-      myCar.ackd = this.ackd[p.id];
-    }
-    var share = {
-      snapshot:       this.snapshot.getShared(p.id),
-      myCar:          myCar,
-      projectiles:    projectiles,
-      collisionPoints:p.playerCar.weapon ? p.playerCar.weapon.collisionPoints : null,
-    }
-    p.client.emit('objects', share);
+    var player = this.players[i];    
+    var share = this.getSharedObjectsForPlayer(player);
+    share.projectiles = projectiles;
+    player.client.emit('objects', share);
   }
+};
+
+GameServer.prototype.getSharedObjectsForPlayer = function(player) {
+  var playerCar = player.playerCar;
+  var myCar;
+  var allCurrentCars = this.carManager.getShared();
+  if (playerCar.dead) {
+    myCar = null;
+  } else {
+    for (var i in allCurrentCars) {
+      var car = allCurrentCars[i];
+      if (car.id === playerCar.id) {
+        myCar = car;
+        break;
+      }
+    }
+    if (!myCar) {
+      console.error('sendPositionsToPlayers: Error retrieving player car');
+    }
+    myCar.ackd = this.ackd[player.id];
+  }
+  
+  return {
+    snapshot:       this.snapshot.getShared(player.id),
+    myCar:          myCar,
+    collisionPoints:player.playerCar.weapon ? player.playerCar.weapon.collisionPoints : null,
+  }  
 };
 
 GameServer.prototype.broadcast = function(key, data) {
