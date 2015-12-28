@@ -127,19 +127,19 @@ var DBManager = require('./libs/db/DBManager');
 DBManager.connect(function(err, client) {
   if (err) {
     return null;
-  } else {
-    var MapManager = require('./libs/MapManager');
-    var mapManager = new MapManager(app);
+  } 
+  
+  var MapManager = require('./libs/MapManager');
+  var mapManager = new MapManager(app);
 
-    app.get('/status', function(req, res) {
-      res.render('status', {
-        layout: false,
-        numServers: Object.keys(mapManager.gameServers).length,
-        numBots: mapManager.getNumBots(),
-        loadAvg: os.loadavg()
-      });
-    })
-  }
+  app.get('/status', function(req, res) {
+    res.render('status', {
+      layout: false,
+      numServers: Object.keys(mapManager.gameServers).length,
+      numBots: mapManager.getNumBots(),
+      loadAvg: os.loadavg()
+    });
+  })
 });
 
 module.exports = app;
