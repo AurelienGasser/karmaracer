@@ -39,7 +39,12 @@
 
     that.connection.on('connect', function() {
       if (!_.isUndefined(G_mapName)) {
-        that.connection.emit('enter_map', G_mapName);
+              
+        if (!Karma.LocalStorage.get('playerName') || Karma.LocalStorage.get('playerName').length === 0) {
+          Karma.LocalStorage.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
+        }
+        
+        that.connection.emit('enter_map', G_mapName, Karma.LocalStorage.get('playerName'));
         announce($.i18n.prop('game_startmessage') + '</br>' + Karma.TopBar.getHelps(), 'blue');
       }
       // setInterval(that.ping.bind(that), 1000);
@@ -47,14 +52,8 @@
     });
 
     this.connection.on('init', function(initInfo) {
+      that.connection.emit('init_done');
       onInitCallback(null, initInfo);
-      
-      if (!Karma.LocalStorage.get('playerName') || Karma.LocalStorage.get('playerName').length === 0) {
-        Karma.LocalStorage.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
-      }
-      that.connection.emit('init_done', {
-        playerName: Karma.LocalStorage.get('playerName')
-      });
       this.init_done = true;
     });
 

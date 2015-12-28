@@ -111,10 +111,13 @@ GameServerSocket.prototype.registerMethods = function(client) {
     return callback(null, map);
   });
 
-  client.on('enter_map', function(mapName) {
-    console.info('enter in', mapName)
+  client.on('enter_map', function(mapName, playerName) {
+    console.info(playerName + 'entered ', mapName)
     var gameServer = that.mapManager.gameServers[mapName];
     if (gameServer) {
+      client.player = new Player(client, playerName);
+      gameServer.addPlayer(client.player);
+      gameServer.broadCastGameInfo();
       var worldInfo = gameServer.engine.getWorldInfo();
       worldInfo.gameInfo = gameServer.carManager.getGameInfo();
       var configShared = {
@@ -124,21 +127,19 @@ GameServerSocket.prototype.registerMethods = function(client) {
         myCarTurnSpeed:                 CONFIG.myCarTurnSpeed,
         userCommandsSentPerSecond:      CONFIG.userCommandsSentPerSecond
       };
+      var objects = gameServer.getSharedObjectsForPlayer(client.player);
       client.emit('init', {
         worldInfo: worldInfo,
         config: configShared,
-        objects: null
+        objects: objects
       });
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;
     }
   });
 
-  client.on('init_done', function(userData) {
-    console.info('client initialized:', userData.playerName, ' on ', client.gameServer.map.name);
-    client.player = new Player(client, userData.playerName);
-    client.gameServer.addPlayer(client.player);
-    client.gameServer.broadCastGameInfo();
+  client.on('init_done', function() {
+    console.info('client initialized:', client.player.playerName, ' on ', client.gameServer.map.name);
   });
 
   client.on('saveMap', function(map) {
