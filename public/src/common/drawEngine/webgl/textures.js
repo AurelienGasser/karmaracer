@@ -16,15 +16,11 @@
       texture.image = new Image();
       texture.loadPromise = $.Deferred();
       promises.push(texture.loadPromise);
-    }
-    
-    $.when.apply($, promises).done(callback);
-    
-    for (var texName in tabTextures) {
-      var texture = tabTextures[texName];
       texture.image.src = tabTexturesSources[texName].file;
       texture.image.onload = this.handleLoadedTexture(texture).bind(this);
     }
+    
+    $.when.apply($, promises).done(callback);
     
     this.tabTextures = tabTextures;    
   };

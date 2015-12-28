@@ -25,18 +25,27 @@
     this.clockSync = new Karma.ClockSync();
     this.interpolator = new Karma.Interpolator(this);
     this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
+    this.gv = new Karma.GunViewer($('body'), this.socketManager.connection);        
     
-    this.setUIEvents();
     this.isMobile = false;
 
     this.chat = new Karma.ChatController();
   }
 
-  GameInstance.prototype.setUIEvents = function() {
-    var that = this;
-  };
-
-  GameInstance.prototype.onInitReceived = function(err, worldInfo, config) {
+  GameInstance.prototype.handleReceivedObjects = function(objects) {
+    this.snapshots[objects.snapshot.stepNum] = objects.snapshot;
+    if (typeof this.userCommandManager !== 'undefined') {
+      this.userCommandManager.synchronizeMyCar(objects.myCar);
+    }
+    this.items.projectiles = objects.projectiles;
+    this.items.collisionPoints = objects.collisionPoints;
+  };  
+  
+  GameInstance.prototype.onInitReceived = function(err, initInfo) {
+    var worldInfo = initInfo.worldInfo;
+    var config = initInfo.config;
+    var objects = initInfo.objects;
+    
     this.config = config;
     Karma.TopBar.setTopBar(this.socketManager.connection);
     var that = this;
@@ -45,7 +54,11 @@
     this.bullets = [];
     this.rockets = [];
     this.gameInfo = null; // is set from sockets
-
+    
+    if (objects) {
+      this.handleReceivedObjects(objects);      
+    }
+    
     var drawEngineType = window.G_defaultDrawEngineType;
     
     this.loadCars();

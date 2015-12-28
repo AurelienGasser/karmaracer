@@ -37,8 +37,6 @@
 
     this.$socketps = $('#socketps');
 
-    this.gv = new Karma.GunViewer($('body'), that.connection);
-
     that.connection.on('connect', function() {
       if (!_.isUndefined(G_mapName)) {
         that.connection.emit('enter_map', G_mapName);
@@ -49,9 +47,8 @@
     });
 
     this.connection.on('init', function(initInfo) {
-      var worldInfo = initInfo.worldInfo;
-      var config    = initInfo.config;
-      onInitCallback(null, worldInfo, config);
+      onInitCallback(null, initInfo);
+      
       if (!Karma.LocalStorage.get('playerName') || Karma.LocalStorage.get('playerName').length === 0) {
         Karma.LocalStorage.set('playerName', prompt('Welcome to Karmaracer !\nWhat\'s your name ?'));
       }
@@ -143,20 +140,7 @@
   }
     
   SocketManager.prototype.handleReceivedObjects = function(objects) {
-    var gameInstance = this.gameInstance;
-
-    gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-    if (typeof gameInstance.userCommandManager !== 'undefined') {
-      gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
-    }
-    gameInstance.items.projectiles = objects.projectiles;
-    gameInstance.items.collisionPoints = objects.collisionPoints;
-
-    //for minimap
-    if (objects.myCar !== null) {
-      var player = gameInstance.gameInfo[objects.myCar.id];
-      this.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
-    }
+    this.gameInstance.handleReceivedObjects(objects);
 
     $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
       return list ? list.length : 0;
@@ -169,8 +153,8 @@
       this.socketCounter = 0;
     }
     this.socketCounter += 1;
-  };  
-
+  };
+  
   SocketManager.prototype.ping = function() {
     var that = this;
     var clock = that.gameInstance.clockSync;
