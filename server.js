@@ -132,6 +132,10 @@ DBManager.connect(function(err, client) {
   var MapManager = require('./libs/MapManager');
   var mapManager = new MapManager(app);
 
+  mapManager.load(function() {
+    var gameServerSocket = new(require('./GameServerSocket'))(mapManager);
+  });
+
   app.get('/status', function(req, res) {
     res.render('status', {
       layout: false,

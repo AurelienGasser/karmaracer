@@ -4,13 +4,11 @@ var CONFIG = require('./../config');
 var filesLib = require('./PackageManager/files');
 var DBManager = require('./db/DBManager');
 
-var MapManager = function(app, callback) {
+var MapManager = function(app) {
   this.app = app;
   this.gameServers = {};
   this.maps = {};
   this.itemsByName = {};
-
-  this.load(callback);
 
   return this;
 };
@@ -34,7 +32,6 @@ MapManager.prototype.loadItems = function(callback) {
     that.itemsByName[item.name] = item;
   }, callback);
 };
-
 
 function getJSONSForDirectory(path, action, callback) {
   filesLib.brosweFilesRec(path, function(err, files) {
@@ -114,19 +111,14 @@ MapManager.prototype.load = function(callback) {
   if (CONFIG.performanceTest) {
     console.info('loading performance test map')
     this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')
+    callback();
   } else {
     this.loadMaps(function(err) {
-      console.info('maps loaded')
-      that.gameServerSocket = new(require('./GameServerSocket'))(that);
-      that.loadItems(function(err) {
-        if (KLib.isFunction(callback)) {
-          return callback(null, that);
-        }
-      })
+      console.info('maps loaded')      
+      that.loadItems(callback);
     });
   }
 }
-
 
 MapManager.prototype.getVictories = function(callback) {
   var UserController = require('./db/UserController');
