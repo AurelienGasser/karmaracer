@@ -14,6 +14,11 @@
     this.canvasID = canvasID;
     this.worldInfo = worldInfo;
     this.interpolator = gameInstance.interpolator;
+
+    // fix canvas dimensions to avoid scaling
+    canvas.width  = $(canvas).css('width').replace('px', '');
+    canvas.height  = $(canvas).css('height').replace('px', '');
+    
     this.gl = setupWebGL(canvas, { antialiasing: false });
     this.camera = { pitch: 83, x: 3, y: 0, z: 1 };
     
