@@ -3,8 +3,9 @@
   
   EngineWebGL.prototype.loadTextures = function(callback) {
     var tabTexturesSources = {
-      grass: { file: "../sprites/3d/grass-128.png", size: 128 },
-      wall: { file: "../sprites/wall.png", size: 128 }
+      grass: { file: "../sprites/3d/grass-128.png" },
+      wall: { file: "../sprites/wall.png" },
+      explosion: { file: "../sprites/3d/explosion-256.png" }
     };
     var tabTextures = {};
     var promises = [];

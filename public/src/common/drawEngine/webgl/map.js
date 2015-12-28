@@ -148,6 +148,7 @@
       return;
     }
     var height = 1;
+    this.gl.uniform1f(this.shaderProgram.uAlpha, 0.5);            
     for (var i in this.worldInfo.staticItems) {
       var c = this.worldInfo.staticItems[i];
 
@@ -155,6 +156,7 @@
         this.drawBox([c.x, c.y, height / 2, c.r], [c.w, c.h, height], [1, 0, 0]);
       }
     }
+    this.gl.uniform1f(this.shaderProgram.uAlpha, 1);            
   };
 
 }(Karma.EngineWebGL));

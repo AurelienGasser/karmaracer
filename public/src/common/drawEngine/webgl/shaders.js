@@ -17,6 +17,7 @@
     program.uSampler = gl.getUniformLocation(program, "uSampler");
     program.uColor = gl.getUniformLocation(program, "uColor");
     program.bUseTextures = gl.getUniformLocation(program, "bUseTextures");
+    program.uAlpha = gl.getUniformLocation(program, "uAlpha");
   };  
 
 }(Karma.EngineWebGL));

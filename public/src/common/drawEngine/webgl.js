@@ -14,6 +14,7 @@
     this.canvasID = canvasID;
     this.worldInfo = worldInfo;
     this.interpolator = gameInstance.interpolator;
+    this.explosions = [];
 
     // fix canvas dimensions to avoid scaling
     canvas.width  = $(canvas).css('width').replace('px', '');
@@ -23,6 +24,7 @@
     this.camera = { pitch: 83, x: 3, y: 0, z: 1 };
     
     var gl = this.gl;        
+    
 
     this.initShaders();
  
@@ -36,8 +38,11 @@
 
     this.mvMatrixStack = [];
 
-    this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
-    this.gl.enable(this.gl.DEPTH_TEST);
+    gl.clearColor(0.0, 0.0, 0.0, 1.0);
+    // gl.enable(gl.DEPTH_TEST);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.BLEND);
+  
 
     return this;
   }
@@ -62,6 +67,7 @@
     this.drawMap();
     this.drawMyCar();
     this.drawCars();
+    this.drawExplosions();
   };  
   
   EngineWebGL.prototype.init = function(callback) {
@@ -130,7 +136,7 @@
   
   EngineWebGL.prototype.drewRectangles = function(num, color) {
     var gl = this.gl;
-    gl.uniform4f(this.shaderProgram.uColor, color[0], color[1], color[2], 0); 
+    gl.uniform4f(this.shaderProgram.uColor, color[0], color[1], color[2], 1.0); 
     gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
     gl.uniform1i(this.shaderProgram.bUseTextures, 0);
     this.setMatrixUniforms();
@@ -157,8 +163,75 @@
 
   EngineWebGL.prototype.addExplosion = function(explosion) {
     // TODO
-    // console.log('add explosion');
+    this.explosionDuration = 1000;
+    explosion.expiresOn = Date.now() + this.explosionDuration;
+    this.explosions.push(explosion);
   };
+
+  EngineWebGL.prototype.drawExplosions = function(explosion) {
+    var now = Date.now();
+    var toDelete = [];
+    var i = this.explosions.length;1
+    while (i--) {
+      var e = this.explosions[i];
+      if (e.expiresOn < now) {
+        this.explosions.splice(i, 1);
+      } else {
+        this.gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);   
+        this.drawExplosion(e, e.expiresOn - now);
+        this.gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);        
+      }
+    }
+  };
+  
+  EngineWebGL.prototype.drawExplosion = function(e, ttl) {
+    var gl = this.gl;    
+    this.mvPushMatrix();
+    var pos = [e.x, e.y, 0.5];
+    var size = [1, 1];
+
+    mat4.translate(this.mvMatrix, this.mvMatrix, pos);
+    var cos = this.camera.x - e.x;
+    var sin = this.camera.y - e.y;
+    var angle = Math.atan2(sin, cos) - Math.PI / 2;
+    mat4.rotate(this.mvMatrix, this.mvMatrix, angle, [0, 0, 1]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+            -size[0]/2, 0, -size[1]/2,
+             size[0]/2, 0,  size[1]/2,
+            -size[0]/2, 0,  size[1]/2,
+            -size[0]/2, 0, -size[1]/2,
+             size[0]/2, 0,  size[1]/2,
+             size[0]/2, 0, -size[1]/2
+        ]),
+        this.gl.STATIC_DRAW);
+    gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+    gl.uniform1i(this.shaderProgram.bUseTextures, 1);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());    
+    var texSize = 0.25;
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+          0, 0,
+          texSize, texSize,
+          0, texSize,
+          0, 0,
+          texSize, texSize,
+          texSize, 0]),
+        this.gl.STATIC_DRAW);
+    gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+    gl.activeTexture(this.gl.TEXTURE0);
+    gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.explosion);
+    gl.uniform1i(this.shaderProgram.uSampler, 0);
+    gl.uniform1f(this.shaderProgram.uAlpha, ttl / this.explosionDuration);
+    this.setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, 6, gl.UNSIGNED_SHORT, 0);
+    gl.uniform1f(this.shaderProgram.uAlpha, 1);    
+    this.mvPopMatrix();
+  };
+
 
   Karma.EngineWebGL = EngineWebGL;
 

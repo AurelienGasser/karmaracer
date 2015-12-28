@@ -9,11 +9,11 @@ html
     meta(name="apple-mobile-web-app-capable", content="yes")
     script(id="shader-vs", type="x-shader/x-vertex").
       attribute vec3 aVertexPosition;
-      attribute vec2 aTextureCoord;      
+      attribute vec2 aTextureCoord;  
       uniform mat4 uMVMatrix;
       uniform mat4 uPMatrix;      
       uniform mat4 flipMatrix;
-      varying highp vec2 vTextureCoord;      
+      varying highp vec2 vTextureCoord;
       void main() {
         gl_Position = flipMatrix * uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
         vTextureCoord = aTextureCoord;
@@ -25,12 +25,14 @@ html
        varying highp vec2 vTextureCoord;
        uniform sampler2D uSampler;
        uniform vec4 uColor;
+       uniform highp float uAlpha;
        uniform bool bUseTextures;
        void main() {
          if (bUseTextures) {
-           gl_FragColor = texture2D(uSampler, vTextureCoord);
+           vec4 color = texture2D(uSampler, vTextureCoord);
+           gl_FragColor = vec4(color.rgb, uAlpha * color.a);
          } else {
-           gl_FragColor = uColor;
+           gl_FragColor = vec4(uColor.rgb, uAlpha);
          }
        }
     script(type='text/javascript').
