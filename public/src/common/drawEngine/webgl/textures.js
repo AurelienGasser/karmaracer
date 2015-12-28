@@ -1,27 +1,32 @@
 (function(EngineWebGL) {
   "use strict";
   
-  EngineWebGL.prototype.initTextures = function() {
-    var gl = this.gl;
-    var tabTextures = {};
-    
-    this.tabTexturesSources = {
+  EngineWebGL.prototype.loadTextures = function(callback) {
+    var tabTexturesSources = {
       grass: { file: "../sprites/3d/grass-128.png", size: 128 },
       wall: { file: "../sprites/wall.png", size: 128 }
     };
-        
-    for (var texName in this.tabTexturesSources) {
+    var tabTextures = {};
+    var promises = [];
+    var gl = this.gl;
+    
+    for (var texName in tabTexturesSources) {
       var texture;
       tabTextures[texName] = texture = this.gl.createTexture();
       texture.image = new Image();
-      texture.image.src = this.tabTexturesSources[texName].file;
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      // Fill the texture with a 1x1 white pixel.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255])); 
-      tabTextures[texName].image.onload = this.handleLoadedTexture(tabTextures[texName]).bind(this);
+      texture.loadPromise = $.Deferred();
+      promises.push(texture.loadPromise);
     }
     
-    this.tabTextures = tabTextures;
+    $.when.apply($, promises).done(callback);
+    
+    for (var texName in tabTextures) {
+      var texture = tabTextures[texName];
+      texture.image.src = tabTexturesSources[texName].file;
+      texture.image.onload = this.handleLoadedTexture(texture).bind(this);
+    }
+    
+    this.tabTextures = tabTextures;    
   };
   
   EngineWebGL.prototype.handleLoadedTexture = function(texture) {
@@ -38,6 +43,7 @@
         
       gl.generateMipmap(gl.TEXTURE_2D);
       gl.bindTexture(gl.TEXTURE_2D, null);
+      texture.loadPromise.resolve();
     };
   };
 

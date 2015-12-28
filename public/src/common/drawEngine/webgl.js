@@ -39,8 +39,6 @@
     this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
     this.gl.enable(this.gl.DEPTH_TEST);
 
-    this.initTextures();
-
     return this;
   }
   
@@ -67,8 +65,8 @@
   };  
   
   EngineWebGL.prototype.init = function(callback) {
-    this.loadGroundBuffers();    
-    callback();
+    this.loadGroundBuffers();
+    this.loadTextures(callback);
   };
   
   EngineWebGL.prototype.drawBox = function(pos, size, color) {
