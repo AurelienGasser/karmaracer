@@ -163,7 +163,7 @@
 
   EngineWebGL.prototype.addExplosion = function(explosion) {
     // TODO
-    this.explosionDuration = 1000;
+    this.explosionDuration = 150;
     explosion.expiresOn = Date.now() + this.explosionDuration;
     this.explosions.push(explosion);
   };
@@ -171,7 +171,7 @@
   EngineWebGL.prototype.drawExplosions = function(explosion) {
     var now = Date.now();
     var toDelete = [];
-    var i = this.explosions.length;1
+    var i = this.explosions.length;
     while (i--) {
       var e = this.explosions[i];
       if (e.expiresOn < now) {
@@ -210,17 +210,11 @@
     gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
     gl.uniform1i(this.shaderProgram.bUseTextures, 1);
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());    
-    var texSize = 0.25;
+    var texCoord = this.getExplosionTextureCoord(ttl);
     this.gl.bufferData(
         this.gl.ARRAY_BUFFER,
-        new Float32Array([
-          0, 0,
-          texSize, texSize,
-          0, texSize,
-          0, 0,
-          texSize, texSize,
-          texSize, 0]),
-        this.gl.STATIC_DRAW);
+        new Float32Array(texCoord),
+        this.gl.STATIC_DRAW);    
     gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
     gl.activeTexture(this.gl.TEXTURE0);
     gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.explosion);
@@ -231,7 +225,28 @@
     gl.uniform1f(this.shaderProgram.uAlpha, 1);    
     this.mvPopMatrix();
   };
-
+  
+  EngineWebGL.prototype.getExplosionTextureCoord = function(ttl) {
+    var numImg = 16;
+    var numCol = 4;
+    var numLines = 4;
+    var percent = (this.explosionDuration - ttl) / this.explosionDuration;
+    var imgIndex = Math.floor(percent * numImg);
+    var col = 3 - (imgIndex % numCol); // col 0 is on the left
+    var line = Math.floor(imgIndex / numLines); // line 0 is at the bottom
+    var texSize = 0.25; 
+    var minX = col * 1.0 / numCol;
+    var maxX = minX + texSize;
+    var minY = line * 1.0 / numLines;
+    var maxY = minY + texSize;
+    return [
+      minX, minY,
+      maxX, maxY,
+      minX, maxY,
+      minX, minY,
+      maxX, maxY,
+      maxX, minY];
+  };
 
   Karma.EngineWebGL = EngineWebGL;
 
