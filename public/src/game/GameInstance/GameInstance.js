@@ -24,13 +24,21 @@
 
     this.clockSync = new Karma.ClockSync();
     this.interpolator = new Karma.Interpolator(this);
-    this.socketManager = new Karma.SocketManager(this, this.onInitReceived.bind(this));
-    this.gv = new Karma.GunViewer($('body'), this.socketManager.connection);        
+    this.socketManager = new Karma.SocketManager(this);
+
+    this.socketManager.init(this.onInitReceived.bind(this));
+
+    this.gv = new Karma.GunViewer($('body'), this.socketManager.connection);
     
     this.isMobile = false;
 
     this.chat = new Karma.ChatController();
   }
+  
+  GameInstance.prototype.handReceivedGameInfo = function(gameInfo) {
+    this.gameInfo = gameInfo;
+    this.scoreTable.updateScoresHTML(gameInfo, this.items, this.myCar);
+  };
 
   GameInstance.prototype.handleReceivedObjects = function(objects) {
     this.snapshots[objects.snapshot.stepNum] = objects.snapshot;
@@ -55,9 +63,8 @@
     this.rockets = [];
     this.gameInfo = null; // is set from sockets
     
-    if (objects) {
-      this.handleReceivedObjects(objects);      
-    }
+    this.handleReceivedObjects(objects);
+    this.handReceivedGameInfo(worldInfo.gameInfo);
     
     var drawEngineType = window.G_defaultDrawEngineType;
     
