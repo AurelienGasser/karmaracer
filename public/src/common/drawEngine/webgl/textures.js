@@ -5,27 +5,19 @@
     var gl = this.gl;
     var tabTextures = {};
     
-    this.tabItems = ['road', 'grass', 'wall', 'car'];
     this.tabTexturesSources = {
       grass: { file: "../sprites/3d/grass-128.png", size: 128 },
-      road: { file: "../sprites/3d/road.jpg", size: 128 },
-      wall: { file: "../sprites/wall.png", size: 128 },      
-      car: { file: "../sprites/c1.png", size: 128 }
+      wall: { file: "../sprites/wall.png", size: 128 }
     };
         
-    for (var i in this.tabItems) {
-      var item = this.tabItems[i];
+    for (var texName in this.tabTexturesSources) {
       var texture;
-      tabTextures[item] = texture = this.gl.createTexture();
+      tabTextures[texName] = texture = this.gl.createTexture();
       texture.image = new Image();
-      texture.image.src = this.tabTexturesSources[item].file;
+      texture.image.src = this.tabTexturesSources[texName].file;
       gl.bindTexture(gl.TEXTURE_2D, texture);
-      // Fill the texture with a 1x1 blue pixel.
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE,
-        new Uint8Array([0, 0, 255, 255])); // blue pixel
-    }
-    
-    for (var texName in tabTextures) {
+      // Fill the texture with a 1x1 white pixel.
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, 1, 1, 0, gl.RGBA, gl.UNSIGNED_BYTE, new Uint8Array([255, 255, 255, 255])); 
       tabTextures[texName].image.onload = this.handleLoadedTexture(tabTextures[texName]).bind(this);
     }
     
