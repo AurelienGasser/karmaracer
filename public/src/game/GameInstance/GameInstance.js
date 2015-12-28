@@ -12,16 +12,13 @@
     this.items.myCar = null;
     this.items.projectiles = [];
     this.points = {};
+    this.worldInfo = {};
     this.pointsID = 0;
-
+    this.drawEngine = null;
+    this.isMobile = false;
     this.pointsManager = new Karma.PointsManager();
     this.scoreTable = Karma.ScoreTable;
     this.scoreTable.setup();
-
-    this.worldInfo = {};
-
-    this.drawEngine = null;
-
     this.clockSync = new Karma.ClockSync();
     this.interpolator = new Karma.Interpolator(this);
     this.socketManager = new Karma.SocketManager(this);
@@ -29,9 +26,6 @@
     this.socketManager.init(this.onInitReceived.bind(this));
 
     this.gv = new Karma.GunViewer($('body'), this.socketManager.connection);
-    
-    this.isMobile = false;
-
     this.chat = new Karma.ChatController();
   }
   

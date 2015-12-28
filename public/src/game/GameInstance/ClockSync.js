@@ -6,21 +6,21 @@
   };
 
   ClockSync.prototype.pong = function(data) {
-    var original = data.original;
-    var receive  = data.receive;
-    var transmit = data.transmit;
-    var returned = data.returned;
+    var clientSent = data.clientSent;
+    var clientReceived = data.clientReceived;
+    var serverReceived  = data.serverReceived;
+    var serverSent = data.serverSent;
 
-    var sending = receive - original;
-    var receiving = returned - transmit;
+    var sending = serverReceived - clientSent;
+    var receiving = clientReceived - serverSent;
     var roundtrip = sending + receiving;
     var oneway = roundtrip / 2;
     var difference = sending - oneway;
 
     // update clock only if this packet is the most recently sent
     if (typeof this.original === 'undefined' ||
-      original > this.original) {
-      this.original = original;
+      clientSent > this.original) {
+      this.original = clientSent;
       this.roundtrip = roundtrip;
       this.difference = difference;
       $('#ping').html('ping: ' + this.roundtrip + 'ms');

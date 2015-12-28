@@ -52,9 +52,10 @@
       this.connection.emit('enter_map', G_mapName, Karma.LocalStorage.get('playerName'));
       announce($.i18n.prop('game_startmessage') + '</br>' + Karma.TopBar.getHelps(), 'blue');
     }
-
-    // setInterval(this.ping.bind(this), 1000);
+    
+    clearInterval(this.pingInterval);
     this.ping();
+    this.pingInterval = setInterval(this.ping.bind(this), 1000);
   };
 
   SocketManager.prototype.onInit = function(initInfo) {
@@ -90,11 +91,11 @@
     var that = this;
     var clock = that.gameInstance.clockSync;
     var req = {
-      original:   Date.now()
+      clientSent: Date.now()
     };
     this.connection.emit('ping', req, function(err, res) {
       if (!err) {
-        res.returned = Date.now();
+        res.clientReceived = Date.now();
         clock.pong(res);
       }
     });

@@ -55,8 +55,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
   }
 
   client.on('ping', function(data, callback) {
-    data.receive = Date.now();
-    data.transmit = Date.now();
+    data.serverReceived = Date.now();
+    data.serverSent = Date.now();
     callback(null, data);
   });
 
