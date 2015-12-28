@@ -8,6 +8,7 @@
     this.gameInstance = gameInstance;
     this.init_done = false;
     this.socketCounter = 0;
+    this.counterGameInfo = 0;
     this.timestamp = new Date().getTime();
     this.msg_id = 0;
 
@@ -16,7 +17,6 @@
     $(window).on('beforeunload', function() {
       that.connection.emit('disconnect');
     });
-
 
     function setupBotMenu() {
       var $botmenu = $('#botMenu');
@@ -34,16 +34,6 @@
     }
 
     setupBotMenu();
-
-    function socketReceived() {
-      var now = new Date().getTime();
-      if (now - that.timestamp > 1000) {
-        that.timestamp = now;
-        that.$socketps.html('socket/ps: ' + that.socketCounter);
-        that.socketCounter = 0;
-      }
-      that.socketCounter += 1;
-    }
 
     this.$socketps = $('#socketps');
 
@@ -136,33 +126,13 @@
 
     });
 
-    var counterGameInfo = 0;
-
     that.connection.on('gameInfo', function(gameInfo){
       gameInstance.gameInfo = gameInfo;
       gameInstance.scoreTable.updateScoresHTML(gameInfo, gameInstance.items, gameInstance.myCar);
-      counterGameInfo += 1;
+      that.counterGameInfo += 1;
     });
 
-    this.connection.on('objects', function(objects) {
-      gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
-      if (typeof gameInstance.userCommandManager !== 'undefined') {
-        gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
-      }
-      gameInstance.items.projectiles = objects.projectiles;
-      gameInstance.items.collisionPoints = objects.collisionPoints;
-
-      //for minimap
-      if (objects.myCar !== null) {
-        var player = gameInstance.gameInfo[objects.myCar.id];
-        that.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
-      }
-
-      $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
-        return list ? list.length : 0;
-      }).concat([counterGameInfo])));
-      socketReceived();
-    });
+    this.connection.on('objects', this.handleReceivedObjects.bind(this));
 
     this.connection.on('explosion', function(explosion) {
       if (gameInstance.drawEngine) {
@@ -171,6 +141,35 @@
     });
     //
   }
+    
+  SocketManager.prototype.handleReceivedObjects = function(objects) {
+    var gameInstance = this.gameInstance;
+
+    gameInstance.snapshots[objects.snapshot.stepNum] = objects.snapshot;
+    if (typeof gameInstance.userCommandManager !== 'undefined') {
+      gameInstance.userCommandManager.synchronizeMyCar(objects.myCar);
+    }
+    gameInstance.items.projectiles = objects.projectiles;
+    gameInstance.items.collisionPoints = objects.collisionPoints;
+
+    //for minimap
+    if (objects.myCar !== null) {
+      var player = gameInstance.gameInfo[objects.myCar.id];
+      this.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
+    }
+
+    $('#debug-sockets').html(JSON.stringify(_.map(objects, function(list) {
+      return list ? list.length : 0;
+    }).concat([this.counterGameInfo])));
+    
+    var now = Date.now();
+    if (now - this.timestamp > 1000) {
+      this.timestamp = now;
+      this.$socketps.html('socket/ps: ' + this.socketCounter);
+      this.socketCounter = 0;
+    }
+    this.socketCounter += 1;
+  };  
 
   SocketManager.prototype.ping = function() {
     var that = this;
