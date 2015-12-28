@@ -4,7 +4,7 @@ var Player = require('./classes/Player');
 var Car = require('./classes/Physics/Bodies/Car');
 var UserCommandManager = require('./UserCommandManager_server');
 
-var GameServerSocket = function(mapManager) {
+var GameServerSocket = function(mapManager, app) {
   this.homeClientIdCount = 0;
   this.homeClients = {};
   this.mapManager = mapManager;
@@ -12,7 +12,7 @@ var GameServerSocket = function(mapManager) {
 
   setInterval(this.broadcastMapsState.bind(this), 1000);
 
-  this.mapManager.app.io.sockets.on('connection', function(client) {
+  app.io.sockets.on('connection', function(client) {
     // console.info('client connected');
     // TODOFIX
     that.registerMethods(client);
@@ -126,7 +126,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
       };
       client.emit('init', {
         worldInfo: worldInfo,
-        config: configShared
+        config: configShared,
+        objects: null
       });
       gameServer.clients[client.id] = client;
       client.gameServer = gameServer;

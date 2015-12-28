@@ -15,7 +15,6 @@ var GameServer = function(app, map, mapManager) {
   return this;
 }
 
-
 GameServer.prototype.reloadMap = function(map) {
   this.map = map;
   this.engine.size = {

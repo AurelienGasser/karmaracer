@@ -133,7 +133,7 @@ DBManager.connect(function(err, client) {
   var mapManager = new MapManager(app);
 
   mapManager.load(function() {
-    var gameServerSocket = new(require('./GameServerSocket'))(mapManager);
+    var gameServerSocket = new(require('./libs/GameServerSocket'))(mapManager, app);
   });
 
   app.get('/status', function(req, res) {
