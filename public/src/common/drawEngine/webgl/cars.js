@@ -48,7 +48,7 @@
   EngineWebGL.prototype._drawCar = function(c, pos, car) {
     var carHeight = 0.6;
     
-    this.drawBox([c.x, c.y, carHeight / 2, c.r], [car.w, car.h, carHeight], [1, 0, 1]);
+    this.drawBox([pos.x, pos.y, carHeight / 2, pos.r], [car.w, car.h, carHeight], [1, 0, 1]);
 
     // // gun flammes
     // if (c.shootingWithWeapon !== null) {

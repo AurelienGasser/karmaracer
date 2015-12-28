@@ -108,7 +108,7 @@ GameServer.prototype.getSharedObjectsForPlayer = function(player) {
       }
     }
     if (!myCar) {
-      console.error('sendPositionsToPlayers: Error retrieving player car');
+      console.error('getSharedObjectsForPlayer: Error retrieving player car');
     }
     myCar.ackd = this.ackd[player.id];
   }

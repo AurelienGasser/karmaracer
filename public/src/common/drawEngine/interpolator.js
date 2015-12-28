@@ -44,7 +44,7 @@
     var numSnaps = stepNumbers.length;
     var serverTs = this.gameInstance.clockSync.getServerTsForClientTs(Date.now());
     if (serverTs === null) {
-      // clock not started yet, cannot draw
+      // clock not started yet, cannot interpolate
       return;
     }
     var wantedServerTs = serverTs - interpolation;
@@ -70,13 +70,10 @@
       // no data available
       // don't touch this.interpData.snapBefore and this.interpData.snapAfter
     }
+        
     this.interpData.ready = typeof this.interpData.snapBefore !== 'undefined' &&
       typeof this.interpData.snapAfter !== 'undefined';
     if (this.interpData.ready) {
-      // interpPercent
-      // 0:   snapBefore
-      // 0.5: in the middle of snapBefore and snapAfter
-      // 1:   snapAfter
       var snapshotsInterval = this.interpData.snapAfter.stepTs - this.interpData.snapBefore.stepTs;
       this.interpData.interpPercent = (wantedServerTs - this.interpData.snapBefore.stepTs) / snapshotsInterval;
     }
