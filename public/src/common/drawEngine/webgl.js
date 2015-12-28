@@ -57,7 +57,7 @@
     
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     
-    mat4.perspective(this.pMatrix, degToRad(45), this.canvas.clientWidth / this.canvas.clientHeight, 1, 1000);
+    mat4.perspective(this.pMatrix, degToRad(70), this.canvas.clientWidth / this.canvas.clientHeight, 1, 70);
     mat4.identity(this.mvMatrix);
     
     this.applyCamera();
