@@ -76,7 +76,7 @@
     for (var i in this.worldInfo.staticItems) {
       var c = this.worldInfo.staticItems[i];
 
-      if (c) {
+      if (c && c.name.substring(0, 4) != 'wall') {
         this.drawBox([c.x, c.y, height / 2, c.r], [c.w, c.h, height], [1, 0, 0]);
       }
     }
