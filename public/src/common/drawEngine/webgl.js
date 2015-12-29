@@ -1,3 +1,4 @@
+  /*global mat3*/
 // o--------------->
 // |  map  |       x
 // |_______|
@@ -27,19 +28,21 @@
     
 
     this.initShaders();
+    this.initCarBuffers();
  
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
 
     this.pMatrix = mat4.create();
     this.mvMatrix = mat4.create();
-    this.flipMatrix = mat4.create(); // invert the y axis
-    this.flipMatrix[0] = -1;
+    this.flipMatrix = mat4.create();
+    this.flipMatrix[0] = -1; // invert the y axis
+    this.scaleMatrix = mat3.create();
 
     this.mvMatrixStack = [];
 
     gl.clearColor(103.0/255, 179.0/255, 1, 0.0);
-    // gl.enable(gl.DEPTH_TEST);
+    gl.enable(gl.DEPTH_TEST);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
     gl.enable(gl.BLEND);
   
@@ -60,7 +63,7 @@
     
     this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
     
-    mat4.perspective(this.pMatrix, degToRad(70), this.canvas.clientWidth / this.canvas.clientHeight, 1, 70);
+    mat4.perspective(this.pMatrix, degToRad(45), this.canvas.clientWidth / this.canvas.clientHeight, 1, 70);
     mat4.identity(this.mvMatrix);
     
     this.applyCamera();
@@ -159,6 +162,7 @@
     this.gl.uniformMatrix4fv(this.shaderProgram.uPMatrix, false, this.pMatrix);
     this.gl.uniformMatrix4fv(this.shaderProgram.uMVMatrix, false, this.mvMatrix);
     this.gl.uniformMatrix4fv(this.shaderProgram.flipMatrix, false, this.flipMatrix);
+    this.gl.uniformMatrix3fv(this.shaderProgram.scaleMatrix, false, this.scaleMatrix);
   };
 
   Karma.EngineWebGL = EngineWebGL;

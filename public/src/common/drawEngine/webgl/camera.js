@@ -15,7 +15,7 @@
       return;
     } 
     
-    var distFromCamera = 1.5;
+    var distFromCamera = 2;
     var r = this.gameInstance.myCar.r;
     this.camera.x = this.gameInstance.myCar.x - distFromCamera * Math.cos(r);
     this.camera.y = this.gameInstance.myCar.y - distFromCamera * Math.sin(r);

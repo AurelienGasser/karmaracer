@@ -13,7 +13,8 @@
     gl.enableVertexAttribArray(program.aTextureCoord);
     program.uPMatrix = gl.getUniformLocation(program, "uPMatrix");
     program.uMVMatrix = gl.getUniformLocation(program, "uMVMatrix");    
-    program.flipMatrix = gl.getUniformLocation(program, "flipMatrix");    
+    program.flipMatrix = gl.getUniformLocation(program, "flipMatrix");
+    program.scaleMatrix = gl.getUniformLocation(program, "scaleMatrix");     
     program.uSampler = gl.getUniformLocation(program, "uSampler");
     program.uColor = gl.getUniformLocation(program, "uColor");
     program.bUseTextures = gl.getUniformLocation(program, "bUseTextures");

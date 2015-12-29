@@ -63,6 +63,7 @@
     gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.grass);
     gl.uniform1i(this.shaderProgram.uSampler, 0);    
     gl.uniform1i(this.shaderProgram.bUseTextures, true);
+    gl.uniform1f(this.shaderProgram.uAlpha, 1.0);    
     
     gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.groundVerticesIndexBuf);
     this.setMatrixUniforms();
