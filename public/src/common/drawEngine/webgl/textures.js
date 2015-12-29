@@ -5,7 +5,8 @@
     var tabTexturesSources = {
       grass: { file: "../sprites/3d/grass-128.png" },
       wall: { file: "../sprites/wall.png" },
-      explosion: { file: "../sprites/3d/explosion-256.png" }
+      explosion: { file: "../sprites/3d/explosion-256.png" },
+      flame: { file: "../sprites/3d/gun_flame.png" }
     };
     var tabTextures = {};
     var promises = [];

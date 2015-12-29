@@ -9,7 +9,10 @@
       return;
     }
 
-    this.drawBox([myCar.x, myCar.y, carHeight / 2, myCar.r], [1, 1, carHeight], [0, 0, 1]);    
+    this.drawBox([myCar.x, myCar.y, carHeight / 2, myCar.r], [1, 1, carHeight], [0, 0, 1]);
+    if (myCar.shootingWithWeapon) {
+      this.drawGunFlame(myCar);
+    }    
   };
 
   EngineWebGL.prototype.drawCars = function() {
@@ -49,6 +52,9 @@
     var carHeight = 0.6;
     
     this.drawBox([pos.x, pos.y, carHeight / 2, pos.r], [car.w, car.h, carHeight], [1, 0, 1]);
+    if (c.shootingWithWeapon) {
+      this.drawGunFlame(c);
+    }
 
     // // gun flammes
     // if (c.shootingWithWeapon !== null) {
@@ -81,48 +87,74 @@
   };
 
 
-  var maxFlameTick = 12;
-
-  EngineWebGL.prototype.drawSingleGunFlame = function(ctx, car, angle, distance, size) {
-    // var ratio = 1.5;
-    // ctx.rotate(angle);
-    // var w = size.w / 2;
-    // var h = size.h / 2;
-    // if (car.flame > maxFlameTick / 2) {
-    //   ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2, w, h);
-    // } else {
-    //   ctx.drawImage(this.gunFlameImage, 0, 0, 135, 125, distance, -h / 2 / ratio, w / ratio, h / ratio);
-    // }
-    // ctx.rotate(-angle);
+  EngineWebGL.prototype.drawGunFlame = function(car) {
+    var w = 2 * car.w;
+    car.shootingWithWeapon = 'SuperMachineGun';
+    switch (car.shootingWithWeapon) {
+      case '90AngleMachineGun':
+        this.drawSingleGunFlame(car, 0, w / 2);
+        this.drawSingleGunFlame(car, Math.PI / 2, w / 4);
+        this.drawSingleGunFlame(car, -Math.PI / 2, w / 4);
+        break;
+      case 'SuperMachineGun':
+        this.drawSingleGunFlame(car, 0, w / 2);
+        this.drawSingleGunFlame(car, Math.PI / 4, w / 2);
+        this.drawSingleGunFlame(car, -Math.PI / 4, w / 2);
+        break;
+      case 'MachineGun':
+        this.drawSingleGunFlame(car, 0, w / 2);
+        break;
+      default:
+        this.drawSingleGunFlame(car, 0, w / 2);
+        break;
+    }
   };
+  
+  EngineWebGL.prototype.drawSingleGunFlame = function(car, angle, dist) {
+    var gl = this.gl; 
+    var pos = [car.x + dist * Math.cos(car.r + angle), car.y + dist * Math.sin(car.r + angle), 0.1, 0.5];
+    this.mvPushMatrix();
+    var size = [1, 0.5];
 
-  EngineWebGL.prototype.drawGunFlame = function(ctx, car, size) {
-    // if (KLib.isUndefined(this.carFlameTicks[car.id])) {
-    //   this.carFlameTicks[car.id] = 0;
-    // }
-    // car.flame = this.carFlameTicks[car.id];
-    //
-    // var w = size.w;
-    //
-    // switch (car.shootingWithWeapon) {
-    //   case '90AngleMachineGun':
-    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-    //     this.drawSingleGunFlame(ctx, car, Math.PI / 2, w / 4, size);
-    //     this.drawSingleGunFlame(ctx, car, -Math.PI / 2, w / 4, size);
-    //     break;
-    //   case 'SuperMachineGun':
-    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-    //     this.drawSingleGunFlame(ctx, car, Math.PI / 4, w / 4, size);
-    //     this.drawSingleGunFlame(ctx, car, -Math.PI / 4, w / 4, size);
-    //     break;
-    //   case 'MachineGun':
-    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-    //     break;
-    //   default:
-    //     this.drawSingleGunFlame(ctx, car, 0, w / 2, size);
-    //     break;
-    // }
-    // this.carFlameTicks[car.id] = (this.carFlameTicks[car.id] + 1) % maxFlameTick;
+    mat4.translate(this.mvMatrix, this.mvMatrix, pos);
+    mat4.rotate(this.mvMatrix, this.mvMatrix, car.r + angle, [0, 0, 1]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+            -size[0]/2, -size[1]/2, 0, 
+             size[0]/2,  size[1]/2, 0, 
+            -size[0]/2,  size[1]/2, 0, 
+            -size[0]/2, -size[1]/2, 0, 
+             size[0]/2,  size[1]/2, 0, 
+             size[0]/2, -size[1]/2, 0
+        ]),
+        this.gl.STATIC_DRAW);
+    gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+    gl.uniform1i(this.shaderProgram.bUseTextures, 1);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+             0, 0,
+             1, 1,
+             0, 1,
+             0, 0,
+             1, 1,
+             1, 0
+        ]),
+        this.gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
+    gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+    gl.activeTexture(this.gl.TEXTURE0);
+    gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.flame);
+    gl.uniform1i(this.shaderProgram.uSampler, 0);
+    gl.uniform1f(this.shaderProgram.uAlpha, 1.0);
+    this.setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, 6, gl.UNSIGNED_SHORT, 0);
+    gl.uniform1f(this.shaderProgram.uAlpha, 1);
+    this.mvPopMatrix();    
+    gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);
   };
 
 }(Karma.EngineWebGL));
