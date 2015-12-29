@@ -97,9 +97,6 @@
   EngineWebGL.prototype._drawCar = function(c, pos, size, color) {
     var gl = this.gl;
     
-    pos.z = -0.005;
-    pos.r = 0;
-
     var scale = 0.25;    
     var scaleMatrix = [
       scale, 0, 0,
@@ -109,7 +106,7 @@
 
     gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
     this.mvPushMatrix();
-    mat4.translate(this.mvMatrix, this.mvMatrix, [pos.x, pos.y, pos.z]);
+    mat4.translate(this.mvMatrix, this.mvMatrix, [pos.x, pos.y, -0.005]);
     mat4.rotate(this.mvMatrix, this.mvMatrix, pos.r, [0, 0, 1]);
     mat4.rotate(this.mvMatrix, this.mvMatrix, Math.PI / 2, [1, 0, 0]);
     mat4.rotate(this.mvMatrix, this.mvMatrix, -Math.PI / 2, [0, 1, 0]);
