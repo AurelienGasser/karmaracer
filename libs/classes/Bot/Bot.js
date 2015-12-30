@@ -35,7 +35,7 @@ Bot.prototype.tickMove = function() {
               this.gameServer.engine.isPointInsideObject(frontCorners.right.x, frontCorners.right.y)
   };
   
-  if (Math.random() > 0.8 && !willHitWall.straight) {
+  if (Math.random() > 0.2 && !willHitWall.straight) {
     car.accelerate(0.5);
     return;    
   }
