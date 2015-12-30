@@ -27,7 +27,7 @@
   EngineWebGL.prototype.drawExplosion = function(e, ttl) {
     var gl = this.gl;    
     this.mvPushMatrix();
-    var pos = [e.x, e.y, 0.5];
+    var pos = [e.x, e.y, this.gunFlameZCoord];
     var size = [1, 1];
 
     mat4.translate(this.mvMatrix, this.mvMatrix, pos);

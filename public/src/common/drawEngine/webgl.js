@@ -16,6 +16,7 @@
     this.worldInfo = worldInfo;
     this.interpolator = gameInstance.interpolator;
     this.explosions = [];
+    this.gunFlameZCoord = 0.22;
 
     // fix canvas dimensions to avoid scaling
     canvas.width  = $(canvas).css('width').replace('px', '');

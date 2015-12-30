@@ -19,18 +19,22 @@ Bot.prototype.tick = function() {
   var maxRandom = 5;
   var diff = 1;
   if(this.playerCar.car && !this.playerCar.dead) {
-    var car = this.playerCar.car;
-    var random = parseInt(Math.random() * maxRandom, 10);
-    if(random < diff) {
-      var turnLeft = (Math.random() - 0.5 > 0 ? 1 : -1);
-      var angle = turnLeft * Math.random() * Math.PI / 4
-      car.accelerateAndTurn(0.5, angle);
-    } else {
-      car.accelerate(0.5);
-    }
+    this.tickMove();
     this.tickShoot();
   }
 }
+
+Bot.prototype.tickMove = function() {
+  var car = this.playerCar.car;  
+  var random = parseInt(Math.random() * maxRandom, 10);
+  if(random < diff) {
+    var turnLeft = (Math.random() - 0.5 > 0 ? 1 : -1);
+    var angle = turnLeft * Math.random() * Math.PI / 4
+    car.accelerateAndTurn(0.5, angle);
+  } else {
+    car.accelerate(0.5);
+  }
+};
 
 Bot.prototype.tickShoot = function() {
   if (this.startShootingDate) {

@@ -1,7 +1,9 @@
 var Body = require('./classes/Physics/Body.js');
 var Engine = require('./classes/Physics/Engine.js');
+var Car = require('./classes/Physics/Bodies/Car.js');
 var UserCommand = require('./classes/UserCommand');
 window.Karma = window.Karma || {};
-window.Karma.Engine = Engine
+window.Karma.Engine = Engine;
+window.Karma.Engine.Car = Car;
 window.Karma.Body = Body;
 window.Karma.UserCommand = UserCommand;

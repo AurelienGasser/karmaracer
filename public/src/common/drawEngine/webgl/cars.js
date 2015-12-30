@@ -58,7 +58,7 @@
     if (!myCar) {
       return;
     }
-    this._drawCar(myCar, myCar, { w: 1, h: 1 }, [0,0,1]);
+    this._drawCar(myCar, myCar, [0,0,1]);
   };
 
   EngineWebGL.prototype.drawCars = function() {
@@ -71,17 +71,15 @@
       return;
     }
     for (var j in cars) {
+      var car = cars[j];
       var carPos = this.interpPosOfCar(j);
-      var carId = cars[j].id;
+      var carId = car.id;
       var player = this.gameInstance.gameInfo[carId];
       if (player) {
-        var carImage = this.gameInstance.cars[player.carImageName];
-        carPos.id = carId;        
-        carPos.w = carImage.w;
-        carPos.h = carImage.h;
+        carPos.id = carId;
         this.gameInstance.engine.replaceCarBody(carPos);
         if (!cars[j].dead) {
-          this._drawCar(cars[j], carPos, carImage, [1, 0, 1]);
+          this._drawCar(cars[j], carPos, [1, 0, 1]);
         }
       }
     }
@@ -94,7 +92,7 @@
     return this.interpolator.interpPos(carBefore, carAfter, interpData.interpPercent);
   };
 
-  EngineWebGL.prototype._drawCar = function(c, pos, size, color) {
+  EngineWebGL.prototype._drawCar = function(c, pos, color) {
     var gl = this.gl;
     
     var scale = 0.25;    
@@ -129,7 +127,7 @@
     gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);    
 
     if (c.shootingWithWeapon) {
-      this.drawGunFlame(c);
+      this.drawGunFlame(pos, c.shootingWithWeapon);
     }
 
     // //name
@@ -156,77 +154,6 @@
     // var ratioSize = maxLifeSize * (c.life / player.maxLife);
     // ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
     // ctx.restore();
-  };
-
-
-  EngineWebGL.prototype.drawGunFlame = function(car) {
-    var w = 2 * car.w;
-    car.shootingWithWeapon = 'SuperMachineGun';
-    switch (car.shootingWithWeapon) {
-      case '90AngleMachineGun':
-        this.drawSingleGunFlame(car, 0, w / 2);
-        this.drawSingleGunFlame(car, Math.PI / 2, w / 4);
-        this.drawSingleGunFlame(car, -Math.PI / 2, w / 4);
-        break;
-      case 'SuperMachineGun':
-        this.drawSingleGunFlame(car, 0, w / 2);
-        this.drawSingleGunFlame(car, Math.PI / 4, w / 2);
-        this.drawSingleGunFlame(car, -Math.PI / 4, w / 2);
-        break;
-      case 'MachineGun':
-        this.drawSingleGunFlame(car, 0, w / 2);
-        break;
-      default:
-        this.drawSingleGunFlame(car, 0, w / 2);
-        break;
-    }
-  };
-  
-  EngineWebGL.prototype.drawSingleGunFlame = function(car, angle, dist) {
-    var gl = this.gl; 
-    var pos = [car.x + dist * Math.cos(car.r + angle), car.y + dist * Math.sin(car.r + angle), 0.01, 0.5];
-    this.mvPushMatrix();
-    var size = [1, 0.5];
-
-    mat4.translate(this.mvMatrix, this.mvMatrix, pos);
-    mat4.rotate(this.mvMatrix, this.mvMatrix, car.r + angle, [0, 0, 1]);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([
-            -size[0]/2, -size[1]/2, 0, 
-             size[0]/2,  size[1]/2, 0, 
-            -size[0]/2,  size[1]/2, 0, 
-            -size[0]/2, -size[1]/2, 0, 
-             size[0]/2,  size[1]/2, 0, 
-             size[0]/2, -size[1]/2, 0
-        ]),
-        this.gl.STATIC_DRAW);
-    gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
-    gl.uniform1i(this.shaderProgram.bUseTextures, 1);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    this.gl.bufferData(
-        this.gl.ARRAY_BUFFER,
-        new Float32Array([
-             0, 0,
-             1, 1,
-             0, 1,
-             0, 0,
-             1, 1,
-             1, 0
-        ]),
-        this.gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
-    gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
-    gl.activeTexture(this.gl.TEXTURE0);
-    gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.flame);
-    gl.uniform1i(this.shaderProgram.uSampler, 0);
-    gl.uniform1f(this.shaderProgram.uAlpha, 1.0);
-    this.setMatrixUniforms();
-    gl.drawArrays(gl.TRIANGLES, 0, 6, gl.UNSIGNED_SHORT, 0);
-    gl.uniform1f(this.shaderProgram.uAlpha, 1);
-    this.mvPopMatrix();    
-    gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);
   };
 
 }(Karma.EngineWebGL));
