@@ -17,9 +17,40 @@ html
     script(type='text/javascript', src='/socket.io/socket.io.js')
     script(type='text/javascript', src='/dist/vendor_common.js')
     script(type='text/javascript', src='/dist/all_game.js')
+    - if (default_draw_engine == 'WEBGL')
+      script(type='text/javascript', src='/dist/vendor_webgl.js')      
     link(rel='stylesheet', href='/dist/all_game.css')
     script(type='text/javascript').
       Karma.setGoogleAnalytics();
+    script(id="shader-vs", type="x-shader/x-vertex").
+      attribute vec3 aVertexPosition;
+      attribute vec2 aTextureCoord;  
+      uniform mat4 uMVMatrix;
+      uniform mat4 uPMatrix;      
+      uniform mat4 flipMatrix;
+      uniform mat3 scaleMatrix;
+      varying highp vec2 vTextureCoord;
+      void main() {
+        gl_Position = flipMatrix * uPMatrix * uMVMatrix * vec4(vec3(scaleMatrix * aVertexPosition), 1.0);
+        vTextureCoord = aTextureCoord;
+      }
+    script(id="shader-fs", type="x-shader/x-fragment").
+       #ifdef GL_ES
+         precision highp float;
+       #endif
+       varying highp vec2 vTextureCoord;
+       uniform sampler2D uSampler;
+       uniform vec4 uColor;
+       uniform highp float uAlpha;
+       uniform bool bUseTextures;
+       void main() {
+         if (bUseTextures) {
+           vec4 color = texture2D(uSampler, vTextureCoord);
+           gl_FragColor = vec4(color.rgb, uAlpha * color.a);
+         } else {
+           gl_FragColor = vec4(uColor.rgb, uAlpha);
+         }
+       }      
   body
     div#fb-root
     #debug

@@ -97,7 +97,7 @@ app.get('/', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
 });
 
 app.get('/game\.:map', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
-  index(req, res, "game.jade", "CANVAS");
+  index(req, res, "game.jade", req.query['draw'] || "CANVAS");
 });
 
 app.get('/mm\.:map', auth.reloadUserFromDbIfAuthenticated, function(req, res) {
