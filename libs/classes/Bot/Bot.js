@@ -16,15 +16,15 @@ var Bot = function(gameServer, name) {
   }
 
 Bot.prototype.tick = function() {
-  var maxRandom = 5;
-  var diff = 1;
-  if(this.playerCar.car && !this.playerCar.dead) {
+  if (this.playerCar.car && !this.playerCar.dead) {
     this.tickMove();
     this.tickShoot();
   }
-}
+};
 
 Bot.prototype.tickMove = function() {
+  var maxRandom = 5;
+  var diff = 1;
   var car = this.playerCar.car;  
   var random = parseInt(Math.random() * maxRandom, 10);
   if(random < diff) {
