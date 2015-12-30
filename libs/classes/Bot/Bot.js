@@ -23,17 +23,52 @@ Bot.prototype.tick = function() {
 };
 
 Bot.prototype.tickMove = function() {
-  var maxRandom = 5;
-  var diff = 1;
   var car = this.playerCar.car;  
-  var random = parseInt(Math.random() * maxRandom, 10);
-  if(random < diff) {
-    var turnLeft = (Math.random() - 0.5 > 0 ? 1 : -1);
-    var angle = turnLeft * Math.random() * Math.PI / 4
-    car.accelerateAndTurn(0.5, angle);
-  } else {
+  var wallProbeDist = car.w * 2;
+  var probePos = {
+    x: car.x + wallProbeDist * Math.cos(car.r), 
+    y: car.y + wallProbeDist * Math.sin(car.r)
+  };
+  var frontCorners = car.getFrontCorners(probePos);
+  var willHitWall = {
+    straight: this.gameServer.engine.isPointInsideObject(frontCorners.left.x, frontCorners.left.y) ||
+              this.gameServer.engine.isPointInsideObject(frontCorners.right.x, frontCorners.right.y)
+  };
+  
+  if (Math.random() > 0.8 && !willHitWall.straight) {
     car.accelerate(0.5);
+    return;    
   }
+
+  var turnDir;
+  var reverse = false;
+  var angle =  Math.random() * Math.PI / 4;
+
+  willHitWall.left = this.gameServer.engine.isPointInsideObject(car.x + wallProbeDist * Math.cos(car.r - angle), car.y + wallProbeDist * Math.sin(car.r - angle)),
+  willHitWall.right = this.gameServer.engine.isPointInsideObject(car.x + wallProbeDist * Math.cos(car.r + angle), car.y + wallProbeDist * Math.sin(car.r + angle))
+  
+  if (willHitWall.left) {
+    if (willHitWall.right) {
+      // don't turn
+      reverse = true;
+    } else {
+      turnDir = 'right';        
+    }
+  } else {
+    if (willHitWall.right) {
+      turnDir = 'left';
+    } else {
+      turnDir = Math.random() > 0.5 ? 'left' : 'right';
+    }
+  }
+  
+  var finalAngle = 0;
+  var finalAcceleration = reverse ? -0.5 : 0.5;
+  if (turnDir) {
+    finalAngle = (turnDir == 'left' ? -1 : +1) * angle;
+  }
+  
+  car.accelerateAndTurn(finalAcceleration, finalAngle);      
 };
 
 Bot.prototype.tickShoot = function() {

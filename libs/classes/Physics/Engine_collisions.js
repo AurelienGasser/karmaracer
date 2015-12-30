@@ -224,6 +224,25 @@ Engine_collisions.bulletCollision = function(projectile) {
   return PhysicsUtils.getClosestPoint(projectile, pointsAndBullets);
 };
 
+Engine_collisions.isPointInsideObject = function(x, y) {
+  if (!(x > 0 && x < this.map.size.w &&
+    y > 0 && y < this.map.size.h)) {
+    // out of the map  
+      return true;
+  }
+    
+  for (var bID in this.bodies) {
+    var b = this.bodies[bID];
+    if (x >= b.x - b.w / 2 &&
+      x <= b.x + b.w / 2 &&
+      y >= b.y - b.h / 2 &&
+      y <= b.y + b.h / 2) {
+        return true;
+      }
+  }
+  return false;
+};
+
 Engine_collisions.checkCollisions = function(body) {
   if (body.collidesWith !== null) {
     return true;

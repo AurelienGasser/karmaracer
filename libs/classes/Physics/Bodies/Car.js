@@ -45,5 +45,23 @@ Car.prototype.receiveHit = function() {
   this.playerCar.receiveHit();
 }
 
+Car.prototype.getFrontCorners = function(pos) {
+  var front = {
+    x: pos.x + this.w / 2 * Math.cos(this.r),
+    y: pos.y + this.w / 2 * Math.sin(this.r)
+  }
+  var diagonal = Math.sqrt((this.w / 2) * (this.w / 2) + (this.h / 2) * (this.h / 2));
+  return {
+    left: {
+      x: front.x + this.h / 2 * Math.cos(this.r + Math.PI / 2),
+      y: front.y + this.h / 2 * Math.sin(this.r + Math.PI / 2)
+    },
+    right: {
+      x: front.x + this.h / 2 * Math.cos(this.r - Math.PI / 2),
+      y: front.y + this.h / 2 * Math.sin(this.r - Math.PI / 2)
+    }
+  };
+}
+
 
 module.exports = Car;
