@@ -4,7 +4,6 @@
   EngineWebGL.prototype.drawGunFlame = function(pos, weapon) {
     var w = Karma.Engine.Car.prototype.w;
     var h = Karma.Engine.Car.prototype.h;
-    weapon = 'SuperMachineGun';
     switch (weapon) {
       case '90AngleMachineGun':
         this.drawSingleGunFlame(pos, 0, w / 2 + 0.85);
@@ -25,11 +24,11 @@
     }
   };
   
-  EngineWebGL.prototype.drawSingleGunFlame = function(car, angle, dist) {
+  EngineWebGL.prototype.drawSingleGunFlame = function(carPos, angle, dist) {
     var gl = this.gl; 
     var pos = [
-      car.x + dist * Math.cos(car.r + angle), 
-      car.y + dist * Math.sin(car.r + angle), 
+      carPos.x + dist * Math.cos(carPos.r + angle), 
+      carPos.y + dist * Math.sin(carPos.r + angle), 
       this.gunFlameZCoord, 
       0.5
     ];
@@ -37,7 +36,7 @@
     var size = [1, 0.5];
 
     mat4.translate(this.mvMatrix, this.mvMatrix, pos);
-    mat4.rotate(this.mvMatrix, this.mvMatrix, car.r + angle, [0, 0, 1]);
+    mat4.rotate(this.mvMatrix, this.mvMatrix, carPos.r + angle, [0, 0, 1]);
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
     this.gl.bufferData(
         this.gl.ARRAY_BUFFER,

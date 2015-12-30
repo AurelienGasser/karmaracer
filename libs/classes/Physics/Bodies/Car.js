@@ -4,22 +4,25 @@ var KBody = require('./../Body');
 var config = require('../../../../config');
 
 var Car = function(playerCar) {
-    KLib.extend(KBody, this);
-    this.startPosition = {
-      x: 5.0,
-      y: 11.5,
-    };
-    this.playerCar = playerCar;
-    this.initialize(this.playerCar.gameServer.engine, this.startPosition, {
-      w: 1,
-      h: 0.5
-    });
-    this.name = 'car';
-    this.goToFreeLandingPoint();
-    this.isBot = playerCar.isBot;
-    this.carImageName = 'c1';
-    return this;
-  }
+  KLib.extend(KBody, this);
+  this.startPosition = {
+    x: 5.0,
+    y: 11.5,
+  };
+  this.playerCar = playerCar;
+  this.initialize(this.playerCar.gameServer.engine, this.startPosition, {
+    w: Car.prototype.w,
+    h: Car.prototype.h
+  });
+  this.name = 'car';
+  this.goToFreeLandingPoint();
+  this.isBot = playerCar.isBot;
+  this.carImageName = 'c1';
+  return this;
+};
+
+Car.prototype.w = 1;
+Car.prototype.h = 0.5;
 
 Car.prototype.goToFreeLandingPoint = function() {
   if(this.engine !== null) {
