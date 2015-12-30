@@ -13,8 +13,6 @@
     this.canvas = canvas;
     this.canvasID = canvasID;
     this.gameInstance = gameInstance;    
-    this.timer = new Date().getTime();
-    this.frames = 0;
     this.fps = undefined; // will be defined by requestAnimFrame
     this.debugDraw = false;
     this.carFlameTicks = {};
@@ -344,21 +342,9 @@
     } else {
       this.draw();
     }
-    
-    this.frames++;
-    if (now - this.timer > 1000) {
-      this.timer = now;
-      this.fps = this.frames;
-      $('#fps').html('fps: ' + this.fps);
-      this.frames = 0;
-    }
   };
 
   Engine2DCanvas.prototype.tick = function() {
-    requestAnimFrame(this.tick.bind(this));
-    if (this.gameInstance) {
-      this.gameInstance.tick();    
-    }
     if (this.isMinimap) {
       this.tickMinimap();
     } else {

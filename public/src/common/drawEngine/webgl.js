@@ -52,10 +52,6 @@
   }
   
   EngineWebGL.prototype.tick = function() {
-    requestAnimFrame(this.tick.bind(this));
-    if (this.gameInstance) {
-      this.gameInstance.tick();
-    }
     this.drawScene();
   };
 

@@ -16,6 +16,8 @@
     this.pointsID = 0;
     this.drawEngine = null;
     this.isMobile = false;
+    this.frames = 0;
+    this.timer = Date.now();    
     this.pointsManager = new Karma.PointsManager();
     this.scoreTable = Karma.ScoreTable;
     this.scoreTable.setup();
@@ -82,7 +84,7 @@
     this.keyboardHandler = new Karma.KeyboardHandler(this);
     document.onkeydown = this.keyboardHandler.handleKeyDown.bind(this.keyboardHandler);
     document.onkeyup = this.keyboardHandler.handleKeyUp.bind(this.keyboardHandler);
-    this.drawEngine.tick();    
+    this.tick();    
   };
   
   GameInstance.prototype.loadCars = function() {
@@ -113,6 +115,10 @@
   };
   
   GameInstance.prototype.tick = function() {
+    var now = Date.now();
+    this.now = now;
+    requestAnimFrame(this.tick.bind(this));
+
     var ucm = this.userCommandManager;
     if (ucm) {
       
@@ -125,6 +131,16 @@
       this.interpolator.getInterpData();
       ucm.updatePos(now);
     }        
+    
+    this.frames++;
+    if (now - this.timer > 1000) {
+      this.timer = now;
+      this.fps = this.frames;
+      $('#fps').html('fps: ' + this.fps);
+      this.frames = 0;
+    }    
+    
+    this.drawEngine.tick();    
   };
 
   Karma.GameInstance = GameInstance;
