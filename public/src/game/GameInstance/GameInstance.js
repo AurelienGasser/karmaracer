@@ -41,6 +41,8 @@
     if (typeof this.userCommandManager !== 'undefined') {
       this.userCommandManager.synchronizeMyCar(objects.myCar);
     }
+    var player = this.gameInfo[objects.myCar.id];
+    this.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
     this.items.projectiles = objects.projectiles;
     this.items.collisionPoints = objects.collisionPoints;
   };  
@@ -59,8 +61,8 @@
     this.rockets = [];
     this.gameInfo = null; // is set from sockets
     
-    this.handleReceivedObjects(objects);
     this.handReceivedGameInfo(worldInfo.gameInfo);
+    this.handleReceivedObjects(objects);
     
     var drawEngineType = window.G_defaultDrawEngineType;
     

@@ -1,6 +1,8 @@
 (function(Engine2DCanvas) {
   "use strict";
 
+  var maxFlameTick = 12;
+
   Engine2DCanvas.prototype.drawLifeBar = function(ctx, c, player, w) {
     ctx.save();
     ctx.translate(-w / 2, -40);
@@ -12,9 +14,6 @@
     ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
     ctx.restore();
   };
-
-
-  var maxFlameTick = 12;
 
   Engine2DCanvas.prototype.drawSingleGunFlame = function(ctx, car, angle, distance, size) {
     var ratio = 1.5;
@@ -29,16 +28,13 @@
     ctx.rotate(-angle);
   };
 
-
-
   Engine2DCanvas.prototype.drawGunFlame = function(ctx, car, size) {
+    var w = size.w;
 
     if (KLib.isUndefined(this.carFlameTicks[car.id])) {
       this.carFlameTicks[car.id] = 0;
     }
     car.flame = this.carFlameTicks[car.id];
-
-    var w = size.w;
 
     switch (car.shootingWithWeapon) {
       case '90AngleMachineGun':
