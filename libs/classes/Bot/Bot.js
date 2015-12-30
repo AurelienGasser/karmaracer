@@ -16,7 +16,6 @@ var Bot = function(gameServer, name) {
   }
 
 Bot.prototype.tick = function() {
-  var numAdditionalTicksToTurn = 20;
   var maxRandom = 5;
   var diff = 1;
   if(this.playerCar.car && !this.playerCar.dead) {
@@ -24,13 +23,32 @@ Bot.prototype.tick = function() {
     var random = parseInt(Math.random() * maxRandom, 10);
     if(random < diff) {
       var turnLeft = (Math.random() - 0.5 > 0 ? 1 : -1);
-      var angle = turnLeft * Math.PI / 4
+      var angle = turnLeft * Math.random() * Math.PI / 4
       car.accelerateAndTurn(0.5, angle);
-      car.playerCar.shoot();
     } else {
       car.accelerate(0.5);
     }
+    this.tickShoot();
   }
 }
+
+Bot.prototype.tickShoot = function() {
+  if (this.startShootingDate) {
+    if (this.gameServer.now > this.startShootingDate) {
+      this.startShootingDate = null;
+      this.stopShootingDate = this.gameServer.now + Math.random() * 2 * 1000;
+    }
+    return;
+  }  
+  if (this.stopShootingDate) {
+    if (this.gameServer.now > this.stopShootingDate) {
+      this.stopShootingDate = null;
+    } else {
+      this.playerCar.shoot();      
+    }
+    return;
+  } 
+  this.startShootingDate = this.gameServer.now + Math.random() * 2 * 1000;  
+};
 
 module.exports = Bot;

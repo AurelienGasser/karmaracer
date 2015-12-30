@@ -45,6 +45,7 @@ GameServer_step.step = function() {
   if (this.doStep === false) {
     return;
   }
+  this.now = Date.now();
   var maxDiff = this.tickInterval;
   if(this.timer.lastDiff > maxDiff) {
     // console.error('Warning: main step takes too long...', this.map.name, this.timer.lastDiff + 'ms, max ', this.tickInterval, 'min ', this.minTickInterval); //, this.timer, 'max:', maxDiff);
