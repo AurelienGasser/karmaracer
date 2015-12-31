@@ -123,8 +123,6 @@
 
     var ucm = this.userCommandManager;
     if (ucm) {
-      
-      var now = Date.now();
       this.tickCptDrive = this.tickCptDrive === undefined ? 0 : this.tickCptDrive + 1;    
       if (this.tickCptDrive >= 3) {
         ucm.generateUserCommand(now);
