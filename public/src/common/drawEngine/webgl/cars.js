@@ -2,7 +2,7 @@
 (function(EngineWebGL) {
   "use strict";
 
-  EngineWebGL.prototype.initCarBuffers = function() {
+  EngineWebGL.prototype.loadCarBuffers = function() {
     /*jslint laxcomma: true */    
     var gl = this.gl;
     var babylon = {"autoClear":true,"clearColor":[0.2,0.2,0.2],"ambientColor":[0,0,0],"gravity":[0,-9.81,0],
@@ -103,7 +103,6 @@
       0, 0, scale
     ];
 
-    gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
     this.mvPushMatrix();
     mat4.translate(this.mvMatrix, this.mvMatrix, [pos.x, pos.y, -0.005]);
     mat4.rotate(this.mvMatrix, this.mvMatrix, pos.r, [0, 0, 1]);
@@ -125,7 +124,6 @@
 
     this.mvPopMatrix();    
     this.scaleMatrix = mat3.create();
-    gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);    
 
     if (c.shootingWithWeapon) {
       this.drawGunFlame(pos, c.shootingWithWeapon);

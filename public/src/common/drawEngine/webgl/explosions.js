@@ -17,9 +17,7 @@
       if (e.expiresOn < now) {
         this.explosions.splice(i, 1);
       } else {
-        this.gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);   
         this.drawExplosion(e, e.expiresOn - now);
-        this.gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);        
       }
     }
   };

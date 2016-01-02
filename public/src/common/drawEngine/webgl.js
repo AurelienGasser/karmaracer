@@ -29,7 +29,6 @@
     
 
     this.initShaders();
-    this.initCarBuffers();
  
     var buffer = gl.createBuffer();
     gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
@@ -72,6 +71,7 @@
   
   EngineWebGL.prototype.init = function(callback) {
     this.loadGroundBuffers();
+    this.loadCarBuffers();
     this.loadTextures(callback);
   };
   

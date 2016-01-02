@@ -2,12 +2,8 @@
   "use strict";
   
   EngineWebGL.prototype.drawMap = function() {
-    this.gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
     this.drawOutsideWalls();
-    this.gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);
-    this.gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
     this.drawGround();
-    this.gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);
     this.drawStaticItems();
   };
   
@@ -145,19 +141,133 @@
   };
   
   EngineWebGL.prototype.drawStaticItems = function() {
-    if (!this.worldInfo.staticItems) {
-      return;
-    }
     var height = 1;
-    this.gl.uniform1f(this.shaderProgram.uAlpha, 0.5);            
     for (var i in this.worldInfo.staticItems) {
       var c = this.worldInfo.staticItems[i];
-
       if (c && c.name.substring(0, 4) != 'wall') {
-        this.drawBox([c.x, c.y, height / 2, c.r], [c.w, c.h, height], [1, 0, 0]);
+        this.drawStaticItem([c.x, c.y, height / 2, c.r], [c.w, c.h, height]);
       }
     }
-    this.gl.uniform1f(this.shaderProgram.uAlpha, 1);            
   };
+  
+  EngineWebGL.prototype.drawStaticItem = function(pos, size) 
+  {
+    var gl = this.gl;    
+    var sx = size[0] * 1.0;
+    var sy = size[1] * 1.0;
+    var sz = size[2] * 1.0;
+    
+    this.mvPushMatrix();
 
+    mat4.translate(this.mvMatrix, this.mvMatrix, [pos[0], pos[1], pos[2]]);
+    mat4.rotate(this.mvMatrix, this.mvMatrix, pos[3] || 0, [0, 0, 1]);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([
+            // top
+            -size[0]/2, -size[1]/2, size[2]/2,
+             size[0]/2,  size[1]/2, size[2]/2,
+            -size[0]/2,  size[1]/2, size[2]/2,
+            -size[0]/2, -size[1]/2, size[2]/2,
+             size[0]/2,  size[1]/2, size[2]/2,
+             size[0]/2, -size[1]/2, size[2]/2,
+            // // side 1
+            -size[0]/2, -size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2,  size[2]/2,
+            -size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2, -size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2,  size[2]/2,
+            -size[0]/2, -size[1]/2,  size[2]/2,
+            // side 2
+             size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+             size[0]/2, -size[1]/2,  size[2]/2,
+            // side 3
+            -size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2,  size[2]/2,
+            -size[0]/2,  size[1]/2,  size[2]/2,
+            // side 4
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2,  size[2]/2,
+             size[0]/2, -size[1]/2, -size[2]/2,
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2,  size[2]/2,
+            -size[0]/2, -size[1]/2,  size[2]/2,
+            // bottom
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2,  size[1]/2, -size[2]/2,
+            -size[0]/2, -size[1]/2, -size[2]/2,
+             size[0]/2,  size[1]/2, -size[2]/2,
+             size[0]/2, -size[1]/2, -size[2]/2
+        ]),
+        this.gl.STATIC_DRAW);        
+    gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+    
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());    
+    this.gl.bufferData(
+        this.gl.ARRAY_BUFFER,
+        new Float32Array([        
+          // top
+          0, 0,
+          sx, sy,
+          0, sy,
+          0, 0,
+          sx, sy,
+          sx, 0,
+          // side 1
+          0, 0,
+          sy, sz,
+          sy, 0,
+          0, 0,
+          sy, sz,
+          0, sz,
+          // // side 2
+          0, 0,
+          sx, sz,
+          sx, 0,
+          0, 0,
+          sx, sz,
+          0, sz,
+          // // side 3
+          0, 0,
+          sy, sz,
+          sy, 0,
+          0, 0,
+          sy, sz,
+          0, sz,
+          // // side 4
+          0, 0,
+          sx, sz,
+          sx, 0,
+          0, 0,
+          sx, sz,
+          0, sz,
+          // // bottom
+          0, 0,
+          sx, sy,
+          0, sy,
+          0, 0,
+          sx, sy,
+          sx, 0,
+        ]),
+        this.gl.STATIC_DRAW);      
+    gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+    gl.activeTexture(this.gl.TEXTURE0);
+    gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.wall);
+    gl.uniform1i(this.shaderProgram.uSampler, 0);
+    gl.uniform1f(this.shaderProgram.uAlpha, 1.0);    
+    gl.uniform1i(this.shaderProgram.bUseTextures, 1);
+    this.setMatrixUniforms();
+    gl.drawArrays(gl.TRIANGLES, 0, 36, gl.UNSIGNED_SHORT, 0);
+    this.mvPopMatrix();
+  }
+ 
 }(Karma.EngineWebGL));

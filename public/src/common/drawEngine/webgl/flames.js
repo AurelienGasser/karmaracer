@@ -63,7 +63,6 @@
              1, 0
         ]),
         this.gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(this.shaderProgram.aTextureCoord);
     gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
     gl.activeTexture(this.gl.TEXTURE0);
     gl.bindTexture(this.gl.TEXTURE_2D, this.tabTextures.flame);
@@ -72,8 +71,7 @@
     this.setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, 6, gl.UNSIGNED_SHORT, 0);
     gl.uniform1f(this.shaderProgram.uAlpha, 1);
-    this.mvPopMatrix();    
-    gl.disableVertexAttribArray(this.shaderProgram.aTextureCoord);
+    this.mvPopMatrix();
   };
   
 }(Karma.EngineWebGL));
