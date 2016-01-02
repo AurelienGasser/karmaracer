@@ -42,6 +42,8 @@
       return;
     }
     this._drawCar(myCar, myCar, [0,0,1]);
+    var maxLife = this.gameInstance.gameInfo[myCar.id].maxLife;
+    this.drawLifeBar(myCar.life, maxLife, myCar);
   };
 
   EngineWebGL.prototype.drawCars = function() {
@@ -61,7 +63,7 @@
         carPos.id = car.id;
         this.gameInstance.engine.replaceCarBody(carPos);
         if (!car.dead) {
-          this._drawCar(car, carPos, [1, 0, 1]);
+          this._drawCar(car, carPos, [1, 0, 1], maxLife);
           var maxLife = this.gameInstance.gameInfo[car.id].maxLife;
           this.drawLifeBar(car.life, maxLife, carPos);
         }
