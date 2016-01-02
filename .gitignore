@@ -10,3 +10,4 @@ err.log
 server/config.js
 public/dist/*
 test.js
+.tm_properties

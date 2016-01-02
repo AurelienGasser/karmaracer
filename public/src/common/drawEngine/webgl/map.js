@@ -18,9 +18,9 @@
     gl.bindBuffer(gl.ARRAY_BUFFER, this.groundTexCoordBuf);
     var texCoord = [
       0.0, 0.0,
-      worldWidth*1.0, 0.0,
-      worldWidth*1.0, worldHeight*1.0,
-      0.0, worldHeight*1.0
+      worldWidth, 0.0,
+      worldWidth, worldHeight,
+      0.0, worldHeight
     ];
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(texCoord), gl.STATIC_DRAW);
     
@@ -153,9 +153,9 @@
   EngineWebGL.prototype.drawStaticItem = function(pos, size) 
   {
     var gl = this.gl;    
-    var sx = size[0] * 1.0;
-    var sy = size[1] * 1.0;
-    var sz = size[2] * 1.0;
+    var sx = size[0];
+    var sy = size[1];
+    var sz = size[2];
     
     this.mvPushMatrix();
 
@@ -256,7 +256,7 @@
           0, sy,
           0, 0,
           sx, sy,
-          sx, 0,
+          sx, 0
         ]),
         this.gl.STATIC_DRAW);      
     gl.vertexAttribPointer(this.shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
@@ -268,6 +268,6 @@
     this.setMatrixUniforms();
     gl.drawArrays(gl.TRIANGLES, 0, 36, gl.UNSIGNED_SHORT, 0);
     this.mvPopMatrix();
-  }
+  };
  
 }(Karma.EngineWebGL));
