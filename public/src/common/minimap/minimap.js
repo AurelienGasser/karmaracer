@@ -34,7 +34,7 @@
       this.drawEngine = drawEngine;
       this.drawEngine.canvasSize = this.drawEngine.worldInfo.size;
       this.drawEngine.resize();
-      this.drawEngine.tick();            
+      // this.drawEngine.tick();
     }    
   };
   
@@ -50,6 +50,13 @@
     this.connection.emit('getMinimap', {
       'name': mapName
     }, this.onWorldInfoReady.bind(this));
+  };
+  
+  Minimap.prototype.tick = function() {
+    if (!this.drawEngine) {
+      return;
+    }
+    this.drawEngine.tick();
   };
 
   Karma.Minimap = Minimap;

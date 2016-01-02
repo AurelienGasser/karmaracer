@@ -81,7 +81,7 @@
     Karma.getDrawEngine(false, 'game-canvas', drawEngineType, that.items, that.worldInfo, 32, this, that.socketManager.connection, this.onDrawEngineReady.bind(this));
 
     if (that.isMobile === false) {
-      new Karma.Minimap($('body'), G_mapName, that.socketManager.connection, that.items, that);
+      this.minimap = new Karma.Minimap($('body'), G_mapName, that.socketManager.connection, that.items, that);
     }
   };
   
@@ -147,6 +147,9 @@
     }    
     
     this.drawEngine.tick();    
+    if (this.minimap) {
+      this.minimap.tick();
+    }
   };
 
   Karma.GameInstance = GameInstance;
