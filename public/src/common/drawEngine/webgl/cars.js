@@ -3,7 +3,6 @@
   "use strict";
 
   EngineWebGL.prototype.loadCarBuffers = function() {
-    /*jslint laxcomma: true */    
     var gl = this.gl;
     var babylon = this.getCarModel();
     

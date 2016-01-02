@@ -15,7 +15,7 @@ var UserCommand = function(gameInstance, ts, clockSyncDifference) {
   } else {
     this.mousePos = {
       force: 1,
-      angle: gameInstance.myCar.r || 0
+      angle: gameInstance.myCar ? (gameInstance.myCar.r || 0) : 0
     };
   }
   this.ts = ts;

@@ -1,3 +1,4 @@
+/*jslint laxcomma: true */    
 (function(EngineWebGL) {
   "use strict";
   

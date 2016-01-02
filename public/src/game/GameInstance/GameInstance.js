@@ -41,8 +41,14 @@
     if (typeof this.userCommandManager !== 'undefined') {
       this.userCommandManager.synchronizeMyCar(objects.myCar);
     }
-    var player = this.gameInfo[objects.myCar.id];
-    this.gv.updateEnergy(player.weaponName, objects.myCar.gunLife);
+    var myCar = objects.myCar;
+    if (myCar) {
+      var player = this.gameInfo[myCar.id];
+      this.gv.show();
+      this.gv.updateEnergy(player.weaponName, myCar.gunLife);      
+    } else {
+      this.gv.hide();
+    }
     this.items.projectiles = objects.projectiles;
     this.items.collisionPoints = objects.collisionPoints;
   };  

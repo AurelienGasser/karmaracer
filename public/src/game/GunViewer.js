@@ -33,13 +33,23 @@
     this.$gunZone.on('touchend', function(e) {
       Karma.gameInstance.keyboardHandler.shoot = false;
     });
-
+  };
+  
+  GunViewer.prototype.hide = function() {
+    if (this.$gunZone && this.$gunZone.is(':visible')) {
+      this.$gunZone.hide();          
+    }
   };
 
+  GunViewer.prototype.show = function() {
+    if (this.$gunZone && !this.$gunZone.is(':visible')) {
+      this.$gunZone.show();          
+    }
+  };
+  
   GunViewer.prototype.setBackground = function(name) {
     this.$gunZone.css('background-image', 'url(\'/images/guns/' + name + '.png\')');
   };
-
 
   GunViewer.prototype.setEnergyMask = function(energy) {
     var imgSize = this.$gunZone.width();
@@ -51,9 +61,7 @@
     this.$gunLoaderZone.css('left', (size) + 'px');
   };
 
-
   GunViewer.prototype.updateEnergy = function(gunName, energy) {
-
     if (KLib.isUndefined(this.$gunZone)) {
       this.addGun(gunName);
     } else {
@@ -62,9 +70,7 @@
         this.gunName = gunName;
       }
     }
-
     this.setEnergyMask(energy);
-
   };
 
 
