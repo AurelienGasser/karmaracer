@@ -73,13 +73,14 @@
     for (var j in cars) {
       var car = cars[j];
       var carPos = this.interpPosOfCar(j);
-      var carId = car.id;
-      var player = this.gameInstance.gameInfo[carId];
+      var player = this.gameInstance.gameInfo[car.id];
       if (player) {
-        carPos.id = carId;
+        carPos.id = car.id;
         this.gameInstance.engine.replaceCarBody(carPos);
-        if (!cars[j].dead) {
-          this._drawCar(cars[j], carPos, [1, 0, 1]);
+        if (!car.dead) {
+          this._drawCar(car, carPos, [1, 0, 1]);
+          var maxLife = this.gameInstance.gameInfo[car.id].maxLife;
+          this.drawLifeBar(car.life, maxLife, carPos);
         }
       }
     }
@@ -142,18 +143,6 @@
     //
     // // bullet
     // this.drawBullet(c, ctx, pos);
-  };
-  
-  EngineWebGL.prototype.drawLifeBar = function(ctx, c, player, w) {
-    // ctx.save();
-    // ctx.translate(-w / 2, -40);
-    // var maxLifeSize = w;
-    // ctx.fillStyle = '#0F0';
-    // ctx.fillRect(0, 0, maxLifeSize, 5);
-    // ctx.fillStyle = '#F00';
-    // var ratioSize = maxLifeSize * (c.life / player.maxLife);
-    // ctx.fillRect(ratioSize, 0, maxLifeSize - ratioSize, 5);
-    // ctx.restore();
   };
 
 }(Karma.EngineWebGL));
