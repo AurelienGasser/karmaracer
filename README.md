@@ -1,4 +1,4 @@
-कर्म Karma Racer
+कर्म रेसर Karma Racer
 
 Karma Racer is an online multi-player car game, written in HTML / JavaScript / node.js
 
