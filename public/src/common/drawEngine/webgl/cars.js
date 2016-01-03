@@ -33,17 +33,6 @@
         new Float32Array(uvs),
         this.gl.STATIC_DRAW);
   };
-  
-  EngineWebGL.prototype.drawMyCar = function() {
-    var myCar = this.gameInstance.myCar;
-    
-    if (!myCar) {
-      return;
-    }
-    this._drawCar(myCar, myCar, [0,0,1]);
-    var maxLife = this.gameInstance.gameInfo[myCar.id].maxLife;
-    this.drawLifeBar(myCar.life, maxLife, myCar);
-  };
 
   EngineWebGL.prototype.drawCars = function() {
     var interpData = this.interpolator.interpData;

@@ -64,7 +64,6 @@
     
     this.applyCamera();
     this.drawMap();
-    this.drawMyCar();
     this.drawCars();
     this.drawExplosions();
   };  

@@ -18,8 +18,6 @@ Snapshot.prototype.getShared = function(playerId) {
   for (var id in this.shared.cars) {
     cars_shared[id] = this.shared.cars[id];
   }
-  // exclude playerId
-  delete cars_shared[playerId];
   return {
     stepNum:  this.shared.stepNum,
     stepTs:   this.shared.stepTs,
