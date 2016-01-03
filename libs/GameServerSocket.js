@@ -6,22 +6,52 @@ var UserCommandManager = require('./UserCommandManager_server');
 
 var GameServerSocket = function(mapManager, app) {
   this.homeClientIdCount = 0;
+  this.clients = [];
   this.homeClients = {};
   this.mapManager = mapManager;
-  var that = this;
 
   setInterval(this.broadcastMapsState.bind(this), 1000);
 
-  app.io.sockets.on('connection', function(client) {
-    // console.info('client connected');
-    // TODOFIX
-    that.registerMethods(client);
-    client.graph = require('fbgraph');
-    if (!KLib.isUndefined(client.handshake.session)) {
-      client.graph.setAccessToken(client.handshake.session.accessToken);
-    }
-  });
+  app.io.sockets.on('connection', this.onConnect.bind(this));  
 }
+
+GameServerSocket.prototype.onConnect = function(client) {
+  // console.info('client connected');
+  require('./Sockets/miniMap')(this, client);
+  require('./MarketPlace/MarketPlaceSockets')(client);
+
+  client.userCommandManager = new UserCommandManager(client);
+  client.graph = require('fbgraph');
+
+  this.registerMethods(client);
+
+  if (!KLib.isUndefined(client.handshake.session)) {
+    client.graph.setAccessToken(client.handshake.session.accessToken);
+  }
+  
+  this.clients.push(client);
+};
+
+GameServerSocket.prototype.onDisconnect = function(client) {
+  return function(socket) {
+    try {
+      console.info('client left:', client.id);
+      this.removeHomeClient(client);
+      var idx = this.clients.indexOf(client);
+      if (idx != -1) {
+        this.clients.splice(idx, 1);
+      }
+      if (!KLib.isUndefined(client.gameServer)) {
+        client.gameServer.removePlayer(client.player);
+      }
+    } catch (e) {
+      console.error(e, e.stack);
+    }
+    if (!KLib.isUndefined(client.gameServer)) {
+      delete client.gameServer.clients[client.id];
+    }
+  }
+};
 
 GameServerSocket.prototype.broadcastMapsState = function() {
   for (var i in this.homeClients) {
@@ -45,10 +75,6 @@ GameServerSocket.prototype.removeHomeClient = function(client) {
 GameServerSocket.prototype.registerMethods = function(client) {
   var that = this;
   var user;
-  require('./Sockets/miniMap')(this, client);
-  require('./MarketPlace/MarketPlaceSockets')(client);
-
-  client.userCommandManager = new UserCommandManager(client);
 
   if (client.handshake.session && client.handshake.session.user) {
     user = client.handshake.session.user;
@@ -160,22 +186,8 @@ GameServerSocket.prototype.registerMethods = function(client) {
     }
   });
 
-  client.on('disconnect', function(socket) {
-    try {
-      console.info('client left:', client.id);
-      that.removeHomeClient(client);
-      if (!KLib.isUndefined(client.gameServer)) {
-        client.gameServer.removePlayer(client.player);
-      }
-
-    } catch (e) {
-      console.error(e, e.stack);
-    }
-    if (!KLib.isUndefined(client.gameServer)) {
-      delete client.gameServer.clients[client.id];
-    }
-  });
-
+  client.on('disconnect', this.onDisconnect(client).bind(this));
+  
   client.on('user_command', function(userCmd) {
     var now = Date.now();
     try {
