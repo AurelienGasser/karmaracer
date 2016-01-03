@@ -14,6 +14,7 @@ var sys = require("util");
 var auth = require('./libs/authentication');
 var config = require('./config');
 var KLib = require('./libs/classes/KLib');
+var MapManager = require('./libs/MapManager');
 
 var hostname = os.hostname();
 var app = express();
@@ -126,15 +127,19 @@ app.io = io;
 var DBManager = require('./libs/db/DBManager');
 DBManager.connect(function(err, client) {
   if (err) {
+    console.error('db manager connection failed', err);
     return null;
-  } 
+  }   
   
-  var MapManager = require('./libs/MapManager');
   var mapManager = new MapManager(app);
 
-  mapManager.load(function() {
-    var gameServerSocket = new(require('./libs/GameServerSocket'))(mapManager, app);
-  });
+  mapManager.init(function(err) {
+    if (err) {
+      console.error('Error while initializing map manager', err);
+    } else {
+      console.info('map manager initialized')
+    }
+  })
 
   app.get('/status', function(req, res) {
     res.render('status', {

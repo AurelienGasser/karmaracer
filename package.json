@@ -10,6 +10,7 @@
     "url": "git@github.com:momow/karmaracer.git"
   },
   "dependencies": {
+    "async": ">=1.5.1",
     "errorhandler": ">=1.4.2",
     "express": ">=3.0.6",
     "jade": ">= 0.16.2",

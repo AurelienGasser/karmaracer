@@ -1,3 +1,4 @@
+var async = require('async');
 var fs = require('fs');
 var KLib = require('./classes/KLib');
 var CONFIG = require('./../config');
@@ -11,6 +12,32 @@ var MapManager = function(app) {
   this.itemsByName = {};
 
   return this;
+};
+
+MapManager.prototype.init = function(callback) {
+  var that = this;
+  if (CONFIG.performanceTest) {
+    this.initPerformanceTest(callback);
+    return;
+  }
+  
+  async.parallel([
+    this.loadMaps.bind(this),
+    this.loadItems.bind(this)
+  ], function(err) {
+    if (err) {
+      callback(err);
+      return;
+    } 
+    
+    that.gameServerSocket = new(require('./GameServerSocket'))(that);                
+  });
+};
+
+MapManager.prototype.initPerformanceTest = function(callback) {
+  console.info('loading performance test map')
+  this.loadMap(CONFIG.serverPath + '/performanceTestMap.json');
+  var gameServerSocket = new(require('./GameServerSocket'))(this);
 };
 
 MapManager.prototype.addGameServer = function(map) {
@@ -105,20 +132,6 @@ MapManager.prototype.getMapsWithPlayers = function() {
   }
   return maps;
 };
-
-MapManager.prototype.load = function(callback) {
-  var that = this;
-  if (CONFIG.performanceTest) {
-    console.info('loading performance test map')
-    this.loadMap(CONFIG.serverPath + '/performanceTestMap.json')
-    callback();
-  } else {
-    this.loadMaps(function(err) {
-      console.info('maps loaded')      
-      that.loadItems(callback);
-    });
-  }
-}
 
 MapManager.prototype.getVictories = function(callback) {
   var UserController = require('./db/UserController');
