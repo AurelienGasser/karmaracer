@@ -127,7 +127,7 @@ GameServer.prototype.broadcast = function(key, data) {
 }
 
 GameServer.prototype.broadcastExplosion = function(point) {
-  if (!this.process.env.DISABLE_EXPLOSIONS) {
+  if (!process.env.DISABLE_EXPLOSIONS) {
     this.broadcast('explosion', {
       x: point.x * this.engine.gScale,
       y: point.y * this.engine.gScale
