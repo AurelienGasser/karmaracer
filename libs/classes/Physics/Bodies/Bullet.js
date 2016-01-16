@@ -1,4 +1,3 @@
-var sys = require("sys");
 var KLib = require('./../../KLib');
 var KBody = require('./../Body');
 

@@ -27,13 +27,15 @@ server.on('error', function(e) {
 });
 
 var io = socketio.listen(server);
-io.set('log level', 0);
 
 app.set('view engine', 'jade');
 app.set('views', __dirname + '/views');
 
 app.use(cookieParser());
-app.use(bodyParser());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
 app.use(methodOverride());
 
 app.use(session(auth.sessionOptions));

@@ -12,6 +12,8 @@ var MemoryStore = session.MemoryStore,
 var sessionSecret = 'grand mere',
   sessionKey = 'session.sid',
   sessionOptions = {
+    resave: true,
+    saveUninitialized: true,
     store: sessionStore,
     key: sessionKey,
     secret: sessionSecret

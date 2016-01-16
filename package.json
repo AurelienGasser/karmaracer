@@ -14,7 +14,7 @@
     "errorhandler": ">=1.4.2",
     "express": ">=3.0.6",
     "jade": ">= 0.16.2",
-    "socket.io": ">= 0.8.5",
+    "socket.io": "=1.3.7",
     "box2dweb-commonjs": ">=2.1.0",
     "walk": ">=0.0.1",
     "forever-monitor": ">=0.0.1",
