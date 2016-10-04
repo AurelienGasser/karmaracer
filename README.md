@@ -1,6 +1,4 @@
-कर्म रेसर
-
-Karma Racer
+कर्म रेसर - Karma Racer
 
 An online multi-player car game.
 
