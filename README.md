@@ -1,3 +1,9 @@
+# ARCHIVED
+
+Thanks to all who played the game, it's fun memories! :)
+
+---
+
 कर्म रेसर - Karma Racer
 
 An online multi-player car game.
